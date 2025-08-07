@@ -334,8 +334,40 @@ export function ChatInterface({
                       <div className="text-xs font-medium text-slate-300 mb-2">
                         📋 Analysis Results:
                       </div>
-                      <div className="bg-slate-950 rounded p-2 font-mono text-xs text-slate-300 overflow-x-auto max-h-32 overflow-y-auto">
-                        <pre>{JSON.stringify(message.workflow.data, null, 2)}</pre>
+                      <div className="bg-slate-950 rounded p-2 text-xs text-slate-300 max-h-32 overflow-y-auto">
+                        {message.workflow.data.features && (
+                          <div className="mb-2">
+                            <div className="font-medium text-slate-200 mb-1">Features:</div>
+                            <ul className="list-disc list-inside space-y-0.5 text-slate-300">
+                              {message.workflow.data.features.map((feature: string, index: number) => (
+                                <li key={index}>{feature}</li>
+                              ))}
+                            </ul>
+                          </div>
+                        )}
+                        {message.workflow.data.pages && (
+                          <div className="mb-2">
+                            <div className="font-medium text-slate-200 mb-1">Pages:</div>
+                            <ul className="list-disc list-inside space-y-0.5 text-slate-300">
+                              {message.workflow.data.pages.map((page: string, index: number) => (
+                                <li key={index}>{page}</li>
+                              ))}
+                            </ul>
+                          </div>
+                        )}
+                        {message.workflow.data.technical_requirements && (
+                          <div>
+                            <div className="font-medium text-slate-200 mb-1">Technical Requirements:</div>
+                            <ul className="list-disc list-inside space-y-0.5 text-slate-300">
+                              <li>Responsive: {message.workflow.data.technical_requirements.responsive ? 'Yes' : 'No'}</li>
+                              <li>Authentication: {message.workflow.data.technical_requirements.authentication ? 'Yes' : 'No'}</li>
+                              <li>Data Storage: {message.workflow.data.technical_requirements.data_persistence}</li>
+                              {message.workflow.data.technical_requirements.ui_framework && (
+                                <li>UI Framework: {message.workflow.data.technical_requirements.ui_framework}</li>
+                              )}
+                            </ul>
+                          </div>
+                        )}
                       </div>
                     </div>
                   )}
