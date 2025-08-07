@@ -51,7 +51,7 @@ Currently implements a minimal user system with username-based identification. T
 ## External Dependencies
 
 **AI Services**: 
-- **Google Gemini Pro** for prompt analysis, requirement extraction, and code generation
+- **Google Gemini 1.5 Flash** for prompt analysis, requirement extraction, and code generation
 - JSON extraction from natural language responses for parsing AI-generated content
 
 **Database Services**:
