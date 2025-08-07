@@ -59,6 +59,7 @@ export function ChatInterface({
       onProjectCreate(data.projectId);
       onChatSessionCreate(data.chatSessionId);
       setCurrentWorkflow(data.workflow);
+      setIsGenerating(true);
       
       // Start file structure generation
       generateStructureMutation.mutate({
@@ -87,13 +88,23 @@ export function ChatInterface({
     },
     onSuccess: (data) => {
       setCurrentWorkflow(data.workflow);
+      setIsGenerating(false);
       queryClient.invalidateQueries({ queryKey: ["/api/chat", chatSessionId] });
+      queryClient.invalidateQueries({ queryKey: ["/api/projects", projectId, "files"] });
       
-      // Start generating files
-      if (data.fileStructure?.public?.children) {
-        const files = Object.keys(data.fileStructure.public.children);
-        generateFilesSequentially(files, 0, messages[0]?.workflow?.data);
-      }
+      toast({
+        title: "Project Generated",
+        description: "Your HTML application has been created successfully!",
+      });
+    },
+    onError: (error: any) => {
+      setIsGenerating(false);
+      setCurrentWorkflow(null);
+      toast({
+        title: "Generation Error",
+        description: error.message || "Failed to generate file structure",
+        variant: "destructive",
+      });
     },
   });
 
@@ -135,28 +146,7 @@ export function ChatInterface({
     },
   });
 
-  const generateFilesSequentially = async (files: string[], index: number, analysisResult: any) => {
-    if (index >= files.length) {
-      setIsGenerating(false);
-      setCurrentWorkflow(null);
-      return;
-    }
 
-    const fileName = files[index];
-    if (chatSessionId) {
-      await generateContentMutation.mutateAsync({
-        sessionId: chatSessionId,
-        fileName,
-        analysisResult,
-        fileStructure: {}
-      });
-      
-      // Generate next file after a short delay
-      setTimeout(() => {
-        generateFilesSequentially(files, index + 1, analysisResult);
-      }, 1000);
-    }
-  };
 
   const handleSubmit = () => {
     if (!inputValue.trim()) return;
