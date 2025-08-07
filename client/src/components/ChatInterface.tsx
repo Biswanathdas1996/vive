@@ -88,14 +88,13 @@ export function ChatInterface({
     },
     onSuccess: (data) => {
       setCurrentWorkflow(data.workflow);
-      setIsGenerating(false);
       queryClient.invalidateQueries({ queryKey: ["/api/chat", chatSessionId] });
-      queryClient.invalidateQueries({ queryKey: ["/api/projects", projectId, "files"] });
       
-      toast({
-        title: "Project Generated",
-        description: "Your HTML application has been created successfully!",
-      });
+      // Start generating files one by one
+      if (data.fileStructure?.public?.children) {
+        const files = Object.keys(data.fileStructure.public.children);
+        generateFilesSequentially(files, 0, data.fileStructure);
+      }
     },
     onError: (error: any) => {
       setIsGenerating(false);
@@ -146,7 +145,41 @@ export function ChatInterface({
     },
   });
 
+  const generateFilesSequentially = async (files: string[], index: number, fileStructure: any) => {
+    if (index >= files.length) {
+      setIsGenerating(false);
+      setCurrentWorkflow(null);
+      queryClient.invalidateQueries({ queryKey: ["/api/projects", projectId, "files"] });
+      toast({
+        title: "Project Generated",
+        description: "Your HTML application has been created successfully!",
+      });
+      return;
+    }
 
+    const fileName = files[index];
+    if (chatSessionId) {
+      try {
+        await generateContentMutation.mutateAsync({
+          sessionId: chatSessionId,
+          fileName,
+          analysisResult: messages[0]?.workflow?.data || {},
+          fileStructure
+        });
+        
+        // Generate next file after a short delay
+        setTimeout(() => {
+          generateFilesSequentially(files, index + 1, fileStructure);
+        }, 1000);
+      } catch (error) {
+        console.error(`Failed to generate ${fileName}:`, error);
+        // Continue with next file even if one fails
+        setTimeout(() => {
+          generateFilesSequentially(files, index + 1, fileStructure);
+        }, 1000);
+      }
+    }
+  };
 
   const handleSubmit = () => {
     if (!inputValue.trim()) return;

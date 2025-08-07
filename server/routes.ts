@@ -8,25 +8,28 @@ import path from "path";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Serve static files from public directory
-  app.use('/public', express.static(path.resolve(import.meta.dirname, "..", "public")));
+  app.use(
+    "/public",
+    express.static(path.resolve(import.meta.dirname, "..", "public")),
+  );
 
   // Start new chat session
   app.post("/api/chat/start", async (req, res) => {
     try {
       const { prompt } = req.body;
-      
+
       if (!prompt) {
         return res.status(400).json({ error: "Prompt is required" });
       }
 
       // Step 1: Analyze prompt
       const analysisResult = await llmService.analyzePrompt(prompt);
-      
+
       // Create project
       const project = await storage.createProject({
         name: "Generated App",
         description: prompt,
-        fileStructure: {}
+        fileStructure: {},
       });
 
       // Create chat session
@@ -48,10 +51,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
               step: 1,
               stepName: "Requirements Analysis",
               status: "completed",
-              data: analysisResult
-            }
-          }
-        ]
+              data: analysisResult,
+            },
+          },
+        ],
       });
 
       res.json({
@@ -61,11 +64,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
         workflow: {
           step: 1,
           stepName: "Requirements Analysis",
-          status: "completed"
-        }
+          status: "completed",
+        },
       });
     } catch (error) {
-      res.status(500).json({ error: error instanceof Error ? error.message : String(error) });
+      res
+        .status(500)
+        .json({
+          error: error instanceof Error ? error.message : String(error),
+        });
     }
   });
 
@@ -75,64 +82,33 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const { sessionId } = req.params;
       const { analysisResult } = req.body;
 
-      const fileStructure = await llmService.generateFileStructure(analysisResult);
-      
+      const fileStructure =
+        await llmService.generateFileStructure(analysisResult);
+      console.log("Generated file structure:", fileStructure);
       // Update chat session
       const chatSession = await storage.getChatSession(sessionId);
       if (!chatSession) {
         return res.status(404).json({ error: "Chat session not found" });
       }
 
-      // Extract files with content and save them automatically
-      const extractAndSaveFiles = async (structure: any, path: string = ""): Promise<void> => {
-        if (structure.type === "file" && structure.content) {
-          const fileName = path;
-          
-          // Clean up content - remove any markdown code blocks
-          const cleanContent = structure.content
-            .replace(/```html\n?/g, '')
-            .replace(/```\n?$/g, '')
-            .trim();
-          
-          // Save file to public directory
-          await fileGeneratorService.createFile(fileName, cleanContent, chatSession.projectId!);
-          
-          // Save to database
-          await storage.createGeneratedFile({
-            projectId: chatSession.projectId!,
-            fileName,
-            filePath: `/public/${fileName}`,
-            content: cleanContent
-          });
-        } else if (structure.type === "directory" && structure.children) {
-          for (const [childName, childStructure] of Object.entries(structure.children)) {
-            const childPath = path ? `${path}/${childName}` : childName;
-            await extractAndSaveFiles(childStructure, childPath);
-          }
-        }
-      };
-
-      // Process the file structure and save all files
-      if (fileStructure.public && fileStructure.public.children) {
-        for (const [fileName, fileData] of Object.entries(fileStructure.public.children)) {
-          await extractAndSaveFiles(fileData, fileName);
-        }
-      }
+      // File structure now contains prompts, not content
+      // Files will be generated individually in the next step
 
       const updatedMessages = [
         ...(chatSession.messages || []),
         {
           id: crypto.randomUUID(),
           role: "assistant" as const,
-          content: "File structure and content generated successfully. All HTML files have been created with embedded styles and scripts.",
+          content:
+            "File structure generated successfully. Ready to generate individual HTML files.",
           timestamp: new Date(),
           workflow: {
             step: 2,
             stepName: "File Structure Generation",
             status: "completed" as const,
-            data: fileStructure
-          }
-        }
+            data: fileStructure,
+          },
+        },
       ];
 
       await storage.updateChatSession(sessionId, { messages: updatedMessages });
@@ -142,11 +118,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
         workflow: {
           step: 2,
           stepName: "File Structure Generation",
-          status: "completed"
-        }
+          status: "completed",
+        },
       });
     } catch (error) {
-      res.status(500).json({ error: error instanceof Error ? error.message : String(error) });
+      res
+        .status(500)
+        .json({
+          error: error instanceof Error ? error.message : String(error),
+        });
     }
   });
 
@@ -156,20 +136,28 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const { sessionId } = req.params;
       const { fileName, analysisResult, fileStructure } = req.body;
 
-      const content = await llmService.generateFileContent(fileName, analysisResult, fileStructure);
-      
+      const content = await llmService.generateFileContent(
+        fileName,
+        analysisResult,
+        fileStructure,
+      );
+
       const chatSession = await storage.getChatSession(sessionId);
       if (!chatSession) {
         return res.status(404).json({ error: "Chat session not found" });
       }
 
       // Save file to public directory
-      const generatedFile = await fileGeneratorService.createFile(fileName, content, chatSession.projectId!);
+      const generatedFile = await fileGeneratorService.createFile(
+        fileName,
+        content,
+        chatSession.projectId!,
+      );
       await storage.createGeneratedFile({
         projectId: chatSession.projectId!,
         fileName,
         filePath: generatedFile.filePath,
-        content
+        content,
       });
 
       res.json({
@@ -179,11 +167,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
         workflow: {
           step: 3,
           stepName: "Content Generation",
-          status: "completed"
-        }
+          status: "completed",
+        },
       });
     } catch (error) {
-      res.status(500).json({ error: error instanceof Error ? error.message : String(error) });
+      res
+        .status(500)
+        .json({
+          error: error instanceof Error ? error.message : String(error),
+        });
     }
   });
 
@@ -194,8 +186,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const { fileName, modificationRequest } = req.body;
 
       const currentContent = await fileGeneratorService.readFile(fileName);
-      const modifiedContent = await llmService.modifyFileContent(fileName, currentContent, modificationRequest);
-      
+      const modifiedContent = await llmService.modifyFileContent(
+        fileName,
+        currentContent,
+        modificationRequest,
+      );
+
       await fileGeneratorService.updateFile(fileName, modifiedContent);
 
       const chatSession = await storage.getChatSession(sessionId);
@@ -216,7 +212,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
           role: "assistant" as const,
           content: `Modified ${fileName} successfully.`,
           timestamp: new Date(),
-        }
+        },
       ];
 
       await storage.updateChatSession(sessionId, { messages: updatedMessages });
@@ -224,10 +220,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.json({
         fileName,
         content: modifiedContent,
-        success: true
+        success: true,
       });
     } catch (error) {
-      res.status(500).json({ error: error instanceof Error ? error.message : String(error) });
+      res
+        .status(500)
+        .json({
+          error: error instanceof Error ? error.message : String(error),
+        });
     }
   });
 
@@ -237,16 +237,20 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const { projectId } = req.params;
       const files = await storage.getProjectFiles(projectId);
       const fileList = await fileGeneratorService.listFiles();
-      
+
       res.json({
         files: files.map((file: any) => ({
           ...file,
-          url: fileGeneratorService.getFileUrl(file.fileName)
+          url: fileGeneratorService.getFileUrl(file.fileName),
         })),
-        fileList
+        fileList,
       });
     } catch (error) {
-      res.status(500).json({ error: error instanceof Error ? error.message : String(error) });
+      res
+        .status(500)
+        .json({
+          error: error instanceof Error ? error.message : String(error),
+        });
     }
   });
 
@@ -257,7 +261,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const content = await fileGeneratorService.readFile(fileName);
       res.json({ fileName, content });
     } catch (error) {
-      res.status(500).json({ error: error instanceof Error ? error.message : String(error) });
+      res
+        .status(500)
+        .json({
+          error: error instanceof Error ? error.message : String(error),
+        });
     }
   });
 
@@ -266,14 +274,18 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const { sessionId } = req.params;
       const chatSession = await storage.getChatSession(sessionId);
-      
+
       if (!chatSession) {
         return res.status(404).json({ error: "Chat session not found" });
       }
 
       res.json(chatSession);
     } catch (error) {
-      res.status(500).json({ error: error instanceof Error ? error.message : String(error) });
+      res
+        .status(500)
+        .json({
+          error: error instanceof Error ? error.message : String(error),
+        });
     }
   });
 
