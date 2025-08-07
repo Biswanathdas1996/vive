@@ -1,249 +1,246 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Login - Modern Web App</title>
-  <style>
-    :root {
-      --primary-color: #6a5af9; /* Soft Purple */
-      --secondary-color: #f0f5ff; /* Light Grey */
-      --accent-color: #ff6f91; /* Coral */
-      --text-color: #333;
-      --light-text-color: #fff;
-      --background-color: #f9f9f9;
-      --shadow-color: rgba(0, 0, 0, 0.1);
-      --border-radius: 12px;
-      --padding: 1.5rem;
-      --gap: 1rem;
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Modern Web App</title>
+    <style>
+        :root {
+            /* Colors */
+            --color-primary: #3498db; /* A vibrant blue */
+            --color-secondary: #f39c12; /* A warm orange */
+            --color-accent: #e74c3c; /* A bold red */
+            --color-text-light: #f0f4f8; /* Light text color */
+            --color-text-dark: #2c3e50; /* Dark text color */
+            --color-bg-light: #ecf0f1; /* Light background */
+            --color-bg-dark: #2c3e50; /* Dark background */
+            --color-border: rgba(0, 0, 0, 0.1); /* Subtle border */
+            --color-shadow: rgba(0, 0, 0, 0.1); /* Shadow color */
 
-      /* Typography */
-      --font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      --heading-size: clamp(2rem, 4vw, 2.5rem);
-      --subheading-size: clamp(1.2rem, 2vw, 1.5rem);
-      --body-size: clamp(0.9rem, 1.7vw, 1rem);
-      --line-height: 1.6;
-    }
+            /* Spacing */
+            --space-s: 0.5rem;
+            --space-m: 1rem;
+            --space-l: 1.5rem;
+            --space-xl: 2rem;
 
-    *,
-    *::before,
-    *::after {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
+            /* Font */
+            --font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            --font-size-base: 1rem;
+            --line-height: 1.6;
 
-    body {
-      font-family: var(--font-family);
-      font-size: var(--body-size);
-      line-height: var(--line-height);
-      background-color: var(--background-color);
-      color: var(--text-color);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
-      padding: 1rem; /* Add padding to prevent content from touching the edges */
-      overflow: hidden; /* Hide overflow to prevent scrollbars on smaller screens */
-    }
+            /* Border Radius */
+            --border-radius: 0.5rem;
 
-    .container {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: var(--gap);
-      max-width: 100%;
-      width: clamp(300px, 90%, 450px); /* Responsive width */
-      padding: var(--padding);
-      background-color: var(--secondary-color);
-      border-radius: var(--border-radius);
-      box-shadow: 0 4px 16px var(--shadow-color);
-      overflow: hidden; /* Ensures rounded corners on content */
-    }
+        }
 
-    @media (min-width: 768px) {
-      .container {
-        grid-template-columns: repeat(2, 1fr);
-        max-width: 900px; /* Wider container on larger screens */
-      }
-    }
+        /* General Styles */
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
 
+        body {
+            font-family: var(--font-family);
+            font-size: var(--font-size-base);
+            line-height: var(--line-height);
+            color: var(--color-text-dark);
+            background-color: var(--color-bg-light);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            transition: background-color 0.3s ease; /* Smooth theme transition */
+        }
 
-    header {
-      padding-bottom: var(--padding);
-      border-bottom: 1px solid rgba(0, 0, 0, 0.05); /* Subtle divider */
-      text-align: center;
-    }
+        .container {
+            width: 100%;
+            max-width: 400px;
+            padding: var(--space-xl);
+            background-color: rgba(255, 255, 255, 0.8); /* Glassmorphism */
+            border-radius: var(--border-radius);
+            box-shadow: 0 10px 20px var(--color-shadow);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--color-border);
+            transition: all 0.3s ease;
+        }
 
-    header h1 {
-      font-size: var(--heading-size);
-      color: var(--primary-color);
-      margin-bottom: var(--gap);
-    }
+        h1 {
+            text-align: center;
+            margin-bottom: var(--space-xl);
+            color: var(--color-primary);
+        }
 
-    .form-group {
-      margin-bottom: var(--gap);
-    }
+        .form-group {
+            margin-bottom: var(--space-l);
+        }
 
-    label {
-      display: block;
-      font-size: var(--subheading-size);
-      margin-bottom: 0.5rem;
-      color: var(--text-color);
-    }
+        label {
+            display: block;
+            margin-bottom: var(--space-s);
+            font-weight: bold;
+            color: var(--color-text-dark);
+        }
 
-    input[type="text"],
-    input[type="password"] {
-      width: 100%;
-      padding: 0.8rem 1rem;
-      border: none;
-      border-radius: var(--border-radius);
-      background-color: rgba(0, 0, 0, 0.02);
-      font-size: var(--body-size);
-      color: var(--text-color);
-      transition: box-shadow 0.2s ease-in-out, background-color 0.2s ease-in-out;
-    }
+        input[type="email"],
+        input[type="password"] {
+            width: 100%;
+            padding: var(--space-m);
+            border: 1px solid var(--color-border);
+            border-radius: var(--border-radius);
+            font-size: var(--font-size-base);
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+            background-color: rgba(255, 255, 255, 0.6);
+        }
 
-    input[type="text"]:focus,
-    input[type="password"]:focus {
-      outline: none;
-      box-shadow: 0 0 0 2px var(--primary-color);
-      background-color: rgba(0, 0, 0, 0.05);
-    }
+        input[type="email"]:focus,
+        input[type="password"]:focus {
+            outline: none;
+            border-color: var(--color-primary);
+            box-shadow: 0 0 5px rgba(52, 152, 219, 0.5);
+        }
 
-    button {
-      background-color: var(--primary-color);
-      color: var(--light-text-color);
-      padding: 0.8rem 1.5rem;
-      border: none;
-      border-radius: var(--border-radius);
-      font-size: var(--body-size);
-      cursor: pointer;
-      transition: background-color 0.2s ease-in-out, transform 0.1s ease-in-out;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
+        button {
+            width: 100%;
+            padding: var(--space-m);
+            border: none;
+            border-radius: var(--border-radius);
+            background-color: var(--color-primary);
+            color: var(--color-text-light);
+            font-size: var(--font-size-base);
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
 
-    button:hover {
-      background-color: #5643fa; /* Darker shade for hover */
-    }
+        button:hover {
+            background-color: #2980b9;
+        }
 
-    button:active {
-      transform: translateY(1px);
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
-    }
+        button:focus {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.3);
+        }
 
-    .forgot-password {
-      text-align: right;
-      font-size: 0.9rem;
-      color: #777;
-      margin-top: 0.5rem;
-    }
+        .error-message {
+            color: var(--color-accent);
+            margin-top: var(--space-s);
+            font-size: 0.9rem;
+        }
 
-    .forgot-password a {
-      color: var(--primary-color);
-      text-decoration: none;
-      transition: color 0.2s ease-in-out;
-    }
+        .links {
+            text-align: center;
+            margin-top: var(--space-l);
+        }
 
-    .forgot-password a:hover {
-      text-decoration: underline;
-    }
+        .links a {
+            color: var(--color-primary);
+            text-decoration: none;
+            transition: color 0.2s ease;
+        }
 
-    /* Illustration Section */
-    .illustration {
-      display: none; /* Hide by default */
-      justify-content: center;
-      align-items: center;
-      background: linear-gradient(135deg, var(--primary-color), #4b39ef);
-      color: var(--light-text-color);
-      padding: var(--padding);
-      border-radius: 0 var(--border-radius) var(--border-radius) 0;
-      text-align: center;
-    }
+        .links a:hover {
+            color: #2980b9;
+        }
 
-    .illustration h2 {
-      font-size: var(--heading-size);
-      margin-bottom: var(--gap);
-    }
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .container {
+                padding: var(--space-l);
+            }
+        }
 
-    .illustration p {
-      font-size: var(--body-size);
-      opacity: 0.8;
-    }
+        /* Dark Mode Toggle (Example - Not Fully Functional) */
+        .theme-toggle {
+            position: absolute;
+            top: var(--space-m);
+            right: var(--space-m);
+            background-color: var(--color-bg-dark);
+            color: var(--color-text-light);
+            border: none;
+            border-radius: var(--border-radius);
+            padding: var(--space-s) var(--space-m);
+            cursor: pointer;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
 
-    .illustration::before { /* Subtle glass effect */
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(255, 255, 255, 0.1); /* Semi-transparent white */
-        backdrop-filter: blur(5px); /* Apply blur to create glass effect */
-        z-index: -1; /* Place behind the content */
-        border-radius: 0 var(--border-radius) var(--border-radius) 0;
-    }
-
-    @media (min-width: 768px) {
-      .illustration {
-        display: flex; /* Show on larger screens */
-      }
-
-      .container {
-        grid-template-columns: 1fr 1fr; /* Two columns on larger screens */
-        border-radius: var(--border-radius);
-        overflow: hidden; /* Prevents illustration from overflowing */
-      }
-
-      .container > * {
-        padding: var(--padding);
-      }
-    }
-  </style>
+        .theme-toggle:hover {
+            background-color: #34495e;
+        }
+    </style>
 </head>
 <body>
+    <button class="theme-toggle" onclick="toggleTheme()">🌙</button>
+    <div class="container">
+        <h1>Login</h1>
+        <form id="loginForm">
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" required placeholder="your@email.com">
+                <div class="error-message" id="emailError"></div>
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" required placeholder="********">
+                <div class="error-message" id="passwordError"></div>
+            </div>
+            <button type="submit">Login</button>
+            <div class="links">
+                <p>Don't have an account? <a href="#">Sign up</a></p>
+            </div>
+        </form>
+    </div>
 
-  <div class="container">
-    <header>
-      <h1>Login</h1>
-    </header>
+    <script>
+        // Client-side validation
+        const loginForm = document.getElementById('loginForm');
+        const emailError = document.getElementById('emailError');
+        const passwordError = document.getElementById('passwordError');
 
-    <main>
-      <form action="#" method="post">
-        <div class="form-group">
-          <label for="username">Username</label>
-          <input type="text" id="username" name="username" placeholder="Enter your username" required>
-        </div>
+        loginForm.addEventListener('submit', (event) => {
+            event.preventDefault(); // Prevent default form submission
 
-        <div class="form-group">
-          <label for="password">Password</label>
-          <input type="password" id="password" name="password" placeholder="Enter your password" required>
-        </div>
+            let isValid = true;
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
 
-        <button type="submit">Sign In</button>
+            // Email validation
+            if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+                emailError.textContent = 'Please enter a valid email address.';
+                isValid = false;
+            } else {
+                emailError.textContent = '';
+            }
 
-        <div class="forgot-password">
-          <a href="#">Forgot Password?</a>
-        </div>
-      </form>
-    </main>
+            // Password validation (simple example - consider stronger validation)
+            if (password.length < 6) {
+                passwordError.textContent = 'Password must be at least 6 characters long.';
+                isValid = false;
+            } else {
+                passwordError.textContent = '';
+            }
 
-    <aside class="illustration">
-      <h2>Welcome Back!</h2>
-      <p>Sign in to access your account and explore.</p>
-    </aside>
-  </div>
+            if (isValid) {
+                // Simulate successful login (replace with actual API call)
+                alert('Login successful! (Simulated)');
+                // You would typically redirect the user here
+            }
+        });
 
-  <script>
-    // JavaScript can be added here for client-side interactions, such as form validation.
-    // For example:
-    // const form = document.querySelector('form');
-    // form.addEventListener('submit', (event) => {
-    //   event.preventDefault();
-    //   // Perform validation and submit logic here
-    //   alert('Form submitted (in a real app, the form would be handled server-side)');
-    // });
-  </script>
+        // Theme Toggle (Placeholder - Requires more robust implementation for dark mode)
+        function toggleTheme() {
+            const body = document.body;
+            if (body.style.backgroundColor === 'var(--color-bg-dark)') {
+                body.style.backgroundColor = 'var(--color-bg-light)';
+                body.style.color = 'var(--color-text-dark)';
+            } else {
+                body.style.backgroundColor = 'var(--color-bg-dark)';
+                body.style.color = 'var(--color-text-light)';
+            }
+        }
+
+    </script>
 </body>
 </html>
