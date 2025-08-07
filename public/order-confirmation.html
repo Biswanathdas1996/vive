@@ -3,104 +3,192 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Order Confirmation</title>
+    <title>Order Confirmation - [Your Company]</title>
     <style>
+        :root {
+            --primary-color: #6A5ACD; /* MediumSlateBlue - base color */
+            --secondary-color: #ADD8E6; /* LightBlue - accent color */
+            --tertiary-color: #F0F8FF; /* AliceBlue - background color */
+            --text-color: #333; /* Dark gray - text color */
+            --light-text-color: #fff; /* White - text on dark backgrounds */
+            --shadow-color: rgba(0, 0, 0, 0.15); /* Subtle shadow */
+            --border-radius: 10px;
+            --spacing-small: 0.75rem;
+            --spacing-medium: 1.5rem;
+            --spacing-large: 2.25rem;
+            --font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+
+            /* Dark Mode variables (optional) - not implemented fully */
+            /* --background-color-dark: #1e1e2e;
+            --text-color-dark: #ddd;
+            --shadow-color-dark: rgba(0, 0, 0, 0.3); */
+        }
+
         body {
-            font-family: sans-serif;
+            font-family: var(--font-family);
+            font-size: 16px;
+            line-height: 1.6;
+            color: var(--text-color);
+            background-color: var(--tertiary-color);
             margin: 0;
             padding: 0;
-            background-color: #f4f4f4;
-            color: #333;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            /* justify-content: center;  Center vertically if content is short */
+            align-items: center;
+            transition: background-color 0.3s ease; /* Smooth transition for dark mode */
         }
 
-        .container {
+        header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: var(--light-text-color);
+            text-align: center;
+            padding: var(--spacing-medium);
+            width: 100%;
+            box-shadow: 0px 2px 10px var(--shadow-color);
+        }
+
+        main {
             max-width: 800px;
-            margin: 20px auto;
+            width: 100%;
+            padding: var(--spacing-medium);
+            margin: var(--spacing-medium) auto;
             background-color: #fff;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: var(--border-radius);
+            box-shadow: 0px 5px 20px var(--shadow-color);
+            overflow: hidden;
         }
 
-        h1 {
+        section {
+            margin-bottom: var(--spacing-medium);
+        }
+
+        h1, h2, h3 {
+            margin-top: 0;
+            margin-bottom: var(--spacing-small);
+            color: var(--primary-color);
+        }
+
+        p {
+            margin-bottom: var(--spacing-small);
+        }
+
+        .order-number {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+
+        .address-section, .payment-section {
+            padding: var(--spacing-medium);
+            border-radius: var(--border-radius);
+            background-color: #f9f9f9; /* Light gray background */
+            box-shadow: 0px 2px 5px var(--shadow-color);
+            margin-bottom: var(--spacing-medium);
+        }
+        .address-section h3, .payment-section h3{
+            margin-bottom: var(--spacing-small);
+        }
+
+        .payment-details {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .payment-details > div {
+           margin-bottom: var(--spacing-small);
+        }
+
+        .shipping-method, .payment-method{
+            font-weight: 500;
+            margin-bottom: var(--spacing-small);
+        }
+
+        footer {
             text-align: center;
-            color: #007bff;
+            padding: var(--spacing-medium);
+            background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+            color: var(--light-text-color);
+            width: 100%;
+            margin-top: auto; /* Push footer to the bottom */
         }
 
-        .order-details {
-            margin-top: 20px;
-            border: 1px solid #ddd;
-            padding: 15px;
-            border-radius: 4px;
+        /* Buttons (Simple, could be improved with more interactive styles) */
+        button {
+            background-color: var(--primary-color);
+            color: var(--light-text-color);
+            padding: var(--spacing-small) var(--spacing-medium);
+            border: none;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background-color 0.2s ease;
         }
 
-        .order-details p {
-            margin: 5px 0;
+        button:hover {
+            background-color: #5c4cae;
         }
 
-        .thank-you {
-            text-align: center;
-            margin-top: 30px;
-            font-size: 1.2em;
-        }
-
-        .order-history-link {
-            display: block;
-            text-align: center;
-            margin-top: 20px;
-            color: #007bff;
-            text-decoration: none;
-        }
-
-        .order-history-link:hover {
-            text-decoration: underline;
-        }
-
-        /* Media Queries for Responsiveness */
-        @media (max-width: 600px) {
-            .container {
-                margin: 10px;
-                padding: 15px;
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            main {
+                padding: var(--spacing-medium) var(--spacing-small);
             }
-
-            h1 {
-                font-size: 1.8em;
+            header, footer {
+                padding: var(--spacing-medium) var(--spacing-small);
             }
+        }
 
-            .order-details {
-                padding: 10px;
-            }
-
-            .thank-you {
-                font-size: 1em;
-            }
+        /* CSS Icons (Example - Replace with more sophisticated techniques if needed) */
+        .check-icon::before {
+            content: '\2713'; /* Unicode checkmark */
+            display: inline-block;
+            margin-right: 0.5rem;
+            color: green;
         }
     </style>
 </head>
 <body>
-    <div class="container">
+    <header>
         <h1>Order Confirmation</h1>
+        <p>Thank you for your order! We've received it and are processing it.</p>
+    </header>
 
-        <div class="order-details">
-            <h2>Order Details:</h2>
-            <p><strong>Order Number:</strong> #12345</p>
-            <p><strong>Date:</strong> October 26, 2023</p>
-            <p><strong>Items:</strong></p>
-            <ul>
-                <li>Product A - Quantity: 1</li>
-                <li>Product B - Quantity: 2</li>
-            </ul>
-            <p><strong>Shipping Address:</strong></p>
-            <p>123 Main St, Anytown, USA</p>
-            <p><strong>Total:</strong> $75.00</p>
-        </div>
+    <main>
+        <section>
+            <h2>Order Summary</h2>
+            <p>Order Number: <span class="order-number">#123456789</span></p>
+            <p class="check-icon">Confirmation message: Your order is confirmed.</p>
+            <p>Estimated Delivery: 3-5 business days</p>
+        </section>
 
-        <div class="thank-you">
-            <p>Thank you for your order!</p>
-            <p>Your order has been confirmed and is being processed.</p>
-        </div>
+        <section class="address-section">
+            <h3>Shipping Address</h3>
+            <p>John Doe</p>
+            <p>123 Main Street</p>
+            <p>Anytown, CA 91234</p>
+            <p>USA</p>
+        </section>
 
-        <a href="#" class="order-history-link">View Order History</a>
-    </div>
+        <section class="payment-section">
+            <h3>Payment Details</h3>
+            <div class="payment-details">
+                <div><span class="shipping-method">Shipping Method:</span> Standard Shipping</div>
+                <div><span class="payment-method">Payment Method:</span> Visa ending in 1234</div>
+                <div>Order Total: $123.45</div>
+            </div>
+        </section>
+
+        <button onclick="window.location.href='/'">Continue Shopping</button>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 [Your Company]. All rights reserved.</p>
+    </footer>
+
+    <script>
+        // Add interactive elements and further functionality with JavaScript here
+    </script>
 </body>
 </html>

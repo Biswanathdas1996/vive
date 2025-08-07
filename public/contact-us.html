@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us</title>
+    <style>
+        :root {
+            /* Colors */
+            --color-primary: #6a79b4; /* Muted Purple */
+            --color-primary-hover: #5f6db0;
+            --color-secondary: #f0f0f8; /* Light Grayish Blue */
+            --color-accent: #56b6f9; /* Light Blue */
+            --color-text: #222;
+            --color-text-light: #fff;
+            --color-background: #f9f9fa;
+            --color-shadow: rgba(0, 0, 0, 0.1);
+
+            /* Spacing */
+            --space-s: 0.75rem;
+            --space-m: 1rem;
+            --space-l: 1.5rem;
+            --space-xl: 2rem;
+
+            /* Font */
+            --font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            --font-size-base: 1rem; /* 16px */
+            --line-height: 1.6;
+
+            /* Border Radius */
+            --border-radius: 0.5rem;
+
+            /* Transitions */
+            --transition-duration: 0.3s;
+        }
+
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: var(--font-family);
+            font-size: var(--font-size-base);
+            line-height: var(--line-height);
+            background-color: var(--color-background);
+            color: var(--color-text);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        header, footer {
+            background: linear-gradient(135deg, var(--color-primary), #8e9cc1);
+            color: var(--color-text-light);
+            padding: var(--space-l) var(--space-m);
+            text-align: center;
+            box-shadow: 0 2px 5px var(--color-shadow);
+        }
+
+        header h1 {
+            font-size: 2rem;
+            margin-bottom: var(--space-s);
+        }
+
+        main {
+            flex: 1;
+            padding: var(--space-l) var(--space-m);
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: var(--space-l);
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        @media (min-width: 768px) {
+            main {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        section {
+            background-color: var(--color-secondary);
+            padding: var(--space-l);
+            border-radius: var(--border-radius);
+            box-shadow: 0 4px 8px var(--color-shadow);
+        }
+
+        form {
+            display: grid;
+            gap: var(--space-m);
+        }
+
+        label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: var(--space-s);
+        }
+
+        input[type="text"],
+        input[type="email"],
+        textarea {
+            width: 100%;
+            padding: var(--space-m);
+            border: 1px solid #ccc;
+            border-radius: var(--border-radius);
+            font-family: inherit;
+            font-size: inherit;
+            transition: border-color var(--transition-duration) ease;
+        }
+
+        input[type="text"]:focus,
+        input[type="email"]:focus,
+        textarea:focus {
+            outline: none;
+            border-color: var(--color-primary);
+        }
+
+        textarea {
+            resize: vertical;
+        }
+
+        button {
+            background-color: var(--color-primary);
+            color: var(--color-text-light);
+            padding: var(--space-m) var(--space-l);
+            border: none;
+            border-radius: var(--border-radius);
+            font-family: inherit;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color var(--transition-duration) ease;
+        }
+
+        button:hover {
+            background-color: var(--color-primary-hover);
+        }
+
+        .contact-info {
+           display: flex;
+           flex-direction: column;
+           gap: var(--space-l);
+        }
+        .contact-item{
+            display: flex;
+            align-items: center;
+            gap: var(--space-m);
+        }
+        .contact-item i {
+            font-size: 1.5rem;
+            color: var(--color-primary);
+        }
+
+        footer {
+            text-align: center;
+            padding: var(--space-l) var(--space-m);
+            font-size: 0.85rem;
+            margin-top: auto;
+        }
+
+        /* Placeholder for Map (replace with actual map integration later) */
+        .map-placeholder {
+            background: linear-gradient(135deg, var(--color-accent), #72c5ff);
+            height: 250px;
+            border-radius: var(--border-radius);
+            box-shadow: 0 4px 8px var(--color-shadow);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: var(--color-text-light);
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        /* CSS Icons (replace with better solution if needed, e.g., icon fonts) */
+        .fa-envelope::before { content: "\f0e0"; font-family: FontAwesome; }
+        .fa-phone::before { content: "\f095"; font-family: FontAwesome; }
+        .fa-map-marker::before { content: "\f041"; font-family: FontAwesome; }
+
+        /* Font Awesome (minimal implementation) - replace with better solution */
+        @font-face {
+            font-family: 'FontAwesome';
+            src: url('data:font/woff2;charset=utf-8;base64,d09GRgABAAAAAABIAAsAAAAABAwAAABwAAABMAAAAAQgAAAAAAAAAAAAAAAAAAAAAAAAAAAABGRlRNAAABMAAAADwAAAAa9vG2h2RjMVAAAACAAAAAAIAAAAEA6s5VAAACAAAAAAABAAABGZsb2NhAwAACAAAAAABAAABcGNtYQD3AABwAAAAAABAAABtGhlYWQDAAAADgAAAAQAAAA/3k9dGhoB1GMAAAAIwAAABwAAAA/vYtzaG1h9AAAAAgAAAAIAAAABjGxvY2EAwAACAACAAQABAAEA8m1hcAAAAEwAAABIAAAAUyFk+W14c3QAAAEQAAAAAAQAAAA8AAABhbmFtZQD0AAAAEAAAABMAAACHgWxpYwEAAACAAB0AAgALAAAAAAAAAAACgAAAAEABAAABwABAAQAAAAAAAAAAAAACQAAABwAAABwAAABwAAABwAAABwAAABwAAABwABAA4BAAAAHgABgAAABwABgAACAAAAACwAZAAgAAABwAAABwABgAACAAAAACwAZAAgAAABwABgAACAAAAACwAZAAgAAABwABgAACAAAAACwAZAAgAAABwABgAACAAAAACwAZAAgAAABwABgAACAAAAACwAZAAgAAABwAAiAAgACwAfACAAQAAAAAAIAAAACAAAAAAAEAAEAAQEAAAAAAH//wAAABIAAQAAABAAQAAAAABAAAAAAABAAIAAwAAAAIAAAAAAAABAAMAAwABAAwAAAAAAIAAAABAAIAAwAAAAIAAAAAAAABAAMAAwABAAwAAAAAAgAAAH//wAAAAoACwAANQAIAAAABwABgAACAAAAACwAZAAgAAABwABgAACAAAAACwAZAAgAAABwAAAAACAAIAAwAAAAIAAAAAAAABAAMAAwABAAwAAAAAAIAAAABAAIAAwAAAAIAAAAAAAABAAMAAwABAAwAAAAAAgAAACAAAAAAIAAQAAAAAAIAAQAAAAAAIAAQAAAAAAIAAQAAAAAAIAAAAAAAIAAAAAAAIAAAAAAAIAAAAAAAAAAAABAAAAAAQAAAAAABAAAAAABAAQACwAAgAAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAABwAAAB

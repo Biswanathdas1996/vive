@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tax Credit Input</title>
+  <style>
+    :root {
+      --primary-color: #6c5ce7; /* Purple */
+      --secondary-color: #f0932b; /* Orange */
+      --background-color: #f8f9fa; /* Light Gray */
+      --text-color: #333;
+      --accent-color: #ff7675; /* Red (for error/alerts) */
+      --border-color: #ced4da;
+      --shadow-color: rgba(0, 0, 0, 0.1);
+      --font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      --border-radius: 0.75rem;
+      --padding-small: 0.75rem;
+      --padding-medium: 1rem;
+      --padding-large: 1.5rem;
+      --transition-duration: 0.3s;
+    }
+
+    body {
+      font-family: var(--font-family);
+      background-color: var(--background-color);
+      color: var(--text-color);
+      margin: 0;
+      padding: 0;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 2rem auto;
+      padding: var(--padding-large);
+      background-color: #fff;
+      border-radius: var(--border-radius);
+      box-shadow: 0 4px 12px var(--shadow-color);
+      transition: box-shadow var(--transition-duration) ease;
+    }
+
+    .container:hover {
+        box-shadow: 0 8px 20px var(--shadow-color);
+    }
+
+    h1, h2, h3 {
+      font-weight: 600;
+      margin-bottom: 0.75rem;
+    }
+
+    h1 {
+      font-size: 2rem;
+      color: var(--primary-color);
+      text-align: center;
+      margin-bottom: 1.5rem;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 0.25rem;
+      font-weight: 500;
+    }
+
+    input[type="text"],
+    input[type="number"],
+    select {
+      width: 100%;
+      padding: var(--padding-small);
+      margin-bottom: 1rem;
+      border: 1px solid var(--border-color);
+      border-radius: var(--border-radius);
+      font-size: 1rem;
+      transition: border-color var(--transition-duration) ease;
+    }
+
+    input[type="text"]:focus,
+    input[type="number"]:focus,
+    select:focus {
+      outline: none;
+      border-color: var(--primary-color);
+    }
+
+    input[type="submit"] {
+      background-color: var(--primary-color);
+      color: white;
+      padding: var(--padding-medium);
+      border: none;
+      border-radius: var(--border-radius);
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background-color var(--transition-duration) ease;
+      width: 100%;
+    }
+
+    input[type="submit"]:hover {
+      background-color: #5549a5;
+    }
+
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+
+    .description {
+      font-size: 0.9rem;
+      color: #666;
+      margin-bottom: 1rem;
+    }
+
+    .credit-section {
+      border: 1px solid var(--border-color);
+      border-radius: var(--border-radius);
+      padding: var(--padding-medium);
+      margin-bottom: 1.5rem;
+      background-color: #f9f9f9;
+    }
+
+    .credit-section h3 {
+      margin-top: 0;
+      margin-bottom: 0.5rem;
+      color: var(--primary-color);
+    }
+
+    .credit-section p {
+      margin-bottom: 0.75rem;
+    }
+
+    .credit-section:hover {
+        box-shadow: 0 2px 8px var(--shadow-color);
+    }
+
+    /* Responsive Design */
+    @media (max-width: 600px) {
+      .container {
+        padding: var(--padding-medium);
+      }
+    }
+
+    /* Custom CSS Icons */
+    .info-icon {
+      position: relative;
+      display: inline-block;
+      width: 1.2rem;
+      height: 1.2rem;
+      border-radius: 50%;
+      background-color: var(--primary-color);
+      color: white;
+      text-align: center;
+      line-height: 1.2rem;
+      font-size: 0.9rem;
+      cursor: help;
+      margin-left: 0.5rem;
+    }
+
+    .info-icon::before {
+      content: "?";
+      display: block;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h1>Tax Credit Input</h1>
+
+    <p class="description">
+      Enter your tax credit information below.  Select the credit type and fill in the required fields.  Explanation and guidance will be provided.
+    </p>
+
+    <form id="taxCreditForm">
+
+      <div class="form-group">
+        <label for="creditType">Select Credit Type:</label>
+        <select id="creditType" name="creditType">
+          <option value="none">Select...</option>
+          <option value="earnedIncome">Earned Income Tax Credit</option>
+          <option value="childCare">Child and Dependent Care Credit</option>
+          <option value="education">Education Credits</option>
+        </select>
+      </div>
+
+      <div id="creditDetails">
+        <!-- Details for selected credit will be injected here -->
+      </div>
+
+      <input type="submit" value="Calculate">
+    </form>
+  </div>
+
+  <script>
+    const creditTypeSelect = document.getElementById('creditType');
+    const creditDetailsDiv = document.getElementById('creditDetails');
+    const taxCreditForm = document.getElementById('taxCreditForm');
+
+
+    function createEarnedIncomeCreditFields() {
+      const fields = `
+        <div class="credit-section">
+          <h3>Earned Income Tax Credit</h3>
+          <p>The Earned Income Tax Credit (EITC) is a refundable tax credit for low-to-moderate income working individuals and couples.</p>
+
+          <div class="form-group">
+            <label for="earnedIncome">Earned Income:</label>
+            <input type="number" id="earnedIncome" name="earnedIncome" placeholder="Enter Earned Income">
+          </div>
+
+          <div class="form-group">
+            <label for="filingStatus">Filing Status:</label>
+            <select id="filingStatus" name="filingStatus">
+              <option value="single">Single</option>
+              <option value="marriedJointly">Married Filing Jointly</option>
+              <option value="headOfHousehold">Head of Household</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="qualifyingChildren">Number of Qualifying Children:</label>
+            <input type="number" id="qualifyingChildren" name="qualifyingChildren" placeholder="Enter Number of Children">
+          </div>
+
+        </div>
+      `;
+      return fields;
+    }
+
+    function createChildCareCreditFields() {
+      const fields = `
+        <div class="credit-section">
+          <h3>Child and Dependent Care Credit</h3>
+          <p>The Child and Dependent Care Credit helps you pay for the care of a qualifying child or other qualifying person so you can work or look for work.</p>
+
+          <div class="form-group">
+            <label for="childCareExpenses">Child Care Expenses:</label>
+            <input type="number" id="childCareExpenses" name="childCareExpenses" placeholder="Enter Child Care Expenses">
+          </div>
+
+          <div class="form-group">
+            <label for="numberOfQualifyingPersons">Number of Qualifying Persons:</label>
+            <input type="number" id="numberOfQualifyingPersons" name="numberOfQualifyingPersons" placeholder="Enter Number of Qualifying Persons">
+          </div>
+
+        </div>
+      `;
+      return fields;
+    }
+
+    function createEducationCreditFields() {
+      const fields = `
+        <div class="credit-section">
+          <h3>Education Credits</h3>
+          <p>Education credits help pay for qualified education expenses.</p>
+
+          <div class="form-group">
+            <label for="qualifiedExpenses">Qualified Education Expenses:</label>
+            <input type="number" id="qualifiedExpenses" name="qualifiedExpenses" placeholder="Enter Qualified Education Expenses">
+          </div>
+
+          <div class="form-group">
+            <label for="studentName">Student Name:</label>
+            <input type="text" id="studentName" name="studentName" placeholder="Enter Student Name">
+          </div>
+        </div>
+      `;
+      return fields;
+    }
+
+
+
+    function updateCreditDetails() {
+      const selectedCredit = creditTypeSelect.value;
+      creditDetailsDiv.innerHTML = ''; // Clear previous content
+
+      switch (selectedCredit) {
+        case 'earnedIncome':
+          creditDetailsDiv.innerHTML = createEarnedIncomeCreditFields();
+          break;
+        case 'childCare':
+          creditDetailsDiv.innerHTML = createChildCareCreditFields();
+          break;
+        case 'education':
+          creditDetailsDiv.innerHTML = createEducationCreditFields();
+          break;
+        default:
+          creditDetailsDiv.innerHTML = '<p>Please select a credit type.</p>';
+      }
+    }
+
+    creditTypeSelect.addEventListener('change', updateCreditDetails);
+    updateCreditDetails(); // Initial call to populate with default selection (none)
+
+     taxCreditForm.addEventListener('submit', (event) => {
+        event.preventDefault(); // Prevent default form submission
+
+        const selectedCredit = creditTypeSelect.value;
+        let formData = {};
+
+        if (selectedCredit === 'earnedIncome') {
+          formData = {
+            earnedIncome: document.getElementById('earnedIncome').value,
+            filingStatus: document.getElementById('filingStatus').value,
+            qualifyingChildren: document.getElementById('qualifyingChildren').value,
+          };
+          console.log("Earned Income Form Data:", formData); // Simulate submitting the form data
+          alert("Earned Income Tax Credit calculation initiated (see console for data)");
+
+
+        } else if (selectedCredit === 'childCare') {
+            formData = {
+                childCareExpenses: document.getElementById('childCareExpenses').value,
+                numberOfQualifyingPersons: document.getElementById('numberOfQualifyingPersons').value,
+            };
+            console.log("Child Care Credit Form Data:", formData);
+            alert("Child Care Credit calculation initiated (see console for data)");
+
+        } else if (selectedCredit === 'education') {
+            formData = {
+                qualifiedExpenses: document.getElementById('qualifiedExpenses').value,
+                studentName: document.getElementById('studentName').value,
+            };
+            console.log("Education Credit Form Data:", formData);
+            alert("Education Credit calculation initiated (see console for data)");
+        } else {
+            alert("Please select a valid credit type.");
+        }
+
+        // In a real application, you would now send formData to a server using fetch or XMLHttpRequest.
+     });
+
+  </script>
+</body>
+</html>

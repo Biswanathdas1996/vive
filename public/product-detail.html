@@ -1,271 +1,507 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Product Detail</title>
-    <style>
-        body {
-            font-family: sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f4f4f4;
-            color: #333;
-            line-height: 1.6;
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Product Detail - Modern Web App</title>
+  <style>
+    :root {
+      /* Color Palette */
+      --color-primary: #4a148c; /* Deep Purple */
+      --color-primary-light: #7c43bd;
+      --color-primary-dark: #12005e;
+      --color-secondary: #ffab00; /* Amber */
+      --color-accent: #00bcd4; /* Cyan */
+      --color-background: #f5f5f5; /* Light Gray */
+      --color-surface: #ffffff; /* White */
+      --color-text-primary: #333; /* Dark Gray */
+      --color-text-secondary: #666; /* Medium Gray */
+      --color-border: rgba(0, 0, 0, 0.1);
+      --color-shadow: rgba(0, 0, 0, 0.15);
 
-        .container {
-            max-width: 1200px;
-            margin: 20px auto;
-            padding: 20px;
-            background-color: #fff;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 20px;
-        }
+      /* Spacing */
+      --space-xs: 0.5rem;
+      --space-sm: 1rem;
+      --space-md: 1.5rem;
+      --space-lg: 2rem;
+      --space-xl: 3rem;
 
-        @media (min-width: 768px) {
-            .container {
-                grid-template-columns: 1fr 2fr;
-            }
-        }
+      /* Typography */
+      --font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      --font-size-base: 1rem;
+      --line-height-base: 1.6;
 
-        .product-images {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
+      /* Border Radius */
+      --border-radius: 0.5rem;
+    }
 
-        .product-images img {
-            max-width: 100%;
-            height: auto;
-            border-radius: 4px;
-            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
-            transition: transform 0.2s ease;
-        }
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+    }
 
-        .product-images img:hover {
-            transform: scale(1.05);
-        }
+    body {
+      font-family: var(--font-family);
+      font-size: var(--font-size-base);
+      line-height: var(--line-height-base);
+      color: var(--color-text-primary);
+      background-color: var(--color-background);
+      margin: 0;
+      padding: 0;
+      overflow-x: hidden; /* Prevent horizontal scroll */
+    }
 
-        .product-details {
-            padding: 10px;
-        }
+    /* Utility Classes */
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: var(--space-md);
+    }
 
-        .product-details h1 {
-            margin-top: 0;
-            font-size: 1.8em;
-        }
+    .visually-hidden {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
 
-        .product-details p {
-            margin-bottom: 1em;
-        }
+    .btn {
+      display: inline-block;
+      padding: var(--space-sm) var(--space-md);
+      background-color: var(--color-primary);
+      color: white;
+      text-decoration: none;
+      border-radius: var(--border-radius);
+      transition: background-color 0.2s ease, transform 0.1s ease;
+      font-weight: bold;
+      border: none;
+      cursor: pointer;
+    }
 
-        .product-details .price {
-            font-size: 1.5em;
-            font-weight: bold;
-            color: #007bff;
-        }
+    .btn:hover,
+    .btn:focus {
+      background-color: var(--color-primary-light);
+      transform: translateY(-2px);
+    }
 
-        .product-details .rating {
-            display: flex;
-            align-items: center;
-            margin-bottom: 1em;
-        }
+    .btn:active {
+      transform: translateY(0);
+    }
 
-        .product-details .rating span {
-            margin-right: 5px;
-        }
+    /* Typography */
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 0;
+      margin-bottom: var(--space-sm);
+      font-weight: bold;
+    }
 
-        .product-details .add-to-cart-button {
-            background-color: #28a745;
-            color: #fff;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 1em;
-            transition: background-color 0.2s ease;
-        }
+    h1 { font-size: clamp(2rem, 4vw, 3rem); }
+    h2 { font-size: clamp(1.75rem, 3.5vw, 2.5rem); }
+    h3 { font-size: clamp(1.5rem, 3vw, 2rem); }
+    h4 { font-size: clamp(1.25rem, 2.5vw, 1.75rem); }
+    p { margin-bottom: var(--space-sm); }
+    small { font-size: 0.875rem; color: var(--color-text-secondary); }
 
-        .product-details .add-to-cart-button:hover {
-            background-color: #218838;
-        }
+    /* Header */
+    header {
+      background-color: var(--color-surface);
+      box-shadow: 0 2px 5px var(--color-shadow);
+      padding: var(--space-md) 0;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
 
-        .reviews {
-            margin-top: 20px;
-            border-top: 1px solid #ccc;
-            padding-top: 20px;
-        }
+    header .container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
 
-        .review {
-            margin-bottom: 15px;
-            padding: 10px;
-            border: 1px solid #eee;
-            border-radius: 4px;
-        }
+    header nav ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+    }
 
-        .review .author {
-            font-weight: bold;
-        }
-        
-        .star-rating {
-            color: #f0c36d;
-            font-size: 1.2em;
-        }
-        
-        .star-rating::before {
-          content: '★★★★★';
-        }
+    header nav li {
+      margin-left: var(--space-md);
+    }
 
-        .star-rating span {
-            color: #ccc;
-        }
+    header nav a {
+      color: var(--color-text-primary);
+      text-decoration: none;
+      transition: color 0.2s ease;
+    }
 
-    </style>
+    header nav a:hover,
+    header nav a:focus {
+      color: var(--color-primary);
+    }
+
+    /* Main Content */
+    main {
+      padding-top: var(--space-md);
+    }
+
+    .product-detail {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: var(--space-md);
+      margin-bottom: var(--space-xl);
+    }
+
+    @media (min-width: 768px) {
+      .product-detail {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    .product-images {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: var(--space-sm);
+    }
+
+    @media (min-width: 768px) {
+      .product-images {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    .product-image {
+      background-color: var(--color-surface);
+      border-radius: var(--border-radius);
+      overflow: hidden;
+      box-shadow: 0 2px 5px var(--color-shadow);
+      position: relative;
+      aspect-ratio: 16/9; /* Maintain aspect ratio */
+    }
+
+    .product-image img { /* Placeholder for future images */
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .product-image::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(135deg, var(--color-primary-light), var(--color-primary));
+        opacity: 0.2; /* Subtle Gradient Overlay */
+        z-index: 1;
+    }
+
+    .product-image span {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        color: white;
+        font-size: 1.2rem;
+        font-weight: bold;
+        z-index: 2;
+    }
+
+    .product-info {
+      background-color: var(--color-surface);
+      padding: var(--space-md);
+      border-radius: var(--border-radius);
+      box-shadow: 0 2px 5px var(--color-shadow);
+    }
+
+    .product-title {
+        font-size: 2.2rem;
+        margin-bottom: var(--space-sm);
+    }
+
+    .product-price {
+        font-size: 1.5rem;
+        font-weight: bold;
+        color: var(--color-secondary);
+    }
+
+    .product-description {
+        margin-bottom: var(--space-md);
+    }
+
+    .product-options {
+      margin-bottom: var(--space-md);
+    }
+
+    .product-options label {
+      display: block;
+      margin-bottom: var(--space-xs);
+      font-weight: bold;
+    }
+
+    .product-options select {
+        width: 100%;
+        padding: var(--space-sm);
+        border-radius: var(--border-radius);
+        border: 1px solid var(--color-border);
+        appearance: none;
+        background-color: var(--color-surface);
+        margin-bottom: var(--space-md);
+        cursor: pointer;
+        font-family: var(--font-family);
+    }
+
+    .product-options select:focus {
+      outline: none;
+      border-color: var(--color-primary);
+      box-shadow: 0 0 0 2px var(--color-primary-light);
+    }
+
+    /* Review Section */
+    .reviews {
+      margin-bottom: var(--space-xl);
+    }
+
+    .review-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: var(--space-md);
+    }
+
+    .review-header h3 {
+        margin-right: var(--space-sm);
+    }
+
+    .review-count {
+        color: var(--color-text-secondary);
+    }
+
+    .review {
+      background-color: var(--color-surface);
+      padding: var(--space-md);
+      border-radius: var(--border-radius);
+      box-shadow: 0 2px 5px var(--color-shadow);
+      margin-bottom: var(--space-sm);
+    }
+
+    .review-author {
+      font-weight: bold;
+      margin-bottom: var(--space-xs);
+    }
+
+    .review-date {
+      color: var(--color-text-secondary);
+      font-size: 0.8rem;
+    }
+
+    /* Product Recommendations */
+    .recommendations {
+      margin-bottom: var(--space-xl);
+    }
+
+    .recommendations-header {
+        margin-bottom: var(--space-md);
+    }
+
+    .recommendations-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: var(--space-md);
+    }
+
+    @media (min-width: 640px) {
+      .recommendations-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (min-width: 1024px) {
+      .recommendations-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+
+    .recommendation-card {
+      background-color: var(--color-surface);
+      border-radius: var(--border-radius);
+      box-shadow: 0 2px 5px var(--color-shadow);
+      overflow: hidden; /*  Prevent content overflow */
+    }
+
+    .recommendation-image {
+        position: relative;
+        aspect-ratio: 16/9; /* Maintain aspect ratio */
+    }
+
+    .recommendation-image::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(135deg, var(--color-secondary), var(--color-primary));
+        opacity: 0.2; /* Subtle Gradient Overlay */
+        z-index: 1;
+    }
+
+    .recommendation-image span {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        color: white;
+        font-size: 1.2rem;
+        font-weight: bold;
+        z-index: 2;
+    }
+
+    .recommendation-content {
+      padding: var(--space-md);
+    }
+
+    .recommendation-title {
+        font-size: 1.2rem;
+        margin-bottom: var(--space-xs);
+    }
+
+    .recommendation-price {
+        font-weight: bold;
+        color: var(--color-secondary);
+    }
+
+
+    /* Footer */
+    footer {
+      background-color: var(--color-primary-dark);
+      color: white;
+      text-align: center;
+      padding: var(--space-md) 0;
+    }
+  </style>
 </head>
 <body>
-
-    <div class="container" id="product-container">
-        <!-- Product images will go here -->
-        <div class="product-images">
-            <!-- Placeholder content, will be replaced by JavaScript -->
-            <img src="https://via.placeholder.com/600x400" alt="Product Image 1">
-            <img src="https://via.placeholder.com/600x400" alt="Product Image 2">
-        </div>
-
-        <div class="product-details">
-            <h1 id="product-title">Product Title</h1>
-            <p id="product-description">Loading product description...</p>
-            <div class="rating">
-                <span class="star-rating"><span id="product-rating"></span></span>
-                (<span id="rating-count">0</span> reviews)
-            </div>
-            <p class="price" id="product-price">$0.00</p>
-            <button class="add-to-cart-button" id="add-to-cart-button">Add to Cart</button>
-            <div class="reviews" id="reviews-container">
-                <!-- Reviews will be added here -->
-            </div>
-        </div>
+  <header>
+    <div class="container">
+      <a href="#" aria-label="Home">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="32" height="32" fill="currentColor">
+          <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
+        </svg>
+      </a>
+      <nav>
+        <ul role="navigation">
+          <li><a href="#">Products</a></li>
+          <li><a href="#">About</a></li>
+          <li><a href="#">Contact</a></li>
+        </ul>
+      </nav>
     </div>
+  </header>
 
-    <script>
-        // Sample product data (replace with your actual data source, e.g., API calls)
-        const products = {
-            1: {
-                title: "Awesome Widget",
-                description: "This is a very awesome widget that does amazing things.  Buy it now!",
-                price: 29.99,
-                images: [
-                    "https://via.placeholder.com/600x400/808080/ffffff?text=Widget+1",
-                    "https://via.placeholder.com/600x400/A0A0A0/000000?text=Widget+2"
-                ],
-                rating: 4.5,
-                reviews: [
-                    { author: "John Doe", comment: "Great product!", rating: 5 },
-                    { author: "Jane Smith", comment: "Works as advertised.", rating: 4 },
-                ]
-            },
-            2: {
-                title: "Super Gadget",
-                description: "The Super Gadget is a must-have!",
-                price: 79.99,
-                images: [
-                    "https://via.placeholder.com/600x400/007bff/ffffff?text=Gadget+1",
-                    "https://via.placeholder.com/600x400/28a745/ffffff?text=Gadget+2"
-                ],
-                rating: 3.8,
-                reviews: [
-                    { author: "Alice", comment: "Pretty good gadget.", rating: 4 },
-                    { author: "Bob", comment: "Could be better.", rating: 3 },
-                ]
-            }
-        };
+  <main>
+    <div class="container">
+      <section class="product-detail">
+        <div class="product-images">
+          <div class="product-image">
+            <span>Image 1</span>
+          </div>
+          <div class="product-image">
+            <span>Image 2</span>
+          </div>
+          <div class="product-image">
+            <span>Image 3</span>
+          </div>
+          <div class="product-image">
+            <span>Image 4</span>
+          </div>
+        </div>
+        <div class="product-info">
+          <h1 class="product-title">Amazing Product Name</h1>
+          <p class="product-price">$99.99</p>
+          <p class="product-description">
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+          </p>
 
-        function getProductData(productId) {
-            return products[productId] || null; // Return null if product not found
-        }
+          <div class="product-options">
+            <label for="size">Size:</label>
+            <select id="size">
+              <option value="s">Small</option>
+              <option value="m">Medium</option>
+              <option value="l">Large</option>
+              <option value="xl">X-Large</option>
+            </select>
+          </div>
 
+          <button class="btn">Add to Cart</button>
+        </div>
+      </section>
 
-        function renderProductDetails(productId) {
-            const product = getProductData(productId);
+      <section class="reviews">
+        <div class="review-header">
+          <h3>Reviews</h3>
+          <span class="review-count">5 Reviews</span>
+        </div>
 
-            if (!product) {
-                document.getElementById("product-container").innerHTML = "<p>Product not found.</p>";
-                return;
-            }
+        <div class="review">
+          <p class="review-author">John Doe</p>
+          <p class="review-date">October 26, 2023</p>
+          <p>This is a great product! I highly recommend it.</p>
+        </div>
 
-            // Update product details in the DOM
-            document.getElementById("product-title").textContent = product.title;
-            document.getElementById("product-description").textContent = product.description;
-            document.getElementById("product-price").textContent = "$" + product.price.toFixed(2);
+        <div class="review">
+          <p class="review-author">Jane Smith</p>
+          <p class="review-date">October 25, 2023</p>
+          <p>Excellent quality and fast shipping.</p>
+        </div>
+      </section>
 
+      <section class="recommendations">
+        <h2 class="recommendations-header">You Might Also Like</h2>
+        <div class="recommendations-grid">
+          <div class="recommendation-card">
+            <div class="recommendation-image">
+              <span>Product 1</span>
+            </div>
+            <div class="recommendation-content">
+              <h3 class="recommendation-title">Another Awesome Product</h3>
+              <p class="recommendation-price">$79.99</p>
+            </div>
+          </div>
+          <div class="recommendation-card">
+            <div class="recommendation-image">
+              <span>Product 2</span>
+            </div>
+            <div class="recommendation-content">
+              <h3 class="recommendation-title">Cool New Thing</h3>
+              <p class="recommendation-price">$129.99</p>
+            </div>
+          </div>
+          <div class="recommendation-card">
+            <div class="recommendation-image">
+              <span>Product 3</span>
+            </div>
+            <div class="recommendation-content">
+              <h3 class="recommendation-title">The Best Product Ever</h3>
+              <p class="recommendation-price">$59.99</p>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
 
-            // Rating stars
-            const ratingStarsSpan = document.getElementById("product-rating");
-            const fullStars = Math.floor(product.rating);
-            const hasHalfStar = product.rating - fullStars >= 0.5;
-            let starHTML = '';
-            for (let i = 0; i < 5; i++) {
-                if (i < fullStars) {
-                    starHTML += '★';
-                } else if (i === fullStars && hasHalfStar) {
-                    starHTML += '½';
-                } else {
-                    starHTML += '<span>★</span>';
-                }
-            }
-            ratingStarsSpan.innerHTML = starHTML;
-            document.getElementById("rating-count").textContent = product.reviews.length;
-
-            // Update images
-            const imageContainer = document.querySelector(".product-images");
-            imageContainer.innerHTML = ""; // Clear existing images
-            product.images.forEach(imageUrl => {
-                const img = document.createElement("img");
-                img.src = imageUrl;
-                img.alt = product.title;
-                imageContainer.appendChild(img);
-            });
-
-            // Render reviews
-            const reviewsContainer = document.getElementById("reviews-container");
-            reviewsContainer.innerHTML = ""; // Clear existing reviews
-            product.reviews.forEach(review => {
-                const reviewDiv = document.createElement("div");
-                reviewDiv.classList.add("review");
-                reviewDiv.innerHTML = `
-                    <p class="author">${review.author}</p>
-                    <div class="rating">
-                        <span class="star-rating">${'★'.repeat(review.rating)}<span>${'★'.repeat(5-review.rating)}</span></span>
-                    </div>
-                    <p>${review.comment}</p>
-                `;
-                reviewsContainer.appendChild(reviewDiv);
-            });
-        }
-
-        // Get product ID from the URL (e.g., product-detail.html?id=1)
-        function getProductIdFromURL() {
-            const params = new URLSearchParams(window.location.search);
-            return parseInt(params.get('id'), 10); // Parse to integer, default to 10 base (decimal)
-        }
-
-        // Initial rendering when the page loads
-        const productId = getProductIdFromURL();
-        if (productId) {
-            renderProductDetails(productId);
-        } else {
-            document.getElementById("product-container").innerHTML = "<p>Product ID not found in URL.</p>";
-        }
-
-        // Add to cart functionality (Placeholder)
-        document.getElementById("add-to-cart-button").addEventListener("click", () => {
-            alert("Product added to cart!"); // Replace with actual add to cart logic
-        });
-
-    </script>
+  <footer>
+    <div class="container">
+      <p>&copy; 2023 Modern Web App</p>
+    </div>
+  </footer>
 </body>
 </html>

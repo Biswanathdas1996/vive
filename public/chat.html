@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modern Chat Interface</title>
+    <style>
+        :root {
+            /* Theme Colors */
+            --color-primary: #4a69ff;
+            --color-secondary: #a0baff;
+            --color-accent: #e6e9ff;
+            --color-text-light: #ffffff;
+            --color-text-dark: #333333;
+            --color-bg-light: #ffffff;
+            --color-bg-dark: #22272e;
+            --color-bg-panel: rgba(255, 255, 255, 0.2); /* Subtle Panel Background */
+            --color-shadow-light: rgba(0, 0, 0, 0.1);
+            --color-shadow-dark: rgba(0, 0, 0, 0.3);
+
+            /* Spacing */
+            --spacing-small: 0.5rem;
+            --spacing-medium: 1rem;
+            --spacing-large: 1.5rem;
+
+            /* Font */
+            --font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            --font-size-base: 1rem; /* Default font size for responsiveness */
+            --line-height-base: 1.6;
+
+            /* Border Radius */
+            --border-radius: 0.75rem;
+        }
+
+        /* General Reset and Body Styling */
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: var(--font-family);
+            font-size: var(--font-size-base);
+            line-height: var(--line-height-base);
+            background-color: var(--color-bg-light);
+            color: var(--color-text-dark);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: var(--spacing-medium);
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        /* Container for the Chat Interface */
+        .chat-container {
+            background-color: var(--color-bg-light);
+            border-radius: var(--border-radius);
+            box-shadow: 0px 10px 20px var(--color-shadow-light);
+            overflow: hidden; /* Prevent content overflow */
+            width: 100%;
+            max-width: 800px;
+            display: flex;
+            flex-direction: column;
+            height: 80vh;
+            transition: background-color 0.3s ease, box-shadow 0.3s ease; /* Smooth transitions */
+        }
+
+        /* Chat Header (Optional) */
+        .chat-header {
+            background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+            color: var(--color-text-light);
+            padding: var(--spacing-medium);
+            text-align: center;
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+
+        /* Chat Messages Display */
+        .chat-messages {
+            flex-grow: 1;
+            padding: var(--spacing-medium);
+            overflow-y: auto; /* Allow scrolling for long conversations */
+            scrollbar-width: thin; /* For Firefox */
+            scrollbar-color: var(--color-primary) transparent; /* For Firefox */
+            background-color: var(--color-bg-panel);
+        }
+
+        .chat-messages::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .chat-messages::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .chat-messages::-webkit-scrollbar-thumb {
+            background-color: var(--color-primary);
+            border-radius: var(--border-radius);
+        }
+
+        /* Message Styling */
+        .message {
+            margin-bottom: var(--spacing-small);
+            padding: var(--spacing-small) var(--spacing-medium);
+            border-radius: var(--border-radius);
+            word-break: break-word; /* Handle long words */
+            box-shadow: 0px 4px 8px var(--color-shadow-light); /* Subtle shadow */
+            background-color: var(--color-bg-light); /* Default background */
+            transition: background-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .message.user {
+            background-color: var(--color-secondary);
+            color: var(--color-text-light);
+            align-self: flex-end;
+        }
+
+        .message.ai {
+            background-color: var(--color-accent);
+            color: var(--color-text-dark);
+            align-self: flex-start;
+        }
+
+        /* Message Bubbles */
+        .message::before {
+           content: "";
+           position: absolute;
+           width: 0;
+           height: 0;
+           border: 8px solid transparent;
+        }
+
+        .message.user::before {
+            border-left-color: var(--color-secondary);
+            right: -8px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        .message.ai::before {
+            border-right-color: var(--color-accent);
+            left: -8px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+
+        .message-text {
+            margin-bottom: var(--spacing-small);
+            line-height: var(--line-height-base);
+        }
+
+        .message-timestamp {
+            font-size: 0.8rem;
+            color: rgba(0, 0, 0, 0.5);
+            text-align: right; /* or left, depending on alignment */
+        }
+
+        /* Chat Input Area */
+        .chat-input {
+            display: flex;
+            padding: var(--spacing-medium);
+            border-top: 1px solid rgba(0, 0, 0, 0.1);
+            background-color: var(--color-bg-light);
+        }
+
+        .input-field {
+            flex-grow: 1;
+            padding: var(--spacing-small) var(--spacing-medium);
+            border: none;
+            border-radius: var(--border-radius);
+            background-color: var(--color-bg-panel);
+            color: var(--color-text-dark);
+            font-size: var(--font-size-base);
+            transition: background-color 0.3s ease, box-shadow 0.3s ease;
+            outline: none; /* Remove default focus outline */
+        }
+
+        .input-field:focus {
+            box-shadow: 0 0 5px var(--color-primary);
+        }
+
+        .send-button {
+            padding: var(--spacing-small) var(--spacing-medium);
+            border: none;
+            border-radius: var(--border-radius);
+            background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+            color: var(--color-text-light);
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.3s ease, transform 0.1s ease;
+            margin-left: var(--spacing-small);
+        }
+
+        .send-button:hover {
+            background: linear-gradient(135deg, var(--color-secondary), var(--color-primary));
+        }
+
+        .send-button:active {
+            transform: scale(0.95);
+        }
+
+
+        /* Placeholder for AI Response (Initially Hidden) */
+        .ai-response {
+            margin-top: var(--spacing-medium);
+            padding: var(--spacing-small) var(--spacing-medium);
+            border-radius: var(--border-radius);
+            background-color: var(--color-accent);
+            color: var(--color-text-dark);
+            display: none; /* Initially hidden */
+            box-shadow: 0px 4px 8px var(--color-shadow-light);
+        }
+
+        /* Dark Mode Toggle */
+        .dark-mode-toggle {
+            position: fixed;
+            top: var(--spacing-medium);
+            right: var(--spacing-medium);
+            padding: var(--spacing-small) var(--spacing-medium);
+            border: none;
+            border-radius: var(--border-radius);
+            background: var(--color-primary);
+            color: var(--color-text-light);
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.3s ease;
+            z-index: 10; /* Ensure toggle is on top */
+        }
+
+        .dark-mode-toggle:hover {
+            background: var(--color-secondary);
+        }
+
+        /* Responsive Design - Mobile First */
+        @media (max-width: 600px) {
+            .chat-container {
+                height: 90vh;
+            }
+
+            .input-field, .send-button {
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <button class="dark-mode-toggle" onclick="toggleDarkMode()">Toggle Dark Mode</button>
+
+    <div class="chat-container">
+        <div class="chat-header">
+            Modern Chat Interface
+        </div>
+        <div class="chat-messages">
+            <!-- Messages will be dynamically added here -->
+        </div>
+        <div class="chat-input">
+            <input type="text" class="input-field" id="messageInput" placeholder="Type your message...">
+            <button class="send-button" onclick="sendMessage()">Send</button>
+        </div>
+    </div>
+
+    <script>
+        // Function to add a message to the chat
+        function addMessage(text, sender, timestamp) {
+            const chatMessages = document.querySelector('.chat-messages');
+            const messageDiv = document.createElement('div');
+            messageDiv.classList.add('message', sender); // Add 'user' or 'ai' class
+
+            const messageText = document.createElement('p');
+            messageText.classList.add('message-text');
+            messageText.textContent = text;
+
+            const timestampSpan = document.createElement('span');
+            timestampSpan.classList.add('message-timestamp');
+            timestampSpan.textContent = timestamp;
+
+            messageDiv.appendChild(messageText);
+            messageDiv.appendChild(timestampSpan);
+            chatMessages.appendChild(messageDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;  // Scroll to the bottom
+        }
+
+
+        // Function to simulate AI response (replace with actual API call)
+        function simulateAIResponse(userMessage) {
+            return new Promise(resolve => {
+                // Simulate a delay for "thinking"
+                setTimeout(() => {
+                    const responses = [
+                        "That's interesting!",
+                        "I see. Tell me more.",
+                        "Processing...",
+                        "Thanks for sharing!",
+                        "Could you please rephrase that?",
+                    ];
+                    const randomIndex = Math.floor(Math.random() * responses.length);
+                    resolve(responses[randomIndex]);
+                }, 1000); // Simulate 1 second delay
+            });
+        }
+
+
+        // Function to handle sending a message
+        async function sendMessage() {
+            const inputField = document.getElementById('messageInput');
+            const messageText = inputField.value.trim(); // Trim whitespace
+
+            if (messageText) {
+                const timestamp = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                addMessage(messageText, 'user', timestamp);
+                inputField.value = '';
+                inputField.focus(); // Keep focus on the input
+
+                // Simulate AI response
+                const aiResponse = await simulateAIResponse(messageText);
+                const aiTimestamp = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                addMessage(aiResponse, 'ai', aiTimestamp);
+            }
+        }
+
+        // Dark Mode Functionality
+        function toggleDarkMode() {
+            const body = document.body;
+            const chatContainer = document.querySelector('.chat-container');
+            const isDarkMode = body.classList.toggle('dark-mode');
+
+            if (isDarkMode) {
+                // Set dark mode styles
+                body.style.backgroundColor = '--color-bg-dark';
+                body.style.color = '--color-text-light';
+                chatContainer.style.backgroundColor = '--color-bg-dark';
+                chatContainer.style.boxShadow = '0px 10px 20px var(--color-shadow-dark)';
+
+
+                //Additional style modifications (example)
+                document.querySelectorAll('.message').forEach(message => {
+                  if(message.classList.contains('user')) {
+                      message.style.backgroundColor = '--color-primary';
+                  } else {
+                      message.style.backgroundColor = '--color-secondary';
+                  }
+                  message.style.boxShadow = '0px 4px 8px var(--color-shadow-dark)';
+                });
+
+                document.querySelector('.chat-input').style.backgroundColor = 'rgba(0,0,0,0.3)';
+
+            } else {
+                // Set light mode styles (reset)
+                body.style.backgroundColor = 'var(--color-bg-light)';
+                body.style.color = 'var(--color-text-dark)';
+                chatContainer.style.backgroundColor = 'var(--color-bg-light)';
+                chatContainer.style.boxShadow = '0px 10px 20px var(--color-shadow-light)';
+
+                // Reset message styles
+                document.querySelectorAll('.message').forEach(message => {
+                  message.style.backgroundColor = ''; // Use default styles
+                  message.style.boxShadow = '0px 4px 8px var(--color-shadow-light)'; // Reset shadows
+                });
+                document.querySelector('.chat-input').style.backgroundColor = '';
+
+            }
+        }
+
+        // Add event listener for Enter key in the input field
+        document.getElementById('messageInput').addEventListener('keydown', function(event) {
+            if (event.key === 'Enter') {
+                event.preventDefault(); // Prevent the default form submission behavior
+                sendMessage();
+            }
+        });
+    </script>
+</body>
+</html>

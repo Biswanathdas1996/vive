@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tax Calculation Preview</title>
+    <style>
+        :root {
+            /* Color Palette */
+            --primary-color: #4a90e2;
+            --primary-color-light: #6ba9ff;
+            --secondary-color: #f03e3e;
+            --accent-color: #f7b924;
+            --background-color: #f8f9fa;
+            --surface-color: #ffffff;
+            --text-color: #333;
+            --text-color-light: #777;
+            --border-color: rgba(0, 0, 0, 0.1);
+            --shadow-color: rgba(0, 0, 0, 0.15);
+
+            /* Spacing */
+            --space-s: 0.5rem;
+            --space-m: 1rem;
+            --space-l: 1.5rem;
+            --space-xl: 2rem;
+
+            /* Font */
+            --font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+            --font-size-base: 1rem;
+            --line-height-base: 1.6;
+        }
+
+        /* General Styles */
+        body {
+            font-family: var(--font-family);
+            font-size: var(--font-size-base);
+            line-height: var(--line-height-base);
+            background-color: var(--background-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            transition: background-color 0.3s ease;
+        }
+
+        /* Container */
+        .container {
+            width: 100%;
+            max-width: 900px;
+            padding: var(--space-l);
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: var(--space-l);
+        }
+
+        /* Card */
+        .card {
+            background-color: var(--surface-color);
+            border-radius: 1rem;
+            box-shadow: 0 4px 12px var(--shadow-color);
+            padding: var(--space-l);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden; /* Important for clip-path on some hover effects */
+        }
+
+        .card:hover {
+            box-shadow: 0 8px 20px var(--shadow-color);
+            transform: translateY(-2px);
+        }
+
+        .card h2 {
+            font-size: 1.75rem;
+            margin-bottom: var(--space-m);
+            color: var(--primary-color);
+        }
+
+        /* Form Preview */
+        .form-preview {
+            background-color: var(--surface-color);
+            border-radius: 1rem;
+            box-shadow: 0 4px 12px var(--shadow-color);
+            padding: var(--space-l);
+            transition: all 0.3s ease;
+            overflow: hidden; /* Clip the content within the rounded corners */
+        }
+        .form-preview:hover {
+            box-shadow: 0 8px 20px var(--shadow-color);
+            transform: translateY(-2px);
+        }
+
+        .form-preview h3 {
+            font-size: 1.5rem;
+            margin-bottom: var(--space-m);
+            color: var(--text-color);
+        }
+
+        .form-preview p {
+            margin-bottom: var(--space-s);
+            color: var(--text-color-light);
+        }
+        /* Tax Calculation Section */
+        .tax-calculation {
+            background-color: var(--surface-color);
+            border-radius: 1rem;
+            box-shadow: 0 4px 12px var(--shadow-color);
+            padding: var(--space-l);
+            transition: all 0.3s ease;
+            overflow: hidden;
+        }
+
+        .tax-calculation:hover {
+            box-shadow: 0 8px 20px var(--shadow-color);
+            transform: translateY(-2px);
+        }
+
+        .tax-calculation h3 {
+            font-size: 1.5rem;
+            margin-bottom: var(--space-m);
+            color: var(--text-color);
+        }
+
+        .tax-calculation ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .tax-calculation li {
+            display: flex;
+            justify-content: space-between;
+            padding: var(--space-s) 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .tax-calculation li:last-child {
+            border-bottom: none;
+        }
+        .tax-calculation li strong {
+            font-weight: bold;
+        }
+        .tax-calculation li span {
+            color: var(--text-color-light);
+        }
+
+        /* Buttons */
+        .button {
+            display: inline-block;
+            padding: var(--space-m) var(--space-l);
+            border-radius: 0.75rem;
+            background-color: var(--primary-color);
+            color: var(--surface-color);
+            text-decoration: none;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+            box-shadow: 0 2px 6px var(--shadow-color);
+            margin-top: var(--space-m);
+            cursor: pointer;
+            border: none;
+        }
+
+        .button:hover {
+            background-color: var(--primary-color-light);
+        }
+
+        .button:focus {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.5);
+        }
+        /* Utility Classes */
+        .text-center {
+            text-align: center;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+
+        <div class="tax-calculation card">
+            <h2>Tax Liability</h2>
+            <h3>Calculated Tax:</h3>
+            <p style="font-size: 1.2rem; font-weight: bold;">$12,500.00</p>
+
+            <h3>Breakdown:</h3>
+            <ul>
+                <li><span>Gross Income:</span> <strong>$85,000.00</strong></li>
+                <li><span>Deductions:</span> <strong>$15,000.00</strong></li>
+                <li><span>Taxable Income:</span> <strong>$70,000.00</strong></li>
+                <li><span>Tax Rate (Average):</span> <strong>17.86%</strong></li>
+            </ul>
+
+            <button class="button" onclick="editTaxData()">Edit Tax Data</button>
+        </div>
+
+
+        <div class="form-preview card">
+            <h3>Tax Form Preview</h3>
+            <p>This is a preview of your tax form based on the provided information.</p>
+            <p><strong>Income:</strong> $85,000.00</p>
+            <p><strong>Deductions:</strong> $15,000.00</p>
+            <p><strong>Taxable Income:</strong> $70,000.00</p>
+            <p><strong>Tax Liability:</strong> $12,500.00</p>
+        </div>
+
+    </div>
+
+    <script>
+        function editTaxData() {
+            alert("Edit functionality not implemented in this example.  This would typically open a modal or redirect to an editing page.");
+            // In a real application, this function would likely:
+            // 1. Open a modal dialog.
+            // 2. Load data into input fields.
+            // 3. Allow the user to edit the data.
+            // 4. Save the changes and recalculate the tax liability.
+        }
+    </script>
+</body>
+</html>

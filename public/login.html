@@ -3,13 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
+    <title>Login - Modern Web App</title>
     <style>
+        :root {
+            --primary-color: #3498db; /* Blue */
+            --secondary-color: #2ecc71; /* Green */
+            --background-color: #f4f4f4;
+            --text-color: #333;
+            --input-border-color: #ccc;
+            --border-radius: 8px;
+            --box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            --transition-duration: 0.3s;
+            --font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
         body {
-            font-family: sans-serif;
+            font-family: var(--font-family);
+            background-color: var(--background-color);
+            color: var(--text-color);
             margin: 0;
             padding: 0;
-            background-color: #f4f4f4;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -17,93 +30,131 @@
         }
 
         .container {
-            background-color: #fff;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            padding: 20px;
-            width: 100%;
-            max-width: 400px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            padding: 3rem;
+            width: clamp(300px, 80%, 400px);
+            text-align: center;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
         }
 
-        h2 {
-            text-align: center;
-            margin-bottom: 20px;
-            color: #333;
+        h1 {
+            color: var(--primary-color);
+            margin-bottom: 1.5rem;
         }
 
         .form-group {
-            margin-bottom: 15px;
+            margin-bottom: 1.5rem;
+            text-align: left;
         }
 
         label {
             display: block;
-            margin-bottom: 5px;
+            margin-bottom: 0.5rem;
             font-weight: bold;
-            color: #555;
         }
 
         input[type="email"],
         input[type="password"] {
             width: 100%;
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            font-size: 16px;
-            box-sizing: border-box; /* Important for padding to not increase width */
+            padding: 0.75rem 1rem;
+            border: 1px solid var(--input-border-color);
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            transition: border-color var(--transition-duration);
+            box-sizing: border-box;
+        }
+
+        input[type="email"]:focus,
+        input[type="password"]:focus {
+            outline: none;
+            border-color: var(--primary-color);
         }
 
         button {
-            background-color: #4CAF50;
+            background-color: var(--primary-color);
             color: white;
-            padding: 12px 20px;
+            padding: 0.75rem 1.5rem;
             border: none;
-            border-radius: 4px;
+            border-radius: var(--border-radius);
+            font-size: 1rem;
             cursor: pointer;
+            transition: background-color var(--transition-duration);
             width: 100%;
-            font-size: 16px;
         }
 
         button:hover {
-            background-color: #45a049;
+            background-color: #2980b9;
         }
 
+        button:focus {
+            outline: none;
+        }
+
+
         .links {
-            text-align: center;
-            margin-top: 15px;
+            margin-top: 1rem;
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.9rem;
         }
 
         .links a {
-            color: #007bff;
+            color: var(--text-color);
             text-decoration: none;
-            margin: 0 10px;
+            transition: color var(--transition-duration);
         }
 
         .links a:hover {
-            text-decoration: underline;
+            color: var(--primary-color);
         }
 
-        .error-message {
-            color: red;
-            margin-top: 10px;
-            text-align: center;
+
+        .form-group input:focus,
+        .form-group button:focus {
+            outline: none;
+            box-shadow: 0 0 5px rgba(52, 152, 219, 0.5); /* Example: Subtle focus effect */
+        }
+
+
+        /* Animations */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .container {
+            animation: fadeIn var(--transition-duration) ease-in-out;
         }
     </style>
 </head>
 <body>
+
     <div class="container">
-        <h2>Login</h2>
+        <h1>Login</h1>
+
         <form id="loginForm">
             <div class="form-group">
-                <label for="email">Email</label>
+                <label for="email">Email Address</label>
                 <input type="email" id="email" name="email" required>
             </div>
+
             <div class="form-group">
                 <label for="password">Password</label>
                 <input type="password" id="password" name="password" required>
             </div>
+
             <button type="submit">Login</button>
-            <div class="error-message" id="errorMessage"></div>
         </form>
+
         <div class="links">
             <a href="#">Forgot Password?</a>
             <a href="#">Create Account</a>
@@ -111,40 +162,29 @@
     </div>
 
     <script>
-        document.getElementById('loginForm').addEventListener('submit', function(event) {
-            event.preventDefault(); // Prevent the default form submission
+        const loginForm = document.getElementById('loginForm');
+
+        loginForm.addEventListener('submit', async (event) => {
+            event.preventDefault(); // Prevent default form submission
 
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
-            const errorMessageElement = document.getElementById('errorMessage');
 
-            // Basic client-side validation (can be enhanced)
-            if (!email || !password) {
-                errorMessageElement.textContent = 'Please enter both email and password.';
-                return;
-            }
-
-            // Simulate authentication (replace with actual API call)
-            // In a real application, you would send a request to your backend server
-            // to validate the credentials.  For this example, we'll just simulate
-            const users = [
-                { email: "test@example.com", password: "password123" },
-                { email: "user@domain.net", password: "securepass" }
-            ];
-
-            const user = users.find(u => u.email === email && u.password === password);
-
-            if (user) {
-                errorMessageElement.textContent = ''; // Clear any previous errors
-                // Simulate session management (replace with actual session management on the backend)
-                alert('Login successful! (Simulated)');
-                //Redirect or update page content as appropriate. For example:
-                //window.location.href = "dashboard.html"; // Example redirect.  Dashboard.html would need to be created.
+            // Simple validation.  Replace with proper server-side authentication.
+            if (email && password) {
+                // Simulate Authentication (replace with actual API call)
+                // For demonstration, we'll just check for a specific email and password
+                if (email === 'test@example.com' && password === 'password') {
+                    alert('Login successful!');
+                    // Redirect to another page (replace with your desired redirect)
+                    window.location.href = 'dashboard.html';
+                } else {
+                    alert('Invalid credentials. Please try again.');
+                }
             } else {
-                errorMessageElement.textContent = 'Invalid email or password.';
+                alert('Please enter both email and password.');
             }
         });
-
     </script>
 </body>
 </html>

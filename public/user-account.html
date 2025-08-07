@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Account Dashboard</title>
+    <style>
+        :root {
+            --primary-color: #6a5af9;
+            --secondary-color: #f0f0f0;
+            --accent-color: #ff66c4;
+            --text-color: #333;
+            --light-text-color: #fff;
+            --border-color: rgba(0, 0, 0, 0.1);
+            --shadow-color: rgba(0, 0, 0, 0.15);
+
+            --radius-small: 0.5rem;
+            --radius-medium: 0.75rem;
+            --radius-large: 1rem;
+
+            --spacing-small: 0.75rem;
+            --spacing-medium: 1rem;
+            --spacing-large: 1.5rem;
+        }
+
+        body {
+            font-family: sans-serif;
+            background-color: var(--secondary-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: var(--spacing-medium);
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+            color: var(--light-text-color);
+            padding: var(--spacing-large) var(--spacing-medium);
+            border-bottom-left-radius: var(--radius-large);
+            border-bottom-right-radius: var(--radius-large);
+            box-shadow: 0 4px 10px var(--shadow-color);
+            margin-bottom: var(--spacing-large);
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 2rem;
+        }
+
+        nav {
+            margin-bottom: var(--spacing-medium);
+        }
+
+        nav ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            justify-content: flex-start;
+            gap: var(--spacing-medium);
+        }
+
+        nav a {
+            text-decoration: none;
+            color: var(--text-color);
+            padding: var(--spacing-small) var(--spacing-medium);
+            border-radius: var(--radius-small);
+            transition: background-color 0.2s ease, color 0.2s ease;
+        }
+
+        nav a:hover,
+        nav a:focus {
+            background-color: rgba(0, 0, 0, 0.05);
+            outline: none;
+        }
+
+        nav a.active {
+            background-color: var(--primary-color);
+            color: var(--light-text-color);
+        }
+
+
+        main {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: var(--spacing-medium);
+        }
+
+        section {
+            background-color: #fff;
+            border-radius: var(--radius-medium);
+            padding: var(--spacing-medium);
+            box-shadow: 0 2px 5px var(--shadow-color);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        section:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px var(--shadow-color);
+        }
+
+        section h2 {
+            margin-top: 0;
+            margin-bottom: var(--spacing-medium);
+            font-size: 1.5rem;
+        }
+
+
+        .profile-info {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-medium);
+        }
+
+        .profile-picture {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent-color), var(--primary-color));
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: var(--light-text-color);
+            font-size: 2rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            box-shadow: 0 2px 5px var(--shadow-color);
+        }
+
+
+        .order-history table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: var(--spacing-medium);
+        }
+
+        .order-history th,
+        .order-history td {
+            padding: var(--spacing-small);
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .order-history th {
+            background-color: rgba(0, 0, 0, 0.03);
+            font-weight: bold;
+        }
+
+        .order-history tr:nth-child(even) {
+            background-color: rgba(0, 0, 0, 0.01);
+        }
+
+        .order-history a {
+            color: var(--primary-color);
+            text-decoration: none;
+            transition: color 0.2s ease;
+        }
+
+        .order-history a:hover {
+            color: var(--accent-color);
+        }
+
+        .account-settings ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .account-settings li {
+            padding: var(--spacing-small) 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .account-settings li:last-child {
+            border-bottom: none;
+        }
+
+        .account-settings button {
+            background-color: var(--primary-color);
+            color: var(--light-text-color);
+            border: none;
+            padding: var(--spacing-small) var(--spacing-medium);
+            border-radius: var(--radius-small);
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background-color 0.2s ease;
+        }
+
+        .account-settings button:hover {
+            background-color: var(--accent-color);
+        }
+
+
+        footer {
+            text-align: center;
+            padding: var(--spacing-medium);
+            margin-top: var(--spacing-large);
+            border-top: 1px solid var(--border-color);
+            color: #777;
+        }
+
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            main {
+                grid-template-columns: 1fr;
+            }
+
+            header h1 {
+                font-size: 1.75rem;
+            }
+
+            nav ul {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>User Account</h1>
+            <nav>
+                <ul>
+                    <li><a href="#" class="active">Dashboard</a></li>
+                    <li><a href="#">Orders</a></li>
+                    <li><a href="#">Settings</a></li>
+                    <li><a href="#">Logout</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <section class="profile">
+            <h2>Profile Information</h2>
+            <div class="profile-info">
+                <div class="profile-picture">JD</div>
+                <div>
+                    <p><strong>John Doe</strong></p>
+                    <p>johndoe@example.com</p>
+                    <p>Joined: 2023-10-27</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="order-history">
+            <h2>Order History</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Order ID</th>
+                        <th>Date</th>
+                        <th>Total</th>
+                        <th>Status</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>#12345</td>
+                        <td>2024-01-15</td>
+                        <td>$75.00</td>
+                        <td>Shipped</td>
+                        <td><a href="#">View Details</a></td>
+                    </tr>
+                    <tr>
+                        <td>#12346</td>
+                        <td>2024-01-10</td>
+                        <td>$120.00</td>
+                        <td>Delivered</td>
+                        <td><a href="#">View Details</a></td>
+                    </tr>
+                    <tr>
+                        <td>#12347</td>
+                        <td>2024-01-05</td>
+                        <td>$30.00</td>
+                        <td>Processing</td>
+                        <td><a href="#">View Details</a></td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section class="account-settings">
+            <h2>Account Settings</h2>
+            <ul>
+                <li>
+                    <a href="#">Change Password</a>
+                </li>
+                <li>
+                    <a href="#">Update Email</a>
+                </li>
+                <li>
+                    <a href="#">Manage Notifications</a>
+                </li>
+                <li>
+                    <button>Delete Account</button>
+                </li>
+            </ul>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2024 User Account Dashboard</p>
+        </div>
+    </footer>
+</body>
+</html>

@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Help & FAQ - Modern Web App</title>
+    <style>
+        :root {
+            /* Color Palette */
+            --primary-color: #6C63FF;
+            --secondary-color: #4CAF50;
+            --accent-color: #FF9800;
+            --background-color: #f0f2f5;
+            --surface-color: #ffffff;
+            --text-color: #333;
+            --text-color-light: #777;
+            --border-color: rgba(0, 0, 0, 0.1);
+            --shadow-color: rgba(0, 0, 0, 0.15);
+
+            /* Spacing */
+            --spacing-small: 0.75rem;
+            --spacing-medium: 1.25rem;
+            --spacing-large: 2rem;
+
+            /* Typography */
+            --font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            --font-size-base: 1rem;
+            --line-height-base: 1.6;
+
+            /* Animation */
+            --transition-duration: 0.2s;
+            --easing-function: ease-in-out;
+
+            /* Dark Theme (Optional) */
+            --dark-background-color: #121212;
+            --dark-surface-color: #1e1e1e;
+            --dark-text-color: #eee;
+            --dark-text-color-light: #aaa;
+        }
+
+        /* General Styles */
+        body {
+            font-family: var(--font-family);
+            font-size: var(--font-size-base);
+            line-height: var(--line-height-base);
+            color: var(--text-color);
+            background-color: var(--background-color);
+            margin: 0;
+            padding: 0;
+            transition: background-color var(--transition-duration) var(--easing-function), color var(--transition-duration) var(--easing-function);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        .dark-theme {
+            --background-color: var(--dark-background-color);
+            --surface-color: var(--dark-surface-color);
+            --text-color: var(--dark-text-color);
+            --text-color-light: var(--dark-text-color-light);
+        }
+
+        .container {
+            max-width: 900px;
+            margin: var(--spacing-large) auto;
+            padding: var(--spacing-medium);
+            width: 95%;
+        }
+
+        /* Header */
+        header {
+            background: linear-gradient(135deg, var(--primary-color), #a29bff);
+            color: white;
+            padding: var(--spacing-medium);
+            text-align: center;
+            border-radius: 0.5rem;
+            box-shadow: 0 2px 5px var(--shadow-color);
+            margin-bottom: var(--spacing-large);
+        }
+
+        header h1 {
+            margin: 0;
+        }
+
+        /* Search Bar */
+        .search-container {
+            display: flex;
+            margin-bottom: var(--spacing-medium);
+        }
+
+        .search-input {
+            flex-grow: 1;
+            padding: var(--spacing-small);
+            border: 1px solid var(--border-color);
+            border-radius: 0.375rem;
+            font-size: 1rem;
+            transition: border-color var(--transition-duration) var(--easing-function);
+            background-color: var(--surface-color);
+            color: var(--text-color);
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+
+        .search-button {
+            padding: var(--spacing-small) var(--spacing-medium);
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 0.375rem;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background-color var(--transition-duration) var(--easing-function);
+            margin-left: var(--spacing-small);
+        }
+
+        .search-button:hover {
+            background-color: #5546ff;
+        }
+
+        /* FAQ Section */
+        .faq-section {
+            margin-bottom: var(--spacing-large);
+        }
+
+        .faq-question {
+            background-color: var(--surface-color);
+            padding: var(--spacing-medium);
+            border-radius: 0.5rem;
+            margin-bottom: var(--spacing-small);
+            box-shadow: 0 1px 3px var(--shadow-color);
+            cursor: pointer;
+            transition: box-shadow var(--transition-duration) var(--easing-function);
+        }
+
+        .faq-question:hover {
+            box-shadow: 0 2px 6px var(--shadow-color);
+        }
+
+        .faq-question h3 {
+            margin: 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .faq-question h3::after {
+            content: '+';
+            font-size: 1.5rem;
+            transition: transform var(--transition-duration) var(--easing-function);
+        }
+
+        .faq-question.active h3::after {
+            transform: rotate(45deg);
+        }
+
+        .faq-answer {
+            padding: 0 var(--spacing-medium);
+            margin-bottom: var(--spacing-small);
+            overflow: hidden;
+            max-height: 0;
+            transition: max-height var(--transition-duration) var(--easing-function);
+            font-size: 0.95rem;
+            color: var(--text-color-light);
+        }
+
+        .faq-answer p {
+            margin-bottom: var(--spacing-small);
+        }
+
+        .faq-answer a {
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+
+        .faq-answer a:hover {
+            text-decoration: underline;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: var(--spacing-medium);
+            color: var(--text-color-light);
+            font-size: 0.8rem;
+            border-top: 1px solid var(--border-color);
+            margin-top: auto;
+            background-color: var(--surface-color);
+        }
+
+        /* Helper Classes */
+        .visually-hidden {
+            clip: rect(0 0 0 0);
+            clip-path: inset(50%);
+            height: 1px;
+            overflow: hidden;
+            position: absolute;
+            white-space: nowrap;
+            width: 1px;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Help &amp; Frequently Asked Questions</h1>
+    </header>
+
+    <main class="container">
+        <section>
+            <div class="search-container">
+                <input type="search" class="search-input" placeholder="Search for a question...">
+                <button class="search-button">Search</button>
+            </div>
+
+            <section class="faq-section">
+                <h2>General Questions</h2>
+                <article class="faq-question" aria-expanded="false">
+                    <h3 id="q1">
+                        What is this website about?
+                    </h3>
+                    <div class="faq-answer" aria-labelledby="q1">
+                        <p>This website is a demonstration of modern web development techniques, including HTML5, CSS3, and JavaScript.  It's designed to showcase contemporary design patterns, such as glassmorphism and neumorphism, and focuses on a user-friendly experience.</p>
+                    </div>
+                </article>
+
+                <article class="faq-question" aria-expanded="false">
+                    <h3 id="q2">
+                        How do I create an account?
+                    </h3>
+                    <div class="faq-answer" aria-labelledby="q2">
+                        <p>Account creation is currently unavailable in this demo.  However, the process would typically involve filling out a registration form with your information (email, password, etc.) and confirming your email address.</p>
+                    </div>
+                </article>
+
+                <article class="faq-question" aria-expanded="false">
+                    <h3 id="q3">
+                        How can I contact support?
+                    </h3>
+                    <div class="faq-answer" aria-labelledby="q3">
+                        <p>For any inquiries or issues, you can reach out to our support team via email at <a href="mailto:support@example.com">support@example.com</a>.</p>
+                    </div>
+                </article>
+
+                <article class="faq-question" aria-expanded="false">
+                    <h3 id="q4">
+                        What are the system requirements?
+                    </h3>
+                    <div class="faq-answer" aria-labelledby="q4">
+                        <p>This website is designed to be compatible with all modern web browsers.  You don't need to install any special software. Simply use a recent version of your favorite browser (Chrome, Firefox, Safari, Edge, etc.).</p>
+                    </div>
+                </article>
+
+                <article class="faq-question" aria-expanded="false">
+                    <h3 id="q5">
+                        Is there a dark mode available?
+                    </h3>
+                    <div class="faq-answer" aria-labelledby="q5">
+                        <p>Yes, to toggle the dark mode, click the button below. Note: This is a static example and does not persist the setting.</p>
+                        <button id="themeToggle" style="background-color:var(--primary-color); color: white; border: none; padding: 0.5rem 1rem; border-radius: 0.375rem; cursor: pointer; transition: background-color var(--transition-duration) var(--easing-function);">Toggle Dark Mode</button>
+                    </div>
+                </article>
+            </section>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 Modern Web App. All rights reserved.</p>
+    </footer>
+
+    <script>
+        // FAQ Accordion Functionality
+        const faqQuestions = document.querySelectorAll('.faq-question');
+
+        faqQuestions.forEach(question => {
+            question.addEventListener('click', () => {
+                question.classList.toggle('active');
+                const answer = question.querySelector('.faq-answer');
+                const isExpanded = question.getAttribute('aria-expanded') === 'true';
+
+                question.setAttribute('aria-expanded', !isExpanded);
+                answer.style.maxHeight = isExpanded ? null : answer.scrollHeight + "px";
+            });
+        });
+
+        // Theme Toggle
+        const themeToggle = document.getElementById('themeToggle');
+        if (themeToggle) {
+          themeToggle.addEventListener('click', () => {
+            document.body.classList.toggle('dark-theme');
+          });
+        }
+    </script>
+</body>
+</html>

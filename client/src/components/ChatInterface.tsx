@@ -8,6 +8,37 @@ import { Separator } from "@/components/ui/separator";
 import { useToast } from "@/hooks/use-toast";
 import { Send, Trash2, Download, Brain, Search, Table, Cog, CheckCircle, Loader, ChevronUp, ChevronDown, ChevronLeft, ChevronRight } from "lucide-react";
 
+// Helper function to render file structure
+const renderFileStructure = (structure: any, prefix: string = ''): React.ReactNode => {
+  if (!structure || typeof structure !== 'object') return null;
+  
+  return Object.entries(structure).map(([name, data]: [string, any], index) => {
+    const isDirectory = data?.type === 'directory' || data?.children;
+    const fullPath = prefix + name;
+    
+    return (
+      <div key={index} className="text-slate-300">
+        <div className="flex items-center space-x-1">
+          <span className="text-slate-500">
+            {isDirectory ? '📁' : '📄'}
+          </span>
+          <span className="text-slate-300">{name}</span>
+          {data?.prompt && (
+            <span className="text-slate-500 text-xs">
+              - {data.prompt.substring(0, 50)}{data.prompt.length > 50 ? '...' : ''}
+            </span>
+          )}
+        </div>
+        {data?.children && (
+          <div className="ml-4 border-l border-slate-700 pl-2 mt-1">
+            {renderFileStructure(data.children, fullPath + '/')}
+          </div>
+        )}
+      </div>
+    );
+  });
+};
+
 interface ChatInterfaceProps {
   projectId: string | null;
   chatSessionId: string | null;
@@ -378,7 +409,7 @@ export function ChatInterface({
                           <div className="text-xs font-medium text-slate-300 mb-2">
                             📋 Analysis Results:
                           </div>
-                          <div className="bg-slate-950 rounded p-2 text-xs text-slate-300 max-h-32 overflow-y-auto">
+                          <div className="bg-slate-950 rounded p-2 text-xs text-slate-300 max-h-48 overflow-y-auto">
                             {message.workflow.data.features && (
                               <div className="mb-2">
                                 <div className="font-medium text-slate-200 mb-1">Features:</div>
@@ -400,7 +431,7 @@ export function ChatInterface({
                               </div>
                             )}
                             {message.workflow.data.technical_requirements && (
-                              <div>
+                              <div className="mb-2">
                                 <div className="font-medium text-slate-200 mb-1">Technical Requirements:</div>
                                 <ul className="list-disc list-inside space-y-0.5 text-slate-300">
                                   <li>Responsive: {message.workflow.data.technical_requirements.responsive ? 'Yes' : 'No'}</li>
@@ -410,6 +441,22 @@ export function ChatInterface({
                                     <li>UI Framework: {message.workflow.data.technical_requirements.ui_framework}</li>
                                   )}
                                 </ul>
+                              </div>
+                            )}
+                            {message.workflow.data.fileStructure && (
+                              <div className="mb-2">
+                                <div className="font-medium text-slate-200 mb-1">📁 File Structure:</div>
+                                <div className="font-mono text-xs bg-slate-900 p-2 rounded border">
+                                  {renderFileStructure(message.workflow.data.fileStructure, '')}
+                                </div>
+                              </div>
+                            )}
+                            {message.workflow.data.public && (
+                              <div>
+                                <div className="font-medium text-slate-200 mb-1">🌐 Generated Files:</div>
+                                <div className="font-mono text-xs bg-slate-900 p-2 rounded border">
+                                  {renderFileStructure(message.workflow.data.public, 'public/')}
+                                </div>
                               </div>
                             )}
                           </div>

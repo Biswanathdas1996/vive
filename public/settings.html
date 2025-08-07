@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Settings - My App</title>
+    <style>
+        :root {
+            /* Colors */
+            --color-primary-light: #f0f8ff; /* AliceBlue */
+            --color-primary-dark: #282c34; /* Dark background */
+            --color-secondary-light: #87ceeb; /* SkyBlue */
+            --color-secondary-dark: #303030; /* Darker shade */
+            --color-accent: #ff69b4; /* HotPink */
+            --color-text-light: #333;
+            --color-text-dark: #fff;
+            --color-border-light: rgba(0, 0, 0, 0.1);
+            --color-border-dark: rgba(255, 255, 255, 0.2);
+            --color-shadow-light: rgba(0, 0, 0, 0.1);
+            --color-shadow-dark: rgba(0, 0, 0, 0.5);
+
+
+            /* Spacing */
+            --space-xs: 0.5rem;
+            --space-s: 1rem;
+            --space-m: 1.5rem;
+            --space-l: 2rem;
+            --space-xl: 3rem;
+
+            /* Font */
+            --font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Modern font */
+            --font-size-base: 1rem;
+            --line-height-base: 1.6;
+            --border-radius: 0.75rem;
+
+            /* Transition */
+            --transition-duration: 0.3s;
+
+        }
+
+        /* General styles */
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: var(--font-family);
+            font-size: var(--font-size-base);
+            line-height: var(--line-height-base);
+            background-color: var(--color-primary-light);
+            color: var(--color-text-light);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            transition: background-color var(--transition-duration) ease, color var(--transition-duration) ease; /* Smooth transitions */
+        }
+
+        /* Dark Mode Toggle (Simplified) */
+        body.dark-mode {
+            background-color: var(--color-primary-dark);
+            color: var(--color-text-dark);
+        }
+
+        .container {
+            max-width: 900px;
+            margin: auto;
+            padding: var(--space-m);
+            flex-grow: 1;
+        }
+
+        header {
+            background-color: var(--color-secondary-light);
+            padding: var(--space-m);
+            text-align: center;
+            box-shadow: 0 2px 5px var(--color-shadow-light);
+            margin-bottom: var(--space-l);
+        }
+
+        h1 {
+            font-size: 2rem;
+            margin-bottom: var(--space-s);
+        }
+
+        /* API Key Section */
+        .api-key-section {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.8) 0%, rgba(255, 255, 255, 0.6) 100%);
+            border-radius: var(--border-radius);
+            padding: var(--space-l);
+            box-shadow: 0 4px 12px var(--color-shadow-light);
+            margin-bottom: var(--space-l);
+            transition: all var(--transition-duration) ease;
+        }
+
+        .api-key-section:hover {
+            box-shadow: 0 8px 20px var(--color-shadow-light);
+        }
+
+        .api-key-section.dark-mode {
+          background: linear-gradient(135deg, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0.6) 100%);
+        }
+
+
+        label {
+            display: block;
+            margin-bottom: var(--space-xs);
+            font-weight: bold;
+        }
+
+        input[type="text"],
+        input[type="password"] {
+            width: 100%;
+            padding: var(--space-s);
+            margin-bottom: var(--space-m);
+            border: 1px solid var(--color-border-light);
+            border-radius: var(--border-radius);
+            font-size: var(--font-size-base);
+            transition: border-color var(--transition-duration) ease, box-shadow var(--transition-duration) ease;
+        }
+
+        input[type="text"]:focus,
+        input[type="password"]:focus {
+            outline: none;
+            border-color: var(--color-accent);
+            box-shadow: 0 0 0 2px var(--color-accent);
+        }
+
+        button {
+            padding: var(--space-s) var(--space-l);
+            background-color: var(--color-accent);
+            color: var(--color-text-dark);
+            border: none;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            font-size: var(--font-size-base);
+            transition: background-color var(--transition-duration) ease, transform var(--transition-duration) ease;
+        }
+
+        button:hover {
+            background-color: #e0529a;
+        }
+
+        button:active {
+            transform: translateY(1px);
+        }
+
+        /* Conversation History Section (Example) */
+        .conversation-history-section {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.8) 0%, rgba(255, 255, 255, 0.6) 100%);
+            border-radius: var(--border-radius);
+            padding: var(--space-l);
+            box-shadow: 0 4px 12px var(--color-shadow-light);
+            margin-bottom: var(--space-l);
+            transition: all var(--transition-duration) ease;
+        }
+
+        .conversation-history-section.dark-mode {
+          background: linear-gradient(135deg, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0.6) 100%);
+        }
+
+        .conversation-history-section:hover {
+            box-shadow: 0 8px 20px var(--color-shadow-light);
+        }
+
+        /* Simplified Toggle Switch */
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 24px;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: 0.4s;
+            border-radius: 34px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: 0.4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background-color: var(--color-accent);
+        }
+
+        input:focus + .slider {
+            box-shadow: 0 0 1px var(--color-accent);
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(26px);
+        }
+
+        footer {
+            background-color: var(--color-secondary-light);
+            text-align: center;
+            padding: var(--space-m);
+            margin-top: auto; /* Push to the bottom */
+            font-size: 0.8rem;
+        }
+
+         /* Mobile Responsiveness */
+        @media (max-width: 768px) {
+            .container {
+                padding: var(--space-m) var(--space-s);
+            }
+
+            h1 {
+                font-size: 1.75rem;
+            }
+
+            input[type="text"],
+            input[type="password"] {
+                font-size: 0.9rem;
+            }
+
+            button {
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Settings</h1>
+        <p>Manage your API key and preferences.</p>
+    </header>
+
+    <main class="container">
+
+        <section class="api-key-section">
+            <h2>API Key</h2>
+            <label for="apiKey">API Key:</label>
+            <input type="password" id="apiKey" placeholder="Enter your API key" aria-label="API Key Input">
+            <button id="saveApiKey">Save API Key</button>
+        </section>
+
+        <section class="conversation-history-section">
+            <h2>Conversation History</h2>
+            <label for="historyToggle">Enable Conversation History:</label>
+            <div class="toggle-switch">
+                <input type="checkbox" id="historyToggle">
+                <span class="slider"></span>
+            </div>
+        </section>
+
+    </main>
+
+    <footer>
+        <p>&copy; 2024 My App. All rights reserved.</p>
+    </footer>
+
+    <script>
+        // Dark Mode Toggle (Simple version, can be improved)
+        const toggleDarkMode = () => {
+            document.body.classList.toggle('dark-mode');
+            // You could also save the preference to localStorage
+        };
+
+        // API Key Saving - Placeholder (Implement actual API key saving)
+        const saveApiKey = () => {
+            const apiKeyInput = document.getElementById('apiKey');
+            const apiKey = apiKeyInput.value;
+            if (apiKey) {
+                alert('API Key saved (in reality, this would be securely saved).');
+                apiKeyInput.value = ''; // Clear the input after saving
+            } else {
+                alert('Please enter an API key.');
+            }
+        };
+
+
+        // Event Listeners
+        document.addEventListener('DOMContentLoaded', () => {
+            const saveButton = document.getElementById('saveApiKey');
+            const historyToggle = document.getElementById('historyToggle');
+
+            saveButton.addEventListener('click', saveApiKey);
+            // More sophisticated dark mode handling, if needed:
+            // Initialize based on stored preference
+            // const prefersDarkMode = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+            // if (localStorage.getItem('darkMode') === 'true' || (localStorage.getItem('darkMode') !== 'false' && prefersDarkMode)) {
+            //   document.body.classList.add('dark-mode');
+            // }
+
+            historyToggle.addEventListener('change', () => {
+               // Handle Conversation History Enable/Disable
+               console.log("Conversation History Toggle:", historyToggle.checked);
+               // You could make API calls to enable/disable history here.
+            });
+        });
+
+    </script>
+</body>
+</html>

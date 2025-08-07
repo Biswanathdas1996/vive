@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Terms and Conditions</title>
+    <style>
+        :root {
+            /* Color Palette */
+            --color-primary: #6c63ff; /* Soft Purple */
+            --color-secondary: #f0f8ff; /* Ghost White */
+            --color-accent: #ff6347; /* Tomato Red */
+            --color-background-light: #f8f8ff; /* Light Background */
+            --color-background-dark: #282c34; /* Dark Background */
+            --color-text-light: #333; /* Dark Text */
+            --color-text-dark: #fff; /* Light Text */
+            --color-border-light: rgba(0, 0, 0, 0.1);
+            --color-border-dark: rgba(255, 255, 255, 0.2);
+            --color-shadow-light: rgba(0, 0, 0, 0.1);
+            --color-shadow-dark: rgba(0, 0, 0, 0.3);
+
+            /* Spacing */
+            --space-s: 0.75rem;
+            --space-m: 1rem;
+            --space-l: 1.5rem;
+            --space-xl: 2rem;
+
+            /* Border Radius */
+            --border-radius: 0.75rem;
+
+            /* Font */
+            --font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            --font-size-base: 1rem;
+
+            /* Transition */
+            --transition-duration: 0.3s;
+        }
+
+        /* General Styles */
+        body {
+            font-family: var(--font-family);
+            font-size: var(--font-size-base);
+            line-height: 1.6;
+            color: var(--color-text-light);
+            background-color: var(--color-background-light);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: var(--space-xl) auto;
+            padding: var(--space-l);
+            background-color: var(--color-secondary);
+            border-radius: var(--border-radius);
+            box-shadow: 0 4px 16px var(--color-shadow-light);
+            transition: box-shadow var(--transition-duration) ease;
+        }
+
+        .container:hover {
+            box-shadow: 0 8px 24px var(--color-shadow-light);
+        }
+
+        /* Header */
+        header {
+            text-align: center;
+            margin-bottom: var(--space-xl);
+        }
+
+        h1 {
+            font-size: 2rem;
+            color: var(--color-primary);
+            margin-bottom: var(--space-m);
+        }
+
+        /* Sections and Articles */
+        section, article {
+            margin-bottom: var(--space-l);
+        }
+
+        h2 {
+            font-size: 1.5rem;
+            color: var(--color-primary);
+            margin-bottom: var(--space-m);
+        }
+
+        p {
+            margin-bottom: var(--space-m);
+        }
+
+        ul, ol {
+            margin-bottom: var(--space-m);
+            padding-left: var(--space-l);
+        }
+
+        li {
+            margin-bottom: var(--space-s);
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            margin-top: auto;
+            padding: var(--space-m);
+            background-color: var(--color-primary);
+            color: var(--color-text-dark);
+            font-size: 0.8rem;
+        }
+
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .container {
+                padding: var(--space-m);
+            }
+            h1 {
+                font-size: 1.75rem;
+            }
+            h2 {
+                font-size: 1.3rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Terms and Conditions</h1>
+        </header>
+
+        <section>
+            <h2>1. Acceptance of Terms</h2>
+            <p>By accessing and using this website, you agree to be bound by these Terms and Conditions. If you disagree with any part of the terms then you may not access the website.</p>
+        </section>
+
+        <section>
+            <h2>2. Intellectual Property</h2>
+            <p>All content on this website, including text, graphics, logos, and images, is the property of [Your Company Name] or its content suppliers and is protected by copyright laws.</p>
+        </section>
+
+        <section>
+            <h2>3. User Conduct</h2>
+            <p>You agree not to:</p>
+            <ul>
+                <li>Use the website for any unlawful purpose.</li>
+                <li>Transmit any viruses, malware, or other harmful code.</li>
+                <li>Interfere with the operation of the website.</li>
+            </ul>
+        </section>
+
+        <section>
+            <h2>4. Disclaimer of Warranties</h2>
+            <p>This website is provided "as is" without any warranties, express or implied. [Your Company Name] makes no warranties about the accuracy or completeness of the content.</p>
+        </section>
+
+        <section>
+            <h2>5. Limitation of Liability</h2>
+            <p>[Your Company Name] shall not be liable for any damages arising out of your use of the website, including, but not limited to, direct, indirect, incidental, and consequential damages.</p>
+        </section>
+
+        <section>
+            <h2>6. Governing Law</h2>
+            <p>These Terms and Conditions shall be governed by and construed in accordance with the laws of [Your Jurisdiction].</p>
+        </section>
+
+        <section>
+            <h2>7. Changes to Terms</h2>
+            <p>We reserve the right to modify these Terms and Conditions at any time. Your continued use of the website after any changes constitutes your acceptance of the new terms.</p>
+        </section>
+
+        <section>
+            <h2>8. Contact Information</h2>
+            <p>If you have any questions about these Terms, please contact us at <a href="mailto:info@example.com">info@example.com</a>.</p>
+        </section>
+    </div>
+
+    <footer>
+        &copy; 2024 [Your Company Name]. All rights reserved.
+    </footer>
+</body>
+</html>

@@ -5,131 +5,305 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Product Listing</title>
     <style>
-        body {
-            font-family: sans-serif;
+        :root {
+            /* Colors */
+            --color-primary: #6c5ce7;
+            --color-secondary: #feca57;
+            --color-accent: #ff7675;
+            --color-background: #f8f9fa; /* Light mode default */
+            --color-text: #2d3436;
+            --color-border: rgba(0, 0, 0, 0.1);
+            --color-shadow: rgba(0, 0, 0, 0.1);
+            --color-highlight: rgba(108, 92, 231, 0.1);
+
+            /* Dark Mode Colors */
+            --color-background-dark: #18191a;
+            --color-text-dark: #e4e6eb;
+            --color-border-dark: rgba(255, 255, 255, 0.1);
+            --color-shadow-dark: rgba(0, 0, 0, 0.5);
+            --color-highlight-dark: rgba(108, 92, 231, 0.2);
+
+
+            /* Spacing */
+            --space-xs: 0.5rem;
+            --space-s: 1rem;
+            --space-m: 1.5rem;
+            --space-l: 2rem;
+            --space-xl: 3rem;
+
+            /* Typography */
+            --font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            --font-size-base: 1rem;
+            --line-height: 1.6;
+            --border-radius: 0.5rem;
+            --transition-duration: 0.3s;
+        }
+
+        /* Dark Mode Toggle */
+        body.dark-mode {
+            --color-background: var(--color-background-dark);
+            --color-text: var(--color-text-dark);
+            --color-border: var(--color-border-dark);
+            --color-shadow: var(--color-shadow-dark);
+            --color-highlight: var(--color-highlight-dark);
+        }
+
+
+        *, *::before, *::after {
+            box-sizing: border-box;
             margin: 0;
             padding: 0;
-            background-color: #f4f4f4;
-            color: #333;
         }
 
+        body {
+            font-family: var(--font-family);
+            font-size: var(--font-size-base);
+            line-height: var(--line-height);
+            color: var(--color-text);
+            background-color: var(--color-background);
+            transition: background-color var(--transition-duration) ease, color var(--transition-duration) ease;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Header */
         header {
-            background-color: #333;
+            background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
             color: white;
-            padding: 1em;
+            padding: var(--space-m) var(--space-l);
             text-align: center;
+            box-shadow: 0 2px 10px var(--color-shadow);
+            z-index: 10;
         }
 
+        header h1 {
+            font-size: 2rem;
+            margin-bottom: var(--space-s);
+        }
+
+        /* Navigation */
+        nav {
+            padding: var(--space-s) var(--space-l);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: var(--color-background);
+            border-bottom: 1px solid var(--color-border);
+            box-shadow: 0 1px 5px var(--color-shadow);
+        }
+
+        nav a {
+            color: var(--color-text);
+            text-decoration: none;
+            padding: var(--space-xs) var(--space-s);
+            border-radius: var(--border-radius);
+            transition: background-color var(--transition-duration) ease, color var(--transition-duration) ease;
+        }
+
+        nav a:hover, nav a:focus {
+            background-color: var(--color-highlight);
+            outline: none;
+        }
+
+        /* Main Content */
         main {
-            padding: 1em;
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 1em;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        @media (min-width: 768px) {
-            main {
-                grid-template-columns: 250px 1fr;
-            }
-        }
-
-        .sidebar {
-            background-color: #eee;
-            padding: 1em;
-            border-radius: 5px;
-        }
-
-        .category-filters {
-            margin-bottom: 1em;
-        }
-
-        .category-filters h3 {
-            margin-bottom: 0.5em;
-        }
-
-        .category-filters ul {
-            list-style: none;
-            padding: 0;
-        }
-
-        .category-filters li {
-            margin-bottom: 0.3em;
-        }
-
-        .product-grid {
+            padding: var(--space-l);
+            flex-grow: 1;
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 1em;
+            gap: var(--space-m);
         }
 
+        /* Product Card */
         .product-card {
-            background-color: white;
-            border-radius: 5px;
-            padding: 1em;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            background-color: #fff;
+            border-radius: var(--border-radius);
+            box-shadow: 0 4px 10px var(--color-shadow);
+            overflow: hidden;
+            transition: transform var(--transition-duration) ease, box-shadow var(--transition-duration) ease;
+            display: flex;
+            flex-direction: column;
+            border: 1px solid var(--color-border);
         }
 
-        .product-card img {
-            width: 100%;
+        .product-card:hover, .product-card:focus {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px var(--color-shadow);
+            outline: none;
+        }
+
+        .product-image {
             height: 150px;
-            object-fit: cover;
-            margin-bottom: 0.5em;
-            background-color: #ccc; /* Placeholder color */
+            background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
 
-        .product-card h3 {
-            margin-top: 0;
-            margin-bottom: 0.5em;
-            font-size: 1.2em;
+        .product-image::before {
+            content: '';
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.2);
+            opacity: 0.5;
+            animation: pulse 2s infinite;
         }
 
-        .product-card p {
-            margin-bottom: 0.5em;
+        .product-details {
+            padding: var(--space-s);
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
         }
 
-        .product-card .price {
+        .product-title {
+            font-size: 1.2rem;
+            margin-bottom: var(--space-xs);
+        }
+
+        .product-price {
             font-weight: bold;
-            color: #007bff;
+            color: var(--color-accent);
         }
 
-        .sort-options {
-            margin-bottom: 1em;
+        .product-button {
+            background-color: var(--color-primary);
+            color: white;
+            border: none;
+            padding: var(--space-s);
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            transition: background-color var(--transition-duration) ease;
+            margin-top: var(--space-s);
         }
 
-        .sort-options label, .sort-options select {
-            margin-right: 0.5em;
+        .product-button:hover, .product-button:focus {
+            background-color: darken(var(--color-primary), 10%);
+            outline: none;
         }
 
+        /* Filter and Sort */
+        .filter-sort-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: var(--space-m) var(--space-l) 0 var(--space-l);
+        }
+
+        .filter-sort-section select, .filter-sort-section input[type="search"] {
+            padding: var(--space-xs) var(--space-s);
+            border-radius: var(--border-radius);
+            border: 1px solid var(--color-border);
+            background-color: var(--color-background);
+            color: var(--color-text);
+            transition: border-color var(--transition-duration) ease, box-shadow var(--transition-duration) ease;
+        }
+
+        .filter-sort-section select:hover, .filter-sort-section input[type="search"]:hover,
+        .filter-sort-section select:focus, .filter-sort-section input[type="search"]:focus {
+            border-color: var(--color-primary);
+            outline: none;
+            box-shadow: 0 0 5px var(--color-primary);
+        }
+
+        .filter-sort-section input[type="search"] {
+            flex-grow: 1;
+            margin-right: var(--space-m);
+        }
+
+        /* Pagination */
         .pagination {
             display: flex;
             justify-content: center;
-            margin-top: 1em;
+            padding: var(--space-l);
+            gap: var(--space-s);
         }
 
         .pagination a {
-            display: inline-block;
-            padding: 0.5em 1em;
-            margin: 0 0.2em;
-            border: 1px solid #ccc;
-            border-radius: 3px;
+            padding: var(--space-xs) var(--space-s);
+            border: 1px solid var(--color-border);
+            border-radius: var(--border-radius);
             text-decoration: none;
-            color: #333;
+            color: var(--color-text);
+            transition: background-color var(--transition-duration) ease, color var(--transition-duration) ease, border-color var(--transition-duration) ease;
         }
 
-        .pagination a.active {
-            background-color: #007bff;
+        .pagination a:hover, .pagination a:focus {
+            background-color: var(--color-highlight);
+            color: var(--color-primary);
+            border-color: var(--color-primary);
+            outline: none;
+        }
+
+        .pagination .active {
+            background-color: var(--color-primary);
             color: white;
-            border-color: #007bff;
+            border-color: var(--color-primary);
         }
 
+        /* Footer */
         footer {
-            background-color: #333;
+            background-color: var(--color-primary);
             color: white;
             text-align: center;
-            padding: 1em;
-            margin-top: 2em;
+            padding: var(--space-m) var(--space-l);
+            margin-top: var(--space-l);
+        }
+
+        /*  Media Queries (Responsive Design) */
+        @media (max-width: 768px) {
+            main {
+                grid-template-columns: repeat(auto-fit, minmax(100%, 1fr));
+            }
+            .filter-sort-section {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .filter-sort-section input[type="search"] {
+                margin-right: 0;
+                margin-bottom: var(--space-s);
+            }
+        }
+
+        /* Animations */
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+                opacity: 0.5;
+            }
+            50% {
+                transform: scale(1.2);
+                opacity: 0.2;
+            }
+            100% {
+                transform: scale(1);
+                opacity: 0.5;
+            }
+        }
+
+        /* Dark Mode Toggle Button */
+        #dark-mode-toggle {
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: var(--color-text);
+            padding: var(--space-xs);
+            border-radius: var(--border-radius);
+            transition: background-color var(--transition-duration) ease, color var(--transition-duration) ease;
+        }
+
+        #dark-mode-toggle:hover, #dark-mode-toggle:focus {
+            background-color: var(--color-highlight);
+            outline: none;
+        }
+
+        /* Search Icon */
+        .search-icon::before {
+            content: '\1F50D';  /* Magnifying Glass */
+            margin-right: 0.5rem;
         }
     </style>
 </head>
@@ -139,207 +313,95 @@
         <h1>Product Listing</h1>
     </header>
 
+    <nav>
+        <a href="#">Home</a>
+        <button id="dark-mode-toggle" aria-label="Toggle Dark Mode">🌙</button>
+    </nav>
+
+    <section class="filter-sort-section">
+        <input type="search" placeholder="Search products" aria-label="Search products" class="search-icon">
+        <select aria-label="Filter by Category">
+            <option value="">All Categories</option>
+            <option value="electronics">Electronics</option>
+            <option value="clothing">Clothing</option>
+            <option value="books">Books</option>
+        </select>
+        <select aria-label="Sort by">
+            <option value="featured">Featured</option>
+            <option value="price-asc">Price: Low to High</option>
+            <option value="price-desc">Price: High to Low</option>
+        </select>
+    </section>
+
     <main>
-        <aside class="sidebar">
-            <div class="category-filters">
-                <h3>Categories</h3>
-                <ul>
-                    <li><label><input type="checkbox" data-category="all" checked> All</label></li>
-                    <li><label><input type="checkbox" data-category="electronics"> Electronics</label></li>
-                    <li><label><input type="checkbox" data-category="clothing"> Clothing</label></li>
-                    <li><label><input type="checkbox" data-category="books"> Books</label></li>
-                </ul>
+        <article class="product-card">
+            <div class="product-image"></div>
+            <div class="product-details">
+                <h3 class="product-title">Product Title 1</h3>
+                <p>A description of the product.  Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                <p class="product-price">$99.99</p>
+                <button class="product-button">Add to Cart</button>
             </div>
-        </aside>
+        </article>
 
-        <section class="product-list">
-            <div class="sort-options">
-                <label for="sort">Sort by:</label>
-                <select id="sort">
-                    <option value="default">Default</option>
-                    <option value="price-asc">Price (Low to High)</option>
-                    <option value="price-desc">Price (High to Low)</option>
-                    <option value="name-asc">Name (A-Z)</option>
-                    <option value="name-desc">Name (Z-A)</option>
-                </select>
+        <article class="product-card">
+            <div class="product-image"></div>
+            <div class="product-details">
+                <h3 class="product-title">Product Title 2</h3>
+                <p>A description of the product.  Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                <p class="product-price">$49.99</p>
+                <button class="product-button">Add to Cart</button>
             </div>
+        </article>
 
-            <div class="product-grid" id="product-grid">
-                <!-- Products will be dynamically added here -->
+        <article class="product-card">
+            <div class="product-image"></div>
+            <div class="product-details">
+                <h3 class="product-title">Product Title 3</h3>
+                <p>A description of the product.  Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                <p class="product-price">$129.99</p>
+                <button class="product-button">Add to Cart</button>
             </div>
+        </article>
 
-            <div class="pagination" id="pagination">
-                <!-- Pagination will be dynamically added here -->
+        <article class="product-card">
+            <div class="product-image"></div>
+            <div class="product-details">
+                <h3 class="product-title">Product Title 4</h3>
+                <p>A description of the product.  Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                <p class="product-price">$79.99</p>
+                <button class="product-button">Add to Cart</button>
             </div>
-        </section>
+        </article>
+
+        <article class="product-card">
+            <div class="product-image"></div>
+            <div class="product-details">
+                <h3 class="product-title">Product Title 5</h3>
+                <p>A description of the product.  Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                <p class="product-price">$19.99</p>
+                <button class="product-button">Add to Cart</button>
+            </div>
+        </article>
     </main>
+
+    <section class="pagination">
+        <a href="#" aria-label="Previous page">← Previous</a>
+        <a href="#" class="active" aria-label="Page 1">1</a>
+        <a href="#" aria-label="Page 2">2</a>
+        <a href="#" aria-label="Next page">Next →</a>
+    </section>
 
     <footer>
         <p>&copy; 2024 Product Listing</p>
     </footer>
 
     <script>
-        const products = [
-            { id: 1, name: "Laptop", category: "electronics", price: 1200, image: "placeholder.jpg" },
-            { id: 2, name: "T-shirt", category: "clothing", price: 25, image: "placeholder.jpg" },
-            { id: 3, name: "Novel", category: "books", price: 15, image: "placeholder.jpg" },
-            { id: 4, name: "Smartphone", category: "electronics", price: 800, image: "placeholder.jpg" },
-            { id: 5, name: "Jeans", category: "clothing", price: 75, image: "placeholder.jpg" },
-            { id: 6, name: "Textbook", category: "books", price: 40, image: "placeholder.jpg" },
-            { id: 7, name: "Tablet", category: "electronics", price: 300, image: "placeholder.jpg" },
-            { id: 8, name: "Dress", category: "clothing", price: 50, image: "placeholder.jpg" },
-            { id: 9, name: "Cookbook", category: "books", price: 20, image: "placeholder.jpg" },
-            { id: 10, name: "Keyboard", category: "electronics", price: 75, image: "placeholder.jpg" },
-            { id: 11, name: "Sweater", category: "clothing", price: 60, image: "placeholder.jpg" },
-            { id: 12, name: "Biography", category: "books", price: 25, image: "placeholder.jpg" },
-        ];
+        const darkModeToggle = document.getElementById('dark-mode-toggle');
 
-        const productGrid = document.getElementById('product-grid');
-        const categoryCheckboxes = document.querySelectorAll('.category-filters input[type="checkbox"]');
-        const sortSelect = document.getElementById('sort');
-        const paginationContainer = document.getElementById('pagination');
-        const productsPerPage = 6;
-        let currentPage = 1;
-
-        function renderProducts(productsToRender) {
-            productGrid.innerHTML = '';
-            productsToRender.forEach(product => {
-                const productCard = document.createElement('div');
-                productCard.classList.add('product-card');
-                productCard.innerHTML = `
-                    <img src="${product.image}" alt="${product.name}">
-                    <h3>${product.name}</h3>
-                    <p>${product.category}</p>
-                    <p class="price">$${product.price.toFixed(2)}</p>
-                `;
-                productGrid.appendChild(productCard);
-            });
-        }
-
-
-        function filterProducts() {
-            const selectedCategories = Array.from(categoryCheckboxes)
-                .filter(checkbox => checkbox.checked && checkbox.dataset.category !== "all")
-                .map(checkbox => checkbox.dataset.category);
-
-            let filteredProducts = products;
-
-            if (selectedCategories.length > 0) {
-                filteredProducts = products.filter(product => selectedCategories.includes(product.category));
-            }
-
-            return filteredProducts;
-        }
-
-        function sortProducts(productsToSort) {
-            const sortValue = sortSelect.value;
-            switch (sortValue) {
-                case 'price-asc':
-                    productsToSort.sort((a, b) => a.price - b.price);
-                    break;
-                case 'price-desc':
-                    productsToSort.sort((a, b) => b.price - a.price);
-                    break;
-                case 'name-asc':
-                    productsToSort.sort((a, b) => a.name.localeCompare(b.name));
-                    break;
-                case 'name-desc':
-                    productsToSort.sort((a, b) => b.name.localeCompare(a.name));
-                    break;
-                default:
-                    // Default - no sorting
-                    break;
-            }
-            return productsToSort;
-        }
-
-
-        function paginateProducts(productsToPaginate) {
-            const totalPages = Math.ceil(productsToPaginate.length / productsPerPage);
-            const startIndex = (currentPage - 1) * productsPerPage;
-            const endIndex = startIndex + productsPerPage;
-            return productsToPaginate.slice(startIndex, endIndex);
-        }
-
-
-        function renderPagination(totalPages) {
-            paginationContainer.innerHTML = '';
-            if (totalPages <= 1) return; // No pagination needed
-
-            const prevLink = document.createElement('a');
-            prevLink.href = '#';
-            prevLink.textContent = 'Previous';
-            prevLink.classList.add("prev");
-            if (currentPage === 1) {
-                prevLink.classList.add('disabled');
-            }
-            prevLink.addEventListener('click', (e) => {
-                e.preventDefault();
-                if(currentPage > 1) {
-                    currentPage--;
-                    updateProductDisplay();
-                }
-            });
-            paginationContainer.appendChild(prevLink);
-
-            for (let i = 1; i <= totalPages; i++) {
-                const pageLink = document.createElement('a');
-                pageLink.href = '#';
-                pageLink.textContent = i;
-                if (i === currentPage) {
-                    pageLink.classList.add('active');
-                }
-                pageLink.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    currentPage = i;
-                    updateProductDisplay();
-                });
-                paginationContainer.appendChild(pageLink);
-            }
-
-            const nextLink = document.createElement('a');
-            nextLink.href = '#';
-            nextLink.textContent = 'Next';
-            nextLink.classList.add("next");
-             if (currentPage === totalPages) {
-                nextLink.classList.add('disabled');
-            }
-            nextLink.addEventListener('click', (e) => {
-                e.preventDefault();
-                if(currentPage < totalPages) {
-                    currentPage++;
-                    updateProductDisplay();
-                }
-            });
-            paginationContainer.appendChild(nextLink);
-
-        }
-
-        function updateProductDisplay() {
-            let filteredProducts = filterProducts();
-            let sortedProducts = sortProducts(filteredProducts);
-            const paginatedProducts = paginateProducts(sortedProducts);
-            renderProducts(paginatedProducts);
-            const totalPages = Math.ceil(sortedProducts.length / productsPerPage);
-            renderPagination(totalPages);
-        }
-
-
-        // Event Listeners
-        categoryCheckboxes.forEach(checkbox => {
-            checkbox.addEventListener('change', () => {
-                currentPage = 1; // Reset to first page when filtering
-                updateProductDisplay();
-            });
+        darkModeToggle.addEventListener('click', () => {
+            document.body.classList.toggle('dark-mode');
         });
-
-        sortSelect.addEventListener('change', () => {
-            currentPage = 1; // Reset to first page when sorting
-            updateProductDisplay();
-        });
-
-        // Initial render
-        updateProductDisplay();
     </script>
 </body>
 </html>

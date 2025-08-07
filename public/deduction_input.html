@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Deduction Input</title>
+    <style>
+        :root {
+            /* Color Palette */
+            --color-primary: #3498db; /* Soft Blue */
+            --color-secondary: #2ecc71; /* Green */
+            --color-accent: #f39c12; /* Orange */
+            --color-background: #f8f9fa; /* Light Gray */
+            --color-text: #333; /* Dark Gray */
+            --color-light-text: #fff; /* White */
+            --color-border: rgba(0, 0, 0, 0.1);
+            --color-shadow: rgba(0, 0, 0, 0.15);
+
+            /* Spacing */
+            --spacing-small: 0.5rem;
+            --spacing-medium: 1rem;
+            --spacing-large: 1.5rem;
+            --spacing-xlarge: 2rem;
+
+            /* Border Radius */
+            --border-radius-small: 0.25rem;
+            --border-radius-medium: 0.5rem;
+
+            /* Font Stack */
+            --font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            font-family: var(--font-family);
+            background-color: var(--color-background);
+            color: var(--color-text);
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            overflow-x: hidden; /* Prevent horizontal scroll on narrow screens */
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+            color: var(--color-light-text);
+            padding: var(--spacing-medium) var(--spacing-large);
+            text-align: center;
+            box-shadow: 0 2px 5px var(--color-shadow);
+        }
+
+        nav {
+            background-color: #fff;
+            padding: var(--spacing-small) var(--spacing-medium);
+            box-shadow: 0 1px 3px var(--color-shadow);
+        }
+
+        nav ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+        }
+
+        nav li {
+            margin: 0 var(--spacing-medium);
+        }
+
+        nav a {
+            text-decoration: none;
+            color: var(--color-text);
+            padding: var(--spacing-small) var(--spacing-medium);
+            border-radius: var(--border-radius-medium);
+            transition: background-color 0.2s ease, color 0.2s ease;
+            display: block; /* Ensure the padding and border radius apply correctly */
+        }
+
+        nav a:hover, nav a:focus {
+            background-color: var(--color-primary);
+            color: var(--color-light-text);
+            outline: none; /* Remove default focus outline */
+        }
+
+        main {
+            padding: var(--spacing-large);
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center; /* Center content horizontally */
+        }
+
+        .deduction-form {
+            background-color: #fff;
+            padding: var(--spacing-large);
+            border-radius: var(--border-radius-medium);
+            box-shadow: 0 4px 8px var(--color-shadow);
+            width: 100%;
+            max-width: 600px; /* Limit the form's width */
+        }
+
+        .form-group {
+            margin-bottom: var(--spacing-medium);
+        }
+
+        label {
+            display: block;
+            margin-bottom: var(--spacing-small);
+            font-weight: bold;
+        }
+
+        input[type="text"],
+        input[type="number"],
+        select {
+            width: 100%;
+            padding: var(--spacing-small);
+            border: 1px solid var(--color-border);
+            border-radius: var(--border-radius-small);
+            font-size: 1rem;
+            transition: border-color 0.2s ease;
+        }
+
+        input[type="text"]:focus,
+        input[type="number"]:focus,
+        select:focus {
+            border-color: var(--color-primary);
+            outline: none;
+        }
+
+        select {
+            appearance: none; /* Remove default styling */
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23333' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E"); /* Custom dropdown arrow */
+            background-repeat: no-repeat;
+            background-position: right 0.5rem center;
+            padding-right: calc(1rem + 15px); /* Space for the arrow */
+        }
+
+        button {
+            background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+            color: var(--color-light-text);
+            padding: var(--spacing-medium) var(--spacing-large);
+            border: none;
+            border-radius: var(--border-radius-medium);
+            cursor: pointer;
+            font-size: 1rem;
+            transition: transform 0.1s ease, box-shadow 0.1s ease;
+            display: block;
+            width: 100%;
+            text-align: center;
+        }
+
+        button:hover, button:focus {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px var(--color-shadow);
+            outline: none;
+        }
+
+        button:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 4px var(--color-shadow);
+        }
+
+
+        .deduction-summary {
+            margin-top: var(--spacing-large);
+            background-color: #fff;
+            padding: var(--spacing-medium);
+            border-radius: var(--border-radius-medium);
+            box-shadow: 0 4px 8px var(--color-shadow);
+            width: 100%;
+            max-width: 600px;
+            text-align: center;
+        }
+
+        .deduction-summary h2 {
+            margin-bottom: var(--spacing-medium);
+        }
+
+        .deduction-summary p {
+            margin-bottom: var(--spacing-small);
+        }
+
+        footer {
+            background: linear-gradient(135deg, var(--color-secondary), var(--color-primary));
+            color: var(--color-light-text);
+            text-align: center;
+            padding: var(--spacing-medium) var(--spacing-large);
+            margin-top: var(--spacing-large);
+        }
+
+        /* Responsive Design - Mobile First */
+        @media (max-width: 768px) {
+            .deduction-form {
+                padding: var(--spacing-medium);
+            }
+
+            nav ul {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            nav li {
+                margin: var(--spacing-small) 0;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Deduction Input</h1>
+    </header>
+
+    <nav>
+        <ul>
+            <li><a href="#">Standard Deduction</a></li>
+            <li><a href="#">Itemized Deductions</a></li>
+            <li><a href="#">About</a></li>
+        </ul>
+    </nav>
+
+    <main>
+        <section class="deduction-form">
+            <h2>Enter Deduction Information</h2>
+
+            <div class="form-group">
+                <label for="deductionType">Deduction Type:</label>
+                <select id="deductionType" name="deductionType">
+                    <option value="standard">Standard Deduction</option>
+                    <option value="medical">Medical Expenses</option>
+                    <option value="stateLocalTaxes">State and Local Taxes (SALT)</option>
+                    <option value="charitableDonations">Charitable Donations</option>
+                    <option value="other">Other</option>
+                </select>
+            </div>
+
+            <div class="form-group" id="deductionAmountGroup" style="display: none;">
+                <label for="deductionAmount">Deduction Amount:</label>
+                <input type="number" id="deductionAmount" name="deductionAmount" placeholder="Enter amount">
+            </div>
+
+            <div class="form-group" id="descriptionGroup" style="display: none;">
+                <label for="description">Description (Optional):</label>
+                <input type="text" id="description" name="description" placeholder="Brief description">
+            </div>
+
+            <button id="calculateButton">Calculate</button>
+        </section>
+
+        <section class="deduction-summary">
+            <h2>Deduction Summary</h2>
+            <p>Total Deductions: <span id="totalDeductions">0.00</span></p>
+            <p id="deductionDetails"></p>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 Deduction Input Tool</p>
+    </footer>
+
+    <script>
+        const deductionTypeSelect = document.getElementById('deductionType');
+        const deductionAmountGroup = document.getElementById('deductionAmountGroup');
+        const deductionAmountInput = document.getElementById('deductionAmount');
+        const descriptionGroup = document.getElementById('descriptionGroup');
+        const descriptionInput = document.getElementById('description');
+        const calculateButton = document.getElementById('calculateButton');
+        const totalDeductionsSpan = document.getElementById('totalDeductions');
+        const deductionDetailsP = document.getElementById('deductionDetails');
+
+        let totalDeductions = 0;
+
+        function updateDeductionFields() {
+            const selectedType = deductionTypeSelect.value;
+
+            if (selectedType === 'standard') {
+                deductionAmountGroup.style.display = 'none';
+                descriptionGroup.style.display = 'none';
+                deductionAmountInput.value = ''; // Clear any previous values
+                descriptionInput.value = '';
+            } else {
+                deductionAmountGroup.style.display = 'block';
+                descriptionGroup.style.display = 'block';
+            }
+        }
+
+        function calculateDeduction() {
+            const selectedType = deductionTypeSelect.value;
+            let amount = 0;
+
+            if (selectedType !== 'standard') {
+                amount = parseFloat(deductionAmountInput.value);
+                if (isNaN(amount) || amount < 0) {
+                    alert('Please enter a valid deduction amount.');
+                    return;
+                }
+            }
+
+            let deductionText = '';
+            if (selectedType === 'standard') {
+                deductionText = 'Standard Deduction Applied';
+                // Assuming standard deduction is a fixed amount, or we can get it dynamically.
+                amount = 13850; // Example value
+            } else {
+                deductionText = `${selectedType.charAt(0).toUpperCase() + selectedType.slice(1)}: $${amount.toFixed(2)}`;
+            }
+
+            totalDeductions += amount;
+            totalDeductionsSpan.textContent = totalDeductions.toFixed(2);
+            deductionDetailsP.textContent += deductionText + '; ';
+        }
+
+        deductionTypeSelect.addEventListener('change', updateDeductionFields);
+        calculateButton.addEventListener('click', calculateDeduction);
+
+        // Initial setup
+        updateDeductionFields();
+    </script>
+</body>
+</html>

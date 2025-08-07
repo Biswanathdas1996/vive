@@ -5,60 +5,111 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Shopping Cart</title>
     <style>
+        :root {
+            /* Colors */
+            --color-primary: #6A5ACD; /* SlateBlue */
+            --color-secondary: #87CEEB; /* SkyBlue */
+            --color-accent: #FF69B4; /* HotPink */
+            --color-text-light: #fff;
+            --color-text-dark: #333;
+            --color-background-light: #f4f4f4;
+            --color-background-dark: #222;
+            --color-card-light: rgba(255, 255, 255, 0.8);
+            --color-card-dark: rgba(34, 34, 34, 0.8);
+            --color-border-light: rgba(0, 0, 0, 0.1);
+            --color-border-dark: rgba(255, 255, 255, 0.1);
+
+            /* Spacing */
+            --space-xs: 0.5rem;
+            --space-s: 1rem;
+            --space-m: 1.5rem;
+            --space-l: 2rem;
+            --space-xl: 3rem;
+
+            /* Font */
+            --font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            --font-size-base: 1rem;
+
+            /* Shadow */
+            --shadow-light: 0 2px 5px rgba(0, 0, 0, 0.1);
+            --shadow-dark: 0 2px 5px rgba(0, 0, 0, 0.3);
+            --transition-duration: 0.2s;
+        }
+
+        /* General Styles */
         body {
-            font-family: sans-serif;
+            font-family: var(--font-family);
+            font-size: var(--font-size-base);
+            line-height: 1.6;
+            background-color: var(--color-background-light);
+            color: var(--color-text-dark);
             margin: 0;
             padding: 0;
-            background-color: #f4f4f4;
-            color: #333;
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
+            transition: background-color var(--transition-duration), color var(--transition-duration);
+            overflow-x: hidden;
         }
 
-        header {
-            background-color: #333;
-            color: #fff;
-            padding: 1rem 0;
-            text-align: center;
+        .dark-mode {
+            background-color: var(--color-background-dark);
+            color: var(--color-text-light);
         }
 
-        main {
-            padding: 1rem;
-            flex-grow: 1;
-        }
-
-        .cart-container {
-            max-width: 800px;
+        .container {
+            max-width: 1200px;
             margin: 0 auto;
-            background-color: #fff;
-            padding: 1rem;
-            border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            padding: var(--space-m);
         }
 
-        .cart-item {
+        /* Header */
+        header {
+            background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+            color: var(--color-text-light);
+            padding: var(--space-l) var(--space-m);
+            text-align: center;
+            box-shadow: var(--shadow-light);
+            margin-bottom: var(--space-l);
+        }
+
+        header h1 {
+            margin: 0;
+        }
+
+        /* Cart Section */
+        .cart-container {
             display: grid;
-            grid-template-columns: 1fr 2fr 1fr 1fr;
-            gap: 1rem;
-            padding: 1rem 0;
-            border-bottom: 1px solid #eee;
-            align-items: center;
+            grid-template-columns: 1fr;
+            gap: var(--space-m);
         }
 
-        .cart-item:last-child {
-            border-bottom: none;
+        /* Cart Item */
+        .cart-item {
+            background-color: var(--color-card-light);
+            padding: var(--space-m);
+            border-radius: 10px;
+            box-shadow: var(--shadow-light);
+            display: grid;
+            grid-template-columns: 1fr 2fr 1fr;
+            align-items: center;
+            gap: var(--space-m);
+            transition: background-color var(--transition-duration), box-shadow var(--transition-duration);
         }
+        .dark-mode .cart-item {
+            background-color: var(--color-card-dark);
+            box-shadow: var(--shadow-dark);
+        }
+
 
         .item-image {
             width: 80px;
             height: 80px;
-            background-color: #ddd;
+            border-radius: 10px;
+            background: linear-gradient(to right, var(--color-primary), var(--color-secondary));
             display: flex;
             justify-content: center;
             align-items: center;
-            font-size: 1.5rem;
-            border-radius: 4px;
+            color: var(--color-text-light);
+            font-size: 2rem;
+            font-weight: bold;
         }
 
         .item-details {
@@ -66,217 +117,249 @@
             flex-direction: column;
         }
 
-        .item-title {
+        .item-name {
             font-weight: bold;
+            margin-bottom: var(--space-xs);
         }
 
         .item-price {
+            color: var(--color-accent);
             font-weight: bold;
-            text-align: center;
         }
 
         .quantity-controls {
             display: flex;
             align-items: center;
-            justify-content: center;
         }
 
-        .quantity-button {
-            background-color: #ddd;
+        .quantity-controls button {
+            background-color: var(--color-primary);
+            color: var(--color-text-light);
             border: none;
-            padding: 0.25rem 0.5rem;
+            padding: var(--space-xs) var(--space-s);
+            border-radius: 5px;
             cursor: pointer;
-            border-radius: 4px;
-            margin: 0 0.25rem;
+            margin: 0 var(--space-xs);
+            transition: background-color var(--transition-duration);
+        }
+        .quantity-controls button:hover {
+            background-color: #5c4ca5;
         }
 
-        .quantity-button:hover {
-            background-color: #ccc;
-        }
 
         .quantity-input {
             width: 40px;
             text-align: center;
-            border: 1px solid #ccc;
-            border-radius: 4px;
+            border: 1px solid var(--color-border-light);
+            border-radius: 5px;
+            padding: var(--space-xs);
+        }
+        .dark-mode .quantity-input {
+            background-color: var(--color-background-dark);
+            color: var(--color-text-light);
+            border-color: var(--color-border-dark);
         }
 
         .remove-button {
-            background-color: #dc3545;
-            color: #fff;
+            background-color: var(--color-accent);
+            color: var(--color-text-light);
             border: none;
-            padding: 0.5rem 1rem;
+            padding: var(--space-s);
+            border-radius: 5px;
             cursor: pointer;
-            border-radius: 4px;
+            transition: background-color var(--transition-duration);
         }
-
         .remove-button:hover {
-            background-color: #c82333;
+            background-color: #e05090;
         }
 
+        /* Summary */
         .cart-summary {
-            margin-top: 1rem;
-            padding: 1rem;
-            border: 1px solid #ccc;
-            border-radius: 8px;
-            background-color: #f9f9f9;
+            background-color: var(--color-card-light);
+            padding: var(--space-m);
+            border-radius: 10px;
+            box-shadow: var(--shadow-light);
+            margin-top: var(--space-l);
+            text-align: right;
+            transition: background-color var(--transition-duration), box-shadow var(--transition-duration);
+        }
+        .dark-mode .cart-summary {
+            background-color: var(--color-card-dark);
+            box-shadow: var(--shadow-dark);
         }
 
         .total-price {
-            font-weight: bold;
             font-size: 1.2rem;
-            text-align: right;
+            font-weight: bold;
+            color: var(--color-accent);
         }
 
+        /* Checkout Button */
         .checkout-button {
-            background-color: #28a745;
-            color: #fff;
+            background-color: var(--color-primary);
+            color: var(--color-text-light);
             border: none;
-            padding: 1rem 2rem;
+            padding: var(--space-m) var(--space-l);
+            border-radius: 10px;
             cursor: pointer;
-            border-radius: 4px;
-            font-size: 1rem;
+            font-size: 1.1rem;
+            transition: background-color var(--transition-duration), transform var(--transition-duration);
             display: block;
             width: 100%;
-            margin-top: 1rem;
             text-align: center;
+            margin-top: var(--space-m);
         }
-
         .checkout-button:hover {
-            background-color: #218838;
+            background-color: #5c4ca5;
+            transform: translateY(-2px);
         }
 
-        footer {
-            background-color: #333;
-            color: #fff;
-            text-align: center;
-            padding: 1rem 0;
-            margin-top: 1rem;
-        }
-
-        @media (max-width: 600px) {
-            .cart-item {
-                grid-template-columns: 1fr;
-                text-align: center;
-            }
-
-            .item-image {
-                width: 100%;
-                height: auto;
-                aspect-ratio: 1/1;
-                margin-bottom: 0.5rem;
-            }
-
-            .item-details {
-                margin-bottom: 0.5rem;
-            }
-
-            .quantity-controls {
-                justify-content: center;
+        /* Mobile Responsiveness */
+        @media (min-width: 768px) {
+            .cart-container {
+                grid-template-columns: repeat(2, 1fr);
             }
         }
+
+        @media (min-width: 1024px) {
+            .cart-container {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+        /* Dark Mode Toggle */
+        .theme-toggle {
+            position: fixed;
+            top: var(--space-m);
+            right: var(--space-m);
+            background-color: var(--color-primary);
+            color: var(--color-text-light);
+            border: none;
+            padding: var(--space-s) var(--space-m);
+            border-radius: 50px;
+            cursor: pointer;
+            z-index: 10;
+            transition: background-color var(--transition-duration);
+        }
+        .theme-toggle:hover {
+            background-color: #5c4ca5;
+        }
+        .theme-toggle::before {
+            content: '☀️'; /* Light mode icon */
+            margin-right: var(--space-xs);
+        }
+        .dark-mode .theme-toggle::before {
+            content: '🌙'; /* Dark mode icon */
+        }
+
     </style>
 </head>
 <body>
+    <button class="theme-toggle" onclick="toggleDarkMode()">Toggle Theme</button>
+
     <header>
-        <h1>Shopping Cart</h1>
+        <h1>Your Shopping Cart</h1>
     </header>
 
-    <main>
-        <div class="cart-container">
-            <div class="cart-item" data-item-id="1">
-                <div class="item-image">Item 1</div>
+    <div class="container">
+        <section class="cart-container">
+            <!-- Cart Item 1 -->
+            <article class="cart-item" data-item-id="1">
+                <div class="item-image">📦</div>
                 <div class="item-details">
-                    <div class="item-title">Product Name 1</div>
-                    <p>Description of the product goes here.</p>
+                    <div class="item-name">Product A</div>
+                    <div class="item-price">$25.00</div>
                 </div>
-                <div class="item-price">$25.00</div>
                 <div class="quantity-controls">
-                    <button class="quantity-button" onclick="updateQuantity(this, -1)">-</button>
-                    <input type="number" class="quantity-input" value="1" min="1" onchange="handleQuantityChange(this)">
-                    <button class="quantity-button" onclick="updateQuantity(this, 1)">+</button>
+                    <button aria-label="Decrease quantity" onclick="changeQuantity(this, -1)">-</button>
+                    <input type="number" class="quantity-input" value="1" min="1" aria-label="Quantity">
+                    <button aria-label="Increase quantity" onclick="changeQuantity(this, 1)">+</button>
                 </div>
                 <button class="remove-button" onclick="removeItem(this)">Remove</button>
-            </div>
+            </article>
 
-            <div class="cart-item" data-item-id="2">
-                <div class="item-image">Item 2</div>
+            <!-- Cart Item 2 -->
+            <article class="cart-item" data-item-id="2">
+                <div class="item-image">🎁</div>
                 <div class="item-details">
-                    <div class="item-title">Product Name 2</div>
-                    <p>Another product description.</p>
+                    <div class="item-name">Product B</div>
+                    <div class="item-price">$15.00</div>
                 </div>
-                <div class="item-price">$15.00</div>
                 <div class="quantity-controls">
-                    <button class="quantity-button" onclick="updateQuantity(this, -1)">-</button>
-                    <input type="number" class="quantity-input" value="2" min="1" onchange="handleQuantityChange(this)">
-                    <button class="quantity-button" onclick="updateQuantity(this, 1)">+</button>
+                    <button aria-label="Decrease quantity" onclick="changeQuantity(this, -1)">-</button>
+                    <input type="number" class="quantity-input" value="2" min="1" aria-label="Quantity">
+                    <button aria-label="Increase quantity" onclick="changeQuantity(this, 1)">+</button>
                 </div>
                 <button class="remove-button" onclick="removeItem(this)">Remove</button>
-            </div>
+            </article>
+             <!-- Cart Item 3 -->
+             <article class="cart-item" data-item-id="3">
+                <div class="item-image">💎</div>
+                <div class="item-details">
+                    <div class="item-name">Product C</div>
+                    <div class="item-price">$40.00</div>
+                </div>
+                <div class="quantity-controls">
+                    <button aria-label="Decrease quantity" onclick="changeQuantity(this, -1)">-</button>
+                    <input type="number" class="quantity-input" value="1" min="1" aria-label="Quantity">
+                    <button aria-label="Increase quantity" onclick="changeQuantity(this, 1)">+</button>
+                </div>
+                <button class="remove-button" onclick="removeItem(this)">Remove</button>
+            </article>
+        </section>
 
-            <div class="cart-summary">
-                <p class="total-price">Total: $0.00</p>
-                <button class="checkout-button" onclick="checkout()">Checkout</button>
-            </div>
+        <div class="cart-summary">
+            <p>Subtotal: <span id="subtotal">$0.00</span></p>
+            <p>Shipping: Free</p>
+            <p class="total-price">Total: <span id="total">$0.00</span></p>
+            <button class="checkout-button" onclick="alert('Checkout functionality not implemented.')">Proceed to Checkout</button>
         </div>
-    </main>
-
-    <footer>
-        <p>&copy; 2024 Shopping Cart</p>
-    </footer>
+    </div>
 
     <script>
-        function updateQuantity(button, change) {
+        // Dark Mode Toggle
+        function toggleDarkMode() {
+            document.body.classList.toggle('dark-mode');
+        }
+
+        // Quantity Change Function
+        function changeQuantity(button, change) {
             const input = button.parentNode.querySelector('.quantity-input');
             let quantity = parseInt(input.value);
-
             quantity += change;
 
             if (quantity < 1) {
-                quantity = 1;
+                quantity = 1; // Prevent quantity from going below 1
             }
 
             input.value = quantity;
-            updateTotalPrice();
+            updateSubtotal();
         }
 
-        function handleQuantityChange(input) {
-            let quantity = parseInt(input.value);
-            if (isNaN(quantity) || quantity < 1) {
-                input.value = 1;
-                quantity = 1;
-            }
-            updateTotalPrice();
-        }
-
+        // Remove Item Function
         function removeItem(button) {
             const item = button.closest('.cart-item');
             item.remove();
-            updateTotalPrice();
+            updateSubtotal();
         }
 
-        function updateTotalPrice() {
-            let total = 0;
-            const items = document.querySelectorAll('.cart-item');
+        // Update Subtotal and Total Functions
+        function updateSubtotal() {
+            let subtotal = 0;
 
-            items.forEach(item => {
-                const priceStr = item.querySelector('.item-price').textContent.replace('$', '');
+            document.querySelectorAll('.cart-item').forEach(item => {
+                const priceText = item.querySelector('.item-price').textContent;
+                const price = parseFloat(priceText.replace('$', ''));
                 const quantity = parseInt(item.querySelector('.quantity-input').value);
-                const price = parseFloat(priceStr);
-
-                if (!isNaN(price) && !isNaN(quantity)) {
-                    total += price * quantity;
-                }
+                subtotal += price * quantity;
             });
 
-            document.querySelector('.total-price').textContent = `Total: $${total.toFixed(2)}`;
+            document.getElementById('subtotal').textContent = '$' + subtotal.toFixed(2);
+            document.getElementById('total').textContent = '$' + subtotal.toFixed(2); // Assuming no tax or shipping is applied in this example
         }
 
-        function checkout() {
-            alert('Checkout functionality will be implemented here.  For now, this is a placeholder.');
-        }
+        // Initial update on page load
+        updateSubtotal();
 
-        updateTotalPrice(); // Initial update on page load
     </script>
 </body>
 </html>
