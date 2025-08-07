@@ -3,11 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login & Registration</title>
+    <title>Login</title>
     <style>
         body {
             font-family: sans-serif;
             margin: 0;
+            padding: 0;
             background-color: #f4f4f4;
             display: flex;
             justify-content: center;
@@ -19,18 +20,9 @@
             background-color: #fff;
             border-radius: 8px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            overflow: hidden;
+            padding: 20px;
             width: 100%;
-            max-width: 800px;
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 0px;
-            padding: 20px;
-            box-sizing: border-box;
-        }
-
-        .form-section {
-            padding: 20px;
+            max-width: 400px;
         }
 
         h2 {
@@ -45,22 +37,23 @@
 
         label {
             display: block;
-            font-weight: bold;
             margin-bottom: 5px;
+            font-weight: bold;
+            color: #555;
         }
 
-        input[type="text"],
         input[type="email"],
         input[type="password"] {
             width: 100%;
             padding: 10px;
             border: 1px solid #ccc;
             border-radius: 4px;
-            box-sizing: border-box;
+            font-size: 16px;
+            box-sizing: border-box; /* Important for padding to not increase width */
         }
 
         button {
-            background-color: #007bff;
+            background-color: #4CAF50;
             color: white;
             padding: 12px 20px;
             border: none;
@@ -71,218 +64,86 @@
         }
 
         button:hover {
-            background-color: #0056b3;
+            background-color: #45a049;
         }
 
-        .switch-form {
+        .links {
             text-align: center;
             margin-top: 15px;
         }
 
-        .switch-form a {
+        .links a {
             color: #007bff;
             text-decoration: none;
+            margin: 0 10px;
         }
 
-        .switch-form a:hover {
+        .links a:hover {
             text-decoration: underline;
         }
 
         .error-message {
             color: red;
-            margin-top: 5px;
+            margin-top: 10px;
+            text-align: center;
         }
-
-        #password-reset-form {
-            display: none;
-            margin-top: 20px;
-        }
-
-        #password-reset-form label,
-        #password-reset-form input,
-        #password-reset-form button {
-            width: 100%;
-            margin-bottom: 10px;
-        }
-
-
-        @media (max-width: 768px) {
-            .container {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        .image-section {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background-color: #f0f8ff; /* Light blue background */
-            padding: 20px;
-        }
-
-        .image-section img {
-            max-width: 100%;
-            height: auto;
-            border-radius: 8px;
-        }
-
-
     </style>
 </head>
 <body>
-
     <div class="container">
-        <div class="image-section">
-            <img src="https://via.placeholder.com/400x300" alt="Login Image">
-        </div>
-
-        <div class="form-section">
-            <div id="login-form">
-                <h2>Login</h2>
-                <div class="form-group">
-                    <label for="login-username">Username:</label>
-                    <input type="text" id="login-username" name="login-username">
-                </div>
-                <div class="form-group">
-                    <label for="login-password">Password:</label>
-                    <input type="password" id="login-password" name="login-password">
-                </div>
-                <div class="error-message" id="login-error"></div>
-                <button onclick="login()">Login</button>
-                <div class="switch-form">
-                    <a href="#" onclick="showRegistration()">Don't have an account? Register</a>
-                </div>
-                <div class="switch-form">
-                    <a href="#" onclick="showPasswordReset()">Forgot Password?</a>
-                </div>
+        <h2>Login</h2>
+        <form id="loginForm">
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" required>
             </div>
-
-
-            <div id="registration-form" style="display: none;">
-                <h2>Register</h2>
-                <div class="form-group">
-                    <label for="register-username">Username:</label>
-                    <input type="text" id="register-username" name="register-username">
-                </div>
-                <div class="form-group">
-                    <label for="register-email">Email:</label>
-                    <input type="email" id="register-email" name="register-email">
-                </div>
-                <div class="form-group">
-                    <label for="register-password">Password:</label>
-                    <input type="password" id="register-password" name="register-password">
-                </div>
-                <div class="error-message" id="registration-error"></div>
-                <button onclick="register()">Register</button>
-                <div class="switch-form">
-                    <a href="#" onclick="showLogin()">Already have an account? Login</a>
-                </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" required>
             </div>
-
-            <div id="password-reset-form" style="display: none;">
-                <h2>Reset Password</h2>
-                <div class="form-group">
-                    <label for="reset-email">Email:</label>
-                    <input type="email" id="reset-email" name="reset-email">
-                </div>
-                <div class="error-message" id="reset-error"></div>
-                <button onclick="resetPassword()">Reset Password</button>
-                <div class="switch-form">
-                    <a href="#" onclick="showLogin()">Back to Login</a>
-                </div>
-            </div>
+            <button type="submit">Login</button>
+            <div class="error-message" id="errorMessage"></div>
+        </form>
+        <div class="links">
+            <a href="#">Forgot Password?</a>
+            <a href="#">Create Account</a>
         </div>
     </div>
 
-
     <script>
-        function showLogin() {
-            document.getElementById('login-form').style.display = 'block';
-            document.getElementById('registration-form').style.display = 'none';
-            document.getElementById('password-reset-form').style.display = 'none';
-            document.getElementById('login-error').textContent = '';
-            document.getElementById('registration-error').textContent = '';
-            document.getElementById('reset-error').textContent = '';
-        }
+        document.getElementById('loginForm').addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevent the default form submission
 
-        function showRegistration() {
-            document.getElementById('login-form').style.display = 'none';
-            document.getElementById('registration-form').style.display = 'block';
-            document.getElementById('password-reset-form').style.display = 'none';
-            document.getElementById('login-error').textContent = '';
-            document.getElementById('registration-error').textContent = '';
-            document.getElementById('reset-error').textContent = '';
-        }
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const errorMessageElement = document.getElementById('errorMessage');
 
-        function showPasswordReset() {
-            document.getElementById('login-form').style.display = 'none';
-            document.getElementById('registration-form').style.display = 'none';
-            document.getElementById('password-reset-form').style.display = 'block';
-            document.getElementById('login-error').textContent = '';
-            document.getElementById('registration-error').textContent = '';
-            document.getElementById('reset-error').textContent = '';
-        }
-
-        function login() {
-            const username = document.getElementById('login-username').value;
-            const password = document.getElementById('login-password').value;
-            const loginError = document.getElementById('login-error');
-
-            if (!username || !password) {
-                loginError.textContent = "Please enter both username and password.";
+            // Basic client-side validation (can be enhanced)
+            if (!email || !password) {
+                errorMessageElement.textContent = 'Please enter both email and password.';
                 return;
             }
 
-            // In a real application, you would make an API call here
-            // to validate the credentials.  For this example, just
-            // provide basic validation.
+            // Simulate authentication (replace with actual API call)
+            // In a real application, you would send a request to your backend server
+            // to validate the credentials.  For this example, we'll just simulate
+            const users = [
+                { email: "test@example.com", password: "password123" },
+                { email: "user@domain.net", password: "securepass" }
+            ];
 
-            if (username === "testuser" && password === "password") {
-                loginError.textContent = "Login successful! (Simulated)";
-                // Here, you would redirect the user to another page
-                // or update the UI to reflect a logged-in state.
+            const user = users.find(u => u.email === email && u.password === password);
+
+            if (user) {
+                errorMessageElement.textContent = ''; // Clear any previous errors
+                // Simulate session management (replace with actual session management on the backend)
+                alert('Login successful! (Simulated)');
+                //Redirect or update page content as appropriate. For example:
+                //window.location.href = "dashboard.html"; // Example redirect.  Dashboard.html would need to be created.
             } else {
-                loginError.textContent = "Invalid username or password.";
+                errorMessageElement.textContent = 'Invalid email or password.';
             }
-        }
-
-        function register() {
-            const username = document.getElementById('register-username').value;
-            const email = document.getElementById('register-email').value;
-            const password = document.getElementById('register-password').value;
-            const registrationError = document.getElementById('registration-error');
-
-            if (!username || !email || !password) {
-                registrationError.textContent = "Please fill in all fields.";
-                return;
-            }
-
-            //  More robust validation would be useful
-
-            if (!email.includes('@')) {
-                registrationError.textContent = "Please enter a valid email address.";
-                return;
-            }
-
-            registrationError.textContent = "Registration successful! (Simulated)";
-        }
-
-        function resetPassword() {
-            const email = document.getElementById('reset-email').value;
-            const resetError = document.getElementById('reset-error');
-
-            if (!email) {
-                resetError.textContent = "Please enter your email address.";
-                return;
-            }
-
-            if (!email.includes('@')) {
-                resetError.textContent = "Please enter a valid email address.";
-                return;
-            }
-
-            resetError.textContent = "Password reset instructions sent to your email (Simulated)";
-        }
+        });
 
     </script>
 </body>

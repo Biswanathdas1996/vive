@@ -11,7 +11,6 @@
             padding: 0;
             background-color: #f4f4f4;
             color: #333;
-            line-height: 1.6;
         }
 
         .container {
@@ -23,17 +22,13 @@
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
 
-        header {
-            text-align: center;
-            margin-bottom: 20px;
-        }
-
         h1 {
+            text-align: center;
             color: #007bff;
         }
 
         .order-details {
-            margin-bottom: 20px;
+            margin-top: 20px;
             border: 1px solid #ddd;
             padding: 15px;
             border-radius: 4px;
@@ -43,143 +38,69 @@
             margin: 5px 0;
         }
 
-        .order-details strong {
-            font-weight: bold;
-        }
-
-        .product-list {
-            list-style: none;
-            padding: 0;
-        }
-
-        .product-list li {
-            margin-bottom: 10px;
-            padding: 10px;
-            border: 1px solid #eee;
-            border-radius: 4px;
-            background-color: #f9f9f9;
-        }
-
-        .product-list li strong {
-            display: block;
-            margin-bottom: 5px;
-        }
-
-        .product-list li span {
-            color: #555;
-        }
-
         .thank-you {
             text-align: center;
-            font-style: italic;
-            margin-top: 20px;
-            color: #666;
+            margin-top: 30px;
+            font-size: 1.2em;
         }
 
-        /* Responsive Design */
+        .order-history-link {
+            display: block;
+            text-align: center;
+            margin-top: 20px;
+            color: #007bff;
+            text-decoration: none;
+        }
+
+        .order-history-link:hover {
+            text-decoration: underline;
+        }
+
+        /* Media Queries for Responsiveness */
         @media (max-width: 600px) {
             .container {
                 margin: 10px;
+                padding: 15px;
+            }
+
+            h1 {
+                font-size: 1.8em;
+            }
+
+            .order-details {
                 padding: 10px;
             }
-            h1 {
-                font-size: 1.5em;
+
+            .thank-you {
+                font-size: 1em;
             }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <header>
-            <h1>Order Confirmation</h1>
-        </header>
+        <h1>Order Confirmation</h1>
 
         <div class="order-details">
-            <p><strong>Confirmation Number:</strong> <span id="confirmation-number"></span></p>
-            <p><strong>Order Date:</strong> <span id="order-date"></span></p>
+            <h2>Order Details:</h2>
+            <p><strong>Order Number:</strong> #12345</p>
+            <p><strong>Date:</strong> October 26, 2023</p>
+            <p><strong>Items:</strong></p>
+            <ul>
+                <li>Product A - Quantity: 1</li>
+                <li>Product B - Quantity: 2</li>
+            </ul>
             <p><strong>Shipping Address:</strong></p>
-            <address id="shipping-address">
-                <!-- Shipping address will be inserted here -->
-            </address>
+            <p>123 Main St, Anytown, USA</p>
+            <p><strong>Total:</strong> $75.00</p>
         </div>
 
-        <h2>Order Summary</h2>
-        <ul class="product-list" id="product-list">
-            <!-- Product items will be inserted here -->
-        </ul>
-
-        <div class="order-details">
-            <p><strong>Subtotal:</strong> $<span id="subtotal">0.00</span></p>
-            <p><strong>Shipping:</strong> $<span id="shipping">0.00</span></p>
-            <p><strong>Tax:</strong> $<span id="tax">0.00</span></p>
-            <p><strong>Total:</strong> $<span id="total">0.00</span></p>
+        <div class="thank-you">
+            <p>Thank you for your order!</p>
+            <p>Your order has been confirmed and is being processed.</p>
         </div>
 
-
-        <p class="thank-you">Thank you for your order!</p>
+        <a href="#" class="order-history-link">View Order History</a>
     </div>
-
-    <script>
-        // Simulate order data (replace with actual data from checkout)
-        const orderData = {
-            confirmationNumber: generateConfirmationNumber(),
-            orderDate: new Date().toLocaleDateString(),
-            shippingAddress: {
-                name: "John Doe",
-                street: "123 Main St",
-                city: "Anytown",
-                state: "CA",
-                zip: "91234",
-                country: "USA"
-            },
-            products: [
-                { name: "Product A", quantity: 2, price: 25.00 },
-                { name: "Product B", quantity: 1, price: 50.00 }
-            ],
-            subtotal: 100.00,
-            shipping: 10.00,
-            tax: 5.00,
-            total: 115.00
-        };
-
-        // Function to generate a random confirmation number
-        function generateConfirmationNumber() {
-            return Math.random().toString(36).substring(2, 15).toUpperCase();
-        }
-
-
-        // Function to populate the order details
-        function populateOrderDetails(data) {
-            document.getElementById('confirmation-number').textContent = data.confirmationNumber;
-            document.getElementById('order-date').textContent = data.orderDate;
-
-            const shippingAddressHTML = `
-                ${data.shippingAddress.name}<br>
-                ${data.shippingAddress.street}<br>
-                ${data.shippingAddress.city}, ${data.shippingAddress.state} ${data.shippingAddress.zip}<br>
-                ${data.shippingAddress.country}
-            `;
-            document.getElementById('shipping-address').innerHTML = shippingAddressHTML;
-
-            const productList = document.getElementById('product-list');
-            data.products.forEach(product => {
-                const listItem = document.createElement('li');
-                listItem.innerHTML = `
-                    <strong>${product.name}</strong>
-                    <span>Quantity: ${product.quantity}</span><br>
-                    <span>Price: $${(product.price * product.quantity).toFixed(2)}</span>
-                `;
-                productList.appendChild(listItem);
-            });
-
-            document.getElementById('subtotal').textContent = data.subtotal.toFixed(2);
-            document.getElementById('shipping').textContent = data.shipping.toFixed(2);
-            document.getElementById('tax').textContent = data.tax.toFixed(2);
-            document.getElementById('total').textContent = data.total.toFixed(2);
-        }
-
-        // Call the function to populate the details with the simulated data
-        populateOrderDetails(orderData);
-    </script>
 </body>
 </html>

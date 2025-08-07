@@ -6,7 +6,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { useToast } from "@/hooks/use-toast";
-import { Send, Trash2, Download, Brain, Search, Table, Cog, CheckCircle, Loader } from "lucide-react";
+import { Send, Trash2, Download, Brain, Search, Table, Cog, CheckCircle, Loader, ChevronUp, ChevronDown } from "lucide-react";
 
 interface ChatInterfaceProps {
   projectId: string | null;
@@ -37,6 +37,7 @@ export function ChatInterface({
   const [inputValue, setInputValue] = useState("");
   const [isGenerating, setIsGenerating] = useState(false);
   const [currentWorkflow, setCurrentWorkflow] = useState<any>(null);
+  const [isHeaderCollapsed, setIsHeaderCollapsed] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const queryClient = useQueryClient();
   const { toast } = useToast();
@@ -230,29 +231,53 @@ export function ChatInterface({
   return (
     <div className="flex-1 flex flex-col bg-slate-950">
       {/* Chat Header */}
-      <div className="bg-slate-900 border-b border-slate-700 px-6 py-4">
+      <div className={`bg-slate-900 border-b border-slate-700 transition-all duration-300 ${isHeaderCollapsed ? 'px-6 py-2' : 'px-6 py-4'}`}>
         <div className="flex items-center justify-between">
-          <div>
-            <h2 className="text-lg font-semibold">Agentic Chat Interface</h2>
-            <p className="text-sm text-slate-400">Describe your web application and watch it come to life</p>
-          </div>
+          {!isHeaderCollapsed && (
+            <div>
+              <h2 className="text-lg font-semibold">Agentic Chat Interface</h2>
+              <p className="text-sm text-slate-400">Describe your web application and watch it come to life</p>
+            </div>
+          )}
+          {isHeaderCollapsed && (
+            <div className="flex items-center space-x-2">
+              <Brain className="w-4 h-4 text-blue-400" />
+              <span className="text-sm font-medium text-slate-300">Chat</span>
+            </div>
+          )}
           <div className="flex items-center space-x-2">
+            {!isHeaderCollapsed && (
+              <>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={clearChat}
+                  className="bg-slate-800 hover:bg-slate-700 border-slate-600"
+                >
+                  <Trash2 className="w-4 h-4 mr-2" />
+                  Clear Chat
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="bg-blue-600 hover:bg-blue-700 border-blue-600"
+                >
+                  <Download className="w-4 h-4 mr-2" />
+                  Export
+                </Button>
+              </>
+            )}
             <Button
-              variant="outline"
+              variant="ghost"
               size="sm"
-              onClick={clearChat}
-              className="bg-slate-800 hover:bg-slate-700 border-slate-600"
+              onClick={() => setIsHeaderCollapsed(!isHeaderCollapsed)}
+              className="p-1 hover:bg-slate-800"
             >
-              <Trash2 className="w-4 h-4 mr-2" />
-              Clear Chat
-            </Button>
-            <Button
-              variant="outline"
-              size="sm"
-              className="bg-blue-600 hover:bg-blue-700 border-blue-600"
-            >
-              <Download className="w-4 h-4 mr-2" />
-              Export
+              {isHeaderCollapsed ? (
+                <ChevronDown className="w-4 h-4 text-slate-400" />
+              ) : (
+                <ChevronUp className="w-4 h-4 text-slate-400" />
+              )}
             </Button>
           </div>
         </div>

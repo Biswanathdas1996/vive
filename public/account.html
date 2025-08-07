@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>User Account Dashboard</title>
+    <title>User Account</title>
     <style>
         body {
             font-family: sans-serif;
@@ -11,10 +11,11 @@
             padding: 0;
             background-color: #f4f4f4;
             color: #333;
+            line-height: 1.6;
         }
 
         .container {
-            max-width: 1200px;
+            max-width: 960px;
             margin: 20px auto;
             padding: 20px;
             background-color: #fff;
@@ -23,241 +24,134 @@
         }
 
         header {
+            background-color: #333;
+            color: #fff;
+            padding: 1rem 0;
             text-align: center;
             margin-bottom: 20px;
         }
 
-        h1 {
-            color: #007bff;
+        h1, h2 {
+            margin-bottom: 10px;
         }
 
-        .dashboard {
-            display: grid;
-            grid-template-columns: 1fr 3fr;
-            gap: 20px;
+        .profile-section, .order-history-section {
+            margin-bottom: 30px;
         }
 
-        .sidebar {
-            background-color: #eee;
-            padding: 15px;
-            border-radius: 8px;
+        .profile-info {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
         }
 
-        .sidebar ul {
-            list-style: none;
-            padding: 0;
+        .profile-info p {
             margin: 0;
         }
 
-        .sidebar li {
-            margin-bottom: 10px;
-        }
-
-        .sidebar a {
-            text-decoration: none;
-            color: #333;
-            display: block;
-            padding: 10px;
-            border-radius: 5px;
-            transition: background-color 0.2s ease;
-        }
-
-        .sidebar a:hover {
-            background-color: #ddd;
-        }
-
-        .content {
-            padding: 15px;
-            border-radius: 8px;
-            background-color: #fff;
-            box-shadow: 0 0 5px rgba(0, 0, 0, 0.05);
-        }
-
-        .account-info, .order-history, .profile-form {
-            margin-bottom: 20px;
-        }
-
-        .account-info h2, .order-history h2, .profile-form h2 {
-            border-bottom: 1px solid #ccc;
-            padding-bottom: 10px;
-            margin-bottom: 15px;
-        }
-
-        .order-item {
-            border: 1px solid #ccc;
-            padding: 10px;
-            margin-bottom: 10px;
-            border-radius: 5px;
-        }
-
-        .profile-form label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: bold;
-        }
-
-        .profile-form input[type="text"],
-        .profile-form input[type="email"] {
-            width: 100%;
-            padding: 8px;
-            margin-bottom: 10px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            box-sizing: border-box;
-        }
-
-        .profile-form button {
+        .update-link {
+            display: inline-block;
             background-color: #007bff;
             color: #fff;
-            padding: 10px 15px;
-            border: none;
+            padding: 8px 15px;
+            text-decoration: none;
             border-radius: 4px;
-            cursor: pointer;
             transition: background-color 0.2s ease;
         }
 
-        .profile-form button:hover {
+        .update-link:hover {
             background-color: #0056b3;
         }
 
+        .order-history-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .order-history-table th, .order-history-table td {
+            padding: 10px;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+
+        .order-history-table th {
+            background-color: #f2f2f2;
+            font-weight: bold;
+        }
+
         @media (max-width: 768px) {
-            .dashboard {
-                grid-template-columns: 1fr;
+            .container {
+                padding: 10px;
             }
-            .sidebar {
-                margin-bottom: 20px;
+
+            .order-history-table {
+                display: block;
+                overflow-x: auto;
+            }
+
+            .order-history-table th, .order-history-table td {
+                white-space: nowrap;
             }
         }
     </style>
 </head>
 <body>
+    <header>
+        <h1>User Account</h1>
+    </header>
+
     <div class="container">
-        <header>
-            <h1>User Account Dashboard</h1>
-        </header>
+        <section class="profile-section">
+            <h2>Profile Information</h2>
+            <div class="profile-info">
+                <p><strong>Name:</strong> John Doe</p>
+                <p><strong>Email:</strong> john.doe@example.com</p>
+                <p><strong>Joined:</strong> January 1, 2023</p>
+                <a href="#" class="update-link">Update Profile</a>
+            </div>
+        </section>
 
-        <div class="dashboard">
-            <aside class="sidebar">
-                <ul>
-                    <li><a href="#" data-section="account-info">Account Information</a></li>
-                    <li><a href="#" data-section="order-history">Order History</a></li>
-                    <li><a href="#" data-section="profile-form">Update Profile</a></li>
-                </ul>
-            </aside>
-
-            <main class="content">
-                <section class="account-info">
-                    <h2>Account Information</h2>
-                    <p><strong>Username:</strong> <span id="username">john.doe</span></p>
-                    <p><strong>Email:</strong> <span id="email">john.doe@example.com</span></p>
-                </section>
-
-                <section class="order-history" style="display:none;">
-                    <h2>Order History</h2>
-                    <div id="order-list">
-                        <!-- Orders will be dynamically added here -->
-                    </div>
-                </section>
-
-                <section class="profile-form" style="display:none;">
-                    <h2>Update Profile</h2>
-                    <form id="profileForm">
-                        <label for="newUsername">Username:</label>
-                        <input type="text" id="newUsername" name="newUsername">
-
-                        <label for="newEmail">Email:</label>
-                        <input type="email" id="newEmail" name="newEmail">
-
-                        <button type="submit">Update Profile</button>
-                    </form>
-                </section>
-            </main>
-        </div>
+        <section class="order-history-section">
+            <h2>Order History</h2>
+            <table class="order-history-table">
+                <thead>
+                    <tr>
+                        <th>Order #</th>
+                        <th>Date</th>
+                        <th>Items</th>
+                        <th>Total</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>#12345</td>
+                        <td>2023-12-01</td>
+                        <td>Item A, Item B</td>
+                        <td>$50.00</td>
+                        <td>Shipped</td>
+                    </tr>
+                    <tr>
+                        <td>#12346</td>
+                        <td>2023-11-15</td>
+                        <td>Item C</td>
+                        <td>$25.00</td>
+                        <td>Delivered</td>
+                    </tr>
+                    <tr>
+                        <td>#12347</td>
+                        <td>2023-10-20</td>
+                        <td>Item A, Item D</td>
+                        <td>$75.00</td>
+                        <td>Cancelled</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
     </div>
 
     <script>
-        // Sample data (replace with actual data fetching)
-        const orders = [
-            { orderId: 'ORD-001', date: '2023-11-15', total: '$50.00' },
-            { orderId: 'ORD-002', date: '2023-11-10', total: '$75.00' },
-            { orderId: 'ORD-003', date: '2023-11-05', total: '$25.00' }
-        ];
-
-        // DOM Elements
-        const sidebarLinks = document.querySelectorAll('.sidebar a');
-        const contentSections = document.querySelectorAll('.content section');
-        const orderList = document.getElementById('order-list');
-        const profileForm = document.getElementById('profileForm');
-        const usernameSpan = document.getElementById('username');
-        const emailSpan = document.getElementById('email');
-
-        // Function to hide all content sections
-        function hideAllSections() {
-            contentSections.forEach(section => {
-                section.style.display = 'none';
-            });
-        }
-
-        // Function to show a specific section
-        function showSection(sectionId) {
-            hideAllSections();
-            const sectionToShow = document.querySelector(`.content section.${sectionId}`);
-            if (sectionToShow) {
-                sectionToShow.style.display = 'block';
-            }
-        }
-
-        // Function to populate order history
-        function populateOrderHistory() {
-            orderList.innerHTML = '';
-            orders.forEach(order => {
-                const orderItem = document.createElement('div');
-                orderItem.classList.add('order-item');
-                orderItem.innerHTML = `
-                    <p><strong>Order ID:</strong> ${order.orderId}</p>
-                    <p><strong>Date:</strong> ${order.date}</p>
-                    <p><strong>Total:</strong> ${order.total}</p>
-                `;
-                orderList.appendChild(orderItem);
-            });
-        }
-
-        // Event listener for sidebar links
-        sidebarLinks.forEach(link => {
-            link.addEventListener('click', (e) => {
-                e.preventDefault();
-                const sectionId = link.dataset.section;
-                showSection(sectionId);
-
-                if (sectionId === 'order-history') {
-                    populateOrderHistory();
-                }
-            });
-        });
-
-        // Event listener for profile form submission
-        profileForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            const newUsername = document.getElementById('newUsername').value;
-            const newEmail = document.getElementById('newEmail').value;
-
-            // Update displayed account information (replace with actual update logic)
-            if (newUsername) {
-                usernameSpan.textContent = newUsername;
-            }
-            if (newEmail) {
-                emailSpan.textContent = newEmail;
-            }
-
-            // Clear form fields
-            document.getElementById('newUsername').value = '';
-            document.getElementById('newEmail').value = '';
-
-            alert('Profile updated successfully!'); // or display a more sophisticated message
-        });
-
-        // Initialize - Show Account Info on load
-        showSection('account-info');
+        // No JavaScript functionality required beyond basic display in this example.
     </script>
 </body>
 </html>

@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Products</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            margin: 0;
+            background-color: #f4f4f4;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        header {
+            background-color: #333;
+            color: #fff;
+            padding: 10px 0;
+            text-align: center;
+        }
+
+        h1, h2 {
+            margin-bottom: 15px;
+        }
+
+        .product-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .product-item {
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+            padding: 15px;
+            border-radius: 8px;
+        }
+
+        .product-item img {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+            margin-bottom: 10px;
+            background-color: #ccc; /* Placeholder */
+        }
+
+        .product-item p {
+            margin-bottom: 5px;
+        }
+
+        .product-item .price {
+            font-weight: bold;
+            color: #007bff;
+        }
+
+        .product-item .actions {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 10px;
+        }
+
+        .product-item button {
+            background-color: #dc3545;
+            color: #fff;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .product-item button.edit {
+            background-color: #28a745;
+        }
+
+        form {
+            margin-top: 20px;
+            padding: 20px;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+        }
+
+        form label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        form input[type="text"],
+        form textarea,
+        form input[type="number"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        form button[type="submit"] {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Admin Products</h1>
+    </header>
+    <div class="container">
+        <h2>Product List</h2>
+        <div class="product-list" id="product-list">
+            <!-- Product items will be dynamically added here -->
+        </div>
+
+        <h2>Add/Edit Product</h2>
+        <form id="product-form">
+            <input type="hidden" id="product-id">
+            <div class="form-group">
+                <label for="name">Name:</label>
+                <input type="text" id="name" required>
+            </div>
+            <div class="form-group">
+                <label for="description">Description:</label>
+                <textarea id="description" rows="3" required></textarea>
+            </div>
+            <div class="form-group">
+                <label for="price">Price:</label>
+                <input type="number" id="price" step="0.01" required>
+            </div>
+            <div class="form-group">
+                <label for="image">Image:</label>
+                <input type="text" id="image"> <!-- Placeholder, could be image URL, file upload -->
+            </div>
+            <button type="submit">Save Product</button>
+        </form>
+    </div>
+
+    <script>
+        const productList = document.getElementById('product-list');
+        const productForm = document.getElementById('product-form');
+        const productIdInput = document.getElementById('product-id');
+        const nameInput = document.getElementById('name');
+        const descriptionInput = document.getElementById('description');
+        const priceInput = document.getElementById('price');
+        const imageInput = document.getElementById('image');
+        let products = []; // Array to store products
+
+        // Function to render product items
+        function renderProducts() {
+            productList.innerHTML = '';
+            products.forEach(product => {
+                const productItem = document.createElement('div');
+                productItem.classList.add('product-item');
+                productItem.innerHTML = `
+                    <img src="" alt="Product Image">
+                    <p><strong>${product.name}</strong></p>
+                    <p>${product.description}</p>
+                    <p class="price">$${product.price.toFixed(2)}</p>
+                    <div class="actions">
+                        <button class="edit" data-id="${product.id}">Edit</button>
+                        <button class="delete" data-id="${product.id}">Delete</button>
+                    </div>
+                `;
+                productList.appendChild(productItem);
+            });
+        }
+
+        // Function to handle editing a product
+        function handleEdit(productId) {
+            const product = products.find(p => p.id === productId);
+            if (product) {
+                productIdInput.value = product.id;
+                nameInput.value = product.name;
+                descriptionInput.value = product.description;
+                priceInput.value = product.price;
+                imageInput.value = product.image;
+            }
+        }
+
+        // Function to handle deleting a product
+        function handleDelete(productId) {
+            products = products.filter(p => p.id !== productId);
+            renderProducts();
+        }
+
+        // Event listeners for edit and delete buttons
+        productList.addEventListener('click', (event) => {
+            if (event.target.classList.contains('edit')) {
+                const productId = parseInt(event.target.dataset.id);
+                handleEdit(productId);
+            } else if (event.target.classList.contains('delete')) {
+                const productId = parseInt(event.target.dataset.id);
+                handleDelete(productId);
+            }
+        });
+
+        // Function to save or update product
+        function saveProduct(event) {
+            event.preventDefault();
+            const id = productIdInput.value ? parseInt(productIdInput.value) : Date.now(); // Use Date.now() for new products
+            const name = nameInput.value;
+            const description = descriptionInput.value;
+            const price = parseFloat(priceInput.value);
+            const image = imageInput.value;
+
+            const product = {
+                id: id,
+                name: name,
+                description: description,
+                price: price,
+                image: image
+            };
+
+            if (productIdInput.value) { // Editing existing product
+                products = products.map(p => (p.id === id ? product : p));
+            } else { // Adding new product
+                products.push(product);
+            }
+
+            renderProducts();
+            productForm.reset(); // Clear the form
+            productIdInput.value = ""; // Reset the hidden id
+        }
+
+
+        // Event listener for form submission
+        productForm.addEventListener('submit', saveProduct);
+
+        // Initial dummy product data
+        products = [
+            { id: 1, name: "Product 1", description: "Description for product 1", price: 19.99, image: "" },
+            { id: 2, name: "Product 2", description: "Description for product 2", price: 29.99, image: "" },
+            { id: 3, name: "Product 3", description: "Description for product 3", price: 9.99, image: "" }
+        ];
+        renderProducts();
+    </script>
+</body>
+</html>
