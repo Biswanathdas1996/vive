@@ -3,203 +3,272 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Modern Landing Page</title>
+    <title>Modern Chat Interface</title>
     <style>
         :root {
-            /* Color Palette */
-            --primary-color: #89cff0; /* Light Blue */
-            --secondary-color: #f08080; /* Light Red */
-            --accent-color: #90ee90; /* Light Green */
-            --background-color: #f5f5f5; /* Light Gray */
-            --text-color: #333;
-            --muted-color: #777;
-            --border-color: rgba(0, 0, 0, 0.1);
-            --shadow-color: rgba(0, 0, 0, 0.15);
+            /* Colors */
+            --color-primary: #6C63FF; /* Vibrant Purple */
+            --color-secondary: #4CAF50; /* Complementary Green */
+            --color-accent: #FF4081; /* Hot Pink */
+            --color-background: #f0f0f5; /* Light Background */
+            --color-surface: #ffffff; /* White Surface */
+            --color-text: #333; /* Dark Text */
+            --color-text-light: #555; /* Lighter Text */
+            --color-border: rgba(0, 0, 0, 0.1); /* Subtle Border */
 
             /* Spacing */
-            --spacing-small: 0.5rem;
-            --spacing-medium: 1rem;
-            --spacing-large: 2rem;
+            --space-xs: 0.5rem;
+            --space-s: 0.75rem;
+            --space-m: 1rem;
+            --space-l: 1.5rem;
+            --space-xl: 2rem;
 
             /* Font */
-            --font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+            --font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            --font-size-base: 1rem;
+            --line-height: 1.6;
 
-            /* Border Radius */
-            --border-radius: 0.75rem;
+            /* Animation */
+            --transition-duration: 0.3s;
+        }
 
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
         }
 
         body {
             font-family: var(--font-family);
-            background-color: var(--background-color);
-            color: var(--text-color);
+            font-size: var(--font-size-base);
+            line-height: var(--line-height);
+            color: var(--color-text);
+            background-color: var(--color-background);
             margin: 0;
             padding: 0;
-            line-height: 1.6;
             display: flex;
             flex-direction: column;
             min-height: 100vh;
         }
 
-        /* Header */
-        header {
-            background: linear-gradient(to right, var(--primary-color), var(--accent-color));
-            color: white;
-            padding: var(--spacing-medium) var(--spacing-large);
-            box-shadow: 0px 2px 10px var(--shadow-color);
+        /* Typography */
+        h1, h2, h3, h4, h5, h6 {
+            font-weight: 600;
+            margin-top: var(--space-m);
+            margin-bottom: var(--space-s);
         }
 
-        header nav {
+        h1 { font-size: 2.5rem; }
+        h2 { font-size: 2rem; }
+        p {
+            margin-bottom: var(--space-m);
+        }
+        a {
+            color: var(--color-primary);
+            text-decoration: none;
+            transition: color var(--transition-duration) ease;
+        }
+
+        a:hover {
+            color: var(--color-accent);
+        }
+
+
+        /* Layout */
+        header, nav, main, footer {
+            padding: var(--space-l);
+        }
+
+        header {
+            background-color: var(--color-surface);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            z-index: 10;
+            position: sticky;
+            top: 0;
+        }
+
+        nav {
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
 
-        header nav a {
-            color: white;
-            text-decoration: none;
-            padding: var(--spacing-small) var(--spacing-medium);
-            border-radius: var(--border-radius);
-            transition: background-color 0.2s ease;
+        nav ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
         }
 
-        header nav a:hover {
-            background-color: rgba(255, 255, 255, 0.1);
+        nav li {
+            margin-left: var(--space-l);
         }
 
-        .logo {
-            font-size: 1.5rem;
-            font-weight: bold;
-        }
-
-        /* Main Content */
         main {
-            flex-grow: 1; /* Allows main to take remaining space */
-            padding: var(--spacing-large);
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: var(--spacing-large);
+            flex: 1;
+            display: flex;
+            flex-direction: column;
             align-items: center;
+            padding-top: var(--space-xl);
+            padding-bottom: var(--space-xl);
         }
 
-        @media (min-width: 768px) {
-            main {
-                grid-template-columns: repeat(2, 1fr);
-            }
-        }
-
-        .hero {
-            padding: var(--spacing-medium);
-            border-radius: var(--border-radius);
-            background-color: white;
-            box-shadow: 0px 5px 15px var(--shadow-color);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            overflow: hidden;
-        }
-
-        .hero:hover {
-            transform: translateY(-5px);
-            box-shadow: 0px 8px 20px var(--shadow-color);
-        }
-
-
-        .hero h1 {
-            font-size: 2.5rem;
-            margin-bottom: var(--spacing-medium);
-        }
-
-        .hero p {
-            font-size: 1.1rem;
-            color: var(--muted-color);
-            margin-bottom: var(--spacing-medium);
-        }
-
-        .cta-button {
-            display: inline-block;
-            padding: var(--spacing-medium) var(--spacing-large);
-            background-color: var(--primary-color);
-            color: white;
-            text-decoration: none;
-            border-radius: var(--border-radius);
-            font-weight: bold;
-            transition: background-color 0.2s ease;
-            box-shadow: 0px 3px 8px var(--shadow-color);
-        }
-
-        .cta-button:hover {
-            background-color: darken(var(--primary-color), 10%);
-        }
-
-        /* Shapes/Visuals */
-
-        .visual {
-            background: linear-gradient(135deg, var(--secondary-color), var(--primary-color));
-            border-radius: var(--border-radius);
-            height: 300px;
-            box-shadow: 0px 5px 15px var(--shadow-color);
-        }
-
-
-        /* Footer */
         footer {
-            background-color: #333;
-            color: white;
+            background-color: var(--color-surface);
             text-align: center;
-            padding: var(--spacing-medium);
+            font-size: 0.8rem;
+            color: var(--color-text-light);
+            border-top: 1px solid var(--color-border);
         }
 
-        /* Responsive adjustments */
-        @media (max-width: 767px) {
-            header nav {
+        /* Buttons */
+        .button {
+            display: inline-block;
+            padding: var(--space-m) var(--space-l);
+            background-color: var(--color-primary);
+            color: var(--color-surface);
+            border: none;
+            border-radius: 0.5rem;
+            text-decoration: none;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color var(--transition-duration) ease, transform var(--transition-duration) ease;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .button:hover {
+            background-color: var(--color-accent);
+            transform: translateY(-2px);
+        }
+
+        .button:active {
+            transform: translateY(0);
+        }
+
+
+        /* Sections and Articles */
+        section, article {
+            background-color: var(--color-surface);
+            border-radius: 1rem;
+            padding: var(--space-l);
+            margin-bottom: var(--space-l);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            width: 100%;
+            max-width: 800px;
+        }
+
+        section h2 {
+            margin-top: 0;
+        }
+
+        /* Features */
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: var(--space-l);
+        }
+
+        .feature-item {
+            padding: var(--space-l);
+            border-radius: 0.75rem;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.8) 0%, rgba(255, 255, 255, 0.5) 100%);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            backdrop-filter: blur(10px);
+        }
+
+        .feature-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background-color: var(--color-primary);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: var(--space-m);
+        }
+
+        .feature-icon::before {
+            content: '';
+            width: 24px;
+            height: 24px;
+            background-color: var(--color-surface);
+            border-radius: 50%;
+        }
+
+
+
+        /* Media Queries for Responsiveness */
+        @media (max-width: 768px) {
+            nav {
                 flex-direction: column;
                 align-items: flex-start;
             }
-            header nav a {
-                margin-bottom: var(--spacing-small);
+
+            nav ul {
+                margin-top: var(--space-m);
+                flex-direction: column;
             }
-            main {
-                padding: var(--spacing-medium);
+
+            nav li {
+                margin-left: 0;
+                margin-bottom: var(--space-s);
             }
-            .hero {
-                padding: var(--spacing-medium);
-            }
-            .hero h1 {
-                font-size: 2rem;
-            }
-            .visual {
-                height: 200px;
+
+            section, article {
+                padding: var(--space-m);
             }
         }
     </style>
 </head>
 <body>
-
     <header>
         <nav>
-            <a href="#" class="logo">My App</a>
             <div>
-                <a href="#">Features</a>
-                <a href="#">Pricing</a>
-                <a href="#">Login</a>
+                <h1>Chat Interface</h1>
             </div>
+            <ul>
+                <li><a href="#">About</a></li>
+                <li><a href="#">Settings</a></li>
+            </ul>
         </nav>
     </header>
 
     <main>
-        <section class="hero">
-            <h1>Welcome to My Awesome App</h1>
-            <p>Unlock your potential with our revolutionary platform.  Experience the future of [your domain] today!</p>
-            <a href="#" class="cta-button">Get Started</a>
+        <section>
+            <h2>Welcome to our Modern Chat Interface</h2>
+            <p>Experience seamless communication with our intuitive and feature-rich chat application. Connect with friends, family, or colleagues effortlessly.  Enjoy features like real-time messaging, file sharing, and more.</p>
+            <a href="#" class="button">Start Chatting</a>
         </section>
 
-        <div class="visual">
-            <!-- Placeholder for visual element -->
-        </div>
+        <section>
+            <h2>Key Features</h2>
+            <div class="feature-grid">
+                <div class="feature-item">
+                    <div class="feature-icon"></div>
+                    <h3>Real-time Messaging</h3>
+                    <p>Instant communication with fast message delivery.</p>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon"></div>
+                    <h3>File Sharing</h3>
+                    <p>Share documents, images, and other files with ease.</p>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon"></div>
+                    <h3>Group Chats</h3>
+                    <p>Create and manage group conversations.</p>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon"></div>
+                    <h3>Customizable Themes</h3>
+                    <p>Personalize your chat experience with various themes.</p>
+                </div>
+            </div>
+        </section>
     </main>
 
     <footer>
-        <p>&copy; 2024 My App. All rights reserved.</p>
+        <p>&copy; 2024 Modern Chat Interface</p>
     </footer>
-
 </body>
 </html>

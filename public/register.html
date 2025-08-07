@@ -3,143 +3,146 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Registration - Modern Web App</title>
+    <title>Registration</title>
     <style>
         :root {
-            /* Color Palette */
-            --color-primary: #62b87b;
-            --color-primary-light: #90c5a1;
-            --color-primary-dark: #4c8d5d;
-            --color-secondary: #f0d3a2;
-            --color-accent: #e6a891;
-            --color-background: #f4f4f9;
-            --color-text: #333;
-            --color-text-light: #555;
-            --color-border: rgba(0, 0, 0, 0.1);
-            --color-shadow: rgba(0, 0, 0, 0.15);
-
-            /* Spacing */
-            --space-xs: 0.5rem;
-            --space-s: 1rem;
-            --space-m: 1.5rem;
-            --space-l: 2rem;
-            --space-xl: 3rem;
-
-            /* Font */
+            --primary-color: #64b5f6; /* Light Blue */
+            --secondary-color: #f06292; /* Pink */
+            --accent-color: #90caf9; /* Light blue (lighter shade) */
+            --background-color: #f5f5f5; /* Light Grey */
+            --text-color: #212121; /* Dark Grey - for text */
+            --border-color: rgba(0, 0, 0, 0.1);
+            --shadow-color: rgba(0, 0, 0, 0.15);
             --font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            --font-size-base: 1rem;
-            --line-height-base: 1.6;
-        }
-
-        *, *::before, *::after {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
+            --border-radius: 10px;
+            --spacing-small: 8px;
+            --spacing-medium: 16px;
+            --spacing-large: 24px;
+            --gradient-primary: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            --gradient-button: linear-gradient(135deg, var(--primary-color) 0%, var(--accent-color) 100%);
         }
 
         body {
             font-family: var(--font-family);
-            font-size: var(--font-size-base);
-            line-height: var(--line-height-base);
-            background-color: var(--color-background);
-            color: var(--color-text);
+            background-color: var(--background-color);
+            color: var(--text-color);
+            margin: 0;
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            padding: var(--space-m);
+            padding: var(--spacing-medium);
         }
 
         .container {
-            max-width: 500px;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: var(--border-radius);
+            box-shadow: 0 10px 20px var(--shadow-color);
+            padding: var(--spacing-large);
             width: 100%;
-            background-color: rgba(255, 255, 255, 0.8);
-            border-radius: 1.5rem;
-            box-shadow: 0 10px 20px var(--color-shadow);
-            padding: var(--space-l);
-            backdrop-filter: blur(10px); /* Glassmorphism */
-            border: 1px solid var(--color-border);
-            transition: all 0.3s ease;
+            max-width: 500px;
+            backdrop-filter: blur(5px);
+            border: 1px solid var(--border-color);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
 
         .container:hover {
-           box-shadow: 0 15px 30px var(--color-shadow);
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px var(--shadow-color);
         }
 
-        h1 {
+        header {
             text-align: center;
-            margin-bottom: var(--space-l);
-            font-size: 2.25rem;
-            color: var(--color-primary);
+            margin-bottom: var(--spacing-large);
+        }
+
+        header h1 {
+            font-size: clamp(1.8rem, 3vw, 2.5rem);
+            margin-bottom: var(--spacing-small);
+            color: var(--primary-color);
+        }
+
+        header p {
+            font-size: 0.9rem;
+            color: #555;
         }
 
         .form-group {
-            margin-bottom: var(--space-m);
+            margin-bottom: var(--spacing-medium);
         }
 
         label {
             display: block;
-            margin-bottom: var(--space-xs);
-            font-weight: 500;
-            color: var(--color-text-light);
+            font-weight: bold;
+            margin-bottom: var(--spacing-small);
+            font-size: 0.9rem;
+            color: #333;
         }
 
+        input[type="text"],
         input[type="email"],
-        input[type="password"],
-        input[type="text"] {
+        input[type="password"] {
             width: 100%;
-            padding: var(--space-s);
-            border-radius: 0.75rem;
-            border: 1px solid var(--color-border);
-            background-color: rgba(255, 255, 255, 0.6);
-            font-size: var(--font-size-base);
-            transition: border-color 0.3s ease;
-            outline: none;
-        }
-
-        input[type="email"]:focus,
-        input[type="password"]:focus,
-        input[type="text"]:focus {
-            border-color: var(--color-primary);
-        }
-
-        input[type="submit"] {
-            background-color: var(--color-primary);
-            color: white;
-            padding: var(--space-s) var(--space-l);
-            border: none;
-            border-radius: 0.75rem;
+            padding: var(--spacing-medium);
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
             font-size: 1rem;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-            display: block;
-            width: 100%;
+            transition: border-color 0.3s ease;
+            background-color: rgba(255, 255, 255, 0.6);
         }
 
-        input[type="submit"]:hover {
-            background-color: var(--color-primary-dark);
+        input:focus {
+            outline: none;
+            border-color: var(--primary-color);
         }
 
         .error-message {
-            color: var(--color-accent);
-            margin-top: var(--space-xs);
-            font-size: 0.875rem;
+            color: #e53935;
+            font-size: 0.8rem;
+            margin-top: var(--spacing-small);
+            display: none;
         }
 
         .success-message {
-            color: var(--color-primary-dark);
-            margin-top: var(--space-xs);
-            font-size: 0.875rem;
+            color: #4caf50;
+            font-size: 0.9rem;
+            margin-top: var(--spacing-small);
+            display: none;
         }
 
+        button {
+            background: var(--gradient-button);
+            color: white;
+            padding: var(--spacing-medium);
+            border: none;
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            cursor: pointer;
+            width: 100%;
+            transition: background 0.3s ease, transform 0.2s ease;
+        }
 
-        /* Responsive Design */
+        button:hover {
+            background: var(--primary-color);
+            transform: translateY(-2px);
+        }
+
+        button:focus {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(100, 181, 246, 0.3); /* Light blue focus ring */
+        }
+
+        footer {
+            text-align: center;
+            margin-top: var(--spacing-medium);
+            font-size: 0.8rem;
+            color: #777;
+        }
+
+        /* Mobile-first responsiveness */
         @media (max-width: 768px) {
             .container {
-                padding: var(--space-m);
-            }
-            h1 {
-                font-size: 1.75rem;
+                padding: var(--spacing-medium);
             }
         }
 
@@ -148,104 +151,112 @@
 <body>
 
     <div class="container">
-        <h1>Register</h1>
+        <header>
+            <h1>Create Account</h1>
+            <p>Sign up to get started!</p>
+        </header>
 
         <form id="registrationForm">
             <div class="form-group">
-                <label for="email">Email:</label>
+                <label for="username">Username</label>
+                <input type="text" id="username" name="username" required>
+                <div class="error-message" id="usernameError"></div>
+            </div>
+
+            <div class="form-group">
+                <label for="email">Email</label>
                 <input type="email" id="email" name="email" required>
                 <div class="error-message" id="emailError"></div>
             </div>
 
             <div class="form-group">
-                <label for="password">Password:</label>
+                <label for="password">Password</label>
                 <input type="password" id="password" name="password" required>
                 <div class="error-message" id="passwordError"></div>
             </div>
 
             <div class="form-group">
-                <label for="confirmPassword">Confirm Password:</label>
+                <label for="confirmPassword">Confirm Password</label>
                 <input type="password" id="confirmPassword" name="confirmPassword" required>
                 <div class="error-message" id="confirmPasswordError"></div>
             </div>
 
-            <div class="form-group">
-                <label for="firstName">First Name (Optional):</label>
-                <input type="text" id="firstName" name="firstName">
-            </div>
-
-             <div class="form-group">
-                <label for="lastName">Last Name (Optional):</label>
-                <input type="text" id="lastName" name="lastName">
-            </div>
-
-
-            <input type="submit" value="Register">
-            <div class="success-message" id="successMessage"></div>
+            <button type="submit">Register</button>
+            <div class="success-message" id="successMessage">Registration Successful!</div>
         </form>
 
+        <footer>
+            <p>&copy; 2024 Registration App</p>
+        </footer>
     </div>
-
 
     <script>
         const form = document.getElementById('registrationForm');
+        const usernameInput = document.getElementById('username');
         const emailInput = document.getElementById('email');
         const passwordInput = document.getElementById('password');
         const confirmPasswordInput = document.getElementById('confirmPassword');
+        const usernameError = document.getElementById('usernameError');
         const emailError = document.getElementById('emailError');
         const passwordError = document.getElementById('passwordError');
         const confirmPasswordError = document.getElementById('confirmPasswordError');
         const successMessage = document.getElementById('successMessage');
-
-
 
         function validateEmail(email) {
             const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
             return re.test(email);
         }
 
-
-        form.addEventListener('submit', (event) => {
-            event.preventDefault(); // Prevent default form submission
+        form.addEventListener('submit', function(event) {
+            event.preventDefault();
 
             let isValid = true;
 
-            // Clear previous error messages
-            emailError.textContent = '';
-            passwordError.textContent = '';
-            confirmPasswordError.textContent = '';
-            successMessage.textContent = '';
+            // Username validation
+            if (usernameInput.value.trim() === "") {
+                usernameError.textContent = "Username is required.";
+                usernameError.style.display = 'block';
+                isValid = false;
+            } else {
+                usernameError.style.display = 'none';
+            }
 
-
-            // Email Validation
+            // Email validation
             if (!validateEmail(emailInput.value)) {
-                emailError.textContent = 'Please enter a valid email address.';
+                emailError.textContent = "Please enter a valid email address.";
+                emailError.style.display = 'block';
                 isValid = false;
+            } else {
+                emailError.style.display = 'none';
             }
 
-            // Password Validation
+            // Password validation
             if (passwordInput.value.length < 8) {
-                passwordError.textContent = 'Password must be at least 8 characters long.';
+                passwordError.textContent = "Password must be at least 8 characters long.";
+                passwordError.style.display = 'block';
                 isValid = false;
+            } else {
+                passwordError.style.display = 'none';
             }
 
-            // Confirm Password Validation
+            // Confirm password validation
             if (passwordInput.value !== confirmPasswordInput.value) {
-                confirmPasswordError.textContent = 'Passwords do not match.';
+                confirmPasswordError.textContent = "Passwords do not match.";
+                confirmPasswordError.style.display = 'block';
                 isValid = false;
+            } else {
+                confirmPasswordError.style.display = 'none';
             }
-
 
             if (isValid) {
                 // Simulate successful registration
-                successMessage.textContent = 'Registration successful! You can now log in.';
-
-                // Optionally, you could redirect the user to a login page here:
-                // window.location.href = 'login.html';  // Example redirect
-                form.reset(); // Clear the form
+                successMessage.style.display = 'block';
+                setTimeout(() => {
+                    successMessage.style.display = 'none';
+                    form.reset(); // Clear the form
+                }, 3000); // Hide after 3 seconds
             }
         });
     </script>
-
 </body>
 </html>

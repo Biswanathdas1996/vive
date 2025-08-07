@@ -3,318 +3,326 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>API Settings - My App</title>
+    <title>Chat Settings</title>
     <style>
         :root {
             /* Colors */
-            --color-primary-light: #f0f8ff; /* AliceBlue */
-            --color-primary-dark: #282c34; /* Dark background */
-            --color-secondary-light: #87ceeb; /* SkyBlue */
-            --color-secondary-dark: #303030; /* Darker shade */
-            --color-accent: #ff69b4; /* HotPink */
-            --color-text-light: #333;
-            --color-text-dark: #fff;
-            --color-border-light: rgba(0, 0, 0, 0.1);
-            --color-border-dark: rgba(255, 255, 255, 0.2);
-            --color-shadow-light: rgba(0, 0, 0, 0.1);
-            --color-shadow-dark: rgba(0, 0, 0, 0.5);
-
+            --primary-color: #64b5f6; /* Light Blue */
+            --secondary-color: #90caf9; /* Lighter Blue */
+            --accent-color: #ff8a65;  /* Coral */
+            --background-color: #f5f5f5; /* Light Gray */
+            --text-color: #333;
+            --text-color-light: #666;
+            --border-color: rgba(0, 0, 0, 0.1);
+            --shadow-color: rgba(0, 0, 0, 0.15);
 
             /* Spacing */
-            --space-xs: 0.5rem;
-            --space-s: 1rem;
-            --space-m: 1.5rem;
-            --space-l: 2rem;
-            --space-xl: 3rem;
+            --spacing-small: 0.5rem;
+            --spacing-medium: 1rem;
+            --spacing-large: 1.5rem;
 
             /* Font */
-            --font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Modern font */
-            --font-size-base: 1rem;
-            --line-height-base: 1.6;
+            --font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+
+            /* Border Radius */
             --border-radius: 0.75rem;
-
-            /* Transition */
-            --transition-duration: 0.3s;
-
-        }
-
-        /* General styles */
-        *,
-        *::before,
-        *::after {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
         }
 
         body {
             font-family: var(--font-family);
-            font-size: var(--font-size-base);
-            line-height: var(--line-height-base);
-            background-color: var(--color-primary-light);
-            color: var(--color-text-light);
+            background-color: var(--background-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 0;
             display: flex;
-            flex-direction: column;
+            justify-content: center;
+            align-items: center;
             min-height: 100vh;
-            transition: background-color var(--transition-duration) ease, color var(--transition-duration) ease; /* Smooth transitions */
-        }
-
-        /* Dark Mode Toggle (Simplified) */
-        body.dark-mode {
-            background-color: var(--color-primary-dark);
-            color: var(--color-text-dark);
+            transition: background-color 0.3s ease, color 0.3s ease;
         }
 
         .container {
-            max-width: 900px;
-            margin: auto;
-            padding: var(--space-m);
-            flex-grow: 1;
+            width: min(90%, 600px);
+            padding: var(--spacing-large);
+            background-color: #fff;
+            border-radius: var(--border-radius);
+            box-shadow: 0 0.5rem 1rem var(--shadow-color);
+            transition: box-shadow 0.3s ease;
+        }
+
+        .container:hover {
+            box-shadow: 0 0.75rem 1.5rem var(--shadow-color);
         }
 
         header {
-            background-color: var(--color-secondary-light);
-            padding: var(--space-m);
             text-align: center;
-            box-shadow: 0 2px 5px var(--color-shadow-light);
-            margin-bottom: var(--space-l);
+            margin-bottom: var(--spacing-large);
         }
 
         h1 {
-            font-size: 2rem;
-            margin-bottom: var(--space-s);
+            font-size: clamp(1.75rem, 4vw, 2.25rem);
+            margin-bottom: var(--spacing-medium);
         }
 
-        /* API Key Section */
-        .api-key-section {
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.8) 0%, rgba(255, 255, 255, 0.6) 100%);
-            border-radius: var(--border-radius);
-            padding: var(--space-l);
-            box-shadow: 0 4px 12px var(--color-shadow-light);
-            margin-bottom: var(--space-l);
-            transition: all var(--transition-duration) ease;
+        .section {
+            margin-bottom: var(--spacing-large);
         }
 
-        .api-key-section:hover {
-            box-shadow: 0 8px 20px var(--color-shadow-light);
+        h2 {
+            font-size: clamp(1.25rem, 3vw, 1.75rem);
+            margin-bottom: var(--spacing-medium);
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: var(--spacing-small);
         }
-
-        .api-key-section.dark-mode {
-          background: linear-gradient(135deg, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0.6) 100%);
-        }
-
 
         label {
             display: block;
-            margin-bottom: var(--space-xs);
-            font-weight: bold;
+            margin-bottom: var(--spacing-small);
+            font-weight: 500;
+            color: var(--text-color);
         }
 
-        input[type="text"],
-        input[type="password"] {
-            width: 100%;
-            padding: var(--space-s);
-            margin-bottom: var(--space-m);
-            border: 1px solid var(--color-border-light);
+        input[type="checkbox"],
+        input[type="radio"] {
+            margin-right: var(--spacing-small);
+            cursor: pointer;
+        }
+
+        select {
+            appearance: none;
+            padding: var(--spacing-small) var(--spacing-medium);
+            border: 1px solid var(--border-color);
             border-radius: var(--border-radius);
-            font-size: var(--font-size-base);
-            transition: border-color var(--transition-duration) ease, box-shadow var(--transition-duration) ease;
+            background-color: #fff;
+            width: 100%;
+            font-family: var(--font-family);
+            color: var(--text-color);
+            margin-bottom: var(--spacing-medium);
+            cursor: pointer;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
         }
 
-        input[type="text"]:focus,
-        input[type="password"]:focus {
+        select:hover {
+            border-color: var(--primary-color);
+        }
+
+        select:focus {
             outline: none;
-            border-color: var(--color-accent);
-            box-shadow: 0 0 0 2px var(--color-accent);
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0.25rem rgba(100, 181, 246, 0.4);
+        }
+
+        .radio-group {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: var(--spacing-medium);
+        }
+
+        .radio-group label {
+            margin-bottom: var(--spacing-small);
+            cursor: pointer;
         }
 
         button {
-            padding: var(--space-s) var(--space-l);
-            background-color: var(--color-accent);
-            color: var(--color-text-dark);
+            background-color: var(--primary-color);
+            color: #fff;
             border: none;
             border-radius: var(--border-radius);
+            padding: var(--spacing-medium) var(--spacing-large);
+            font-size: 1rem;
             cursor: pointer;
-            font-size: var(--font-size-base);
-            transition: background-color var(--transition-duration) ease, transform var(--transition-duration) ease;
+            transition: background-color 0.3s ease, box-shadow 0.3s ease;
+            width: 100%;
         }
 
         button:hover {
-            background-color: #e0529a;
+            background-color: #50a0e0;
+        }
+
+        button:focus {
+            outline: none;
+            box-shadow: 0 0 0.25rem rgba(100, 181, 246, 0.4);
         }
 
         button:active {
             transform: translateY(1px);
         }
 
-        /* Conversation History Section (Example) */
-        .conversation-history-section {
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.8) 0%, rgba(255, 255, 255, 0.6) 100%);
-            border-radius: var(--border-radius);
-            padding: var(--space-l);
-            box-shadow: 0 4px 12px var(--color-shadow-light);
-            margin-bottom: var(--space-l);
-            transition: all var(--transition-duration) ease;
+        .theme-options {
+            display: flex;
+            gap: var(--spacing-medium);
         }
 
-        .conversation-history-section.dark-mode {
-          background: linear-gradient(135deg, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0.6) 100%);
-        }
-
-        .conversation-history-section:hover {
-            box-shadow: 0 8px 20px var(--color-shadow-light);
-        }
-
-        /* Simplified Toggle Switch */
-        .toggle-switch {
-            position: relative;
-            display: inline-block;
+        .theme-option {
             width: 50px;
-            height: 24px;
-        }
-
-        .toggle-switch input {
-            opacity: 0;
-            width: 0;
-            height: 0;
-        }
-
-        .slider {
-            position: absolute;
+            height: 50px;
+            border-radius: 50%;
             cursor: pointer;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: #ccc;
-            transition: 0.4s;
-            border-radius: 34px;
+            border: 2px solid var(--border-color);
+            transition: border-color 0.3s ease;
         }
 
-        .slider:before {
+        .theme-option:hover {
+            border-color: var(--primary-color);
+        }
+
+        .theme-option.active {
+            border-color: var(--accent-color);
+        }
+
+        .theme-option[data-theme="light"] {
+            background-color: #fff;
+        }
+
+        .theme-option[data-theme="dark"] {
+            background-color: #333;
+        }
+
+        .theme-option[data-theme="blue"] {
+            background: linear-gradient(135deg, #64b5f6, #2196f3);
+        }
+
+        .theme-option[data-theme="green"] {
+            background: linear-gradient(135deg, #66bb6a, #388e3c);
+        }
+
+        .notification-preview {
+            padding: var(--spacing-medium);
+            border-radius: var(--border-radius);
+            background-color: var(--secondary-color);
+            color: #fff;
+            text-align: center;
+            font-weight: bold;
+            margin-bottom: var(--spacing-medium);
+            box-shadow: 0 0.25rem 0.5rem var(--shadow-color);
+        }
+
+
+        /* Dark Mode */
+        body.dark-mode {
+            --primary-color: #90caf9; /* Light Blue */
+            --secondary-color: #42a5f5; /* Lighter Blue */
+            --accent-color: #ffab91;  /* Coral */
+            --background-color: #212121; /* Dark Gray */
+            --text-color: #f5f5f5;
+            --text-color-light: #ccc;
+            --border-color: rgba(255, 255, 255, 0.1);
+            --shadow-color: rgba(0, 0, 0, 0.3);
+        }
+
+
+        /* CSS Icons (Example) */
+        .icon {
+            display: inline-block;
+            width: 1.5em;
+            height: 1.5em;
+            vertical-align: middle;
+            margin-right: 0.5em;
+            position: relative;
+        }
+
+        .icon::before {
+            content: '';
             position: absolute;
-            content: "";
-            height: 18px;
-            width: 18px;
-            left: 3px;
-            bottom: 3px;
-            background-color: white;
-            transition: 0.4s;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 1em;
+            height: 1em;
+            background-color: var(--accent-color);
             border-radius: 50%;
         }
 
-        input:checked + .slider {
-            background-color: var(--color-accent);
+        .icon-bell::after {
+            content: '';
+            position: absolute;
+            top: 10%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0.25em;
+            height: 0.25em;
+            border-radius: 50%;
+            background-color: white;
         }
 
-        input:focus + .slider {
-            box-shadow: 0 0 1px var(--color-accent);
-        }
-
-        input:checked + .slider:before {
-            transform: translateX(26px);
-        }
-
-        footer {
-            background-color: var(--color-secondary-light);
-            text-align: center;
-            padding: var(--space-m);
-            margin-top: auto; /* Push to the bottom */
-            font-size: 0.8rem;
-        }
-
-         /* Mobile Responsiveness */
-        @media (max-width: 768px) {
-            .container {
-                padding: var(--space-m) var(--space-s);
-            }
-
-            h1 {
-                font-size: 1.75rem;
-            }
-
-            input[type="text"],
-            input[type="password"] {
-                font-size: 0.9rem;
-            }
-
-            button {
-                font-size: 0.9rem;
-            }
-        }
     </style>
 </head>
 <body>
+    <div class="container">
+        <header>
+            <h1>Chat Settings</h1>
+        </header>
 
-    <header>
-        <h1>Settings</h1>
-        <p>Manage your API key and preferences.</p>
-    </header>
-
-    <main class="container">
-
-        <section class="api-key-section">
-            <h2>API Key</h2>
-            <label for="apiKey">API Key:</label>
-            <input type="password" id="apiKey" placeholder="Enter your API key" aria-label="API Key Input">
-            <button id="saveApiKey">Save API Key</button>
-        </section>
-
-        <section class="conversation-history-section">
-            <h2>Conversation History</h2>
-            <label for="historyToggle">Enable Conversation History:</label>
-            <div class="toggle-switch">
-                <input type="checkbox" id="historyToggle">
-                <span class="slider"></span>
+        <section class="section">
+            <h2>Appearance</h2>
+            <div class="theme-options">
+                <div class="theme-option active" data-theme="light" aria-label="Light Theme"></div>
+                <div class="theme-option" data-theme="dark" aria-label="Dark Theme"></div>
+                <div class="theme-option" data-theme="blue" aria-label="Blue Theme"></div>
+                <div class="theme-option" data-theme="green" aria-label="Green Theme"></div>
             </div>
         </section>
 
-    </main>
+        <section class="section">
+            <h2>Notifications</h2>
+            <label for="notifications-enabled">
+                <input type="checkbox" id="notifications-enabled" name="notifications-enabled" checked> Enable Notifications
+            </label>
 
-    <footer>
-        <p>&copy; 2024 My App. All rights reserved.</p>
-    </footer>
+            <div class="notification-preview">
+                <span class="icon icon-bell"></span>
+                Notification Preview
+            </div>
+
+            <label for="notification-sound">Notification Sound:</label>
+            <select id="notification-sound" name="notification-sound">
+                <option value="default">Default Sound</option>
+                <option value="ding">Ding</option>
+                <option value="chime">Chime</option>
+            </select>
+        </section>
+
+        <section class="section">
+            <h2>Bot Personality (If Available)</h2>
+            <div class="radio-group">
+                <label>
+                    <input type="radio" name="bot-personality" value="friendly"> Friendly
+                </label>
+                <label>
+                    <input type="radio" name="bot-personality" value="witty" checked> Witty
+                </label>
+                <label>
+                    <input type="radio" name="bot-personality" value="professional"> Professional
+                </label>
+            </div>
+        </section>
+
+        <button id="save-settings">Save Settings</button>
+    </div>
 
     <script>
-        // Dark Mode Toggle (Simple version, can be improved)
-        const toggleDarkMode = () => {
-            document.body.classList.toggle('dark-mode');
-            // You could also save the preference to localStorage
-        };
+        const themeOptions = document.querySelectorAll('.theme-option');
+        const body = document.body;
+        const saveButton = document.getElementById('save-settings');
 
-        // API Key Saving - Placeholder (Implement actual API key saving)
-        const saveApiKey = () => {
-            const apiKeyInput = document.getElementById('apiKey');
-            const apiKey = apiKeyInput.value;
-            if (apiKey) {
-                alert('API Key saved (in reality, this would be securely saved).');
-                apiKeyInput.value = ''; // Clear the input after saving
-            } else {
-                alert('Please enter an API key.');
-            }
-        };
+        themeOptions.forEach(option => {
+            option.addEventListener('click', () => {
+                themeOptions.forEach(opt => opt.classList.remove('active'));
+                option.classList.add('active');
+                const selectedTheme = option.getAttribute('data-theme');
 
-
-        // Event Listeners
-        document.addEventListener('DOMContentLoaded', () => {
-            const saveButton = document.getElementById('saveApiKey');
-            const historyToggle = document.getElementById('historyToggle');
-
-            saveButton.addEventListener('click', saveApiKey);
-            // More sophisticated dark mode handling, if needed:
-            // Initialize based on stored preference
-            // const prefersDarkMode = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-            // if (localStorage.getItem('darkMode') === 'true' || (localStorage.getItem('darkMode') !== 'false' && prefersDarkMode)) {
-            //   document.body.classList.add('dark-mode');
-            // }
-
-            historyToggle.addEventListener('change', () => {
-               // Handle Conversation History Enable/Disable
-               console.log("Conversation History Toggle:", historyToggle.checked);
-               // You could make API calls to enable/disable history here.
+                if (selectedTheme === 'dark') {
+                    body.classList.add('dark-mode');
+                } else {
+                    body.classList.remove('dark-mode');
+                }
+                //Add more theme options for blue and green when available
             });
         });
 
+        saveButton.addEventListener('click', () => {
+            alert('Settings saved (functionality not implemented)');
+        });
     </script>
 </body>
 </html>

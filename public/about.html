@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About - AI Chatbot</title>
+    <style>
+        :root {
+            /* Color Palette */
+            --primary-color: #64b5f6; /* Light Blue */
+            --secondary-color: #1e88e5; /* Darker Blue */
+            --accent-color: #81c784; /* Green */
+            --background-color: #f0f4c3; /* Light Green */
+            --text-color: #212121; /* Dark Text */
+            --light-text-color: #ffffff; /* White Text */
+            --border-color: rgba(0, 0, 0, 0.12); /* Subtle Border */
+            --shadow-color: rgba(0, 0, 0, 0.2);
+            --glass-background: rgba(255, 255, 255, 0.2); /* Glassmorphism background */
+
+            /* Spacing */
+            --spacing-small: 0.5rem;
+            --spacing-medium: 1rem;
+            --spacing-large: 2rem;
+
+            /* Font */
+            --font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+
+            /* Border Radius */
+            --border-radius: 12px;
+
+            /* Transitions */
+            --transition-duration: 0.3s;
+        }
+
+        body {
+            font-family: var(--font-family);
+            color: var(--text-color);
+            background-color: var(--background-color);
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* Header */
+        header {
+            background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+            color: var(--light-text-color);
+            padding: var(--spacing-medium) var(--spacing-large);
+            box-shadow: 0 2px 5px var(--shadow-color);
+            text-align: center;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 2.5rem;
+        }
+
+        /* Main Content */
+        main {
+            flex: 1;
+            padding: var(--spacing-large);
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: var(--spacing-large);
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        @media (min-width: 768px) {
+            main {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        /* Section */
+        section {
+            background-color: var(--light-text-color);
+            border-radius: var(--border-radius);
+            padding: var(--spacing-medium);
+            box-shadow: 0 4px 8px var(--shadow-color);
+            transition: transform var(--transition-duration) ease;
+        }
+
+        section:hover {
+            transform: translateY(-5px);
+        }
+
+        section h2 {
+            font-size: 1.75rem;
+            margin-bottom: var(--spacing-medium);
+            color: var(--secondary-color);
+        }
+
+        section p {
+            margin-bottom: var(--spacing-small);
+        }
+
+        /* Team Member Cards (Placeholder) */
+        .team-member {
+            background: var(--glass-background);
+            backdrop-filter: blur(5px);
+            border-radius: var(--border-radius);
+            padding: var(--spacing-medium);
+            box-shadow: 0 2px 10px var(--shadow-color);
+            transition: transform var(--transition-duration) ease, background-color var(--transition-duration) ease;
+        }
+
+        .team-member:hover {
+            transform: translateY(-5px);
+        }
+        .team-member:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+
+        .team-member img {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-bottom: var(--spacing-small);
+        }
+
+        .team-member h3 {
+            font-size: 1.25rem;
+            margin: 0 0 var(--spacing-small) 0;
+            color: var(--secondary-color);
+        }
+        .team-member p {
+            margin: 0;
+        }
+
+        /* Technologies Used Section */
+        .technologies {
+            display: flex;
+            flex-wrap: wrap;
+            gap: var(--spacing-medium);
+            justify-content: center;
+        }
+
+        .technology-item {
+            background-color: var(--primary-color);
+            color: var(--light-text-color);
+            padding: var(--spacing-medium);
+            border-radius: var(--border-radius);
+            text-align: center;
+            width: calc(50% - var(--spacing-medium)); /* Two items per row on larger screens */
+            box-shadow: 0 2px 5px var(--shadow-color);
+            transition: transform var(--transition-duration) ease;
+            position: relative;
+        }
+
+        @media (min-width: 768px) {
+            .technology-item {
+                width: calc(33.33% - var(--spacing-medium)); /* Three items per row */
+            }
+        }
+
+        .technology-item:hover {
+            transform: translateY(-5px);
+        }
+
+        /* CSS Icons (Placeholder) */
+        .technology-item::before {
+            content: '';
+            display: block;
+            width: 30px;
+            height: 30px;
+            margin: 0 auto var(--spacing-small) auto;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.3); /* Subtle highlight */
+            transition: background-color var(--transition-duration) ease;
+        }
+
+        .technology-item:hover::before {
+           background-color: rgba(255, 255, 255, 0.5);
+        }
+
+
+        /* Chat Capabilities Section */
+        .capabilities-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .capabilities-list li {
+            margin-bottom: var(--spacing-small);
+            padding: var(--spacing-small);
+            border-left: 4px solid var(--accent-color);
+            background-color: var(--glass-background);
+            backdrop-filter: blur(2px);
+            border-radius: var(--border-radius);
+            box-shadow: 0 2px 5px var(--shadow-color);
+        }
+
+        .capabilities-list li::before {
+            content: "✓ ";
+            color: var(--accent-color);
+        }
+
+        /* Footer */
+        footer {
+            background: var(--secondary-color);
+            color: var(--light-text-color);
+            text-align: center;
+            padding: var(--spacing-medium);
+            font-size: 0.8rem;
+            margin-top: var(--spacing-large);
+        }
+
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>About AI Chatbot</h1>
+    </header>
+
+    <main>
+        <section>
+            <h2>About the Project</h2>
+            <p>This AI Chatbot project aims to provide a user-friendly and intelligent conversational experience. It is designed to assist users with a variety of tasks, from answering questions to generating creative content.</p>
+            <p>Our goal is to create a seamless and engaging interface leveraging the latest advancements in natural language processing and machine learning.</p>
+        </section>
+
+        <section>
+            <h2>Team</h2>
+            <div class="team-member">
+                <!-- Placeholder for image -->
+                <!--<img src="placeholder-image.jpg" alt="Team Member">-->
+                <h3>John Doe</h3>
+                <p>Lead Developer</p>
+                <!-- Placeholder for details -->
+                <p>Responsible for the core architecture and feature implementation.</p>
+            </div>
+            <div class="team-member">
+                <!-- Placeholder for image -->
+                <!--<img src="placeholder-image.jpg" alt="Team Member">-->
+                <h3>Jane Smith</h3>
+                <p>UI/UX Designer</p>
+                <!-- Placeholder for details -->
+                <p>Focused on creating an intuitive and visually appealing user interface.</p>
+            </div>
+
+        </section>
+
+
+        <section>
+            <h2>Technologies Used</h2>
+            <div class="technologies">
+                <div class="technology-item">
+                    AI Model
+                    <!-- Placeholder for icon -->
+                </div>
+                <div class="technology-item">
+                    ReactJS
+                    <!-- Placeholder for icon -->
+                </div>
+                <div class="technology-item">
+                    Node.js
+                    <!-- Placeholder for icon -->
+                </div>
+                <div class="technology-item">
+                    MongoDB
+                    <!-- Placeholder for icon -->
+                </div>
+                <div class="technology-item">
+                    Express.js
+                    <!-- Placeholder for icon -->
+                </div>
+                <div class="technology-item">
+                    HTML5/CSS3
+                    <!-- Placeholder for icon -->
+                </div>
+            </div>
+        </section>
+
+
+        <section>
+            <h2>Chat Capabilities</h2>
+            <ul class="capabilities-list">
+                <li>Answer general knowledge questions</li>
+                <li>Generate creative content (poems, code, scripts, musical pieces, email, letters, etc.)</li>
+                <li>Translate languages</li>
+                <li>Summarize text</li>
+                <li>Provide information on various topics</li>
+                <li>Engage in natural and fluid conversations</li>
+            </ul>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 AI Chatbot Project. All rights reserved.</p>
+    </footer>
+
+    <script>
+        // No JavaScript functionality is specifically required for this page, but a good practice is to include this block.
+        // You could include things like dynamic content loading or interactive elements here if needed.
+        // For example:
+        // document.addEventListener('DOMContentLoaded', () => {
+        //     // ...Your JavaScript code here...
+        // });
+    </script>
+</body>
+</html>

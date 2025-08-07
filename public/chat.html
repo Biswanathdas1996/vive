@@ -7,195 +7,184 @@
     <style>
         :root {
             /* Color Palette */
-            --color-primary: #6c5ce7; /* Soft Purple */
-            --color-primary-light: #a29bfe;
-            --color-secondary: #00b894; /* Teal */
-            --color-background: #f8f9fa; /* Light Gray */
-            --color-surface: #ffffff; /* White */
-            --color-text: #333; /* Dark Gray */
-            --color-text-light: #666;
-            --color-error: #e74c3c; /* Red */
-            --color-placeholder: #cccccc;
-            --color-border: #e9ecef;
+            --primary-color: #5D54A4;
+            --secondary-color: #B1A6F0;
+            --accent-color: #F0EFFF;
+            --background-color: #f5f5fa;
+            --text-color: #333;
+            --text-color-light: #666;
+            --shadow-color: rgba(0, 0, 0, 0.1);
+            --border-color: rgba(0, 0, 0, 0.15);
 
             /* Spacing */
-            --space-small: 0.5rem;
-            --space-medium: 1rem;
-            --space-large: 1.5rem;
+            --padding-small: 0.75rem;
+            --padding-medium: 1rem;
+            --padding-large: 1.5rem;
+            --border-radius: 0.75rem;
+            --transition-duration: 0.3s;
 
             /* Typography */
-            --font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-            --font-size-base: 1rem;
-            --font-weight-normal: 400;
-            --font-weight-bold: 700;
-            --line-height: 1.6;
-
-            /* Border Radius */
-            --border-radius: 0.75rem;
-
-            /* Shadow */
-            --shadow-light: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
-            --shadow-medium: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
-        }
-
-        *,
-        *::before,
-        *::after {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
+            --font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
         body {
             font-family: var(--font-family);
-            font-size: var(--font-size-base);
-            font-weight: var(--font-weight-normal);
-            line-height: var(--line-height);
-            background-color: var(--color-background);
-            color: var(--color-text);
+            background-color: var(--background-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 0;
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            padding: var(--space-medium);
+            overflow: hidden; /* Prevents scrollbars when keyboard appears on mobile */
         }
 
-        .container {
+        .chat-container {
             width: 100%;
-            max-width: 500px;
-            background-color: var(--color-surface);
+            max-width: 450px;
+            background-color: #fff;
             border-radius: var(--border-radius);
-            box-shadow: var(--shadow-medium);
+            box-shadow: 0 10px 20px var(--shadow-color);
             overflow: hidden;
             display: flex;
             flex-direction: column;
-            height: 80vh;
+            height: 85vh;
+            position: relative;
+            border: 1px solid var(--border-color);
         }
 
-        /* Header (Optional - Not in the prompt) */
         .chat-header {
-            padding: var(--space-medium);
-            background: linear-gradient(135deg, var(--color-primary), var(--color-primary-light));
-            color: white;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: var(--accent-color);
+            padding: var(--padding-medium);
             text-align: center;
-            font-weight: var(--font-weight-bold);
-            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+            font-size: 1.2rem;
+            font-weight: 600;
+            border-bottom: 1px solid var(--border-color);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
         }
 
         .chat-messages {
             flex-grow: 1;
-            padding: var(--space-medium);
+            padding: var(--padding-medium);
             overflow-y: auto;
-            scroll-behavior: smooth;
+            scrollbar-width: thin; /* For Firefox */
+            scrollbar-color: var(--secondary-color) var(--background-color); /* For Firefox */
         }
 
-        .message {
-            margin-bottom: var(--space-medium);
-            padding: var(--space-medium);
+        .chat-messages::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .chat-messages::-webkit-scrollbar-thumb {
+            background-color: var(--secondary-color);
+            border-radius: 4px;
+        }
+
+        .chat-message {
+            margin-bottom: var(--padding-small);
+            padding: var(--padding-medium);
             border-radius: var(--border-radius);
-            background-color: var(--color-background);
-            box-shadow: var(--shadow-light);
-            word-break: break-word;
+            box-shadow: 0 2px 5px var(--shadow-color);
+            word-wrap: break-word;
         }
 
-        .message-sent {
-            background-color: var(--color-primary-light);
+        .user-message {
+            background-color: var(--secondary-color);
             align-self: flex-end;
-            color: white;
+            color: var(--primary-color);
         }
 
-        .message-received {
-            background-color: var(--color-surface);
+        .bot-message {
+            background-color: var(--accent-color);
+            align-self: flex-start;
+            color: var(--text-color);
         }
 
-        .message-content {
-            font-size: 0.9rem;
-        }
-
-        .message-timestamp {
-            color: var(--color-text-light);
-            font-size: 0.75rem;
-            margin-top: var(--space-small);
-            text-align: right;
-        }
-
-        .chat-input-area {
-            padding: var(--space-medium);
+        .chat-input-container {
+            padding: var(--padding-medium);
             display: flex;
-            align-items: center;
-            border-top: 1px solid var(--color-border);
-            background-color: var(--color-surface);
+            border-top: 1px solid var(--border-color);
+            background-color: #fff;
         }
 
         .chat-input {
             flex-grow: 1;
-            padding: var(--space-small) var(--space-medium);
-            border: 1px solid var(--color-border);
+            padding: var(--padding-small) var(--padding-medium);
+            border: 1px solid var(--border-color);
             border-radius: var(--border-radius);
-            font-size: var(--font-size-base);
-            margin-right: var(--space-medium);
-            transition: border-color 0.2s ease;
+            font-size: 1rem;
+            outline: none;
+            transition: border-color var(--transition-duration) ease;
         }
 
         .chat-input:focus {
-            outline: none;
-            border-color: var(--color-primary);
+            border-color: var(--primary-color);
         }
 
         .send-button {
-            background-color: var(--color-primary);
-            color: white;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: var(--accent-color);
             border: none;
-            padding: var(--space-small) var(--space-medium);
             border-radius: var(--border-radius);
+            padding: var(--padding-small) var(--padding-medium);
+            margin-left: var(--padding-small);
             cursor: pointer;
-            font-weight: var(--font-weight-bold);
-            transition: background-color 0.2s ease;
+            font-weight: 500;
+            transition: background var(--transition-duration) ease;
         }
 
         .send-button:hover {
-            background-color: darken(var(--color-primary), 10%);
+            background: linear-gradient(135deg, var(--secondary-color), var(--primary-color));
         }
 
-        .send-button:focus {
-            outline: none;
-            box-shadow: 0 0 0 2px rgba(var(--color-primary), 0.5);
+        /* CSS for the typing indicator */
+        .typing-indicator {
+            display: flex;
+            align-items: center;
+            margin-bottom: var(--padding-small);
         }
 
-        .loading-indicator {
-            display: none;
-            margin-left: var(--space-medium);
-            animation: spin 1s linear infinite;
-            color: var(--color-text-light);
+        .typing-indicator::before {
+            content: "Typing...";
+            font-style: italic;
+            color: var(--text-color-light);
+            margin-right: var(--padding-small);
         }
 
-        .loading-indicator.show {
-            display: inline-block;
+        .typing-indicator .dot {
+            width: 6px;
+            height: 6px;
+            background-color: var(--text-color-light);
+            border-radius: 50%;
+            margin: 0 2px;
+            animation: typing 1s infinite;
         }
 
-        .error-message {
-            color: var(--color-error);
-            margin-top: var(--space-medium);
-            text-align: center;
-            display: none;
+        .typing-indicator .dot:nth-child(2) {
+            animation-delay: 0.2s;
         }
 
-        .error-message.show {
-            display: block;
+        .typing-indicator .dot:nth-child(3) {
+            animation-delay: 0.4s;
         }
 
-        @keyframes spin {
+        @keyframes typing {
             0% {
-                transform: rotate(0deg);
+                opacity: 0.2;
+            }
+            50% {
+                opacity: 1;
             }
             100% {
-                transform: rotate(360deg);
+                opacity: 0.2;
             }
         }
 
-        /* Responsive Design */
-        @media (max-width: 768px) {
-            .container {
+        /* Mobile Responsiveness */
+        @media (max-width: 600px) {
+            .chat-container {
                 width: 95%;
                 height: 90vh;
             }
@@ -203,141 +192,83 @@
     </style>
 </head>
 <body>
-
-    <div class="container">
-
-        <!-- Header (Optional) -->
-        <header class="chat-header">
-            Chat Application
-        </header>
-
-        <main class="chat-messages">
-            <!-- Messages will be dynamically added here -->
-            <div class="message message-received">
-                <div class="message-content">
-                    Hello there! Welcome to the chat.
-                </div>
-                <div class="message-timestamp">
-                    12:00 PM
-                </div>
-            </div>
-            <div class="message message-sent">
-                <div class="message-content">
-                    Hi! Thanks for having me.
-                </div>
-                <div class="message-timestamp">
-                    12:01 PM
-                </div>
-            </div>
-        </main>
-
-        <footer class="chat-input-area">
-            <input type="text" class="chat-input" placeholder="Type your message..." aria-label="Type your message">
-            <button class="send-button" aria-label="Send Message">Send
-                <span class="loading-indicator" aria-hidden="true">&#9676;</span>
-            </button>
-        </footer>
-
-        <div class="error-message" aria-live="assertive">
-            Error: Could not send message. Please try again.
+    <div class="chat-container">
+        <div class="chat-header">
+            Chatbot
         </div>
-
+        <div class="chat-messages">
+            <!-- Messages will be added here dynamically -->
+        </div>
+        <div class="chat-input-container">
+            <input type="text" class="chat-input" placeholder="Type your message...">
+            <button class="send-button">Send</button>
+        </div>
+        <div class="typing-indicator" style="display:none;">
+            <span class="dot"></span>
+            <span class="dot"></span>
+            <span class="dot"></span>
+        </div>
     </div>
-
 
     <script>
         const chatMessages = document.querySelector('.chat-messages');
         const chatInput = document.querySelector('.chat-input');
         const sendButton = document.querySelector('.send-button');
-        const loadingIndicator = document.querySelector('.loading-indicator');
-        const errorMessage = document.querySelector('.error-message');
+        const typingIndicator = document.querySelector('.typing-indicator');
 
-        function addMessage(text, isSent, timestamp) {
+        function addMessage(message, sender) {
             const messageDiv = document.createElement('div');
-            messageDiv.classList.add('message');
-            if (isSent) {
-                messageDiv.classList.add('message-sent');
-            } else {
-                messageDiv.classList.add('message-received');
-            }
-
-            const messageContentDiv = document.createElement('div');
-            messageContentDiv.classList.add('message-content');
-            messageContentDiv.textContent = text;
-            messageDiv.appendChild(messageContentDiv);
-
-            const timestampDiv = document.createElement('div');
-            timestampDiv.classList.add('message-timestamp');
-            timestampDiv.textContent = timestamp;
-            messageDiv.appendChild(timestampDiv);
-
+            messageDiv.classList.add('chat-message');
+            messageDiv.classList.add(`${sender}-message`);
+            messageDiv.textContent = message;
             chatMessages.appendChild(messageDiv);
-            chatMessages.scrollTop = chatMessages.scrollHeight; // Auto-scroll to the bottom
-        }
-
-        function showLoading() {
-            loadingIndicator.classList.add('show');
-            sendButton.disabled = true;
-        }
-
-        function hideLoading() {
-            loadingIndicator.classList.remove('show');
-            sendButton.disabled = false;
-        }
-
-        function showError(message) {
-            errorMessage.textContent = message;
-            errorMessage.classList.add('show');
-            setTimeout(() => {
-                errorMessage.classList.remove('show');
-            }, 3000);
+            chatMessages.scrollTop = chatMessages.scrollHeight; // Scroll to bottom
         }
 
 
-        function sendMessage() {
-            const messageText = chatInput.value.trim();
+        function simulateBotTyping() {
+            typingIndicator.style.display = 'flex';
+            chatMessages.scrollTop = chatMessages.scrollHeight; // ensure it's at the bottom
+        }
 
-            if (messageText === "") {
-                return; // Don't send empty messages
+        function stopBotTyping() {
+             typingIndicator.style.display = 'none';
+        }
+
+
+        function getBotResponse(userMessage) {
+            // Simple bot logic (replace with more sophisticated logic)
+            const lowerCaseMessage = userMessage.toLowerCase();
+            if (lowerCaseMessage.includes('hello') || lowerCaseMessage.includes('hi')) {
+                return "Hello there!";
+            } else if (lowerCaseMessage.includes('how are you')) {
+                return "I'm doing well, thank you!";
+            } else if (lowerCaseMessage.includes('goodbye') || lowerCaseMessage.includes('bye')) {
+                return "Goodbye!";
+            } else {
+                return "I'm sorry, I don't understand.";
             }
-
-            showLoading();
-
-            // Simulate sending and receiving with a delay (replace with actual API call)
-            setTimeout(() => {
-                try {
-                  // Simulate a successful send
-                    addMessage(messageText, true, getCurrentTime());
-                    chatInput.value = ""; // Clear input
-                    // Simulate a received response (echo)
-                    setTimeout(() => {
-                        addMessage("Echo: " + messageText, false, getCurrentTime());
-                    }, 500); // Simulate server response time
-
-                } catch (error) {
-                    showError("Error sending message: " + error.message);
-                } finally {
-                  hideLoading();
-                }
-
-            }, 1000); // Simulate send time
         }
 
-        function getCurrentTime() {
-            const now = new Date();
-            let hours = now.getHours();
-            let minutes = now.getMinutes();
-            const ampm = hours >= 12 ? 'PM' : 'AM';
-            hours = hours % 12;
-            hours = hours ? hours : 12; // the hour '0' should be '12'
-            minutes = minutes < 10 ? '0'+minutes : minutes;
-            return `${hours}:${minutes} ${ampm}`;
-        }
 
-        sendButton.addEventListener('click', sendMessage);
-        chatInput.addEventListener('keydown', (event) => {
+        sendButton.addEventListener('click', () => {
+            const userMessage = chatInput.value.trim();
+            if (userMessage) {
+                addMessage(userMessage, 'user');
+                chatInput.value = '';
+                simulateBotTyping();
+
+                setTimeout(() => { // Simulate bot processing time
+                    const botResponse = getBotResponse(userMessage);
+                    stopBotTyping();
+                    addMessage(botResponse, 'bot');
+                }, 1000 + Math.random() * 1000); // Random delay between 1-2 seconds
+            }
+        });
+
+        chatInput.addEventListener('keypress', (event) => {
             if (event.key === 'Enter') {
-                sendMessage();
+                sendButton.click(); // Trigger send button click on Enter
             }
         });
     </script>

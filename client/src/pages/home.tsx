@@ -54,6 +54,7 @@ export default function Home() {
           onChatSessionCreate={setCurrentChatSession}
           isCollapsed={isChatCollapsed}
           onCollapse={setIsChatCollapsed}
+          selectedFile={selectedFile}
         />
 
         {/* Right Panel - Live Preview */}

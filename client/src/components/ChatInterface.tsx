@@ -86,6 +86,7 @@ interface ChatInterfaceProps {
   onChatSessionCreate: (sessionId: string) => void;
   isCollapsed: boolean;
   onCollapse: (collapsed: boolean) => void;
+  selectedFile: string | null;
 }
 
 interface ChatMessage {
@@ -107,7 +108,8 @@ export function ChatInterface({
   onProjectCreate, 
   onChatSessionCreate,
   isCollapsed,
-  onCollapse
+  onCollapse,
+  selectedFile
 }: ChatInterfaceProps) {
   const [inputValue, setInputValue] = useState("");
   const [isGenerating, setIsGenerating] = useState(false);
@@ -266,8 +268,8 @@ export function ChatInterface({
       setIsGenerating(true);
       startChatMutation.mutate(inputValue);
     } else {
-      // Subsequent chats - modify existing project
-      const fileName = "index.html"; // TODO: Determine which file to modify
+      // Subsequent chats - modify selected file or default to index.html
+      const fileName = selectedFile || "index.html";
       modifyFileMutation.mutate({
         sessionId: chatSessionId,
         fileName,
@@ -514,7 +516,12 @@ export function ChatInterface({
             <div className="flex items-end space-x-3">
               <div className="flex-1">
                 <Textarea
-                  placeholder="Describe modifications or ask questions about your generated app..."
+                  placeholder={chatSessionId && selectedFile ? 
+                    `Describe changes for ${selectedFile}...` : 
+                    chatSessionId ? 
+                    "Describe modifications for index.html or ask questions..." :
+                    "Describe your web application and watch it come to life..."
+                  }
                   value={inputValue}
                   onChange={(e) => setInputValue(e.target.value)}
                   onKeyDown={handleKeyDown}
@@ -523,9 +530,16 @@ export function ChatInterface({
                 />
                 <div className="flex items-center justify-between mt-2">
                   <div className="flex items-center space-x-4 text-xs text-slate-500">
+                    {chatSessionId && (
+                      <>
+                        <div className="flex items-center space-x-1">
+                          <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+                          <span>Modifying: {selectedFile || "index.html"}</span>
+                        </div>
+                        <span>•</span>
+                      </>
+                    )}
                     <span>Shift + Enter for new line</span>
-                    <span>•</span>
-                    <span>/help for commands</span>
                   </div>
                   <div className="text-xs text-slate-500">{inputValue.length} / 1000</div>
                 </div>
@@ -541,10 +555,7 @@ export function ChatInterface({
             </div>
           </div>
         </>
-      ) : (
-        <div className="flex items-center justify-center h-full">
-        </div>
-      )}
+      ) : null}
     </div>
   );
 }
