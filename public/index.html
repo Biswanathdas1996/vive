@@ -3,137 +3,121 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Calculator</title>
+<title>Todo List</title>
 <style>
 body {
   font-family: sans-serif;
   display: flex;
-  justify-content: center;
+  flex-direction: column;
   align-items: center;
   min-height: 100vh;
+  margin: 0;
   background-color: #f4f4f4;
 }
 
-.calculator {
+.container {
+  width: 80%;
+  max-width: 500px;
   background-color: #fff;
-  border-radius: 8px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   padding: 20px;
-  width: 300px;
+  border-radius: 5px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
-.display {
-  background-color: #eee;
+header {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+input[type="text"] {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 10px;
   border: 1px solid #ccc;
   border-radius: 5px;
-  padding: 10px;
-  font-size: 24px;
-  text-align: right;
-  margin-bottom: 10px;
-}
-
-.buttons {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  grid-gap: 10px;
 }
 
 button {
   background-color: #4CAF50;
   color: white;
+  padding: 10px 15px;
   border: none;
-  padding: 15px;
-  text-align: center;
-  text-decoration: none;
-  display: inline-block;
-  font-size: 16px;
   border-radius: 5px;
   cursor: pointer;
 }
 
-button:hover {
-  background-color: #45a049;
+.todo-list {
+  list-style: none;
+  padding: 0;
 }
 
-button.clear {
-  background-color: #f44336;
+.todo-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px solid #eee;
 }
 
-button.clear:hover {
-  background-color: #d32f2f;
+.todo-item input[type="checkbox"] {
+  margin-right: 10px;
 }
 
-@media (max-width: 350px) {
-  .calculator {
-    width: 250px;
-  }
+.todo-item.completed {
+  text-decoration: line-through;
+  color: #888;
 }
 </style>
 </head>
 <body>
-<div class="calculator">
-  <div class="display" id="display">0</div>
-  <div class="buttons">
-    <button onclick="appendNumber('7')">7</button>
-    <button onclick="appendNumber('8')">8</button>
-    <button onclick="appendNumber('9')">9</button>
-    <button onclick="appendOperator('/')">/</button>
-    <button onclick="appendNumber('4')">4</button>
-    <button onclick="appendNumber('5')">5</button>
-    <button onclick="appendNumber('6')">6</button>
-    <button onclick="appendOperator('*')">*</button>
-    <button onclick="appendNumber('1')">1</button>
-    <button onclick="appendNumber('2')">2</button>
-    <button onclick="appendNumber('3')">3</button>
-    <button onclick="appendOperator('-')">-</button>
-    <button onclick="appendNumber('0')">0</button>
-    <button onclick="appendNumber('.')">.</button>
-    <button onclick="calculate()">=</button>
-    <button class="clear" onclick="clearDisplay()">C</button>
-    <button onclick="appendOperator('+')">+</button>
-  </div>
+<div class="container">
+  <header><h1>My Todo List</h1></header>
+  <input type="text" id="newTodo" placeholder="Add new todo item">
+  <button onclick="addTodo()">Add</button>
+  <ul class="todo-list" id="todoList"></ul>
 </div>
 <script>
-let display = document.getElementById('display');
-let currentInput = '';
-let operator = null;
-let previousInput = null;
+let todos = JSON.parse(localStorage.getItem('todos')) || [];
 
-function appendNumber(num) {
-  currentInput += num;
-  display.textContent = currentInput;
+function renderTodos() {
+  const todoList = document.getElementById('todoList');
+  todoList.innerHTML = '';
+  todos.forEach((todo, index) => {
+    const listItem = document.createElement('li');
+    listItem.classList.add('todo-item');
+    if (todo.completed) listItem.classList.add('completed');
+    listItem.innerHTML = `
+      <input type="checkbox" ${todo.completed ? 'checked' : ''} onchange="toggleComplete(${index})">
+      <span>${todo.text}</span>
+      <button onclick="deleteTodo(${index})">Delete</button>
+    `;
+    todoList.appendChild(listItem);
+  });
 }
 
-function appendOperator(op) {
-  if (operator !== null) {
-    calculate();
+function addTodo() {
+  const newTodoText = document.getElementById('newTodo').value;
+  if (newTodoText.trim() !== '') {
+    todos.push({ text: newTodoText, completed: false });
+    localStorage.setItem('todos', JSON.stringify(todos));
+    document.getElementById('newTodo').value = '';
+    renderTodos();
   }
-  operator = op;
-  previousInput = currentInput;
-  currentInput = '';
 }
 
-function calculate() {
-  if (operator === null || currentInput === '') return;
-  let result;
-  switch (operator) {
-    case '+': result = parseFloat(previousInput) + parseFloat(currentInput); break;
-    case '-': result = parseFloat(previousInput) - parseFloat(currentInput); break;
-    case '*': result = parseFloat(previousInput) * parseFloat(currentInput); break;
-    case '/': result = parseFloat(previousInput) / parseFloat(currentInput); break;
-  }
-  display.textContent = result;
-  currentInput = result.toString();
-  operator = null;
-  previousInput = null; 
+function deleteTodo(index) {
+  todos.splice(index, 1);
+  localStorage.setItem('todos', JSON.stringify(todos));
+  renderTodos();
 }
 
-function clearDisplay() {
-  currentInput = '';
-  operator = null;
-  previousInput = null;
-  display.textContent = '0';
+function toggleComplete(index) {
+  todos[index].completed = !todos[index].completed;
+  localStorage.setItem('todos', JSON.stringify(todos));
+  renderTodos();
 }
+
+renderTodos();
 </script>
 </body>
 </html>

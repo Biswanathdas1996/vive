@@ -123,13 +123,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
         ...(chatSession.messages || []),
         {
           id: crypto.randomUUID(),
-          role: "assistant",
+          role: "assistant" as const,
           content: "File structure and content generated successfully. All HTML files have been created with embedded styles and scripts.",
           timestamp: new Date(),
           workflow: {
             step: 2,
             stepName: "File Structure Generation",
-            status: "completed",
+            status: "completed" as const,
             data: fileStructure
           }
         }
@@ -207,13 +207,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
         ...(chatSession.messages || []),
         {
           id: crypto.randomUUID(),
-          role: "user",
+          role: "user" as const,
           content: modificationRequest,
           timestamp: new Date(),
         },
         {
           id: crypto.randomUUID(),
-          role: "assistant",
+          role: "assistant" as const,
           content: `Modified ${fileName} successfully.`,
           timestamp: new Date(),
         }
@@ -257,7 +257,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const content = await fileGeneratorService.readFile(fileName);
       res.json({ fileName, content });
     } catch (error) {
-      res.status(500).json({ error: error.message });
+      res.status(500).json({ error: error instanceof Error ? error.message : String(error) });
     }
   });
 
@@ -273,7 +273,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       res.json(chatSession);
     } catch (error) {
-      res.status(500).json({ error: error.message });
+      res.status(500).json({ error: error instanceof Error ? error.message : String(error) });
     }
   });
 
