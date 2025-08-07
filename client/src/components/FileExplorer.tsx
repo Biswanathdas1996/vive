@@ -10,7 +10,9 @@ import {
   FileCode, 
   Clock, 
   CheckCircle,
-  Loader
+  Loader,
+  ChevronLeft,
+  ChevronRight
 } from "lucide-react";
 
 interface FileExplorerProps {
@@ -29,6 +31,7 @@ interface GeneratedFile {
 
 export function FileExplorer({ projectId, selectedFile, onFileSelect }: FileExplorerProps) {
   const [expandedFolders, setExpandedFolders] = useState<Set<string>>(new Set(["public"]));
+  const [isCollapsed, setIsCollapsed] = useState(false);
 
   // Fetch project files
   const { data: filesData, isLoading, refetch } = useQuery({
@@ -76,37 +79,54 @@ export function FileExplorer({ projectId, selectedFile, onFileSelect }: FileExpl
   };
 
   return (
-    <div className="w-80 bg-slate-900 border-r border-slate-700 flex flex-col">
+    <div className={`${isCollapsed ? 'w-12' : 'w-80'} bg-slate-900 border-r border-slate-700 flex flex-col transition-all duration-300`}>
       {/* File Explorer Header */}
       <div className="px-4 py-3 border-b border-slate-700">
-        <h2 className="text-sm font-medium text-slate-300 mb-3">Project Explorer</h2>
-        <div className="flex items-center space-x-2">
+        <div className="flex items-center justify-between">
+          {!isCollapsed && <h2 className="text-sm font-medium text-slate-300">Project Explorer</h2>}
           <Button
-            variant="outline"
+            variant="ghost"
             size="sm"
-            className="flex-1 bg-slate-800 hover:bg-slate-700 border-slate-600 text-sm"
+            onClick={() => setIsCollapsed(!isCollapsed)}
+            className="p-1 hover:bg-slate-800"
           >
-            <FolderPlus className="w-4 h-4 mr-2" />
-            New Project
-          </Button>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => refetch()}
-            className="p-2 hover:bg-slate-800 border-slate-600"
-          >
-            <RefreshCw className="w-4 h-4 text-slate-400" />
+            {isCollapsed ? (
+              <ChevronRight className="w-4 h-4 text-slate-400" />
+            ) : (
+              <ChevronLeft className="w-4 h-4 text-slate-400" />
+            )}
           </Button>
         </div>
+        {!isCollapsed && (
+          <div className="flex items-center space-x-2 mt-3">
+            <Button
+              variant="outline"
+              size="sm"
+              className="flex-1 bg-slate-800 hover:bg-slate-700 border-slate-600 text-sm"
+            >
+              <FolderPlus className="w-4 h-4 mr-2" />
+              New Project
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => refetch()}
+              className="p-2 hover:bg-slate-800 border-slate-600"
+            >
+              <RefreshCw className="w-4 h-4 text-slate-400" />
+            </Button>
+          </div>
+        )}
       </div>
 
       {/* File Tree */}
-      <div className="flex-1 overflow-y-auto px-2 py-1">
-        <div className="space-y-0.5">
-          {projectId ? (
-            <>
-              {/* Current Project Section */}
-              <div className="text-xs font-medium text-slate-400 px-2 py-0.5">CURRENT PROJECT</div>
+      {!isCollapsed && (
+        <div className="flex-1 overflow-y-auto px-2 py-1">
+          <div className="space-y-0.5">
+            {projectId ? (
+              <>
+                {/* Current Project Section */}
+                <div className="text-xs font-medium text-slate-400 px-2 py-0.5">CURRENT PROJECT</div>
               
               {/* Public Folder */}
               <div className="ml-1">
@@ -176,9 +196,10 @@ export function FileExplorer({ projectId, selectedFile, onFileSelect }: FileExpl
           )}
         </div>
       </div>
+      )}
 
       {/* Status Panel */}
-      {projectId && (
+      {!isCollapsed && projectId && (
         <div className="border-t border-slate-700 p-2">
           <div className="text-xs font-medium text-slate-400 mb-1">GENERATION STATUS</div>
           <div className="space-y-1">
