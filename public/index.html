@@ -3,250 +3,203 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chat Application Landing Page</title>
+    <title>Modern Landing Page</title>
     <style>
         :root {
             /* Color Palette */
-            --color-primary: #2962ff; /* Blue */
-            --color-secondary: #64b5f6; /* Light Blue */
-            --color-accent: #ff4081; /* Pink */
-            --color-background: #f0f4c3; /* Light Beige */
-            --color-text: #212121; /* Dark Grey */
-            --color-text-light: #ffffff; /* White */
-            --color-shadow: rgba(0, 0, 0, 0.1);
-            --color-border: rgba(0, 0, 0, 0.15);
-            /* Spacing */
-            --space-s: 0.75rem;
-            --space-m: 1.25rem;
-            --space-l: 2rem;
-            --space-xl: 3rem;
-            /* Font */
-            --font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            --font-size-base: 1rem;
-            --font-weight-regular: 400;
-            --font-weight-bold: 700;
-            /* Transitions */
-            --transition-duration: 0.3s;
-        }
+            --primary-color: #89cff0; /* Light Blue */
+            --secondary-color: #f08080; /* Light Red */
+            --accent-color: #90ee90; /* Light Green */
+            --background-color: #f5f5f5; /* Light Gray */
+            --text-color: #333;
+            --muted-color: #777;
+            --border-color: rgba(0, 0, 0, 0.1);
+            --shadow-color: rgba(0, 0, 0, 0.15);
 
-        *,
-        *::before,
-        *::after {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
+            /* Spacing */
+            --spacing-small: 0.5rem;
+            --spacing-medium: 1rem;
+            --spacing-large: 2rem;
+
+            /* Font */
+            --font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+
+            /* Border Radius */
+            --border-radius: 0.75rem;
+
         }
 
         body {
             font-family: var(--font-family);
-            font-size: var(--font-size-base);
-            font-weight: var(--font-weight-regular);
-            color: var(--color-text);
-            background-color: var(--color-background);
+            background-color: var(--background-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 0;
             line-height: 1.6;
-            overflow-x: hidden;
             display: flex;
             flex-direction: column;
             min-height: 100vh;
-            align-items: center;
-            padding-bottom: var(--space-xl);
         }
 
+        /* Header */
         header {
-            background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
-            color: var(--color-text-light);
-            padding: var(--space-m) var(--space-l);
-            width: 100%;
-            text-align: center;
-            box-shadow: 0 2px 10px var(--color-shadow);
-            margin-bottom: var(--space-xl);
+            background: linear-gradient(to right, var(--primary-color), var(--accent-color));
+            color: white;
+            padding: var(--spacing-medium) var(--spacing-large);
+            box-shadow: 0px 2px 10px var(--shadow-color);
         }
 
-        header h1 {
-            font-size: 2rem;
-            font-weight: var(--font-weight-bold);
-            margin-bottom: var(--space-s);
-        }
-
-        main {
-            max-width: 900px;
-            width: 100%;
-            padding: var(--space-l);
-            background-color: rgba(255, 255, 255, 0.9);
-            border-radius: 1rem;
-            box-shadow: 0 4px 15px var(--color-shadow);
-            margin-bottom: var(--space-xl);
+        header nav {
             display: flex;
-            flex-direction: column;
+            justify-content: space-between;
             align-items: center;
         }
 
-        section {
-            margin-bottom: var(--space-l);
+        header nav a {
+            color: white;
+            text-decoration: none;
+            padding: var(--spacing-small) var(--spacing-medium);
+            border-radius: var(--border-radius);
+            transition: background-color 0.2s ease;
         }
 
-        section h2 {
-            font-size: 1.75rem;
-            font-weight: var(--font-weight-bold);
-            margin-bottom: var(--space-m);
-            text-align: center;
+        header nav a:hover {
+            background-color: rgba(255, 255, 255, 0.1);
         }
 
-        p {
-            margin-bottom: var(--space-m);
-            text-align: justify;
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
         }
 
-        .cta-buttons {
-            display: flex;
-            gap: var(--space-m);
-            justify-content: center;
+        /* Main Content */
+        main {
+            flex-grow: 1; /* Allows main to take remaining space */
+            padding: var(--spacing-large);
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: var(--spacing-large);
+            align-items: center;
+        }
+
+        @media (min-width: 768px) {
+            main {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        .hero {
+            padding: var(--spacing-medium);
+            border-radius: var(--border-radius);
+            background-color: white;
+            box-shadow: 0px 5px 15px var(--shadow-color);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            overflow: hidden;
+        }
+
+        .hero:hover {
+            transform: translateY(-5px);
+            box-shadow: 0px 8px 20px var(--shadow-color);
+        }
+
+
+        .hero h1 {
+            font-size: 2.5rem;
+            margin-bottom: var(--spacing-medium);
+        }
+
+        .hero p {
+            font-size: 1.1rem;
+            color: var(--muted-color);
+            margin-bottom: var(--spacing-medium);
         }
 
         .cta-button {
             display: inline-block;
-            padding: var(--space-m) var(--space-l);
-            background-color: var(--color-primary);
-            color: var(--color-text-light);
+            padding: var(--spacing-medium) var(--spacing-large);
+            background-color: var(--primary-color);
+            color: white;
             text-decoration: none;
-            border-radius: 0.75rem;
-            font-weight: var(--font-weight-bold);
-            transition: background-color var(--transition-duration) ease;
-            box-shadow: 0 2px 5px var(--color-shadow);
-            border: none;
-            cursor: pointer;
+            border-radius: var(--border-radius);
+            font-weight: bold;
+            transition: background-color 0.2s ease;
+            box-shadow: 0px 3px 8px var(--shadow-color);
         }
 
-        .cta-button:hover, .cta-button:focus {
-            background-color: #1a4dff; /* Darker shade on hover */
-            outline: none;
+        .cta-button:hover {
+            background-color: darken(var(--primary-color), 10%);
         }
 
-        .feature {
-            display: flex;
-            align-items: center;
-            margin-bottom: var(--space-l);
-            gap: var(--space-l);
+        /* Shapes/Visuals */
+
+        .visual {
+            background: linear-gradient(135deg, var(--secondary-color), var(--primary-color));
+            border-radius: var(--border-radius);
+            height: 300px;
+            box-shadow: 0px 5px 15px var(--shadow-color);
         }
 
-        .feature-icon {
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, var(--color-accent), var(--color-primary));
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            color: var(--color-text-light);
-            font-size: 2rem;
-            flex-shrink: 0;
-        }
 
-        .feature-content {
-            flex-grow: 1;
-        }
-
+        /* Footer */
         footer {
+            background-color: #333;
+            color: white;
             text-align: center;
-            color: rgba(0, 0, 0, 0.6);
-            font-size: 0.85rem;
-            padding: var(--space-m) var(--space-l);
-            width: 100%;
-            margin-top: auto;
+            padding: var(--spacing-medium);
         }
 
-        @media (max-width: 768px) {
-            header {
-                padding: var(--space-m);
+        /* Responsive adjustments */
+        @media (max-width: 767px) {
+            header nav {
+                flex-direction: column;
+                align-items: flex-start;
             }
-
-            header h1 {
-                font-size: 1.75rem;
+            header nav a {
+                margin-bottom: var(--spacing-small);
             }
-
             main {
-                padding: var(--space-m);
+                padding: var(--spacing-medium);
             }
-
-            section h2 {
-                font-size: 1.5rem;
+            .hero {
+                padding: var(--spacing-medium);
             }
-
-            .cta-buttons {
-                flex-direction: column;
-                align-items: center;
+            .hero h1 {
+                font-size: 2rem;
             }
-
-            .cta-button {
-                width: 100%;
-                text-align: center;
-            }
-
-            .feature {
-                flex-direction: column;
-                text-align: center;
-            }
-
-            .feature-icon {
-                margin-bottom: var(--space-m);
+            .visual {
+                height: 200px;
             }
         }
-
     </style>
 </head>
 <body>
 
     <header>
-        <h1>Welcome to Our Chat Application</h1>
-        <p>Connect with friends, family, and colleagues seamlessly.</p>
+        <nav>
+            <a href="#" class="logo">My App</a>
+            <div>
+                <a href="#">Features</a>
+                <a href="#">Pricing</a>
+                <a href="#">Login</a>
+            </div>
+        </nav>
     </header>
 
     <main>
-        <section>
-            <h2>About Our Chat Application</h2>
-            <p>
-                Our chat application provides a secure and intuitive platform for real-time communication.
-                Enjoy features like group chats, file sharing, and end-to-end encryption.
-                Stay connected with a user-friendly experience designed for everyone.
-            </p>
-            <div class="cta-buttons">
-                <a href="#" class="cta-button">Sign Up</a>
-                <a href="#" class="cta-button">Login</a>
-            </div>
+        <section class="hero">
+            <h1>Welcome to My Awesome App</h1>
+            <p>Unlock your potential with our revolutionary platform.  Experience the future of [your domain] today!</p>
+            <a href="#" class="cta-button">Get Started</a>
         </section>
 
-        <section>
-            <h2>Key Features</h2>
-
-            <div class="feature">
-                <div class="feature-icon">💬</div>
-                <div class="feature-content">
-                    <h3>Real-time Messaging</h3>
-                    <p>Send and receive messages instantly with fast and reliable performance.</p>
-                </div>
-            </div>
-
-            <div class="feature">
-                <div class="feature-icon">🔒</div>
-                <div class="feature-content">
-                    <h3>Secure Communication</h3>
-                    <p>Benefit from end-to-end encryption to keep your conversations private and secure.</p>
-                </div>
-            </div>
-
-            <div class="feature">
-                <div class="feature-icon">👥</div>
-                <div class="feature-content">
-                    <h3>Group Chat</h3>
-                    <p>Create group chats to easily connect with multiple people at once.</p>
-                </div>
-            </div>
-
-        </section>
+        <div class="visual">
+            <!-- Placeholder for visual element -->
+        </div>
     </main>
 
     <footer>
-        &copy; 2024 Chat Application. All rights reserved.
+        <p>&copy; 2024 My App. All rights reserved.</p>
     </footer>
+
 </body>
 </html>

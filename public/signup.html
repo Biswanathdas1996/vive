@@ -5,253 +5,226 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Signup - Modern Web App</title>
     <style>
-        /* CSS Variables (Custom Properties) */
         :root {
-            --primary-color: #6200ff; /* Vibrant Purple */
-            --secondary-color: #3a127d; /* Deep Purple */
-            --accent-color: #00d4ff;  /* Cyan */
-            --text-color: #f0f0f0;   /* Light Grey */
-            --background-color: #121212; /* Dark Grey */
-            --card-background: rgba(32, 32, 32, 0.8); /* Slightly transparent dark grey */
-            --shadow-color: rgba(0, 0, 0, 0.3);
-            --border-radius: 0.75rem;
-            --padding: 1.5rem;
+            /* Colors */
+            --color-primary: #5a7dfa;
+            --color-primary-light: #7897ff;
+            --color-primary-dark: #4660d6;
+            --color-secondary: #f2f7ff;
+            --color-accent: #ffc107;
+            --color-text-light: #f0f0f0;
+            --color-text-dark: #333;
+            --color-background: #e9e9ee;
+            --color-border: rgba(0, 0, 0, 0.1);
+
+            /* Spacing */
+            --space-s: 0.5rem;
+            --space-m: 1rem;
+            --space-l: 1.5rem;
+            --space-xl: 2rem;
+
+            /* Font */
             --font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            --transition-duration: 0.3s;
-            --focus-shadow: 0 0 0 2px var(--accent-color);
+            --font-size-base: 1rem;
+            --font-weight-normal: 400;
+            --font-weight-bold: 600;
+            --line-height-base: 1.6;
         }
 
-        /* Global Styles */
-        body {
-            font-family: var(--font-family);
-            background-color: var(--background-color);
-            color: var(--text-color);
+        *, *::before, *::after {
+            box-sizing: border-box;
             margin: 0;
             padding: 0;
+        }
+
+        body {
+            font-family: var(--font-family);
+            font-size: var(--font-size-base);
+            font-weight: var(--font-weight-normal);
+            line-height: var(--line-height-base);
+            background-color: var(--color-background);
+            color: var(--color-text-dark);
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            overflow: hidden; /* Prevent scrollbars */
+            padding: var(--space-l);
         }
 
         .container {
-            background: var(--card-background);
-            border-radius: var(--border-radius);
-            padding: var(--padding);
-            box-shadow: 0 4px 10px var(--shadow-color);
-            width: clamp(300px, 80%, 450px); /* Responsive width */
-            transition: background-color var(--transition-duration) ease, box-shadow var(--transition-duration) ease;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
             backdrop-filter: blur(10px);
+            padding: var(--space-xl);
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+            transition: transform 0.3s ease;
+            border: 1px solid var(--color-border);
         }
 
         .container:hover {
-            box-shadow: 0 6px 15px var(--shadow-color);
+            transform: translateY(-5px);
         }
 
         h1 {
-            text-align: center;
-            margin-bottom: 2rem;
-            color: var(--accent-color);
-            font-size: clamp(1.8rem, 4vw, 2.5rem); /* Fluid Typography */
-            letter-spacing: 0.05em;
+            font-size: 2rem;
+            font-weight: var(--font-weight-bold);
+            margin-bottom: var(--space-xl);
+            color: var(--color-primary);
         }
 
-        /* Form Styles */
         .form-group {
-            margin-bottom: 1.5rem;
+            margin-bottom: var(--space-m);
+            text-align: left;
         }
 
         label {
             display: block;
-            margin-bottom: 0.5rem;
-            font-weight: bold;
-            color: var(--text-color);
-            font-size: 0.95rem;
+            margin-bottom: var(--space-s);
+            font-weight: var(--font-weight-bold);
+            color: var(--color-text-dark);
         }
 
         input[type="text"],
         input[type="email"],
         input[type="password"] {
             width: 100%;
-            padding: 0.9rem;
-            border: none;
-            border-radius: var(--border-radius);
-            background-color: rgba(255, 255, 255, 0.08);
-            color: var(--text-color);
-            font-size: 1rem;
-            transition: background-color var(--transition-duration) ease, box-shadow var(--transition-duration) ease;
+            padding: var(--space-m);
+            border: 1px solid var(--color-border);
+            border-radius: 10px;
+            background-color: rgba(255, 255, 255, 0.9);
+            font-size: var(--font-size-base);
+            transition: border-color 0.2s ease;
             outline: none;
-            box-shadow: 0 2px 5px var(--shadow-color);
         }
 
-        input:focus {
-            background-color: rgba(255, 255, 255, 0.12);
-            box-shadow: var(--focus-shadow);
-        }
-
-        input[type="text"]::placeholder,
-        input[type="email"]::placeholder,
-        input[type="password"]::placeholder {
-            color: rgba(255, 255, 255, 0.6);
+        input[type="text"]:focus,
+        input[type="email"]:focus,
+        input[type="password"]:focus {
+            border-color: var(--color-primary);
         }
 
         .error-message {
-            color: #ff4444; /* Red */
-            font-size: 0.85rem;
-            margin-top: 0.25rem;
+            color: #dc3545;
+            font-size: 0.8rem;
+            margin-top: var(--space-s);
+            display: none;
         }
 
-        /* Button Styles */
-        button {
-            width: 100%;
-            padding: 0.9rem;
-            border: none;
-            border-radius: var(--border-radius);
-            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-            color: var(--text-color);
-            font-size: 1rem;
-            font-weight: bold;
-            cursor: pointer;
-            transition: transform var(--transition-duration) ease, box-shadow var(--transition-duration) ease;
-            box-shadow: 0 3px 8px var(--shadow-color);
-        }
-
-        button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 12px var(--shadow-color);
-        }
-
-        button:focus {
-            outline: none;
-            box-shadow: var(--focus-shadow);
-        }
-
-        /* Link Styles */
-        .link-text {
-            text-align: center;
-            margin-top: 1.5rem;
-            font-size: 0.9rem;
-        }
-
-        a {
-            color: var(--accent-color);
+        .btn {
+            display: inline-block;
+            padding: var(--space-m) var(--space-xl);
+            background: linear-gradient(135deg, var(--color-primary), var(--color-primary-light));
+            color: var(--color-text-light);
             text-decoration: none;
-            transition: color var(--transition-duration) ease;
+            border-radius: 10px;
+            font-weight: var(--font-weight-bold);
+            border: none;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
 
-        a:hover {
-            color: #b3e5fc; /* Lighter Cyan */
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
         }
 
-        /* Additional visual elements */
-        .background-shape {
-            position: fixed;
-            top: -10%;
-            left: -10%;
-            width: 120%;
-            height: 120%;
-            background: linear-gradient(135deg, rgba(98, 0, 255, 0.2) 0%, rgba(0, 212, 255, 0.2) 100%);
-            z-index: -1;
-            clip-path: circle(50% at 50% 50%);
-            animation: rotateBackground 20s linear infinite;
+        .btn:focus {
+           outline: 2px solid var(--color-primary);
+           outline-offset: 2px;
         }
 
-        @keyframes rotateBackground {
-            from {
-                transform: rotate(0deg);
-            }
-            to {
-                transform: rotate(360deg);
-            }
+        .btn:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
 
-        /* Responsive adjustments */
-        @media (max-width: 600px) {
-            .container {
-                width: 90%;
-            }
+        .form-group.error .error-message {
+            display: block;
+        }
+
+        .form-group.error input {
+            border-color: #dc3545;
         }
 
     </style>
 </head>
 <body>
-    <div class="background-shape"></div>
     <div class="container">
         <h1>Sign Up</h1>
-        <form id="signupForm">
+
+        <form id="signupForm" novalidate>
             <div class="form-group">
                 <label for="username">Username</label>
-                <input type="text" id="username" name="username" placeholder="Enter your username" required>
-                <div class="error-message" id="usernameError"></div>
+                <input type="text" id="username" name="username" required>
+                <div class="error-message" id="usernameError">Please enter a username.</div>
             </div>
+
             <div class="form-group">
                 <label for="email">Email</label>
-                <input type="email" id="email" name="email" placeholder="Enter your email" required>
-                <div class="error-message" id="emailError"></div>
+                <input type="email" id="email" name="email" required>
+                <div class="error-message" id="emailError">Please enter a valid email address.</div>
             </div>
+
             <div class="form-group">
                 <label for="password">Password</label>
-                <input type="password" id="password" name="password" placeholder="Enter your password" required>
-                <div class="error-message" id="passwordError"></div>
+                <input type="password" id="password" name="password" required>
+                <div class="error-message" id="passwordError">Please enter a password.</div>
             </div>
-            <button type="submit">Sign Up</button>
+
+            <button type="submit" class="btn">Sign Up</button>
         </form>
-        <div class="link-text">
-            Already have an account? <a href="#">Login</a>
-        </div>
     </div>
 
     <script>
-        // Form Validation
         const form = document.getElementById('signupForm');
-        const usernameInput = document.getElementById('username');
-        const emailInput = document.getElementById('email');
-        const passwordInput = document.getElementById('password');
-        const usernameError = document.getElementById('usernameError');
-        const emailError = document.getElementById('emailError');
-        const passwordError = document.getElementById('passwordError');
 
         form.addEventListener('submit', function(event) {
             event.preventDefault(); // Prevent form submission
 
             let isValid = true;
 
+            // Clear existing errors
+            const errorMessages = document.querySelectorAll('.error-message');
+            errorMessages.forEach(message => {
+                message.style.display = 'none';
+                message.parentElement.classList.remove('error');
+            });
+
             // Username validation
-            if (usernameInput.value.trim() === "") {
-                usernameError.textContent = "Username is required";
+            const usernameInput = document.getElementById('username');
+            if (usernameInput.value.trim() === '') {
+                document.getElementById('usernameError').style.display = 'block';
+                usernameInput.parentElement.classList.add('error');
                 isValid = false;
-            } else {
-                usernameError.textContent = "";
             }
 
             // Email validation
+            const emailInput = document.getElementById('email');
             const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            if (!emailRegex.test(emailInput.value)) {
-                emailError.textContent = "Invalid email format";
+            if (!emailRegex.test(emailInput.value.trim())) {
+                document.getElementById('emailError').style.display = 'block';
+                emailInput.parentElement.classList.add('error');
                 isValid = false;
-            } else {
-                emailError.textContent = "";
             }
 
             // Password validation
-            if (passwordInput.value.length < 8) {
-                passwordError.textContent = "Password must be at least 8 characters long";
+            const passwordInput = document.getElementById('password');
+            if (passwordInput.value.trim() === '') {
+                document.getElementById('passwordError').style.display = 'block';
+                passwordInput.parentElement.classList.add('error');
                 isValid = false;
-            } else {
-                passwordError.textContent = "";
             }
 
             if (isValid) {
                 // Simulate successful signup (replace with actual API call)
-                alert("Signup successful! (Simulated)");
-                form.reset(); // Clear the form
+                alert('Signup successful!');
+                form.reset(); // Optionally reset the form
             }
         });
-
-        // Optional: Add some visual feedback on successful/failed validation attempts
-        // (e.g., changing input borders or showing a checkmark/cross icon)
-
     </script>
 </body>
 </html>

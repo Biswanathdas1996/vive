@@ -449,8 +449,8 @@ export function ChatInterface({
                           <div className="text-xs font-medium text-slate-300 mb-2">
                             📋 Analysis Results:
                           </div>
-                          <div className="bg-slate-950 rounded p-2 text-xs text-slate-300 max-h-48 overflow-y-auto">
-                            <div className="font-mono">
+                          <div className="bg-slate-950 rounded p-2 text-xs text-slate-300 overflow-x-auto overflow-y-hidden">
+                            <div className="font-mono min-w-max">
                               {renderJsonData(message.workflow.data)}
                             </div>
                           </div>
