@@ -51,8 +51,8 @@ Currently implements a minimal user system with username-based identification. T
 ## External Dependencies
 
 **AI Services**: 
-- **OpenAI GPT-4o** for prompt analysis, requirement extraction, and code generation
-- Structured JSON responses for parsing AI-generated content
+- **Google Gemini Pro** for prompt analysis, requirement extraction, and code generation
+- JSON extraction from natural language responses for parsing AI-generated content
 
 **Database Services**:
 - **Neon Database** (serverless PostgreSQL) for production data persistence
