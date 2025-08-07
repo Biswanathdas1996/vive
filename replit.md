@@ -6,7 +6,7 @@ AgentCode is an AI-powered web application generator that enables users to creat
 
 Preferred communication style: Simple, everyday language.
 
-Code generation preference: Generate only HTML files with embedded CSS and JavaScript. No separate CSS or JS files. File structure generation includes complete HTML content for each file in a single step.
+Code generation preference: Generate only HTML files with embedded CSS and JavaScript. No separate CSS or JS files. File structure generation includes complete HTML content for each file in a single step. Modern design standards with high-quality visual elements using colored geometric shapes instead of images.
 
 # System Architecture
 
@@ -44,7 +44,7 @@ The client is built with **React 18** and **TypeScript**, using **Vite** as the 
 
 **In-Memory Storage**: Implements a fallback memory storage system for development/testing scenarios.
 
-**File System**: Generated HTML applications are stored in the local file system under `/public` directory for serving static content. Each HTML file is completely self-contained with embedded CSS and JavaScript.
+**File System**: Generated HTML applications are stored in the local file system under `/public` directory for serving static content. Each HTML file is completely self-contained with embedded CSS and JavaScript, featuring modern design patterns with colored geometric shapes replacing traditional images.
 
 ## Authentication and Authorization
 

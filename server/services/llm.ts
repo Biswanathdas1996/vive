@@ -106,24 +106,45 @@ Requirements:
         filePrompt = (fileStructure.public.children[fileName] as any).prompt;
       }
 
-      const prompt = `You are an expert web developer. Generate a complete, self-contained modern HTML5 file with ALL styles and JavaScript embedded within the HTML file using <style> and <script> tags. Do NOT reference external CSS or JS files.
+      const prompt = `You are an expert modern web developer specialized in creating high-quality, contemporary HTML5 applications. Generate a complete, self-contained HTML5 file with ALL styles and JavaScript embedded using <style> and <script> tags. Do NOT reference external CSS, JS, or image files.
 
-Requirements:
-- Complete modern HTML5 document with DOCTYPE
-- All CSS styles embedded in <style> tags in the <head>
-- All JavaScript embedded in <script> tags
-- Modern, responsive design using CSS Grid/Flexbox
-- Clean, professional styling
-- Full functionality for the requested features
-- Mobile-responsive design
-- Proper semantic HTML
--for any image or icon, use placeholder text or a simple shape (e.g., a colored rectangle)
+MODERN DESIGN REQUIREMENTS:
+- Use contemporary design patterns (glassmorphism, neumorphism, gradient overlays, subtle shadows)
+- Implement modern color palettes (soft gradients, complementary colors, proper contrast ratios)
+- Apply modern typography (font stacks, proper sizing hierarchy, line-height optimization)
+- Create smooth animations and micro-interactions with CSS transitions/transforms
+- Use CSS custom properties (variables) for consistent theming
+- Implement modern spacing and layout principles
+
+VISUAL ELEMENTS:
+- Replace ALL images with colored geometric shapes, gradients, or CSS-generated icons
+- Use colored rectangles, circles, or rounded boxes as placeholders
+- Create visual appeal through color combinations, gradients, and shapes
+- Implement CSS icons using ::before/::after pseudo-elements when needed
+- Use box-shadow, border-radius, and background gradients for visual depth
+
+TECHNICAL SPECIFICATIONS:
+- Modern HTML5 semantic structure (header, nav, main, section, article, footer)
+- CSS Grid and Flexbox for sophisticated layouts
+- Mobile-first responsive design with fluid typography (clamp, rem, em units)
+- CSS animations and transitions for polished interactions
+- Modern JavaScript (ES6+) with proper event handling
+- Accessibility features (ARIA labels, semantic markup, keyboard navigation)
+- Performance optimizations (efficient selectors, minimal reflow)
+
+CSS STYLE GUIDELINES:
+- Use CSS custom properties for colors and spacing
+- Implement modern color schemes (dark/light themes when appropriate)
+- Apply sophisticated hover effects and focus states
+- Use backdrop-filter, filter effects, and modern CSS features
+- Implement smooth scrolling and polished user interactions
+- Create depth with layered shadows and subtle gradients
 
 File: ${fileName}
 Specific requirements: ${filePrompt}
-Overall project context: ${JSON.stringify(analysisResult)}
+Project context: ${JSON.stringify(analysisResult)}
 
-Return ONLY the complete HTML content, nothing else. No markdown formatting or code blocks.`;
+Generate a production-ready, visually stunning HTML5 application that demonstrates modern web development best practices. Return ONLY the complete HTML content without markdown formatting.`;
 
       const result = await model.generateContent(prompt);
       const response = await result.response;
