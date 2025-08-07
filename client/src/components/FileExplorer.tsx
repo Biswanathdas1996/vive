@@ -101,21 +101,21 @@ export function FileExplorer({ projectId, selectedFile, onFileSelect }: FileExpl
       </div>
 
       {/* File Tree */}
-      <div className="flex-1 overflow-y-auto px-2 py-2">
-        <div className="space-y-1">
+      <div className="flex-1 overflow-y-auto px-2 py-1">
+        <div className="space-y-0.5">
           {projectId ? (
             <>
               {/* Current Project Section */}
-              <div className="text-xs font-medium text-slate-400 px-2 py-1">CURRENT PROJECT</div>
+              <div className="text-xs font-medium text-slate-400 px-2 py-0.5">CURRENT PROJECT</div>
               
               {/* Public Folder */}
-              <div className="ml-2">
+              <div className="ml-1">
                 <div 
-                  className="flex items-center space-x-2 px-2 py-1.5 hover:bg-slate-800 rounded cursor-pointer group"
+                  className="flex items-center space-x-1.5 px-2 py-1 hover:bg-slate-800 rounded cursor-pointer group"
                   onClick={() => toggleFolder("public")}
                 >
-                  <Folder className="w-4 h-4 text-blue-400" />
-                  <span className="text-sm text-slate-300 font-mono">public/</span>
+                  <Folder className="w-3 h-3 text-blue-400" />
+                  <span className="text-xs text-slate-300 font-mono">public/</span>
                   <div className={`ml-auto transition-transform ${
                     expandedFolders.has("public") ? "rotate-90" : ""
                   }`}>
@@ -125,23 +125,23 @@ export function FileExplorer({ projectId, selectedFile, onFileSelect }: FileExpl
                 
                 {/* Files in public folder */}
                 {expandedFolders.has("public") && (
-                  <div className="ml-4 space-y-1">
+                  <div className="ml-3 space-y-0.5">
                     {isLoading ? (
-                      <div className="flex items-center space-x-2 px-2 py-1 text-slate-400">
+                      <div className="flex items-center space-x-1.5 px-2 py-0.5 text-slate-400">
                         <Loader className="w-3 h-3 animate-spin" />
-                        <span className="text-sm">Loading files...</span>
+                        <span className="text-xs">Loading files...</span>
                       </div>
                     ) : files.length > 0 ? (
                       files.map((file) => (
                         <div
                           key={file.id}
-                          className={`flex items-center space-x-2 px-2 py-1 hover:bg-slate-800 rounded cursor-pointer group ${
+                          className={`flex items-center space-x-1.5 px-2 py-0.5 hover:bg-slate-800 rounded cursor-pointer group ${
                             selectedFile === file.fileName ? "bg-slate-800" : ""
                           }`}
                           onClick={() => onFileSelect(file.fileName)}
                         >
                           {getFileIcon(file.fileName)}
-                          <span className="text-sm text-slate-300 font-mono flex-1">
+                          <span className="text-xs text-slate-300 font-mono flex-1">
                             {file.fileName}
                           </span>
                           <div className="opacity-0 group-hover:opacity-100">
@@ -150,7 +150,7 @@ export function FileExplorer({ projectId, selectedFile, onFileSelect }: FileExpl
                         </div>
                       ))
                     ) : (
-                      <div className="text-sm text-slate-500 px-2 py-1 italic">
+                      <div className="text-xs text-slate-500 px-2 py-0.5 italic">
                         No files generated yet
                       </div>
                     )}
@@ -159,18 +159,18 @@ export function FileExplorer({ projectId, selectedFile, onFileSelect }: FileExpl
               </div>
 
               {/* Generation History */}
-              <div className="mt-4">
-                <div className="text-xs font-medium text-slate-400 px-2 py-1">GENERATION HISTORY</div>
-                <div className="ml-2 space-y-1">
-                  <div className="flex items-center space-x-2 px-2 py-1.5 hover:bg-slate-800 rounded cursor-pointer">
+              <div className="mt-2">
+                <div className="text-xs font-medium text-slate-400 px-2 py-0.5">GENERATION HISTORY</div>
+                <div className="ml-1 space-y-0.5">
+                  <div className="flex items-center space-x-1.5 px-2 py-1 hover:bg-slate-800 rounded cursor-pointer">
                     <Clock className="w-3 h-3 text-amber-400" />
-                    <span className="text-sm text-slate-400">Current Session</span>
+                    <span className="text-xs text-slate-400">Current Session</span>
                   </div>
                 </div>
               </div>
             </>
           ) : (
-            <div className="text-sm text-slate-500 px-2 py-4 text-center italic">
+            <div className="text-xs text-slate-500 px-2 py-2 text-center italic">
               Start a chat to create your first project
             </div>
           )}
@@ -179,23 +179,23 @@ export function FileExplorer({ projectId, selectedFile, onFileSelect }: FileExpl
 
       {/* Status Panel */}
       {projectId && (
-        <div className="border-t border-slate-700 p-4">
-          <div className="text-xs font-medium text-slate-400 mb-2">GENERATION STATUS</div>
-          <div className="space-y-2">
+        <div className="border-t border-slate-700 p-2">
+          <div className="text-xs font-medium text-slate-400 mb-1">GENERATION STATUS</div>
+          <div className="space-y-1">
             <div className="flex items-center justify-between">
-              <span className="text-sm text-slate-300">Analysis</span>
-              <CheckCircle className="w-4 h-4 text-emerald-500" />
+              <span className="text-xs text-slate-300">Analysis</span>
+              <CheckCircle className="w-3 h-3 text-emerald-500" />
             </div>
             <div className="flex items-center justify-between">
-              <span className="text-sm text-slate-300">File Structure</span>
-              <CheckCircle className="w-4 h-4 text-emerald-500" />
+              <span className="text-xs text-slate-300">File Structure</span>
+              <CheckCircle className="w-3 h-3 text-emerald-500" />
             </div>
             <div className="flex items-center justify-between">
-              <span className="text-sm text-slate-300">Content Generation</span>
+              <span className="text-xs text-slate-300">Content Generation</span>
               {files.some(f => f.status === 'generating') ? (
-                <Loader className="w-4 h-4 text-blue-500 animate-spin" />
+                <Loader className="w-3 h-3 text-blue-500 animate-spin" />
               ) : (
-                <CheckCircle className="w-4 h-4 text-emerald-500" />
+                <CheckCircle className="w-3 h-3 text-emerald-500" />
               )}
             </div>
           </div>

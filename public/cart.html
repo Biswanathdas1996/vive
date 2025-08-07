@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Your Shopping Cart</title>
+    <title>Shopping Cart</title>
     <style>
         body {
             font-family: sans-serif;
@@ -11,11 +11,10 @@
             padding: 0;
             background-color: #f4f4f4;
             color: #333;
-            line-height: 1.6;
         }
 
         .container {
-            max-width: 960px;
+            max-width: 1200px;
             margin: 20px auto;
             padding: 20px;
             background-color: #fff;
@@ -26,45 +25,57 @@
         h1 {
             text-align: center;
             margin-bottom: 20px;
-            color: #333;
+        }
+
+        .cart-items {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
         }
 
         .cart-item {
             display: flex;
             align-items: center;
-            justify-content: space-between;
-            padding: 15px;
-            border-bottom: 1px solid #eee;
-        }
-
-        .cart-item:last-child {
-            border-bottom: none;
-        }
-
-        .item-details {
-            flex: 1;
-            margin-right: 15px;
+            border: 1px solid #ddd;
+            padding: 10px;
+            border-radius: 4px;
+            background-color: #fff;
         }
 
         .item-image {
-            width: 60px;
-            height: 60px;
+            width: 80px;
+            height: 80px;
             object-fit: cover;
-            border-radius: 4px;
             margin-right: 15px;
+            border-radius: 4px;
+        }
+
+        .item-details {
+            flex-grow: 1;
+        }
+
+        .item-name {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .item-price {
+            font-weight: bold;
         }
 
         .quantity-controls {
             display: flex;
             align-items: center;
+            margin-left: 15px;
         }
 
         .quantity-controls button {
-            background-color: #ddd;
+            background-color: #007bff;
+            color: #fff;
             border: none;
             padding: 5px 10px;
-            cursor: pointer;
             border-radius: 4px;
+            cursor: pointer;
             margin: 0 5px;
         }
 
@@ -76,97 +87,43 @@
             padding: 5px;
         }
 
-        .remove-item-button {
-            background-color: #e74c3c;
-            color: white;
+        .remove-button {
+            background-color: #dc3545;
+            color: #fff;
             border: none;
-            padding: 8px 15px;
+            padding: 5px 10px;
             border-radius: 4px;
             cursor: pointer;
-            transition: background-color 0.2s ease;
-        }
-
-        .remove-item-button:hover {
-            background-color: #c0392b;
         }
 
         .cart-summary {
             margin-top: 20px;
             padding: 15px;
-            border: 1px solid #ccc;
-            border-radius: 8px;
-        }
-
-        .coupon-section {
-            display: flex;
-            margin-bottom: 15px;
-        }
-
-        .coupon-section input[type="text"] {
-            flex: 1;
-            padding: 10px;
-            border: 1px solid #ccc;
+            border: 1px solid #ddd;
             border-radius: 4px;
-            margin-right: 10px;
+            background-color: #f9f9f9;
+            text-align: right;
         }
 
-        .coupon-section button {
-            background-color: #2ecc71;
-            color: white;
-            border: none;
-            padding: 10px 15px;
-            border-radius: 4px;
-            cursor: pointer;
-            transition: background-color 0.2s ease;
-        }
-
-        .coupon-section button:hover {
-            background-color: #27ae60;
+        .cart-total {
+            font-size: 1.2em;
+            font-weight: bold;
         }
 
         .checkout-button {
-            background-color: #3498db;
-            color: white;
+            background-color: #28a745;
+            color: #fff;
             border: none;
-            padding: 12px 20px;
+            padding: 10px 20px;
             border-radius: 4px;
             cursor: pointer;
-            display: block;
-            width: 100%;
-            text-align: center;
-            text-decoration: none;
-            transition: background-color 0.2s ease;
-        }
-
-        .checkout-button:hover {
-            background-color: #2980b9;
-        }
-
-        .empty-cart-message {
-            text-align: center;
-            padding: 20px;
-            font-style: italic;
-            color: #777;
+            font-size: 1em;
+            margin-top: 10px;
         }
 
         @media (max-width: 768px) {
-            .cart-item {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-
-            .item-details {
-                margin-right: 0;
-                margin-bottom: 10px;
-            }
-
-            .item-image {
-                margin-right: 0;
-                margin-bottom: 10px;
-            }
-
-            .quantity-controls {
-                margin-bottom: 10px;
+            .cart-items {
+                grid-template-columns: 1fr;
             }
         }
     </style>
@@ -175,161 +132,81 @@
     <div class="container">
         <h1>Your Shopping Cart</h1>
 
-        <div id="cart-items-container">
+        <div class="cart-items" id="cart-items">
             <!-- Cart items will be dynamically added here -->
         </div>
 
         <div class="cart-summary">
-            <div class="coupon-section">
-                <input type="text" id="coupon-code" placeholder="Enter coupon code">
-                <button onclick="applyCoupon()">Apply Coupon</button>
-            </div>
-            <p><b>Subtotal:</b> $<span id="subtotal">0.00</span></p>
-            <p><b>Discount:</b> $<span id="discount">0.00</span></p>
-            <p><b>Total:</b> $<span id="total">0.00</span></p>
-            <a href="#" class="checkout-button">Proceed to Checkout</a>
+            <p class="cart-total">Total: $<span id="cart-total">0.00</span></p>
+            <button class="checkout-button" onclick="checkout()">Proceed to Checkout</button>
         </div>
     </div>
 
     <script>
-        const cartItemsContainer = document.getElementById('cart-items-container');
-        const subtotalElement = document.getElementById('subtotal');
-        const discountElement = document.getElementById('discount');
-        const totalElement = document.getElementById('total');
-        const couponCodeInput = document.getElementById('coupon-code');
-
-        let cartItems = [];
-        let discountAmount = 0;
-        let couponApplied = false;
-
-        // Sample product data (replace with actual product data)
-        const products = [
-            { id: 1, name: 'Product A', price: 25.00, image: 'https://via.placeholder.com/60' },
-            { id: 2, name: 'Product B', price: 50.00, image: 'https://via.placeholder.com/60' },
-            { id: 3, name: 'Product C', price: 15.00, image: 'https://via.placeholder.com/60' }
+        // Sample cart data (replace with data from local storage or API)
+        let cartItems = [
+            { id: 1, name: "Product 1", price: 25.00, quantity: 2, image: "https://via.placeholder.com/80" },
+            { id: 2, name: "Product 2", price: 50.00, quantity: 1, image: "https://via.placeholder.com/80" },
+            { id: 3, name: "Product 3", price: 15.00, quantity: 3, image: "https://via.placeholder.com/80" }
         ];
 
-        // Load cart from local storage (if any)
-        document.addEventListener('DOMContentLoaded', () => {
-            const savedCart = localStorage.getItem('cart');
-            if (savedCart) {
-                cartItems = JSON.parse(savedCart);
-                renderCartItems();
-                updateTotals();
-            }
-        });
 
+        function updateCartDisplay() {
+            const cartItemsContainer = document.getElementById("cart-items");
+            const cartTotalElement = document.getElementById("cart-total");
+            let total = 0;
 
-        function addItemToCart(productId, quantity = 1) {
-            const product = products.find(p => p.id === productId);
-            if (!product) {
-                console.error('Product not found');
-                return;
-            }
-
-            const existingItemIndex = cartItems.findIndex(item => item.productId === productId);
-
-            if (existingItemIndex !== -1) {
-                cartItems[existingItemIndex].quantity += quantity;
-            } else {
-                cartItems.push({ productId: productId, name: product.name, price: product.price, quantity: quantity, image: product.image });
-            }
-
-            renderCartItems();
-            updateTotals();
-            saveCartToLocalStorage();
-        }
-
-
-
-        function removeItemFromCart(productId) {
-            cartItems = cartItems.filter(item => item.productId !== productId);
-            renderCartItems();
-            updateTotals();
-            saveCartToLocalStorage();
-        }
-
-        function updateQuantity(productId, newQuantity) {
-            const itemIndex = cartItems.findIndex(item => item.productId === productId);
-            if (itemIndex !== -1) {
-                cartItems[itemIndex].quantity = parseInt(newQuantity, 10);
-                if (isNaN(cartItems[itemIndex].quantity) || cartItems[itemIndex].quantity <= 0) {
-                    cartItems.splice(itemIndex, 1); // Remove item if quantity is invalid or zero
-                }
-                renderCartItems();
-                updateTotals();
-                saveCartToLocalStorage();
-            }
-        }
-
-        function applyCoupon() {
-            const couponCode = couponCodeInput.value.trim().toLowerCase();
-            if (couponApplied) {
-                alert("Coupon already applied!");
-                return;
-            }
-
-
-            if (couponCode === 'DISCOUNT10') {
-                discountAmount = calculateSubtotal() * 0.10; // 10% discount
-                couponApplied = true;
-                alert('Coupon applied successfully!');
-                updateTotals();
-            } else {
-                alert('Invalid coupon code.');
-            }
-        }
-
-
-
-        function calculateSubtotal() {
-            let subtotal = 0;
-            cartItems.forEach(item => {
-                subtotal += item.price * item.quantity;
-            });
-            return subtotal;
-        }
-
-        function updateTotals() {
-            const subtotal = calculateSubtotal();
-            subtotalElement.textContent = subtotal.toFixed(2);
-            discountElement.textContent = discountAmount.toFixed(2);
-            const total = subtotal - discountAmount;
-            totalElement.textContent = total.toFixed(2);
-        }
-
-
-        function renderCartItems() {
-            cartItemsContainer.innerHTML = ''; // Clear existing items
-
-            if (cartItems.length === 0) {
-                cartItemsContainer.innerHTML = '<p class="empty-cart-message">Your cart is empty.</p>';
-                return;
-            }
+            cartItemsContainer.innerHTML = ""; // Clear existing items
 
             cartItems.forEach(item => {
-                const itemElement = document.createElement('div');
-                itemElement.classList.add('cart-item');
+                const itemElement = document.createElement("div");
+                itemElement.classList.add("cart-item");
                 itemElement.innerHTML = `
-                    <img src="${item.image}" alt="${item.name}" class="item-image">
+                    <img class="item-image" src="${item.image}" alt="${item.name}">
                     <div class="item-details">
-                        <p>${item.name}</p>
-                        <p>$${item.price.toFixed(2)}</p>
+                        <div class="item-name">${item.name}</div>
+                        <div class="item-price">$${item.price.toFixed(2)}</div>
                     </div>
                     <div class="quantity-controls">
-                        <button onclick="updateQuantity(${item.productId}, ${item.quantity - 1})">-</button>
-                        <input type="number" value="${item.quantity}" onchange="updateQuantity(${item.productId}, this.value)">
-                        <button onclick="updateQuantity(${item.productId}, ${item.quantity + 1})">+</button>
+                        <button onclick="updateQuantity(${item.id}, -1)">-</button>
+                        <input type="number" value="${item.quantity}" min="1" onchange="updateQuantity(${item.id}, parseInt(this.value) - item.quantity)">
+                        <button onclick="updateQuantity(${item.id}, 1)">+</button>
+                        <button class="remove-button" onclick="removeItem(${item.id})">Remove</button>
                     </div>
-                    <button class="remove-item-button" onclick="removeItemFromCart(${item.productId})">Remove</button>
                 `;
                 cartItemsContainer.appendChild(itemElement);
+                total += item.price * item.quantity;
             });
+
+            cartTotalElement.textContent = total.toFixed(2);
         }
 
-        function saveCartToLocalStorage() {
-           localStorage.setItem('cart', JSON.stringify(cartItems));
+
+        function updateQuantity(itemId, change) {
+            const itemIndex = cartItems.findIndex(item => item.id === itemId);
+            if (itemIndex !== -1) {
+                cartItems[itemIndex].quantity += change;
+                if (cartItems[itemIndex].quantity < 1) {
+                    cartItems[itemIndex].quantity = 1;
+                }
+                updateCartDisplay();
+            }
         }
+
+
+        function removeItem(itemId) {
+            cartItems = cartItems.filter(item => item.id !== itemId);
+            updateCartDisplay();
+        }
+
+
+        function checkout() {
+            alert("Checkout functionality not yet implemented.");
+            // In a real application, you would redirect the user to a checkout page or process the order.
+        }
+
+        // Initial display when the page loads
+        updateCartDisplay();
     </script>
 </body>
 </html>

@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout - Payment Information</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 960px;
+            margin: 20px auto;
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1, h2 {
+            color: #333;
+            text-align: center;
+        }
+
+        .checkout-steps {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 20px;
+        }
+
+        .step {
+            text-align: center;
+            padding: 10px;
+            border-radius: 5px;
+            background-color: #eee;
+            flex-grow: 1;
+        }
+
+        .step.active {
+            background-color: #007bff;
+            color: white;
+        }
+
+        .payment-form {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 15px;
+        }
+
+        @media (min-width: 768px) {
+            .payment-form {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        input[type="text"],
+        input[type="number"],
+        select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+            margin-bottom: 10px;
+        }
+
+        .card-details {
+            display: flex;
+            gap: 10px;
+        }
+
+        .card-details > div {
+            flex: 1;
+        }
+
+        .order-summary {
+            border: 1px solid #ccc;
+            padding: 15px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+        }
+
+        .order-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+
+        .total {
+            font-weight: bold;
+        }
+
+        .button {
+            background-color: #28a745;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1rem;
+            width: 100%;
+            transition: background-color 0.3s ease;
+        }
+
+        .button:hover {
+            background-color: #218838;
+        }
+
+        .error-message {
+            color: red;
+            margin-bottom: 10px;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Checkout</h1>
+
+        <div class="checkout-steps">
+            <div class="step">Shipping</div>
+            <div class="step active">Payment</div>
+            <div class="step">Confirmation</div>
+        </div>
+
+        <h2>Payment Information</h2>
+
+        <div id="error-message" class="error-message" style="display: none;"></div>
+
+        <form id="paymentForm" class="payment-form">
+            <div>
+                <label for="cardName">Name on Card:</label>
+                <input type="text" id="cardName" name="cardName" required>
+            </div>
+            <div>
+                <label for="cardNumber">Card Number:</label>
+                <input type="text" id="cardNumber" name="cardNumber" required>
+            </div>
+            <div>
+                <label for="expiryMonth">Expiry Month:</label>
+                <select id="expiryMonth" name="expiryMonth" required>
+                    <option value="">Select Month</option>
+                    <option value="01">01 - January</option>
+                    <option value="02">02 - February</option>
+                    <option value="03">03 - March</option>
+                    <option value="04">04 - April</option>
+                    <option value="05">05 - May</option>
+                    <option value="06">06 - June</option>
+                    <option value="07">07 - July</option>
+                    <option value="08">08 - August</option>
+                    <option value="09">09 - September</option>
+                    <option value="10">10 - October</option>
+                    <option value="11">11 - November</option>
+                    <option value="12">12 - December</option>
+                </select>
+            </div>
+            <div>
+                <label for="expiryYear">Expiry Year:</label>
+                <select id="expiryYear" name="expiryYear" required>
+                    <option value="">Select Year</option>
+                    <option value="2024">2024</option>
+                    <option value="2025">2025</option>
+                    <option value="2026">2026</option>
+                    <option value="2027">2027</option>
+                    <option value="2028">2028</option>
+                    <option value="2029">2029</option>
+                    <option value="2030">2030</option>
+                </select>
+            </div>
+            <div>
+                <label for="cvv">CVV:</label>
+                <input type="text" id="cvv" name="cvv" required>
+            </div>
+            <div style="grid-column: 1 / span 2;">
+              <button type="button" class="button" onclick="validateForm()">Pay Now</button>
+            </div>
+        </form>
+
+        <h2>Order Summary</h2>
+        <div class="order-summary">
+            <div class="order-item">
+                <span>Product 1</span>
+                <span>$50.00</span>
+            </div>
+            <div class="order-item">
+                <span>Product 2</span>
+                <span>$30.00</span>
+            </div>
+            <div class="order-item">
+                <span>Shipping</span>
+                <span>$10.00</span>
+            </div>
+            <hr>
+            <div class="order-item total">
+                <span>Total</span>
+                <span>$90.00</span>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        function validateForm() {
+            const cardName = document.getElementById('cardName').value;
+            const cardNumber = document.getElementById('cardNumber').value;
+            const expiryMonth = document.getElementById('expiryMonth').value;
+            const expiryYear = document.getElementById('expiryYear').value;
+            const cvv = document.getElementById('cvv').value;
+            const errorMessageElement = document.getElementById('error-message');
+
+            errorMessageElement.style.display = 'none'; // Reset error message
+
+            if (!cardName || !cardNumber || !expiryMonth || !expiryYear || !cvv) {
+                errorMessageElement.textContent = 'Please fill in all fields.';
+                errorMessageElement.style.display = 'block';
+                return;
+            }
+
+            // Basic card number validation (replace with actual validation logic)
+            if (!/^\d{13,19}$/.test(cardNumber)) {
+                errorMessageElement.textContent = 'Invalid card number.';
+                errorMessageElement.style.display = 'block';
+                return;
+            }
+
+            // Basic CVV validation (replace with actual validation logic)
+            if (!/^\d{3,4}$/.test(cvv)) {
+                errorMessageElement.textContent = 'Invalid CVV.';
+                errorMessageElement.style.display = 'block';
+                return;
+            }
+
+            // Implement more robust validation for expiry date (month and year combined).
+            const currentYear = new Date().getFullYear();
+            if (parseInt(expiryYear) < currentYear || (parseInt(expiryYear) === currentYear && parseInt(expiryMonth) < (new Date().getMonth() + 1)) )
+            {
+                errorMessageElement.textContent = 'Invalid expiry date.';
+                errorMessageElement.style.display = 'block';
+                return;
+            }
+
+
+            // Simulate payment processing (replace with actual payment gateway integration)
+            alert('Payment processing initiated... (simulated)');
+            // In a real application, you'd now:
+            // 1. Send the payment information to a secure server (using HTTPS).
+            // 2. Process the payment through a payment gateway (e.g., Stripe, PayPal).
+            // 3. Handle success or failure responses from the gateway.
+            // 4. Redirect or update the UI based on the result.
+
+            // Simulate redirection to confirmation page (replace with actual redirection)
+            window.location.href = "checkout-confirmation.html"; // Assuming a confirmation page
+        }
+    </script>
+</body>
+</html>

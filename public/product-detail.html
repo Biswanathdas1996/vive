@@ -17,138 +17,255 @@
         .container {
             max-width: 1200px;
             margin: 20px auto;
-            background-color: #fff;
             padding: 20px;
+            background-color: #fff;
             border-radius: 8px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-
-        .product-grid {
             display: grid;
             grid-template-columns: 1fr;
             gap: 20px;
         }
 
         @media (min-width: 768px) {
-            .product-grid {
-                grid-template-columns: 1fr 1fr;
+            .container {
+                grid-template-columns: 1fr 2fr;
             }
         }
 
         .product-images {
             display: flex;
             flex-direction: column;
+            gap: 10px;
         }
 
         .product-images img {
-            width: 100%;
-            margin-bottom: 10px;
+            max-width: 100%;
+            height: auto;
             border-radius: 4px;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s ease;
         }
 
-        .product-info {
+        .product-images img:hover {
+            transform: scale(1.05);
+        }
+
+        .product-details {
             padding: 10px;
         }
 
-        .product-title {
+        .product-details h1 {
+            margin-top: 0;
             font-size: 1.8em;
-            margin-bottom: 10px;
         }
 
-        .product-price {
+        .product-details p {
+            margin-bottom: 1em;
+        }
+
+        .product-details .price {
             font-size: 1.5em;
-            color: #e44d26;
+            font-weight: bold;
+            color: #007bff;
+        }
+
+        .product-details .rating {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1em;
+        }
+
+        .product-details .rating span {
+            margin-right: 5px;
+        }
+
+        .product-details .add-to-cart-button {
+            background-color: #28a745;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: background-color 0.2s ease;
+        }
+
+        .product-details .add-to-cart-button:hover {
+            background-color: #218838;
+        }
+
+        .reviews {
+            margin-top: 20px;
+            border-top: 1px solid #ccc;
+            padding-top: 20px;
+        }
+
+        .review {
             margin-bottom: 15px;
+            padding: 10px;
+            border: 1px solid #eee;
+            border-radius: 4px;
         }
 
-        .product-description {
-            margin-bottom: 20px;
-        }
-
-        .product-options label {
-            display: block;
-            margin-bottom: 5px;
+        .review .author {
             font-weight: bold;
         }
-
-        .product-options select,
-        .product-options input[type="number"] {
-            width: 100%;
-            padding: 10px;
-            margin-bottom: 15px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            box-sizing: border-box;
+        
+        .star-rating {
+            color: #f0c36d;
+            font-size: 1.2em;
+        }
+        
+        .star-rating::before {
+          content: '★★★★★';
         }
 
-        .add-to-cart-button {
-            background-color: #4CAF50;
-            color: white;
-            padding: 15px 20px;
-            text-align: center;
-            text-decoration: none;
-            display: inline-block;
-            font-size: 1em;
-            cursor: pointer;
-            border-radius: 4px;
-            border: none;
-            width: 100%;
+        .star-rating span {
+            color: #ccc;
         }
 
-        @media (min-width: 768px) {
-            .add-to-cart-button {
-                width: auto;
-            }
-        }
-
-        .add-to-cart-button:hover {
-            background-color: #3e8e41;
-        }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="product-grid">
-            <div class="product-images">
-                <img src="https://via.placeholder.com/600x400/999999/FFFFFF?text=Product+Image+1" alt="Product Image 1">
-                <img src="https://via.placeholder.com/600x400/777777/FFFFFF?text=Product+Image+2" alt="Product Image 2">
-                <img src="https://via.placeholder.com/600x400/555555/FFFFFF?text=Product+Image+3" alt="Product Image 3">
+
+    <div class="container" id="product-container">
+        <!-- Product images will go here -->
+        <div class="product-images">
+            <!-- Placeholder content, will be replaced by JavaScript -->
+            <img src="https://via.placeholder.com/600x400" alt="Product Image 1">
+            <img src="https://via.placeholder.com/600x400" alt="Product Image 2">
+        </div>
+
+        <div class="product-details">
+            <h1 id="product-title">Product Title</h1>
+            <p id="product-description">Loading product description...</p>
+            <div class="rating">
+                <span class="star-rating"><span id="product-rating"></span></span>
+                (<span id="rating-count">0</span> reviews)
             </div>
-            <div class="product-info">
-                <h1 class="product-title">Product Name</h1>
-                <p class="product-price">$99.99</p>
-                <p class="product-description">
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
-                </p>
-                <div class="product-options">
-                    <label for="size">Size:</label>
-                    <select id="size">
-                        <option value="s">S</option>
-                        <option value="m">M</option>
-                        <option value="l">L</option>
-                        <option value="xl">XL</option>
-                    </select>
-                    <label for="color">Color:</label>
-                    <select id="color">
-                        <option value="red">Red</option>
-                        <option value="blue">Blue</option>
-                        <option value="green">Green</option>
-                    </select>
-                    <label for="quantity">Quantity:</label>
-                    <input type="number" id="quantity" value="1" min="1">
-                </div>
-                <button class="add-to-cart-button" onclick="addToCart()">Add to Cart</button>
+            <p class="price" id="product-price">$0.00</p>
+            <button class="add-to-cart-button" id="add-to-cart-button">Add to Cart</button>
+            <div class="reviews" id="reviews-container">
+                <!-- Reviews will be added here -->
             </div>
         </div>
     </div>
-    <script>
-        function addToCart() {
-            const size = document.getElementById('size').value;
-            const color = document.getElementById('color').value;
-            const quantity = document.getElementById('quantity').value;
 
-            alert(`Added to cart:\nSize: ${size}\nColor: ${color}\nQuantity: ${quantity}`);
+    <script>
+        // Sample product data (replace with your actual data source, e.g., API calls)
+        const products = {
+            1: {
+                title: "Awesome Widget",
+                description: "This is a very awesome widget that does amazing things.  Buy it now!",
+                price: 29.99,
+                images: [
+                    "https://via.placeholder.com/600x400/808080/ffffff?text=Widget+1",
+                    "https://via.placeholder.com/600x400/A0A0A0/000000?text=Widget+2"
+                ],
+                rating: 4.5,
+                reviews: [
+                    { author: "John Doe", comment: "Great product!", rating: 5 },
+                    { author: "Jane Smith", comment: "Works as advertised.", rating: 4 },
+                ]
+            },
+            2: {
+                title: "Super Gadget",
+                description: "The Super Gadget is a must-have!",
+                price: 79.99,
+                images: [
+                    "https://via.placeholder.com/600x400/007bff/ffffff?text=Gadget+1",
+                    "https://via.placeholder.com/600x400/28a745/ffffff?text=Gadget+2"
+                ],
+                rating: 3.8,
+                reviews: [
+                    { author: "Alice", comment: "Pretty good gadget.", rating: 4 },
+                    { author: "Bob", comment: "Could be better.", rating: 3 },
+                ]
+            }
+        };
+
+        function getProductData(productId) {
+            return products[productId] || null; // Return null if product not found
         }
+
+
+        function renderProductDetails(productId) {
+            const product = getProductData(productId);
+
+            if (!product) {
+                document.getElementById("product-container").innerHTML = "<p>Product not found.</p>";
+                return;
+            }
+
+            // Update product details in the DOM
+            document.getElementById("product-title").textContent = product.title;
+            document.getElementById("product-description").textContent = product.description;
+            document.getElementById("product-price").textContent = "$" + product.price.toFixed(2);
+
+
+            // Rating stars
+            const ratingStarsSpan = document.getElementById("product-rating");
+            const fullStars = Math.floor(product.rating);
+            const hasHalfStar = product.rating - fullStars >= 0.5;
+            let starHTML = '';
+            for (let i = 0; i < 5; i++) {
+                if (i < fullStars) {
+                    starHTML += '★';
+                } else if (i === fullStars && hasHalfStar) {
+                    starHTML += '½';
+                } else {
+                    starHTML += '<span>★</span>';
+                }
+            }
+            ratingStarsSpan.innerHTML = starHTML;
+            document.getElementById("rating-count").textContent = product.reviews.length;
+
+            // Update images
+            const imageContainer = document.querySelector(".product-images");
+            imageContainer.innerHTML = ""; // Clear existing images
+            product.images.forEach(imageUrl => {
+                const img = document.createElement("img");
+                img.src = imageUrl;
+                img.alt = product.title;
+                imageContainer.appendChild(img);
+            });
+
+            // Render reviews
+            const reviewsContainer = document.getElementById("reviews-container");
+            reviewsContainer.innerHTML = ""; // Clear existing reviews
+            product.reviews.forEach(review => {
+                const reviewDiv = document.createElement("div");
+                reviewDiv.classList.add("review");
+                reviewDiv.innerHTML = `
+                    <p class="author">${review.author}</p>
+                    <div class="rating">
+                        <span class="star-rating">${'★'.repeat(review.rating)}<span>${'★'.repeat(5-review.rating)}</span></span>
+                    </div>
+                    <p>${review.comment}</p>
+                `;
+                reviewsContainer.appendChild(reviewDiv);
+            });
+        }
+
+        // Get product ID from the URL (e.g., product-detail.html?id=1)
+        function getProductIdFromURL() {
+            const params = new URLSearchParams(window.location.search);
+            return parseInt(params.get('id'), 10); // Parse to integer, default to 10 base (decimal)
+        }
+
+        // Initial rendering when the page loads
+        const productId = getProductIdFromURL();
+        if (productId) {
+            renderProductDetails(productId);
+        } else {
+            document.getElementById("product-container").innerHTML = "<p>Product ID not found in URL.</p>";
+        }
+
+        // Add to cart functionality (Placeholder)
+        document.getElementById("add-to-cart-button").addEventListener("click", () => {
+            alert("Product added to cart!"); // Replace with actual add to cart logic
+        });
+
     </script>
 </body>
 </html>
