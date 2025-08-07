@@ -19,6 +19,8 @@ interface FileExplorerProps {
   projectId: string | null;
   selectedFile: string | null;
   onFileSelect: (fileName: string) => void;
+  isCollapsed: boolean;
+  onCollapse: (collapsed: boolean) => void;
 }
 
 interface GeneratedFile {
@@ -29,9 +31,8 @@ interface GeneratedFile {
   createdAt: string;
 }
 
-export function FileExplorer({ projectId, selectedFile, onFileSelect }: FileExplorerProps) {
+export function FileExplorer({ projectId, selectedFile, onFileSelect, isCollapsed, onCollapse }: FileExplorerProps) {
   const [expandedFolders, setExpandedFolders] = useState<Set<string>>(new Set(["public"]));
-  const [isCollapsed, setIsCollapsed] = useState(false);
 
   // Fetch project files
   const { data: filesData, isLoading, refetch } = useQuery({
@@ -87,7 +88,7 @@ export function FileExplorer({ projectId, selectedFile, onFileSelect }: FileExpl
           <Button
             variant="ghost"
             size="sm"
-            onClick={() => setIsCollapsed(!isCollapsed)}
+            onClick={() => onCollapse(!isCollapsed)}
             className="p-1 hover:bg-slate-800"
           >
             {isCollapsed ? (

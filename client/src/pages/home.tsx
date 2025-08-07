@@ -8,6 +8,8 @@ export default function Home() {
   const [currentProject, setCurrentProject] = useState<string | null>(null);
   const [currentChatSession, setCurrentChatSession] = useState<string | null>(null);
   const [selectedFile, setSelectedFile] = useState<string | null>(null);
+  const [isChatCollapsed, setIsChatCollapsed] = useState(false);
+  const [isFileExplorerCollapsed, setIsFileExplorerCollapsed] = useState(false);
 
   return (
     <div className="h-screen flex flex-col bg-slate-950 text-slate-50">
@@ -40,6 +42,8 @@ export default function Home() {
           projectId={currentProject}
           selectedFile={selectedFile}
           onFileSelect={setSelectedFile}
+          isCollapsed={isFileExplorerCollapsed}
+          onCollapse={setIsFileExplorerCollapsed}
         />
 
         {/* Center Panel - Chat Interface */}
@@ -48,12 +52,16 @@ export default function Home() {
           chatSessionId={currentChatSession}
           onProjectCreate={setCurrentProject}
           onChatSessionCreate={setCurrentChatSession}
+          isCollapsed={isChatCollapsed}
+          onCollapse={setIsChatCollapsed}
         />
 
         {/* Right Panel - Live Preview */}
         <PreviewPanel 
           projectId={currentProject}
           selectedFile={selectedFile}
+          isChatCollapsed={isChatCollapsed}
+          isFileExplorerCollapsed={isFileExplorerCollapsed}
         />
       </div>
     </div>

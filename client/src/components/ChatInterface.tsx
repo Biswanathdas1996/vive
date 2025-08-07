@@ -84,6 +84,8 @@ interface ChatInterfaceProps {
   chatSessionId: string | null;
   onProjectCreate: (projectId: string) => void;
   onChatSessionCreate: (sessionId: string) => void;
+  isCollapsed: boolean;
+  onCollapse: (collapsed: boolean) => void;
 }
 
 interface ChatMessage {
@@ -103,13 +105,15 @@ export function ChatInterface({
   projectId, 
   chatSessionId, 
   onProjectCreate, 
-  onChatSessionCreate 
+  onChatSessionCreate,
+  isCollapsed,
+  onCollapse
 }: ChatInterfaceProps) {
   const [inputValue, setInputValue] = useState("");
   const [isGenerating, setIsGenerating] = useState(false);
   const [currentWorkflow, setCurrentWorkflow] = useState<any>(null);
   const [isHeaderCollapsed, setIsHeaderCollapsed] = useState(false);
-  const [isLeftCollapsed, setIsLeftCollapsed] = useState(false);
+  // Remove local state and use props instead
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const queryClient = useQueryClient();
   const { toast } = useToast();
@@ -301,16 +305,16 @@ export function ChatInterface({
   };
 
   return (
-    <div className={`flex flex-col bg-slate-950 transition-all duration-300 ${isLeftCollapsed ? 'w-12' : 'flex-1'} relative`}>
+    <div className={`flex flex-col bg-slate-950 transition-all duration-300 ${isCollapsed ? 'w-12' : 'flex-1'} relative`}>
       {/* Left Collapse Toggle */}
       <div className="absolute left-0 top-1/2 transform -translate-y-1/2 z-10">
         <Button
           variant="ghost"
           size="sm"
-          onClick={() => setIsLeftCollapsed(!isLeftCollapsed)}
+          onClick={() => onCollapse(!isCollapsed)}
           className="p-1 hover:bg-slate-800 bg-slate-900 border border-slate-700 rounded-r-md border-l-0"
         >
-          {isLeftCollapsed ? (
+          {isCollapsed ? (
             <ChevronRight className="w-4 h-4 text-slate-400" />
           ) : (
             <ChevronLeft className="w-4 h-4 text-slate-400" />
@@ -318,7 +322,7 @@ export function ChatInterface({
         </Button>
       </div>
 
-      {!isLeftCollapsed ? (
+      {!isCollapsed ? (
         <>
           {/* Chat Header */}
           <div className={`bg-slate-900 border-b border-slate-700 transition-all duration-300 ${isHeaderCollapsed ? 'px-6 py-2' : 'px-6 py-4'}`}>

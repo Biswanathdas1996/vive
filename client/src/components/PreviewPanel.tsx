@@ -17,6 +17,8 @@ import {
 interface PreviewPanelProps {
   projectId: string | null;
   selectedFile: string | null;
+  isChatCollapsed: boolean;
+  isFileExplorerCollapsed: boolean;
 }
 
 interface GeneratedFile {
@@ -29,10 +31,21 @@ interface GeneratedFile {
 
 type DeviceType = "desktop" | "tablet" | "mobile";
 
-export function PreviewPanel({ projectId, selectedFile }: PreviewPanelProps) {
+export function PreviewPanel({ projectId, selectedFile, isChatCollapsed, isFileExplorerCollapsed }: PreviewPanelProps) {
   const [activeTab, setActiveTab] = useState("index.html");
   const [deviceType, setDeviceType] = useState<DeviceType>("desktop");
   const [previewMode, setPreviewMode] = useState<"preview" | "code">("preview");
+
+  // Calculate dynamic width based on collapse states
+  const getPreviewWidth = () => {
+    if (isChatCollapsed && isFileExplorerCollapsed) {
+      return "flex-1"; // Take full space when both are collapsed
+    } else if (isChatCollapsed || isFileExplorerCollapsed) {
+      return "flex-1"; // Take remaining space when one is collapsed
+    } else {
+      return "w-1/2"; // Default width when both are expanded
+    }
+  };
 
   // Fetch project files
   const { data: filesData, isLoading } = useQuery({
@@ -100,7 +113,7 @@ export function PreviewPanel({ projectId, selectedFile }: PreviewPanelProps) {
 
   if (!projectId) {
     return (
-      <div className="w-1/2 bg-slate-900 border-l border-slate-700 flex flex-col">
+      <div className={`${getPreviewWidth()} bg-slate-900 border-l border-slate-700 flex flex-col transition-all duration-300`}>
         <div className="flex-1 flex items-center justify-center">
           <div className="text-center">
             <Eye className="w-12 h-12 text-slate-600 mx-auto mb-4" />
@@ -115,7 +128,7 @@ export function PreviewPanel({ projectId, selectedFile }: PreviewPanelProps) {
   }
 
   return (
-    <div className="w-1/2 bg-slate-900 border-l border-slate-700 flex flex-col">
+    <div className={`${getPreviewWidth()} bg-slate-900 border-l border-slate-700 flex flex-col transition-all duration-300`}>
       {/* Preview Header */}
       <div className="border-b border-slate-700 px-4 py-3">
         <div className="flex items-center justify-between mb-3">
