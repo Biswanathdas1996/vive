@@ -6,285 +6,267 @@
     <title>Modern Chatbot</title>
     <style>
         :root {
-            /* Theme Colors */
-            --primary-color: #222;
-            --secondary-color: #333;
-            --accent-color: #007bff; /* Modern Blue */
-            --text-color: #eee;
-            --light-bg: #f4f4f4;
-            --light-text: #333;
-            --shadow-color: rgba(0, 0, 0, 0.3);
-
-            /* Spacing */
-            --padding-small: 0.5rem;
-            --padding-medium: 1rem;
-            --padding-large: 1.5rem;
-            --border-radius: 0.75rem;
-            --transition-duration: 0.3s;
-
-            /* Font */
+            --primary-color: #64b5f6; /* Light Blue */
+            --secondary-color: #1e88e5; /* Darker Blue */
+            --accent-color: #ff4081; /* Pink Accent */
+            --background-color: #f0f4c3; /* Light Green */
+            --text-color: #212121; /* Dark Text */
+            --light-text-color: #ffffff; /* Light Text */
+            --border-color: rgba(0, 0, 0, 0.1);
+            --shadow-color: rgba(0, 0, 0, 0.2);
             --font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             --font-size-base: 1rem;
+            --spacing-small: 0.5rem;
+            --spacing-medium: 1rem;
+            --spacing-large: 1.5rem;
+
+            --gradient-primary: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            --glass-background: rgba(255, 255, 255, 0.2);
+            --glass-border: rgba(255, 255, 255, 0.3);
         }
 
-        /* Dark Theme (Default) */
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
         body {
             font-family: var(--font-family);
             font-size: var(--font-size-base);
             color: var(--text-color);
-            background-color: var(--primary-color);
-            margin: 0;
-            padding: 0;
+            background-color: var(--background-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: var(--spacing-medium);
+        }
+
+        .container {
+            width: 100%;
+            max-width: 450px;
+            background: var(--glass-background);
+            border-radius: 1.5rem;
+            overflow: hidden;
+            box-shadow: 0 10px 20px var(--shadow-color);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
             display: flex;
             flex-direction: column;
-            min-height: 100vh;
+            height: 80vh;
         }
 
         header {
-            background: linear-gradient(135deg, var(--accent-color), var(--secondary-color));
-            color: var(--text-color);
-            padding: var(--padding-medium);
+            padding: var(--spacing-medium);
+            background: var(--gradient-primary);
+            color: var(--light-text-color);
             text-align: center;
-            box-shadow: 0 2px 5px var(--shadow-color);
+            font-size: 1.4rem;
+            font-weight: 600;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
         }
 
-        nav {
-            background-color: var(--secondary-color);
-            padding: var(--padding-small) var(--padding-medium);
-        }
-
-        nav ul {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-            display: flex;
-            justify-content: center;
-        }
-
-        nav li {
-            margin: 0 var(--padding-medium);
-        }
-
-        nav a {
-            color: var(--text-color);
-            text-decoration: none;
-            padding: var(--padding-small) var(--padding-medium);
-            border-radius: var(--border-radius);
-            transition: background-color var(--transition-duration), color var(--transition-duration);
-            display: block;
-        }
-
-        nav a:hover, nav a:focus {
-            background-color: rgba(255, 255, 255, 0.1);
-        }
-
-        main {
-            flex: 1;
-            padding: var(--padding-medium);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-
-        .chat-container {
-            width: 100%;
-            max-width: 800px;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: var(--border-radius);
-            padding: var(--padding-medium);
-            box-shadow: 0 5px 15px var(--shadow-color);
-            overflow-y: auto;
+        .chat-area {
             flex-grow: 1;
-            margin-bottom: var(--padding-medium);
+            padding: var(--spacing-medium);
+            overflow-y: auto;
+            scrollbar-width: thin;
+            scrollbar-color: var(--secondary-color) var(--glass-background);
         }
 
-        .chat-message {
-            padding: var(--padding-small) var(--padding-medium);
-            border-radius: var(--border-radius);
-            margin-bottom: var(--padding-small);
-            word-wrap: break-word; /* Prevents long words from overflowing */
+        .chat-area::-webkit-scrollbar {
+            width: 8px;
         }
 
-        .user-message {
-            background-color: var(--accent-color);
+        .chat-area::-webkit-scrollbar-track {
+            background: var(--glass-background);
+        }
+
+        .chat-area::-webkit-scrollbar-thumb {
+            background-color: var(--secondary-color);
+            border-radius: 4px;
+        }
+
+
+        .message {
+            margin-bottom: var(--spacing-medium);
+            padding: var(--spacing-small) var(--spacing-medium);
+            border-radius: 1.25rem;
+            box-shadow: 0 4px 8px var(--shadow-color);
+            position: relative;
+        }
+
+        .message.user {
+            background: var(--glass-background);
             color: var(--text-color);
             align-self: flex-end;
         }
 
-        .bot-message {
-            background-color: var(--secondary-color);
-            color: var(--text-color);
+        .message.bot {
+            background: var(--primary-color);
+            color: var(--light-text-color);
             align-self: flex-start;
         }
 
+        .message p {
+            word-break: break-word;
+            line-height: 1.4;
+        }
+
+
         .input-area {
+            padding: var(--spacing-medium);
             display: flex;
-            width: 100%;
-            max-width: 800px;
-            padding: var(--padding-medium);
-            background: var(--secondary-color);
-            border-radius: var(--border-radius);
-            box-shadow: 0 2px 5px var(--shadow-color);
+            align-items: center;
+            background: var(--glass-background);
+            border-top: 1px solid var(--border-color);
         }
 
-        #messageInput {
+        input[type="text"] {
             flex-grow: 1;
-            padding: var(--padding-small) var(--padding-medium);
+            padding: var(--spacing-small) var(--spacing-medium);
             border: none;
-            border-radius: var(--border-radius);
-            margin-right: var(--padding-small);
-            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 1.25rem;
+            background: rgba(255, 255, 255, 0.1);
             color: var(--text-color);
+            font-size: var(--font-size-base);
             outline: none;
-            transition: background-color var(--transition-duration);
+            transition: background-color 0.2s ease-in-out;
         }
 
-        #messageInput:focus {
+        input[type="text"]:focus {
             background-color: rgba(255, 255, 255, 0.2);
         }
 
-        #sendButton {
-            padding: var(--padding-small) var(--padding-medium);
+        button {
+            padding: var(--spacing-small) var(--spacing-medium);
             border: none;
-            border-radius: var(--border-radius);
-            background-color: var(--accent-color);
-            color: var(--text-color);
+            border-radius: 1.25rem;
+            background: var(--accent-color);
+            color: var(--light-text-color);
+            font-size: var(--font-size-base);
             cursor: pointer;
-            transition: background-color var(--transition-duration);
-            font-weight: bold;
+            margin-left: var(--spacing-medium);
+            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
         }
 
-        #sendButton:hover {
-            background-color: #0056b3; /* Darker Shade */
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 10px var(--shadow-color);
         }
 
-        footer {
-            background-color: var(--secondary-color);
-            color: var(--text-color);
-            text-align: center;
-            padding: var(--padding-medium);
-            font-size: 0.85rem;
+        button:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 5px var(--shadow-color);
         }
 
-        /* Light Theme (Optional) */
-        .light-theme {
-            --primary-color: #eee;
-            --secondary-color: #ddd;
-            --accent-color: #007bff;
-            --text-color: #333;
-            --light-bg: #fff;
-            --light-text: #333;
-            --shadow-color: rgba(0, 0, 0, 0.1);
+        /* CSS Icons (replace with more refined shapes/svgs) */
+        button::before {
+            content: '\27A4'; /* Right Arrow */
+            margin-right: 0.5rem;
         }
 
-        /* Mobile Responsiveness */
+
+        /* Responsive Design */
         @media (max-width: 600px) {
-            nav ul {
-                flex-direction: column;
-                align-items: center;
-            }
-            nav li {
-                margin: var(--padding-small) 0;
-            }
-            .input-area {
-                flex-direction: column;
-            }
-            #messageInput {
-                margin-right: 0;
-                margin-bottom: var(--padding-small);
+            .container {
+                width: 95%;
             }
         }
 
-        /* Smooth Scroll */
-        html {
-            scroll-behavior: smooth;
-        }
     </style>
 </head>
 <body>
-    <header>
-        <h1>Modern Chatbot</h1>
-    </header>
-
-    <nav>
-        <ul>
-            <li><a href="#">Home</a></li>
-            <li><a href="#">Features</a></li>
-            <li><a href="#">About</a></li>
-            <li><a href="#">Contact</a></li>
-        </ul>
-    </nav>
-
-    <main>
-        <div class="chat-container" id="chatContainer">
-            <!-- Chat messages will be added here -->
-        </div>
-
+    <div class="container">
+        <header>
+            Chatbot
+        </header>
+        <main class="chat-area">
+            <!-- Messages will be dynamically added here -->
+        </main>
         <div class="input-area">
-            <input type="text" id="messageInput" placeholder="Type your message..." aria-label="Enter your message">
+            <input type="text" id="userInput" placeholder="Type your message...">
             <button id="sendButton">Send</button>
         </div>
-    </main>
-
-    <footer>
-        <p>&copy; 2024 Modern Chatbot. All rights reserved.</p>
-    </footer>
+    </div>
 
     <script>
         // JavaScript (ES6+)
-        const chatContainer = document.getElementById('chatContainer');
-        const messageInput = document.getElementById('messageInput');
+        const chatArea = document.querySelector('.chat-area');
+        const userInput = document.getElementById('userInput');
         const sendButton = document.getElementById('sendButton');
 
         // Function to add a message to the chat
         function addMessage(message, sender) {
             const messageElement = document.createElement('div');
-            messageElement.classList.add('chat-message', `${sender}-message`);
-            messageElement.textContent = message;
-            chatContainer.appendChild(messageElement);
-            chatContainer.scrollTop = chatContainer.scrollHeight; // Auto-scroll to the bottom
+            messageElement.classList.add('message', sender);
+            const paragraph = document.createElement('p');
+            paragraph.textContent = message;
+            messageElement.appendChild(paragraph);
+            chatArea.appendChild(messageElement);
+            chatArea.scrollTop = chatArea.scrollHeight; // Auto-scroll to bottom
         }
 
-        // Function to handle bot responses (Example)
-        function getBotResponse(userMessage) {
-            const lowerCaseMessage = userMessage.toLowerCase();
+        // Simple NLU (replace with a more robust solution)
+        function getIntent(message) {
+            const lowerCaseMessage = message.toLowerCase();
 
             if (lowerCaseMessage.includes('hello') || lowerCaseMessage.includes('hi')) {
-                return "Hello there!";
+                return 'greeting';
             } else if (lowerCaseMessage.includes('how are you')) {
-                return "I am doing well, thank you!";
+                return 'howAreYou';
             } else if (lowerCaseMessage.includes('bye') || lowerCaseMessage.includes('goodbye')) {
-                return "Goodbye! Have a great day!";
-            } else {
-                return "I'm sorry, I don't understand.";
+                return 'goodbye';
+            } else if (lowerCaseMessage.includes('weather')) {
+              return 'weather';
+            }
+            else {
+                return 'unknown';
             }
         }
 
+        function getBotResponse(intent) {
+            switch (intent) {
+                case 'greeting':
+                    return "Hello! How can I help you today?";
+                case 'howAreYou':
+                    return "I'm doing well, thanks for asking!";
+                case 'goodbye':
+                    return "Goodbye! Have a great day.";
+                case 'weather':
+                    return "I am unable to fetch the weather at this time, but I'm always learning.";
+                case 'unknown':
+                    return "I'm sorry, I didn't understand.  Could you please rephrase?";
+                default:
+                    return "I'm sorry, I didn't understand.  Could you please rephrase?";
+            }
+        }
+
+
+
         // Event listener for the send button
         sendButton.addEventListener('click', () => {
-            const userMessage = messageInput.value.trim();
-            if (userMessage !== "") {
+            const userMessage = userInput.value.trim();
+            if (userMessage) {
                 addMessage(userMessage, 'user');
-                messageInput.value = ''; // Clear the input field
+                userInput.value = '';
 
-                // Simulate a bot response after a delay
+                // Simulate a bot response after a short delay (for realism)
                 setTimeout(() => {
-                    const botResponse = getBotResponse(userMessage);
+                    const intent = getIntent(userMessage);
+                    const botResponse = getBotResponse(intent);
                     addMessage(botResponse, 'bot');
                 }, 500);
             }
         });
 
-        // Event listener for pressing Enter key
-        messageInput.addEventListener('keydown', (event) => {
+        // Event listener for Enter key
+        userInput.addEventListener('keydown', (event) => {
             if (event.key === 'Enter') {
                 sendButton.click(); // Trigger the send button click
             }
         });
-
-        // Initial Welcome Message
-        addMessage("Hello! I'm a chatbot. How can I help you?", 'bot');
-
     </script>
 </body>
 </html>

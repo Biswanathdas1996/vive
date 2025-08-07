@@ -3,260 +3,241 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>About Us - Project Zenith</title>
+    <title>About | AI Assistant</title>
     <style>
+        /* CSS Custom Properties (Variables) */
         :root {
-            /* Colors */
-            --primary-color: #3498db; /* Example Blue */
-            --secondary-color: #2ecc71; /* Example Green */
-            --accent-color: #f39c12; /* Example Orange */
-            --background-color: #f0f4f8; /* Light Gray Background */
-            --text-color: #333;
-            --text-color-light: #eee;
-            --shadow-color: rgba(0, 0, 0, 0.1);
+            --primary-color: #6a5af9; /* Deep Purple */
+            --secondary-color: #4ade80; /* Emerald Green */
+            --accent-color: #fde68a; /* Soft Yellow */
+            --background-color: #18181b; /* Dark Gray */
+            --text-color: #e2e8f0; /* Light Gray */
+            --shadow-color: rgba(0, 0, 0, 0.2);
+            --border-radius: 1.25rem;
+            --padding: 1.5rem;
+            --gap: 1rem;
 
-            /* Spacing */
-            --spacing-small: 0.5rem;
-            --spacing-medium: 1rem;
-            --spacing-large: 2rem;
-
-            /* Font */
             --font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            --font-size-base: 1rem;
-            --font-weight-normal: 400;
-            --font-weight-bold: 700;
+            --heading-size: clamp(2rem, 4vw, 2.5rem);
+            --subheading-size: clamp(1.2rem, 2.5vw, 1.5rem);
+            --text-size: clamp(1rem, 2vw, 1.1rem);
 
-            /* Border radius */
-            --border-radius: 12px;
-
-            /* Transition */
-            --transition-duration: 0.3s;
+            /* Light Theme (Optional) */
+            --light-background-color: #f8fafc;
+            --light-text-color: #1e293b;
+            --light-shadow-color: rgba(0, 0, 0, 0.1);
         }
 
+
+        /* General Styles */
         body {
             font-family: var(--font-family);
-            font-size: var(--font-size-base);
+            font-size: var(--text-size);
             color: var(--text-color);
             background-color: var(--background-color);
             margin: 0;
             padding: 0;
             line-height: 1.6;
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh; /* Ensure full viewport height */
+            overflow-x: hidden; /* Prevents horizontal scroll on mobile */
         }
 
-        /* Header */
-        header {
-            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-            color: var(--text-color-light);
-            padding: var(--spacing-medium);
-            text-align: center;
-            box-shadow: 0 4px 6px var(--shadow-color);
-        }
-
-        header h1 {
-            margin: 0;
-            font-size: 2rem;
-            font-weight: var(--font-weight-bold);
-        }
-
-        /* Main Content */
-        main {
-            flex: 1; /* Takes up remaining space */
-            padding: var(--spacing-large);
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: var(--spacing-large);
-            max-width: 1200px;
-            margin: 0 auto; /* Center the content */
-        }
-
-        section {
-            background: rgba(255, 255, 255, 0.7);
+        .container {
+            max-width: 90%;
+            margin: 2rem auto;
+            padding: var(--padding);
             border-radius: var(--border-radius);
-            padding: var(--spacing-medium);
-            box-shadow: 0 8px 16px var(--shadow-color);
-            transition: all var(--transition-duration) ease;
+            background: rgba(255, 255, 255, 0.08); /* Glassmorphism effect */
+            box-shadow: 0 4px 30px var(--shadow-color);
+            backdrop-filter: blur(5px); /* Also glassmorphism effect */
         }
 
-        section:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 12px 24px var(--shadow-color);
+        h1, h2, h3 {
+            color: var(--primary-color);
+            margin-bottom: 0.75rem;
+            font-weight: 600;
+        }
+
+        h1 {
+            font-size: var(--heading-size);
         }
 
         h2 {
-            font-size: 1.75rem;
-            margin-bottom: var(--spacing-medium);
-            color: var(--primary-color);
+            font-size: var(--subheading-size);
         }
 
         p {
-            margin-bottom: var(--spacing-small);
+            margin-bottom: 1rem;
         }
 
-        /* Features Section */
-        .features {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: var(--spacing-medium);
+        a {
+            color: var(--primary-color);
+            text-decoration: none;
+            transition: color 0.2s ease;
         }
 
-        .feature-item {
-            padding: var(--spacing-medium);
+        a:hover {
+            color: var(--secondary-color);
+        }
+
+        /* Header/Navigation (Optional, but fits the project context) */
+        header {
+            background: linear-gradient(135deg, rgba(106, 90, 249, 0.8) 0%, rgba(74, 222, 128, 0.8) 100%);
+            padding: var(--padding);
+            border-bottom-left-radius: var(--border-radius);
+            border-bottom-right-radius: var(--border-radius);
+            margin-bottom: 1.5rem;
+            box-shadow: 0 2px 10px var(--shadow-color);
+        }
+
+        header h1 {
+            color: var(--text-color);
+            margin: 0;
+            font-size: 1.75rem;
+        }
+
+        nav ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        nav li {
+            margin-left: 1.5rem;
+        }
+
+        nav a {
+            color: var(--text-color);
+            font-weight: 500;
+            transition: opacity 0.2s ease;
+        }
+
+        nav a:hover {
+            opacity: 0.8;
+        }
+
+        /* Buttons - Simple Implementation */
+        .button {
+            display: inline-block;
+            padding: 0.75rem 1.5rem;
             border-radius: var(--border-radius);
-            background-color: rgba(255, 255, 255, 0.9);
-            box-shadow: 0 4px 8px var(--shadow-color);
-            transition: all var(--transition-duration) ease;
-            text-align: center;
+            background: var(--primary-color);
+            color: var(--text-color);
+            text-decoration: none;
+            font-weight: 500;
+            transition: background 0.2s ease, transform 0.1s ease;
+            box-shadow: 0 2px 5px var(--shadow-color);
+            border: none;
+            cursor: pointer;
+            outline: none;
+            font-size: var(--text-size);
         }
 
-        .feature-item:hover {
+        .button:hover {
+            background: var(--secondary-color);
+        }
+
+        .button:active {
+            transform: scale(0.98);
+            box-shadow: 0 1px 3px var(--shadow-color);
+        }
+
+        /* Card style */
+        .card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: var(--border-radius);
+            padding: var(--padding);
+            margin-bottom: var(--gap);
+            box-shadow: 0 4px 15px var(--shadow-color);
+            transition: transform 0.2s ease;
+        }
+
+        .card:hover {
             transform: translateY(-3px);
-            box-shadow: 0 6px 12px var(--shadow-color);
-        }
-
-
-        .feature-icon {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            margin: 0 auto var(--spacing-small) auto;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 1.5rem;
-            color: white;
-            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
-        }
-
-        /* Team Section */
-        .team-member {
-            display: flex;
-            align-items: center;
-            margin-bottom: var(--spacing-medium);
-            padding: var(--spacing-medium);
-            border-radius: var(--border-radius);
-            background-color: rgba(255, 255, 255, 0.8);
-            box-shadow: 0 2px 4px var(--shadow-color);
-        }
-
-        .team-member-image {
-            width: 80px;
-            height: 80px;
-            border-radius: 50%;
-            background: var(--accent-color); /* Placeholder:  Use gradients or images here */
-            margin-right: var(--spacing-medium);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            color: white;
-            font-size: 2rem;
-        }
-
-        .team-member-info {
-            flex: 1;
-        }
-
-        .team-member-name {
-            font-weight: var(--font-weight-bold);
-            margin-bottom: var(--spacing-small);
-        }
-
-        /* Footer */
-        footer {
-            background-color: var(--primary-color);
-            color: var(--text-color-light);
-            text-align: center;
-            padding: var(--spacing-medium);
-            font-size: 0.8rem;
-            box-shadow: 0 -4px 6px var(--shadow-color);
         }
 
         /* Responsive Design */
         @media (max-width: 768px) {
-            main {
-                grid-template-columns: 1fr;
+            .container {
+                max-width: 95%;
+                margin: 1rem auto;
+                padding: var(--padding) 0.75rem;
+            }
+
+            header {
+                padding: 1rem;
+            }
+
+            header h1 {
+                font-size: 1.5rem;
+            }
+
+            nav ul {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            nav li {
+                margin: 0.75rem 0;
             }
         }
-
-        /* Smooth Scroll */
-        html {
-            scroll-behavior: smooth;
-        }
-
     </style>
 </head>
 <body>
 
     <header>
-        <h1>About Project Zenith</h1>
-        <p>Learn more about our mission, features, and the team behind Project Zenith.</p>
+        <h1>AI Assistant - About</h1>
+        <nav>
+            <ul>
+                <li><a href="#">Home</a></li>
+                <li><a href="#">Features</a></li>
+                <li><a href="#">Contact</a></li>
+            </ul>
+        </nav>
     </header>
 
-    <main>
+    <main class="container">
+        <h1>About the AI Assistant</h1>
 
         <section>
-            <h2>Our Mission</h2>
-            <p>Project Zenith is dedicated to providing innovative solutions for [briefly explain the app's purpose, e.g., simplifying project management, connecting users, etc.].</p>
-            <p>We aim to empower users with intuitive tools and a seamless experience.</p>
+            <h2>Purpose</h2>
+            <p>This AI Assistant is designed to help you with various tasks, offering a blend of information, assistance, and creative capabilities.</p>
+            <p>It uses advanced language models to generate human-like text, answer your questions comprehensively, and assist with creative projects.</p>
         </section>
 
         <section>
-            <h2>Features</h2>
-            <div class="features">
-                <div class="feature-item">
-                    <div class="feature-icon">🚀</div>
-                    <h3>Feature 1</h3>
-                    <p>Description of Feature 1.  Explain what it does and why it's valuable.</p>
-                </div>
-                <div class="feature-item">
-                    <div class="feature-icon">💡</div>
-                    <h3>Feature 2</h3>
-                    <p>Description of Feature 2.  Explain what it does and why it's valuable.</p>
-                </div>
-                <div class="feature-item">
-                    <div class="feature-icon">⚙️</div>
-                    <h3>Feature 3</h3>
-                    <p>Description of Feature 3.  Explain what it does and why it's valuable.</p>
-                </div>
-            </div>
+            <h2>How to Use</h2>
+            <p>Simply type your questions or requests into the input field.</p>
+            <ul>
+                <li>Ask questions directly.</li>
+                <li>Request summaries of text.</li>
+                <li>Ask it to create content (e.g., poems, code, scripts, musical pieces, email, letters, etc.)</li>
+                <li>...and more!</li>
+            </ul>
         </section>
 
         <section>
-            <h2>Meet the Team</h2>
-            <div class="team-member">
-                <div class="team-member-image">JD</div>
-                <div class="team-member-info">
-                    <div class="team-member-name">John Doe</div>
-                    <p>Lead Developer, responsible for the overall architecture and implementation.</p>
-                </div>
-            </div>
-            <div class="team-member">
-                <div class="team-member-image">AS</div>
-                <div class="team-member-info">
-                    <div class="team-member-name">Alice Smith</div>
-                    <p>UX/UI Designer, focused on user experience and interface design.</p>
-                </div>
-            </div>
-            <div class="team-member">
-                <div class="team-member-image">BB</div>
-                <div class="team-member-info">
-                    <div class="team-member-name">Bob Brown</div>
-                    <p>Backend Engineer, managing the server-side infrastructure and API development.</p>
-                </div>
-            </div>
+            <h2>Limitations and Disclaimers</h2>
+            <p>This AI Assistant is a tool and should be used responsibly. While it's designed to provide helpful information, it has limitations:</p>
+            <ul>
+                <li><strong>Accuracy:</strong> The information provided may not always be accurate. Always verify critical information.</li>
+                <li><strong>Bias:</strong> The AI may reflect biases present in its training data.</li>
+                <li><strong>Dependence:</strong> Do not solely rely on this assistant for crucial decisions.</li>
+                <li><strong>Privacy:</strong> Your input may be used for model improvement, while respecting privacy best practices.</li>
+            </ul>
         </section>
 
         <section>
-            <h2>Contact Us</h2>
-            <p>If you have any questions or feedback, please contact us at <a href="mailto:info@projectzenith.com">info@projectzenith.com</a>.</p>
+            <h2>Contact and Support</h2>
+            <p>For any questions, issues, or suggestions, please contact us at <a href="mailto:support@example.com">support@example.com</a>.</p>
         </section>
-
     </main>
 
     <footer>
-        <p>&copy; 2024 Project Zenith. All rights reserved.</p>
+        <div class="container">
+            <p>&copy; 2024 AI Assistant. All rights reserved.</p>
+        </div>
     </footer>
 
 </body>

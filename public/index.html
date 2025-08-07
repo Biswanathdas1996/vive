@@ -3,19 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Real-Time Messaging Platform</title>
+    <title>Chat Interface</title>
     <style>
         :root {
             /* Color Palette */
-            --primary-color: #6200EE; /* Dark Purple */
-            --secondary-color: #03DAC5; /* Teal */
-            --accent-color: #BB86FC; /* Light Purple */
-            --background-color: #121212; /* Dark Gray (Background) */
-            --surface-color: #212121; /* Slightly Lighter Gray (Cards/Surfaces) */
-            --text-color: #fff; /* White */
-            --text-color-secondary: #BDBDBD; /* Light Gray */
-            --error-color: #CF6679; /* Red */
-            --shadow-color: rgba(0, 0, 0, 0.3); /* Shadow */
+            --primary-color: #64b5f6; /* Light Blue */
+            --secondary-color: #1e88e5; /* Darker Blue */
+            --background-color: #f0f4c3; /* Light Cream */
+            --text-color: #333; /* Dark Grey */
+            --accent-color: #e57373; /* Red */
+            --border-color: rgba(0, 0, 0, 0.1);
+            --glass-color: rgba(255, 255, 255, 0.2);
+            --shadow-color: rgba(0, 0, 0, 0.15);
 
             /* Spacing */
             --space-s: 0.5rem;
@@ -23,465 +22,209 @@
             --space-l: 1.5rem;
             --space-xl: 2rem;
 
-            /* Border Radius */
-            --border-radius: 0.75rem;
-
             /* Font */
             --font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            --font-size-base: 16px; /* Base font size */
+
+            /* Rounded Corners */
+            --border-radius: 0.75rem;
         }
 
-        /* General Styles */
         body {
             font-family: var(--font-family);
+            font-size: var(--font-size-base);
+            line-height: 1.6;
             background-color: var(--background-color);
             color: var(--text-color);
             margin: 0;
             padding: 0;
-            line-height: 1.6;
-            overflow-x: hidden;
-        }
-
-        a {
-            color: var(--accent-color);
-            text-decoration: none;
-        }
-
-        a:hover {
-            text-decoration: underline;
-        }
-
-        /* Utility Classes */
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: var(--space-l);
-        }
-
-        .visually-hidden {
-            clip: rect(0 0 0 0);
-            clip-path: inset(50%);
-            height: 1px;
-            overflow: hidden;
-            position: absolute;
-            white-space: nowrap;
-            width: 1px;
-        }
-
-        /* Header */
-        header {
-            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
-            padding: var(--space-m) 0;
-            box-shadow: 0 2px 5px var(--shadow-color);
-        }
-
-        header .container {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .logo {
-            font-size: 1.75rem;
-            font-weight: bold;
-            color: var(--text-color);
-            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
-        }
-
-        nav ul {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-            display: flex;
-        }
-
-        nav li {
-            margin-left: var(--space-l);
-        }
-
-        nav a {
-            color: var(--text-color);
-            transition: color 0.3s ease;
-            padding: var(--space-s) var(--space-m);
-            border-radius: var(--border-radius);
-        }
-
-        nav a:hover,
-        nav a:focus {
-            color: var(--primary-color);
-            background-color: rgba(255, 255, 255, 0.2);
-            outline: none;
-        }
-
-        /* Main Content */
-        main {
-            padding: var(--space-xl) 0;
-        }
-
-        .hero {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: var(--space-xl);
-            align-items: center;
-            padding: var(--space-xl) 0;
-        }
-
-        .hero-text {
-            padding-right: var(--space-l);
-        }
-
-        .hero-title {
-            font-size: 2.5rem;
-            margin-bottom: var(--space-m);
-        }
-
-        .hero-description {
-            color: var(--text-color-secondary);
-            margin-bottom: var(--space-l);
-        }
-
-        .hero-image {
-            background: linear-gradient(135deg, var(--secondary-color), var(--accent-color));
-            border-radius: var(--border-radius);
-            padding: var(--space-xl);
             display: flex;
             justify-content: center;
             align-items: center;
+            min-height: 100vh;
         }
 
-        .hero-image::before {
-            content: '';
-            position: absolute;
+        .container {
             width: 100%;
-            height: 100%;
-            border-radius: inherit;
-            background: rgba(255, 255, 255, 0.1);
-            filter: blur(10px);
-            z-index: -1;
-        }
-
-        .hero-image svg {
-            width: 100%;
-            max-width: 300px;
-            height: auto;
-        }
-
-        /* Form Styles */
-        .form-section {
-            background-color: var(--surface-color);
+            max-width: 500px;
+            margin: var(--space-m);
             border-radius: var(--border-radius);
+            overflow: hidden;
+            box-shadow: 0 4px 12px var(--shadow-color);
+            background-color: var(--glass-color);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--border-color);
+        }
+
+
+        header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
             padding: var(--space-l);
-            box-shadow: 0 5px 15px var(--shadow-color);
-            margin-bottom: var(--space-xl);
+            text-align: center;
+            font-size: 1.2rem;
+            font-weight: 600;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
         }
 
-        .form-section h2 {
-            font-size: 1.75rem;
+        .chat-window {
+            padding: var(--space-l);
+            overflow-y: auto;
+            max-height: 400px;
+        }
+
+        .message {
             margin-bottom: var(--space-m);
-        }
-
-        .form-group {
-            margin-bottom: var(--space-m);
-        }
-
-        label {
-            display: block;
-            margin-bottom: var(--space-s);
-            color: var(--text-color-secondary);
-        }
-
-        input[type="text"],
-        input[type="email"],
-        input[type="password"] {
-            width: 100%;
             padding: var(--space-m);
-            border: none;
             border-radius: var(--border-radius);
-            background-color: rgba(255, 255, 255, 0.05);
-            color: var(--text-color);
-            transition: background-color 0.3s ease;
-            outline: none;
+            box-shadow: 0 2px 6px var(--shadow-color);
+            clear: both; /* Ensure messages clear the floats */
         }
 
-        input[type="text"]:focus,
-        input[type="email"]:focus,
-        input[type="password"]:focus {
-            background-color: rgba(255, 255, 255, 0.1);
+        .user-message {
+            background-color: var(--primary-color);
+            color: white;
+            float: right;
+            clear: both;
+            text-align: right;
         }
 
-        button {
-            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+        .bot-message {
+            background-color: #fff;
             color: var(--text-color);
-            padding: var(--space-m) var(--space-l);
+            float: left;
+            clear: both;
+            text-align: left;
+        }
+
+        .bot-message::before{ /* CSS Icon for bot */
+            content: '';
+            display: inline-block;
+            width: 15px;
+            height: 15px;
+            border-radius: 50%;
+            background-color: var(--secondary-color);
+            margin-right: var(--space-s);
+        }
+
+        .input-area {
+            display: flex;
+            padding: var(--space-m);
+            border-top: 1px solid var(--border-color);
+            background-color: #fff;
+        }
+
+        #message-input {
+            flex-grow: 1;
+            padding: var(--space-m);
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            margin-right: var(--space-m);
+        }
+
+        #send-button {
+            background-color: var(--accent-color);
+            color: white;
             border: none;
+            padding: var(--space-m) var(--space-l);
             border-radius: var(--border-radius);
             cursor: pointer;
-            font-size: 1rem;
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            transition: background-color 0.2s ease;
         }
 
-        button:hover,
-        button:focus {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 10px var(--shadow-color);
-            outline: none;
+        #send-button:hover {
+            background-color: darken(var(--accent-color), 10%);
         }
 
-        button:active {
-            transform: translateY(0);
-            box-shadow: none;
-        }
-
-        .error-message {
-            color: var(--error-color);
-            margin-top: var(--space-s);
-        }
-
-        /* Features Section */
-        .features-section {
-            padding: var(--space-xl) 0;
-        }
-
-        .features-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: var(--space-l);
-        }
-
-        .feature-card {
-            background-color: var(--surface-color);
-            border-radius: var(--border-radius);
-            padding: var(--space-l);
-            box-shadow: 0 3px 8px var(--shadow-color);
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-        }
-
-        .feature-card:hover,
-        .feature-card:focus {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px var(--shadow-color);
-            outline: none;
-        }
-
-        .feature-icon {
-            width: 3rem;
-            height: 3rem;
-            background: linear-gradient(135deg, var(--secondary-color), var(--accent-color));
-            border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin-bottom: var(--space-m);
-        }
-
-        .feature-icon svg {
-            width: 1.5rem;
-            height: 1.5rem;
-            fill: var(--text-color);
-        }
-
-        .feature-title {
-            font-size: 1.25rem;
-            margin-bottom: var(--space-s);
-        }
-
-        .feature-description {
-            color: var(--text-color-secondary);
-        }
-
-        /* Footer */
-        footer {
-            background-color: var(--surface-color);
-            padding: var(--space-l) 0;
-            text-align: center;
-            font-size: 0.875rem;
-            color: var(--text-color-secondary);
-        }
-
-        /* Responsive Design - Mobile First */
+        /* Responsive Design */
         @media (max-width: 768px) {
             .container {
+                margin: var(--space-s);
+                max-width: 95%;
+            }
+            header {
+                font-size: 1rem;
                 padding: var(--space-m);
             }
-
-            .hero {
-                grid-template-columns: 1fr;
-                text-align: center;
+            .chat-window {
+                padding: var(--space-m);
+                max-height: 300px;
             }
-
-            .hero-text {
-                padding-right: 0;
-            }
-
-            .hero-image {
-                margin-top: var(--space-l);
-            }
-
-            nav ul {
-                flex-direction: column;
-                align-items: center;
-            }
-
-            nav li {
-                margin: var(--space-s) 0;
-            }
-
-            .features-grid {
-                grid-template-columns: 1fr;
+            #message-input, #send-button {
+                padding: var(--space-s);
+                font-size: 0.9rem;
             }
         }
     </style>
 </head>
 <body>
-
-    <header>
-        <div class="container">
-            <div class="logo">ChatterBox</div>
-            <nav>
-                <ul aria-label="Main Navigation">
-                    <li><a href="#">Features</a></li>
-                    <li><a href="#">Pricing</a></li>
-                    <li><a href="#">Support</a></li>
-                    <li><a href="#">Login</a></li>
-                </ul>
-            </nav>
-        </div>
-    </header>
-
-    <main>
-        <section class="hero container">
-            <div class="hero-text">
-                <h1 class="hero-title">Real-time Messaging Reimagined</h1>
-                <p class="hero-description">Connect with friends, family, and colleagues instantly with our powerful and secure messaging platform. Enjoy seamless communication across all your devices.</p>
-                <button>Get Started</button>
-            </div>
-            <div class="hero-image">
-                <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-                    <circle cx="50" cy="50" r="40" fill="transparent" stroke="white" stroke-width="3" />
-                    <path d="M 30 30 L 70 70 M 70 30 L 30 70" stroke="white" stroke-width="3" />
-                </svg>
-            </div>
-        </section>
-
-        <section class="form-section container">
-            <h2>Login or Sign Up</h2>
-            <form id="login-form">
-                <div class="form-group">
-                    <label for="email">Email</label>
-                    <input type="email" id="email" name="email" placeholder="your@email.com" required>
+    <div class="container">
+        <header>
+            Chat Interface
+        </header>
+        <main>
+            <div class="chat-window" id="chat-window">
+                <div class="bot-message message">
+                    Welcome!  How can I help you today?
                 </div>
-                <div class="form-group">
-                    <label for="password">Password</label>
-                    <input type="password" id="password" name="password" placeholder="Password" required>
-                </div>
-                <button type="submit">Login</button>
-                <p class="error-message" id="login-error" aria-live="polite"></p>
-            </form>
-            <form id="signup-form">
-                <div class="form-group">
-                    <label for="signup-email">Email</label>
-                    <input type="email" id="signup-email" name="signup-email" placeholder="your@email.com" required>
-                </div>
-                <div class="form-group">
-                    <label for="signup-password">Password</label>
-                    <input type="password" id="signup-password" name="signup-password" placeholder="Password" required>
-                </div>
-                <button type="submit">Sign Up</button>
-                <p class="error-message" id="signup-error" aria-live="polite"></p>
-            </form>
-        </section>
-
-        <section class="features-section container">
-            <h2>Key Features</h2>
-            <div class="features-grid">
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="currentColor">
-                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-12h2v6h-2zm0 8h2v2h-2z"/>
-                        </svg>
-                    </div>
-                    <h3 class="feature-title">Real-time Messaging</h3>
-                    <p class="feature-description">Send and receive messages instantly with our lightning-fast real-time communication.</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="currentColor">
-                            <path d="M12 1C5.93 1 1 5.93 1 12s4.93 11 11 11 11-4.93 11-11S18.07 1 12 1zm0 20c-5.52 0-10-4.48-10-10S6.48 1 12 1s10 4.48 10 10-4.48 10-10 10zm-3-7h2v2h-2zm0 4h2v2h-2z"/>
-                        </svg>
-                    </div>
-                    <h3 class="feature-title">Secure & Encrypted</h3>
-                    <p class="feature-description">Enjoy end-to-end encryption and robust security features to keep your conversations private.</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="currentColor">
-                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-3-9h2v2h-2zm0 4h2v2h-2z"/>
-                        </svg>
-                    </div>
-                    <h3 class="feature-title">Cross-Platform Support</h3>
-                    <p class="feature-description">Access your messages and stay connected on any device, from your phone to your computer.</p>
+                <div class="bot-message message">
+                    You can ask me anything.
                 </div>
             </div>
-        </section>
-    </main>
-
-    <footer>
-        <div class="container">
-            <p>&copy; 2024 Real-Time Messaging Platform. All rights reserved.</p>
-        </div>
-    </footer>
+            <div class="input-area">
+                <input type="text" id="message-input" placeholder="Type your message here...">
+                <button id="send-button">Send</button>
+            </div>
+        </main>
+    </div>
 
     <script>
-        // Login Form Handling
-        document.getElementById('login-form').addEventListener('submit', function(event) {
-            event.preventDefault();
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
-            const errorElement = document.getElementById('login-error');
+        const chatWindow = document.getElementById('chat-window');
+        const messageInput = document.getElementById('message-input');
+        const sendButton = document.getElementById('send-button');
 
-            // Basic Validation (replace with actual API call)
-            if (!email || !password) {
-                errorElement.textContent = 'Please enter both email and password.';
-                return;
+        function addMessage(message, sender) {
+            const messageDiv = document.createElement('div');
+            messageDiv.classList.add('message', sender === 'user' ? 'user-message' : 'bot-message');
+            messageDiv.textContent = message;
+            chatWindow.appendChild(messageDiv);
+            chatWindow.scrollTop = chatWindow.scrollHeight;  // Scroll to bottom
+        }
+
+        function simulateBotResponse(userMessage) {
+            // Simple bot logic (replace with your actual bot logic)
+            let response = "I'm sorry, I didn't understand that.";
+            if (userMessage.toLowerCase().includes('hello') || userMessage.toLowerCase().includes('hi')) {
+                response = "Hello there!";
+            } else if (userMessage.toLowerCase().includes('how are you')) {
+                response = "I'm doing well, thank you!";
+            } else if (userMessage.toLowerCase().includes('goodbye') || userMessage.toLowerCase().includes('bye')) {
+                response = "Goodbye!  Have a great day!";
+            }
+            else if(userMessage.toLowerCase().includes("weather")){
+              response = "I am unable to provide real-time weather information at this time.";
             }
 
-            //Simulate API call and success
-            errorElement.textContent = 'Logging in...';
             setTimeout(() => {
-                errorElement.textContent = 'Login successful! (Simulated)';
-                errorElement.style.color = 'green';
-            }, 1000);
+                addMessage(response, 'bot');
+            }, 500);
+        }
 
-            setTimeout(() => {
-                errorElement.textContent = '';
-                errorElement.style.color = '';
-            }, 3000);
+
+        sendButton.addEventListener('click', () => {
+            const message = messageInput.value.trim();
+            if (message) {
+                addMessage(message, 'user');
+                messageInput.value = ''; // Clear input
+                simulateBotResponse(message); // Simulate bot response
+            }
         });
 
 
-        // Signup Form Handling
-        document.getElementById('signup-form').addEventListener('submit', function(event) {
-            event.preventDefault();
-            const email = document.getElementById('signup-email').value;
-            const password = document.getElementById('signup-password').value;
-            const errorElement = document.getElementById('signup-error');
-
-            // Basic Validation (replace with actual API call)
-            if (!email || !password) {
-                errorElement.textContent = 'Please enter both email and password.';
-                return;
+        messageInput.addEventListener('keydown', (event) => {
+            if (event.key === 'Enter') {
+                sendButton.click(); // Trigger send on Enter key
             }
-
-            //Simulate API call and success
-            errorElement.textContent = 'Signing up...';
-            setTimeout(() => {
-                errorElement.textContent = 'Sign up successful! (Simulated)';
-                errorElement.style.color = 'green';
-            }, 1000);
-
-            setTimeout(() => {
-                errorElement.textContent = '';
-                errorElement.style.color = '';
-            }, 3000);
         });
     </script>
 </body>

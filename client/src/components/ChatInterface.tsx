@@ -137,7 +137,12 @@ export function ChatInterface({
     onSuccess: (data) => {
       onProjectCreate(data.projectId);
       onChatSessionCreate(data.chatSessionId);
-      setCurrentWorkflow(data.workflow);
+      setCurrentWorkflow({
+        currentStep: "structure",
+        analysisComplete: true,
+        structureComplete: false,
+        contentComplete: false
+      });
       setIsGenerating(true);
       
       // Start file structure generation
@@ -166,7 +171,15 @@ export function ChatInterface({
       return response.json();
     },
     onSuccess: (data) => {
-      setCurrentWorkflow(data.workflow);
+      setCurrentWorkflow({
+        currentStep: "content",
+        analysisComplete: true,
+        structureComplete: true,
+        contentComplete: false,
+        totalFiles: data.fileStructure?.public?.children ? Object.keys(data.fileStructure.public.children).length : 0,
+        completedFiles: 0,
+        currentFile: null
+      });
       queryClient.invalidateQueries({ queryKey: ["/api/chat", chatSessionId] });
       
       // Start generating files one by one
@@ -254,7 +267,14 @@ export function ChatInterface({
   const generateFilesSequentially = async (files: string[], index: number, fileStructure: any) => {
     if (index >= files.length) {
       setIsGenerating(false);
-      setCurrentWorkflow(null);
+      setCurrentWorkflow({
+        currentStep: "complete",
+        analysisComplete: true,
+        structureComplete: true,
+        contentComplete: true,
+        totalFiles: files.length,
+        completedFiles: files.length
+      });
       queryClient.invalidateQueries({ queryKey: ["/api/projects", projectId, "files"] });
       toast({
         title: "Project Generated",
@@ -264,6 +284,14 @@ export function ChatInterface({
     }
 
     const fileName = files[index];
+    
+    // Update workflow to show current file being generated
+    setCurrentWorkflow((prev: any) => ({
+      ...prev,
+      currentFile: fileName,
+      completedFiles: index
+    }));
+
     if (chatSessionId) {
       try {
         await generateContentMutation.mutateAsync({
@@ -272,6 +300,12 @@ export function ChatInterface({
           analysisResult: messages[0]?.workflow?.data || {},
           fileStructure
         });
+        
+        // Update completed files count
+        setCurrentWorkflow((prev: any) => ({
+          ...prev,
+          completedFiles: index + 1
+        }));
         
         // Generate next file after a short delay
         setTimeout(() => {
@@ -561,16 +595,49 @@ export function ChatInterface({
                       <div className="space-y-2">
                         <div className="flex items-center justify-between">
                           <span className="text-xs text-slate-300">Analysis</span>
-                          <span className="text-xs bg-emerald-600 px-2 py-1 rounded">Complete</span>
+                          <span className={`text-xs px-2 py-1 rounded ${
+                            currentWorkflow?.analysisComplete ? "bg-emerald-600" : 
+                            currentWorkflow?.currentStep === "analysis" ? "bg-blue-600 animate-pulse" : "bg-slate-600"
+                          }`}>
+                            {currentWorkflow?.analysisComplete ? "Complete" : 
+                             currentWorkflow?.currentStep === "analysis" ? "Analyzing..." : "Pending"}
+                          </span>
                         </div>
                         <div className="flex items-center justify-between">
                           <span className="text-xs text-slate-300">File Structure</span>
-                          <span className="text-xs bg-emerald-600 px-2 py-1 rounded">Complete</span>
+                          <span className={`text-xs px-2 py-1 rounded ${
+                            currentWorkflow?.structureComplete ? "bg-emerald-600" : 
+                            currentWorkflow?.currentStep === "structure" ? "bg-blue-600 animate-pulse" : "bg-slate-600"
+                          }`}>
+                            {currentWorkflow?.structureComplete ? "Complete" : 
+                             currentWorkflow?.currentStep === "structure" ? "Generating..." : "Pending"}
+                          </span>
                         </div>
                         <div className="flex items-center justify-between">
                           <span className="text-xs text-slate-300">Content Generation</span>
-                          <span className="text-xs bg-blue-600 px-2 py-1 rounded animate-pulse">Generating...</span>
+                          <span className={`text-xs px-2 py-1 rounded ${
+                            currentWorkflow?.contentComplete ? "bg-emerald-600" : 
+                            currentWorkflow?.currentStep === "content" ? "bg-blue-600 animate-pulse" : "bg-slate-600"
+                          }`}>
+                            {currentWorkflow?.contentComplete ? "Complete" : 
+                             currentWorkflow?.currentStep === "content" ? 
+                             `Generating ${currentWorkflow?.currentFile || "files"}...` : "Pending"}
+                          </span>
                         </div>
+                        {currentWorkflow?.currentStep === "content" && currentWorkflow?.totalFiles && (
+                          <div className="mt-2 bg-slate-900 rounded p-2">
+                            <div className="flex items-center justify-between text-xs text-slate-400 mb-1">
+                              <span>Progress</span>
+                              <span>{currentWorkflow?.completedFiles || 0} / {currentWorkflow?.totalFiles}</span>
+                            </div>
+                            <div className="w-full bg-slate-700 rounded-full h-1">
+                              <div 
+                                className="bg-blue-500 h-1 rounded-full transition-all duration-300" 
+                                style={{ width: `${((currentWorkflow?.completedFiles || 0) / (currentWorkflow?.totalFiles || 1)) * 100}%` }}
+                              ></div>
+                            </div>
+                          </div>
+                        )}
                       </div>
                     </CardContent>
                   </Card>
