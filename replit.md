@@ -1,10 +1,12 @@
 # Overview
 
-AgentCode is an AI-powered web application generator that enables users to create complete web applications through a conversational interface. The platform combines modern React frontend technologies with a Node.js/Express backend and leverages OpenAI's GPT-4o model to analyze user requirements, generate file structures, and create application code. The system provides real-time chat interaction, file management, and live preview capabilities for generated applications.
+AgentCode is an AI-powered web application generator that enables users to create complete web applications through a conversational interface. The platform combines modern React frontend technologies with a Node.js/Express backend and leverages Google Gemini 1.5 Flash to analyze user requirements, generate file structures, and create self-contained HTML applications. The system provides real-time chat interaction, file management, and live preview capabilities for generated HTML-only applications with embedded CSS and JavaScript.
 
 # User Preferences
 
 Preferred communication style: Simple, everyday language.
+
+Code generation preference: Generate only HTML files with embedded CSS and JavaScript. No separate CSS or JS files.
 
 # System Architecture
 
@@ -42,7 +44,7 @@ The client is built with **React 18** and **TypeScript**, using **Vite** as the 
 
 **In-Memory Storage**: Implements a fallback memory storage system for development/testing scenarios.
 
-**File System**: Generated application files are stored in the local file system under `/public` directory for serving static content.
+**File System**: Generated HTML applications are stored in the local file system under `/public` directory for serving static content. Each HTML file is completely self-contained with embedded CSS and JavaScript.
 
 ## Authentication and Authorization
 
