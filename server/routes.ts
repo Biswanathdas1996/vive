@@ -1,0 +1,246 @@
+import type { Express } from "express";
+import { createServer, type Server } from "http";
+import { storage } from "./storage";
+import { llmService } from "./services/llm";
+import { fileGeneratorService } from "./services/fileGenerator";
+import express from "express";
+import path from "path";
+
+export async function registerRoutes(app: Express): Promise<Server> {
+  // Serve static files from public directory
+  app.use('/public', express.static(path.resolve(import.meta.dirname, "..", "public")));
+
+  // Start new chat session
+  app.post("/api/chat/start", async (req, res) => {
+    try {
+      const { prompt } = req.body;
+      
+      if (!prompt) {
+        return res.status(400).json({ error: "Prompt is required" });
+      }
+
+      // Step 1: Analyze prompt
+      const analysisResult = await llmService.analyzePrompt(prompt);
+      
+      // Create project
+      const project = await storage.createProject({
+        name: "Generated App",
+        description: prompt,
+        fileStructure: {}
+      });
+
+      // Create chat session
+      const chatSession = await storage.createChatSession({
+        projectId: project.id,
+        messages: [
+          {
+            id: crypto.randomUUID(),
+            role: "user",
+            content: prompt,
+            timestamp: new Date(),
+          },
+          {
+            id: crypto.randomUUID(),
+            role: "assistant",
+            content: `Analysis complete. Extracted ${analysisResult.features.length} features and ${analysisResult.pages.length} pages.`,
+            timestamp: new Date(),
+            workflow: {
+              step: 1,
+              stepName: "Requirements Analysis",
+              status: "completed",
+              data: analysisResult
+            }
+          }
+        ]
+      });
+
+      res.json({
+        projectId: project.id,
+        chatSessionId: chatSession.id,
+        analysisResult,
+        workflow: {
+          step: 1,
+          stepName: "Requirements Analysis",
+          status: "completed"
+        }
+      });
+    } catch (error) {
+      res.status(500).json({ error: error instanceof Error ? error.message : String(error) });
+    }
+  });
+
+  // Generate file structure
+  app.post("/api/chat/:sessionId/generate-structure", async (req, res) => {
+    try {
+      const { sessionId } = req.params;
+      const { analysisResult } = req.body;
+
+      const fileStructure = await llmService.generateFileStructure(analysisResult);
+      
+      // Update chat session
+      const chatSession = await storage.getChatSession(sessionId);
+      if (!chatSession) {
+        return res.status(404).json({ error: "Chat session not found" });
+      }
+
+      const updatedMessages = [
+        ...chatSession.messages,
+        {
+          id: crypto.randomUUID(),
+          role: "assistant",
+          content: "File structure generated successfully.",
+          timestamp: new Date(),
+          workflow: {
+            step: 2,
+            stepName: "File Structure Generation",
+            status: "completed",
+            data: fileStructure
+          }
+        }
+      ];
+
+      await storage.updateChatSession(sessionId, { messages: updatedMessages });
+
+      res.json({
+        fileStructure,
+        workflow: {
+          step: 2,
+          stepName: "File Structure Generation",
+          status: "completed"
+        }
+      });
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  // Generate file content
+  app.post("/api/chat/:sessionId/generate-content", async (req, res) => {
+    try {
+      const { sessionId } = req.params;
+      const { fileName, analysisResult, fileStructure } = req.body;
+
+      const content = await llmService.generateFileContent(fileName, analysisResult, fileStructure);
+      
+      const chatSession = await storage.getChatSession(sessionId);
+      if (!chatSession) {
+        return res.status(404).json({ error: "Chat session not found" });
+      }
+
+      // Save file to public directory
+      const generatedFile = await fileGeneratorService.createFile(fileName, content, chatSession.projectId!);
+      await storage.createGeneratedFile({
+        projectId: chatSession.projectId!,
+        fileName,
+        filePath: generatedFile.filePath,
+        content
+      });
+
+      res.json({
+        fileName,
+        content,
+        filePath: generatedFile.filePath,
+        workflow: {
+          step: 3,
+          stepName: "Content Generation",
+          status: "completed"
+        }
+      });
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  // Modify file
+  app.post("/api/chat/:sessionId/modify", async (req, res) => {
+    try {
+      const { sessionId } = req.params;
+      const { fileName, modificationRequest } = req.body;
+
+      const currentContent = await fileGeneratorService.readFile(fileName);
+      const modifiedContent = await llmService.modifyFileContent(fileName, currentContent, modificationRequest);
+      
+      await fileGeneratorService.updateFile(fileName, modifiedContent);
+
+      const chatSession = await storage.getChatSession(sessionId);
+      if (!chatSession) {
+        return res.status(404).json({ error: "Chat session not found" });
+      }
+
+      const updatedMessages = [
+        ...chatSession.messages,
+        {
+          id: crypto.randomUUID(),
+          role: "user",
+          content: modificationRequest,
+          timestamp: new Date(),
+        },
+        {
+          id: crypto.randomUUID(),
+          role: "assistant",
+          content: `Modified ${fileName} successfully.`,
+          timestamp: new Date(),
+        }
+      ];
+
+      await storage.updateChatSession(sessionId, { messages: updatedMessages });
+
+      res.json({
+        fileName,
+        content: modifiedContent,
+        success: true
+      });
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  // Get project files
+  app.get("/api/projects/:projectId/files", async (req, res) => {
+    try {
+      const { projectId } = req.params;
+      const files = await storage.getProjectFiles(projectId);
+      const fileList = await fileGeneratorService.listFiles();
+      
+      res.json({
+        files: files.map((file: any) => ({
+          ...file,
+          url: fileGeneratorService.getFileUrl(file.fileName)
+        })),
+        fileList
+      });
+    } catch (error) {
+      res.status(500).json({ error: error instanceof Error ? error.message : String(error) });
+    }
+  });
+
+  // Get file content
+  app.get("/api/files/:fileName", async (req, res) => {
+    try {
+      const { fileName } = req.params;
+      const content = await fileGeneratorService.readFile(fileName);
+      res.json({ fileName, content });
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  // Get chat session
+  app.get("/api/chat/:sessionId", async (req, res) => {
+    try {
+      const { sessionId } = req.params;
+      const chatSession = await storage.getChatSession(sessionId);
+      
+      if (!chatSession) {
+        return res.status(404).json({ error: "Chat session not found" });
+      }
+
+      res.json(chatSession);
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  const httpServer = createServer(app);
+  return httpServer;
+}

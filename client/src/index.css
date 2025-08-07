@@ -1,0 +1,157 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
+@import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: hsl(210 11% 15%);
+  --foreground: hsl(210 6% 93%);
+  --card: hsl(210 11% 15%);
+  --card-foreground: hsl(210 6% 93%);
+  --popover: hsl(210 11% 15%);
+  --popover-foreground: hsl(210 6% 93%);
+  --primary: hsl(204 94% 57%);
+  --primary-foreground: hsl(0 0% 100%);
+  --secondary: hsl(210 11% 15%);
+  --secondary-foreground: hsl(210 6% 93%);
+  --muted: hsl(210 7% 23%);
+  --muted-foreground: hsl(210 5% 61%);
+  --accent: hsl(210 7% 23%);
+  --accent-foreground: hsl(210 6% 93%);
+  --destructive: hsl(0 84% 60%);
+  --destructive-foreground: hsl(0 0% 100%);
+  --border: hsl(210 6% 41%);
+  --input: hsl(210 7% 23%);
+  --ring: hsl(204 94% 57%);
+  --chart-1: hsl(204 94% 57%);
+  --chart-2: hsl(159 100% 36%);
+  --chart-3: hsl(42 93% 56%);
+  --chart-4: hsl(147 79% 42%);
+  --chart-5: hsl(341 75% 51%);
+  --sidebar: hsl(210 11% 15%);
+  --sidebar-foreground: hsl(210 6% 93%);
+  --sidebar-primary: hsl(204 94% 57%);
+  --sidebar-primary-foreground: hsl(0 0% 100%);
+  --sidebar-accent: hsl(210 7% 23%);
+  --sidebar-accent-foreground: hsl(210 6% 93%);
+  --sidebar-border: hsl(210 6% 41%);
+  --sidebar-ring: hsl(204 94% 57%);
+  --font-sans: Inter, system-ui, sans-serif;
+  --font-serif: Georgia, serif;
+  --font-mono: JetBrains Mono, monospace;
+  --radius: 0.5rem;
+  --shadow-2xs: 0px 1px 2px 0px hsl(0 0% 0% / 0.05);
+  --shadow-xs: 0px 1px 2px 0px hsl(0 0% 0% / 0.05);
+  --shadow-sm: 0px 1px 3px 0px hsl(0 0% 0% / 0.1), 0px 1px 2px -1px hsl(0 0% 0% / 0.1);
+  --shadow: 0px 1px 3px 0px hsl(0 0% 0% / 0.1), 0px 1px 2px -1px hsl(0 0% 0% / 0.1);
+  --shadow-md: 0px 4px 6px -1px hsl(0 0% 0% / 0.1), 0px 2px 4px -2px hsl(0 0% 0% / 0.1);
+  --shadow-lg: 0px 10px 15px -3px hsl(0 0% 0% / 0.1), 0px 4px 6px -4px hsl(0 0% 0% / 0.1);
+  --shadow-xl: 0px 20px 25px -5px hsl(0 0% 0% / 0.1), 0px 8px 10px -6px hsl(0 0% 0% / 0.1);
+  --shadow-2xl: 0px 25px 50px -12px hsl(0 0% 0% / 0.25);
+  --tracking-normal: 0em;
+  --spacing: 0.25rem;
+  
+  /* Custom slate colors */
+  --slate-850: hsl(210 11% 12%);
+  --slate-950: hsl(210 11% 4%);
+}
+
+.dark {
+  --background: hsl(210 11% 4%);
+  --foreground: hsl(210 6% 93%);
+  --card: hsl(210 11% 15%);
+  --card-foreground: hsl(210 6% 93%);
+  --popover: hsl(210 11% 4%);
+  --popover-foreground: hsl(210 6% 93%);
+  --primary: hsl(204 94% 57%);
+  --primary-foreground: hsl(0 0% 100%);
+  --secondary: hsl(210 7% 23%);
+  --secondary-foreground: hsl(210 6% 93%);
+  --muted: hsl(210 7% 15%);
+  --muted-foreground: hsl(210 5% 61%);
+  --accent: hsl(210 7% 15%);
+  --accent-foreground: hsl(210 6% 93%);
+  --destructive: hsl(0 84% 60%);
+  --destructive-foreground: hsl(0 0% 100%);
+  --border: hsl(210 6% 24%);
+  --input: hsl(210 7% 15%);
+  --ring: hsl(204 94% 57%);
+  --chart-1: hsl(204 94% 57%);
+  --chart-2: hsl(159 100% 36%);
+  --chart-3: hsl(42 93% 56%);
+  --chart-4: hsl(147 79% 42%);
+  --chart-5: hsl(341 75% 51%);
+  --sidebar: hsl(210 11% 15%);
+  --sidebar-foreground: hsl(210 6% 93%);
+  --sidebar-primary: hsl(204 94% 57%);
+  --sidebar-primary-foreground: hsl(0 0% 100%);
+  --sidebar-accent: hsl(210 7% 15%);
+  --sidebar-accent-foreground: hsl(210 6% 93%);
+  --sidebar-border: hsl(210 6% 24%);
+  --sidebar-ring: hsl(204 94% 57%);
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply font-sans antialiased bg-background text-foreground;
+  }
+
+  /* Custom scrollbar styles */
+  .scrollbar-thin::-webkit-scrollbar {
+    width: 6px;
+  }
+  .scrollbar-thin::-webkit-scrollbar-track {
+    background: hsl(210 7% 23%);
+  }
+  .scrollbar-thin::-webkit-scrollbar-thumb {
+    background: hsl(210 5% 41%);
+    border-radius: 3px;
+  }
+  .scrollbar-thin::-webkit-scrollbar-thumb:hover {
+    background: hsl(210 5% 51%);
+  }
+}
+
+@layer utilities {
+  .animate-fade-in {
+    animation: fadeIn 0.3s ease-in-out;
+  }
+  
+  .animate-slide-up {
+    animation: slideUp 0.3s ease-out;
+  }
+  
+  .animate-pulse-soft {
+    animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+  
+  .bg-slate-850 {
+    background-color: hsl(210 11% 12%);
+  }
+  
+  .bg-slate-950 {
+    background-color: hsl(210 11% 4%);
+  }
+}
+
+@keyframes fadeIn {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+@keyframes slideUp {
+  0% { 
+    transform: translateY(10px); 
+    opacity: 0; 
+  }
+  100% { 
+    transform: translateY(0); 
+    opacity: 1; 
+  }
+}
