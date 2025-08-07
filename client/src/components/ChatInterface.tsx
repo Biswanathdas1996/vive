@@ -543,9 +543,6 @@ export function ChatInterface({
         </>
       ) : (
         <div className="flex items-center justify-center h-full">
-          <div className="transform -rotate-90 text-xs text-slate-400 font-medium">
-            Chat
-          </div>
         </div>
       )}
     </div>
