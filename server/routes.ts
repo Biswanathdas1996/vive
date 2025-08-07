@@ -83,12 +83,48 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(404).json({ error: "Chat session not found" });
       }
 
+      // Extract files with content and save them automatically
+      const extractAndSaveFiles = async (structure: any, path: string = ""): Promise<void> => {
+        if (structure.type === "file" && structure.content) {
+          const fileName = path;
+          
+          // Clean up content - remove any markdown code blocks
+          const cleanContent = structure.content
+            .replace(/```html\n?/g, '')
+            .replace(/```\n?$/g, '')
+            .trim();
+          
+          // Save file to public directory
+          await fileGeneratorService.createFile(fileName, cleanContent, chatSession.projectId!);
+          
+          // Save to database
+          await storage.createGeneratedFile({
+            projectId: chatSession.projectId!,
+            fileName,
+            filePath: `/public/${fileName}`,
+            content: cleanContent
+          });
+        } else if (structure.type === "directory" && structure.children) {
+          for (const [childName, childStructure] of Object.entries(structure.children)) {
+            const childPath = path ? `${path}/${childName}` : childName;
+            await extractAndSaveFiles(childStructure, childPath);
+          }
+        }
+      };
+
+      // Process the file structure and save all files
+      if (fileStructure.public && fileStructure.public.children) {
+        for (const [fileName, fileData] of Object.entries(fileStructure.public.children)) {
+          await extractAndSaveFiles(fileData, fileName);
+        }
+      }
+
       const updatedMessages = [
-        ...chatSession.messages,
+        ...(chatSession.messages || []),
         {
           id: crypto.randomUUID(),
           role: "assistant",
-          content: "File structure generated successfully.",
+          content: "File structure and content generated successfully. All HTML files have been created with embedded styles and scripts.",
           timestamp: new Date(),
           workflow: {
             step: 2,
@@ -110,7 +146,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         }
       });
     } catch (error) {
-      res.status(500).json({ error: error.message });
+      res.status(500).json({ error: error instanceof Error ? error.message : String(error) });
     }
   });
 
@@ -147,7 +183,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         }
       });
     } catch (error) {
-      res.status(500).json({ error: error.message });
+      res.status(500).json({ error: error instanceof Error ? error.message : String(error) });
     }
   });
 
@@ -168,7 +204,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
 
       const updatedMessages = [
-        ...chatSession.messages,
+        ...(chatSession.messages || []),
         {
           id: crypto.randomUUID(),
           role: "user",
@@ -191,7 +227,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         success: true
       });
     } catch (error) {
-      res.status(500).json({ error: error.message });
+      res.status(500).json({ error: error instanceof Error ? error.message : String(error) });
     }
   });
 

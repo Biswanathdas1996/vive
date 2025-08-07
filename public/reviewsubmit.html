@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Review Submission</title>
+<style>
+body {
+  font-family: sans-serif;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background-color: #f4f4f4;
+}
+
+.container {
+  max-width: 600px;
+  margin: 20px auto;
+  padding: 20px;
+  background-color: white;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  border-radius: 5px;
+}
+
+h1 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+label {
+  display: block;
+  margin-bottom: 5px;
+}
+
+input[type="text"],
+textarea,
+select {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+textarea {
+  height: 150px;
+}
+
+button {
+  background-color: #4CAF50;
+  color: white;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #45a049;
+}
+
+.error {
+  color: red;
+  margin-top: 5px;
+}
+
+@media (max-width: 400px) {
+  .container {
+    padding: 10px;
+  }
+}
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>Submit Your Review</h1>
+  <form id="reviewForm">
+    <label for="name">Your Name:</label>
+    <input type="text" id="name" name="name" required>
+    <div id="nameError" class="error"></div>
+
+    <label for="rating">Rating:</label>
+    <select id="rating" name="rating" required>
+      <option value="">Select Rating</option>
+      <option value="1">1 Star</option>
+      <option value="2">2 Stars</option>
+      <option value="3">3 Stars</option>
+      <option value="4">4 Stars</option>
+      <option value="5">5 Stars</option>
+    </select>
+    <div id="ratingError" class="error"></div>
+
+    <label for="review">Your Review:</label>
+    <textarea id="review" name="review" required></textarea>
+    <div id="reviewError" class="error"></div>
+
+    <button type="submit">Submit Review</button>
+  </form>
+</div>
+
+<script>
+document.getElementById('reviewForm').addEventListener('submit', function(event) {
+  event.preventDefault();
+
+  const name = document.getElementById('name').value;
+  const rating = document.getElementById('rating').value;
+  const reviewText = document.getElementById('review').value;
+
+  const nameError = document.getElementById('nameError');
+  const ratingError = document.getElementById('ratingError');
+  const reviewError = document.getElementById('reviewError');
+
+  nameError.textContent = '';
+  ratingError.textContent = '';
+  reviewError.textContent = '';
+
+  let isValid = true;
+
+  if (name.trim() === '') {
+    nameError.textContent = 'Name is required';
+    isValid = false;
+  }
+  if (rating === '') {
+    ratingError.textContent = 'Rating is required';
+    isValid = false;
+  }
+  if (reviewText.trim() === '') {
+    reviewError.textContent = 'Review is required';
+    isValid = false;
+  }
+
+  if (isValid) {
+    // Submit the form data here (e.g., using AJAX)
+    alert('Review submitted successfully!');
+    document.getElementById('reviewForm').reset();
+  }
+});
+</script>
+</body>
+</html>

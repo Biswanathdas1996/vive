@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Help and Support</title>
+<style>
+body {
+  font-family: sans-serif;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background-color: #f4f4f4;
+}
+
+header {
+  background-color: #333;
+  color: white;
+  padding: 1rem;
+  text-align: center;
+}
+
+main {
+  flex: 1;
+  padding: 2rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  grid-gap: 2rem;
+}
+
+.faq-section {
+  background-color: white;
+  padding: 1.5rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.faq-section h3 {
+  margin-top: 0;
+}
+
+.faq-section .faq-item {
+  margin-bottom: 1rem;
+}
+
+.faq-item h4 {
+  margin-top: 0;
+  cursor: pointer;
+}
+
+.faq-item .answer {
+  display: none;
+  margin-top: 0.5rem;
+}
+
+.faq-item.active .answer {
+  display: block;
+}
+
+footer {
+  background-color: #333;
+  color: white;
+  text-align: center;
+  padding: 1rem;
+}
+
+@media (max-width: 600px) {
+  main {
+    grid-template-columns: 1fr;
+  }
+}
+</style>
+</head>
+<body>
+<header>
+  <h1>Help and Support</h1>
+</header>
+<main>
+  <div class="faq-section">
+    <h3>Getting Started</h3>
+    <div class="faq-item">
+      <h4>How do I create an account?</h4>
+      <div class="answer">
+        <p>To create an account, simply click the "Sign Up" button on the homepage and fill out the required information.</p>
+      </div>
+    </div>
+    <div class="faq-item">
+      <h4>What are the system requirements?</h4>
+      <div class="answer">
+        <p>The minimum system requirements are a modern web browser and an internet connection.  Specific browser recommendations are listed on the FAQ page.</p>
+      </div>
+    </div>
+  </div>
+  <div class="faq-section">
+    <h3>Troubleshooting</h3>
+    <div class="faq-item">
+      <h4>What should I do if I'm having login issues?</h4>
+      <div class="answer">
+        <p>Please check your username and password. If you've forgotten your password, use the "Forgot Password" link to reset it. If issues persist, contact support.</p>
+      </div>
+    </div>
+    <div class="faq-item">
+      <h4>The website is not loading.</h4>
+      <div class="answer">
+        <p>Please check your internet connection. If you're still experiencing issues, try clearing your browser cache and cookies or using a different browser.</p>
+      </div>
+    </div>
+  </div>
+</main>
+<footer>
+  <p>&copy; 2023 My Company</p>
+</footer>
+<script>
+const faqItems = document.querySelectorAll('.faq-item');
+
+faqItems.forEach(item => {
+  const question = item.querySelector('h4');
+  question.addEventListener('click', () => {
+    item.classList.toggle('active');
+  });
+});
+</script>
+</body>
+</html>

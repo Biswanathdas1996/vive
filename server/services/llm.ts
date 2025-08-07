@@ -40,19 +40,37 @@ Analyze this web application request: ${prompt}`;
 
   async generateFileStructure(analysisResult: AnalysisResult): Promise<FileStructure> {
     try {
-      const prompt = `You are an expert web developer. Based on the analysis results, generate a file structure that contains ONLY HTML files. Each HTML file should be self-contained with embedded CSS and JavaScript. Do not create separate CSS or JS files. Respond with JSON in this format:
-      {
-        "public": {
-          "type": "directory",
-          "children": {
-            "index.html": { "type": "file" }
-          }
-        }
+      const prompt = `You are an expert web developer. Based on the analysis results, generate a complete file structure with FULL HTML content for each file. Each HTML file must be self-contained with embedded CSS and JavaScript.
+
+IMPORTANT: Include the complete HTML content for each file in the "content" property.
+
+Respond with JSON in this exact format:
+{
+  "public": {
+    "type": "directory",
+    "children": {
+      "index.html": { 
+        "type": "file",
+        "content": "<!DOCTYPE html>\\n<html lang=\\"en\\">\\n<head>\\n<meta charset=\\"UTF-8\\">\\n<meta name=\\"viewport\\" content=\\"width=device-width, initial-scale=1.0\\">\\n<title>Title</title>\\n<style>\\n/* All CSS styles here */\\n</style>\\n</head>\\n<body>\\n<!-- All HTML content here -->\\n<script>\\n// All JavaScript here\\n</script>\\n</body>\\n</html>"
       }
+    }
+  }
+}
 
-For multi-page applications, create additional HTML files like "about.html", "contact.html", etc. Each HTML file must be completely self-contained with embedded <style> and <script> tags.
+Requirements for each HTML file:
+- Complete HTML5 document with DOCTYPE
+- All CSS styles in <style> tags in <head>
+- All JavaScript in <script> tags
+- Modern, responsive design
+- Full functionality for all requested features
+- Professional styling and layout
+- Mobile-responsive design
+- Proper semantic HTML
+- No external file references
 
-Generate HTML-only file structure for: ${JSON.stringify(analysisResult)}`;
+Generate complete file structure with content for: ${JSON.stringify(analysisResult)}
+
+Make sure each file has complete, functional HTML content that implements the requested features.`;
 
       const result = await model.generateContent(prompt);
       const response = await result.response;

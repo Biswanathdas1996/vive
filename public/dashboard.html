@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            margin: 0;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            grid-gap: 20px;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+
+        .card {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            padding: 20px;
+            overflow: hidden;
+        }
+
+        .card h2 {
+            margin-top: 0;
+        }
+
+        .card p {
+            margin-bottom: 0;
+        }
+
+        .chart-container {
+            width: 100%;
+            height: 200px;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .button {
+          background-color: #4CAF50;
+          border: none;
+          color: white;
+          padding: 10px 20px;
+          text-align: center;
+          text-decoration: none;
+          display: inline-block;
+          font-size: 16px;
+          margin: 4px 2px;
+          cursor: pointer;
+          border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="card">
+        <h2>Overview</h2>
+        <p>Total Users: <span id="totalUsers">0</span></p>
+        <p>Active Users: <span id="activeUsers">0</span></p>
+        <div class="chart-container">
+            <!-- Chart would go here -->
+        </div>
+    </div>
+
+    <div class="card">
+        <h2>Recent Activity</h2>
+        <ul id="activityList">
+          <!-- Activity items will be added here -->
+        </ul>
+        <button class="button" onclick="addActivity()">Add Activity</button>
+    </div>
+
+
+    <script>
+        let totalUsers = 150;
+        let activeUsers = 35;
+        let activityItems = [
+          {time:"10:00 AM", description: "User logged in"},
+          {time:"10:30 AM", description: "New user registered"}
+        ];
+
+
+        document.getElementById("totalUsers").textContent = totalUsers;
+        document.getElementById("activeUsers").textContent = activeUsers;
+
+        function addActivity() {
+          let newActivity = {time: new Date().toLocaleTimeString(), description: "Test activity added"};
+          activityItems.push(newActivity);
+          updateActivityList();
+        }
+
+        function updateActivityList() {
+          const activityList = document.getElementById("activityList");
+          activityList.innerHTML = ''; //Clear existing items
+
+          activityItems.forEach(item => {
+            let listItem = document.createElement('li');
+            listItem.textContent = `${item.time} - ${item.description}`;
+            activityList.appendChild(listItem);
+          });
+        }
+
+        updateActivityList();
+    </script>
+
+</body>
+</html>
