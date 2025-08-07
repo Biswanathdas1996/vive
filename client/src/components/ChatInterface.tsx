@@ -8,35 +8,75 @@ import { Separator } from "@/components/ui/separator";
 import { useToast } from "@/hooks/use-toast";
 import { Send, Trash2, Download, Brain, Search, Table, Cog, CheckCircle, Loader, ChevronUp, ChevronDown, ChevronLeft, ChevronRight } from "lucide-react";
 
-// Helper function to render file structure
-const renderFileStructure = (structure: any, prefix: string = ''): React.ReactNode => {
-  if (!structure || typeof structure !== 'object') return null;
+// Generic JSON renderer that can handle any data structure
+const renderJsonData = (data: any, depth: number = 0): React.ReactNode => {
+  if (data === null || data === undefined) {
+    return <span className="text-slate-500">null</span>;
+  }
   
-  return Object.entries(structure).map(([name, data]: [string, any], index) => {
-    const isDirectory = data?.type === 'directory' || data?.children;
-    const fullPath = prefix + name;
-    
+  if (typeof data === 'boolean') {
+    return <span className="text-blue-400">{data.toString()}</span>;
+  }
+  
+  if (typeof data === 'number') {
+    return <span className="text-green-400">{data}</span>;
+  }
+  
+  if (typeof data === 'string') {
+    // Special handling for file structure prompts
+    if (data.length > 80) {
+      return <span className="text-slate-300">{data.substring(0, 80)}...</span>;
+    }
+    return <span className="text-slate-300">{data}</span>;
+  }
+  
+  if (Array.isArray(data)) {
     return (
-      <div key={index} className="text-slate-300">
-        <div className="flex items-center space-x-1">
-          <span className="text-slate-500">
-            {isDirectory ? '📁' : '📄'}
-          </span>
-          <span className="text-slate-300">{name}</span>
-          {data?.prompt && (
-            <span className="text-slate-500 text-xs">
-              - {data.prompt.substring(0, 50)}{data.prompt.length > 50 ? '...' : ''}
-            </span>
-          )}
-        </div>
-        {data?.children && (
-          <div className="ml-4 border-l border-slate-700 pl-2 mt-1">
-            {renderFileStructure(data.children, fullPath + '/')}
+      <div className="ml-2">
+        {data.map((item, index) => (
+          <div key={index} className="flex items-start space-x-2 mb-1">
+            <span className="text-slate-500">•</span>
+            <div className="flex-1">
+              {renderJsonData(item, depth + 1)}
+            </div>
           </div>
-        )}
+        ))}
       </div>
     );
-  });
+  }
+  
+  if (typeof data === 'object') {
+    return (
+      <div className={depth > 0 ? 'ml-4 border-l border-slate-700 pl-2' : ''}>
+        {Object.entries(data).map(([key, value], index) => {
+          const isFileStructure = (key === 'type' && value === 'directory') || 
+                                 (key === 'children' && typeof value === 'object');
+          const isFileNode = data.type === 'directory' || data.children;
+          
+          return (
+            <div key={index} className="mb-2">
+              <div className="flex items-start space-x-2">
+                {isFileStructure && key === 'type' && (
+                  <span className="text-slate-500 text-xs">📁</span>
+                )}
+                {key === 'children' && (
+                  <span className="text-slate-500 text-xs">📂</span>
+                )}
+                <span className="text-slate-200 font-medium text-xs">
+                  {key}:
+                </span>
+                <div className="flex-1">
+                  {renderJsonData(value, depth + 1)}
+                </div>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    );
+  }
+  
+  return <span className="text-slate-400">{String(data)}</span>;
 };
 
 interface ChatInterfaceProps {
@@ -410,55 +450,9 @@ export function ChatInterface({
                             📋 Analysis Results:
                           </div>
                           <div className="bg-slate-950 rounded p-2 text-xs text-slate-300 max-h-48 overflow-y-auto">
-                            {message.workflow.data.features && (
-                              <div className="mb-2">
-                                <div className="font-medium text-slate-200 mb-1">Features:</div>
-                                <ul className="list-disc list-inside space-y-0.5 text-slate-300">
-                                  {message.workflow.data.features.map((feature: string, index: number) => (
-                                    <li key={index}>{feature}</li>
-                                  ))}
-                                </ul>
-                              </div>
-                            )}
-                            {message.workflow.data.pages && (
-                              <div className="mb-2">
-                                <div className="font-medium text-slate-200 mb-1">Pages:</div>
-                                <ul className="list-disc list-inside space-y-0.5 text-slate-300">
-                                  {message.workflow.data.pages.map((page: string, index: number) => (
-                                    <li key={index}>{page}</li>
-                                  ))}
-                                </ul>
-                              </div>
-                            )}
-                            {message.workflow.data.technical_requirements && (
-                              <div className="mb-2">
-                                <div className="font-medium text-slate-200 mb-1">Technical Requirements:</div>
-                                <ul className="list-disc list-inside space-y-0.5 text-slate-300">
-                                  <li>Responsive: {message.workflow.data.technical_requirements.responsive ? 'Yes' : 'No'}</li>
-                                  <li>Authentication: {message.workflow.data.technical_requirements.authentication ? 'Yes' : 'No'}</li>
-                                  <li>Data Storage: {message.workflow.data.technical_requirements.data_persistence}</li>
-                                  {message.workflow.data.technical_requirements.ui_framework && (
-                                    <li>UI Framework: {message.workflow.data.technical_requirements.ui_framework}</li>
-                                  )}
-                                </ul>
-                              </div>
-                            )}
-                            {message.workflow.data.fileStructure && (
-                              <div className="mb-2">
-                                <div className="font-medium text-slate-200 mb-1">📁 File Structure:</div>
-                                <div className="font-mono text-xs bg-slate-900 p-2 rounded border">
-                                  {renderFileStructure(message.workflow.data.fileStructure, '')}
-                                </div>
-                              </div>
-                            )}
-                            {message.workflow.data.public && (
-                              <div>
-                                <div className="font-medium text-slate-200 mb-1">🌐 Generated Files:</div>
-                                <div className="font-mono text-xs bg-slate-900 p-2 rounded border">
-                                  {renderFileStructure(message.workflow.data.public, 'public/')}
-                                </div>
-                              </div>
-                            )}
+                            <div className="font-mono">
+                              {renderJsonData(message.workflow.data)}
+                            </div>
                           </div>
                         </div>
                       )}

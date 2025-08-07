@@ -3,188 +3,256 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - Modern Web App</title>
+    <title>Modern Login Form</title>
     <style>
         :root {
-            --primary-color: #3498db; /* Blue */
-            --secondary-color: #2ecc71; /* Green */
-            --background-color: #f4f4f4;
-            --text-color: #333;
-            --input-border-color: #ccc;
-            --border-radius: 8px;
-            --box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            --transition-duration: 0.3s;
+            /* Color Palette */
+            --color-primary: #3498db; /* Soft Blue */
+            --color-secondary: #e74c3c; /* Soft Red */
+            --color-accent: #f39c12; /* Soft Orange */
+            --color-background: #f0f2f5; /* Light Gray */
+            --color-surface: #ffffff; /* White */
+            --color-text-primary: #333; /* Dark Gray */
+            --color-text-secondary: #777; /* Medium Gray */
+            --color-border: #ccc;
+            --color-shadow: rgba(0, 0, 0, 0.1);
+
+            /* Spacing */
+            --space-s: 0.75rem;
+            --space-m: 1rem;
+            --space-l: 1.5rem;
+            --space-xl: 2rem;
+
+            /* Font */
             --font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            --font-size-base: 1rem; /* 16px */
+            --font-weight-normal: 400;
+            --font-weight-bold: 700;
+            --line-height-base: 1.6;
+
+            /* Border Radius */
+            --border-radius: 0.5rem;
+
+            /* Transition */
+            --transition-duration: 0.3s;
+            --transition-easing: ease-in-out;
+
+            /* Theme */
+            --theme-mode: light; /* or 'dark' */
         }
 
         body {
             font-family: var(--font-family);
-            background-color: var(--background-color);
-            color: var(--text-color);
+            font-size: var(--font-size-base);
+            font-weight: var(--font-weight-normal);
+            line-height: var(--line-height-base);
+            background-color: var(--color-background);
+            color: var(--color-text-primary);
             margin: 0;
             padding: 0;
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
+            transition: background-color var(--transition-duration) var(--transition-easing);
         }
+
+        /* Dark Theme (Optional) */
+        body[data-theme="dark"] {
+            --color-background: #1e1e2e;
+            --color-surface: #282c33;
+            --color-text-primary: #eee;
+            --color-text-secondary: #aaa;
+            --color-border: #444;
+            --color-shadow: rgba(0, 0, 0, 0.3);
+        }
+
 
         .container {
-            background: rgba(255, 255, 255, 0.9);
+            background-color: var(--color-surface);
             border-radius: var(--border-radius);
-            box-shadow: var(--box-shadow);
-            padding: 3rem;
-            width: clamp(300px, 80%, 400px);
-            text-align: center;
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 4px 16px var(--color-shadow);
+            padding: var(--space-xl);
+            width: clamp(300px, 90%, 500px);
+            transition: all var(--transition-duration) var(--transition-easing);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
 
-        h1 {
-            color: var(--primary-color);
-            margin-bottom: 1.5rem;
+        .form-title {
+            font-size: 2rem;
+            font-weight: var(--font-weight-bold);
+            margin-bottom: var(--space-l);
+            text-align: center;
         }
 
         .form-group {
-            margin-bottom: 1.5rem;
-            text-align: left;
+            margin-bottom: var(--space-m);
+            width: 100%;
         }
 
         label {
             display: block;
-            margin-bottom: 0.5rem;
-            font-weight: bold;
+            font-weight: var(--font-weight-bold);
+            margin-bottom: var(--space-s);
+            color: var(--color-text-primary);
         }
 
         input[type="email"],
-        input[type="password"] {
+        input[type="password"],
+        input[type="text"] {
             width: 100%;
-            padding: 0.75rem 1rem;
-            border: 1px solid var(--input-border-color);
+            padding: var(--space-m);
+            border: 1px solid var(--color-border);
             border-radius: var(--border-radius);
-            font-size: 1rem;
-            transition: border-color var(--transition-duration);
-            box-sizing: border-box;
+            font-size: var(--font-size-base);
+            transition: border-color var(--transition-duration) var(--transition-easing), box-shadow var(--transition-duration) var(--transition-easing);
+            background-color: var(--color-surface);
+            color: var(--color-text-primary);
+            outline: none; /* Remove default outline */
         }
 
         input[type="email"]:focus,
-        input[type="password"]:focus {
-            outline: none;
-            border-color: var(--primary-color);
+        input[type="password"]:focus,
+        input[type="text"]:focus {
+            border-color: var(--color-primary);
+            box-shadow: 0 0 0 2px rgba(var(--color-primary-rgb), 0.2);
         }
 
         button {
-            background-color: var(--primary-color);
+            background-color: var(--color-primary);
             color: white;
-            padding: 0.75rem 1.5rem;
+            padding: var(--space-m) var(--space-xl);
             border: none;
             border-radius: var(--border-radius);
-            font-size: 1rem;
+            font-size: var(--font-size-base);
+            font-weight: var(--font-weight-bold);
             cursor: pointer;
-            transition: background-color var(--transition-duration);
+            transition: background-color var(--transition-duration) var(--transition-easing), transform var(--transition-duration) var(--transition-easing);
             width: 100%;
+            outline: none;
+            box-shadow: 0 4px 8px var(--color-shadow);
         }
 
         button:hover {
-            background-color: #2980b9;
+            background-color: #2980b9; /* Darker shade */
+            transform: translateY(-2px);
         }
 
-        button:focus {
-            outline: none;
+        button:active {
+            transform: translateY(0); /* Reset transform on active */
         }
 
-
-        .links {
-            margin-top: 1rem;
+        .form-links {
             display: flex;
             justify-content: space-between;
+            width: 100%;
+            margin-top: var(--space-s);
             font-size: 0.9rem;
         }
 
-        .links a {
-            color: var(--text-color);
+        .form-links a {
+            color: var(--color-primary);
             text-decoration: none;
-            transition: color var(--transition-duration);
+            transition: color var(--transition-duration) var(--transition-easing);
         }
 
-        .links a:hover {
-            color: var(--primary-color);
+        .form-links a:hover {
+            color: #2980b9; /* Darker shade */
         }
 
-
-        .form-group input:focus,
-        .form-group button:focus {
-            outline: none;
-            box-shadow: 0 0 5px rgba(52, 152, 219, 0.5); /* Example: Subtle focus effect */
-        }
-
-
-        /* Animations */
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
+        /* Responsive adjustments */
+        @media (max-width: 600px) {
+            .container {
+                width: 90%;
             }
         }
 
-        .container {
-            animation: fadeIn var(--transition-duration) ease-in-out;
+        /* Utilities */
+        .text-center {
+            text-align: center;
         }
+
+        .visually-hidden {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap; /* added for good measure */
+            border: 0;
+        }
+
+        /* Helper for color variables - allows rgba easily */
+        :root {
+            --color-primary-rgb: 52, 152, 219; /* from --color-primary */
+        }
+
     </style>
 </head>
-<body>
-
+<body data-theme="light">
     <div class="container">
-        <h1>Login</h1>
+        <h1 class="form-title">Login</h1>
 
         <form id="loginForm">
             <div class="form-group">
-                <label for="email">Email Address</label>
-                <input type="email" id="email" name="email" required>
+                <label for="email">Email or Username</label>
+                <input type="text" id="email" name="email" placeholder="Enter your email or username" required>
             </div>
 
             <div class="form-group">
                 <label for="password">Password</label>
-                <input type="password" id="password" name="password" required>
+                <input type="password" id="password" name="password" placeholder="Enter your password" required>
             </div>
 
             <button type="submit">Login</button>
         </form>
 
-        <div class="links">
+        <div class="form-links">
             <a href="#">Forgot Password?</a>
-            <a href="#">Create Account</a>
+            <a href="#">Sign Up</a>
         </div>
     </div>
 
     <script>
-        const loginForm = document.getElementById('loginForm');
+        // JavaScript for form submission and potential validation.
+        const form = document.getElementById('loginForm');
 
-        loginForm.addEventListener('submit', async (event) => {
-            event.preventDefault(); // Prevent default form submission
+        form.addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevent default form submission.
 
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
+            // Basic client-side validation example (add more robust validation).
+            const emailInput = document.getElementById('email');
+            const passwordInput = document.getElementById('password');
 
-            // Simple validation.  Replace with proper server-side authentication.
-            if (email && password) {
-                // Simulate Authentication (replace with actual API call)
-                // For demonstration, we'll just check for a specific email and password
-                if (email === 'test@example.com' && password === 'password') {
-                    alert('Login successful!');
-                    // Redirect to another page (replace with your desired redirect)
-                    window.location.href = 'dashboard.html';
-                } else {
-                    alert('Invalid credentials. Please try again.');
-                }
-            } else {
-                alert('Please enter both email and password.');
+            if (!emailInput.value || !passwordInput.value) {
+                alert('Please fill in all fields.');
+                return;
             }
+
+            // Simulate login attempt (replace with actual API call).
+            console.log('Login attempt with:', {
+                email: emailInput.value,
+                password: passwordInput.value
+            });
+            alert('Login successful (simulated)!');
+
+            // Optional: Clear form after successful submission
+            //form.reset();
         });
+
+        // Theme Toggle (Optional - Example)
+        //  const themeToggle = document.getElementById('themeToggle'); // Assuming you have a theme toggle button
+        // if (themeToggle) {
+        //     themeToggle.addEventListener('click', () => {
+        //         const currentTheme = document.body.getAttribute('data-theme');
+        //         const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+        //         document.body.setAttribute('data-theme', newTheme);
+        //     });
+        // }
     </script>
 </body>
 </html>

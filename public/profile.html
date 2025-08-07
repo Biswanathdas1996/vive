@@ -3,462 +3,227 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>User Profile & Settings</title>
+    <title>User Profile</title>
     <style>
         :root {
-            /* Colors */
-            --color-primary: #2196F3;
-            --color-secondary: #64B5F6;
-            --color-accent: #FFC107;
-            --color-background: #f0f2f5; /* Light Mode */
-            --color-text: #333;
-            --color-text-light: #fff;
-            --color-border: rgba(0, 0, 0, 0.1);
-            --color-shadow: rgba(0, 0, 0, 0.15);
-
-            /* Dark Mode Colors (Overridable) */
-            --color-background-dark: #121212;
-            --color-text-dark: #f0f0f0;
-            --color-border-dark: rgba(255, 255, 255, 0.1);
-            --color-shadow-dark: rgba(0, 0, 0, 0.5);
-
+            /* Color Palette */
+            --color-primary: #64b5f6; /* Light Blue */
+            --color-primary-dark: #1e88e5;
+            --color-secondary: #ffab00; /* Amber */
+            --color-background: #f0f4c3; /* Light Green */
+            --color-surface: #ffffff; /* White */
+            --color-on-surface: #212121; /* Dark Grey */
+            --color-accent: #e57373; /* Red */
 
             /* Spacing */
-            --space-xs: 0.5rem;
-            --space-s: 1rem;
-            --space-m: 1.5rem;
-            --space-l: 2rem;
-            --space-xl: 3rem;
-            --space-xxl: 4rem;
+            --space-s: 0.75rem;
+            --space-m: 1rem;
+            --space-l: 1.5rem;
+            --space-xl: 2rem;
 
-            /* Font */
+            /* Typography */
             --font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            --font-size-base: 16px;
+            --font-size-base: 1rem;
             --line-height-base: 1.6;
+            --font-weight-light: 300;
+            --font-weight-regular: 400;
+            --font-weight-bold: 700;
+
+            /* Border Radius */
+            --border-radius: 0.75rem;
+
+            /* Shadow */
+            --shadow-small: 0 1px 2px rgba(0, 0, 0, 0.1);
+            --shadow-medium: 0 2px 4px rgba(0, 0, 0, 0.15);
+            --shadow-large: 0 4px 8px rgba(0, 0, 0, 0.2);
         }
 
-        /* Light/Dark Mode Toggle */
-        body.dark-mode {
-            --color-background: var(--color-background-dark);
-            --color-text: var(--color-text-dark);
-            --color-border: var(--color-border-dark);
-            --color-shadow: var(--color-shadow-dark);
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
         }
-
-
 
         body {
             font-family: var(--font-family);
             font-size: var(--font-size-base);
             line-height: var(--line-height-base);
             background-color: var(--color-background);
-            color: var(--color-text);
-            margin: 0;
-            padding: 0;
-            transition: background-color 0.3s ease, color 0.3s ease; /* Smooth transitions */
+            color: var(--color-on-surface);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: var(--space-m);
         }
 
         .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: var(--space-l);
+            width: 100%;
+            max-width: 800px;
+            background-color: var(--color-surface);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-medium);
+            overflow: hidden;
         }
 
         header {
-            background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
-            color: var(--color-text-light);
-            padding: var(--space-m) 0;
+            background: linear-gradient(to right, var(--color-primary), var(--color-secondary));
+            color: var(--color-surface);
+            padding: var(--space-xl);
             text-align: center;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
 
         header h1 {
-            margin: 0;
             font-size: 2rem;
+            font-weight: var(--font-weight-bold);
+            margin-bottom: var(--space-s);
         }
 
-        nav {
-            background-color: #fff;
-            padding: var(--space-s);
-            border-bottom: 1px solid var(--color-border);
-        }
-
-        nav ul {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-            display: flex;
-            justify-content: center;
-        }
-
-        nav li {
-            margin: 0 var(--space-m);
-        }
-
-        nav a {
-            text-decoration: none;
-            color: var(--color-text);
-            padding: var(--space-s);
-            border-radius: 0.25rem;
-            transition: background-color 0.2s ease, color 0.2s ease;
-        }
-
-        nav a:hover,
-        nav a:focus {
-            background-color: var(--color-primary);
-            color: var(--color-text-light);
-            outline: none;
-        }
-
-        main {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: var(--space-l);
-            padding: var(--space-l) 0;
-        }
-
-        @media (min-width: 768px) {
-            main {
-                grid-template-columns: 250px 1fr;
-            }
-        }
-
-        aside {
-            background-color: #fff;
-            border-radius: 0.5rem;
-            box-shadow: 0 2px 4px var(--color-shadow);
-            padding: var(--space-m);
-            text-align: center;
-        }
-
-        aside img {
+        .avatar-container {
             width: 100px;
             height: 100px;
             border-radius: 50%;
-            margin-bottom: var(--space-s);
-            object-fit: cover;
+            background-color: rgba(255, 255, 255, 0.2);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: var(--space-m);
+            overflow: hidden;
+            border: 2px solid rgba(255, 255, 255, 0.4);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
         }
 
-
-        aside ul {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-        }
-
-        aside li {
-            margin-bottom: var(--space-s);
-        }
-
-        aside a {
-            text-decoration: none;
-            color: var(--color-text);
+        .avatar-container::before {
+            content: '';
             display: block;
-            padding: var(--space-s);
-            border-radius: 0.25rem;
-            transition: background-color 0.2s ease, color 0.2s ease;
+            width: 60%;
+            height: 60%;
+            background-color: var(--color-secondary);
+            border-radius: 50%;
         }
 
-        aside a:hover,
-        aside a:focus {
-            background-color: var(--color-primary);
-            color: var(--color-text-light);
-            outline: none;
+        main {
+            padding: var(--space-l);
         }
-
-        article {
-            background-color: #fff;
-            border-radius: 0.5rem;
-            box-shadow: 0 2px 4px var(--color-shadow);
-            padding: var(--space-m);
-        }
-
 
         .profile-section {
             margin-bottom: var(--space-l);
         }
 
         .profile-section h2 {
-            margin-top: 0;
-            margin-bottom: var(--space-m);
             font-size: 1.5rem;
-        }
-
-        .form-group {
+            font-weight: var(--font-weight-bold);
             margin-bottom: var(--space-m);
         }
 
-        label {
+        .profile-field {
+            margin-bottom: var(--space-m);
+        }
+
+        .profile-field label {
             display: block;
-            margin-bottom: var(--space-xs);
-            font-weight: bold;
-        }
-
-        input[type="text"],
-        input[type="email"],
-        input[type="tel"],
-        input[type="password"],
-        select,
-        textarea {
-            width: 100%;
-            padding: var(--space-s);
-            border: 1px solid var(--color-border);
-            border-radius: 0.25rem;
-            font-size: 1rem;
-            transition: border-color 0.2s ease;
-        }
-
-        input[type="text"]:focus,
-        input[type="email"]:focus,
-        input[type="tel"]:focus,
-        input[type="password"]:focus,
-        select:focus,
-        textarea:focus {
-            border-color: var(--color-primary);
-            outline: none;
-        }
-
-        button {
-            background-color: var(--color-primary);
-            color: var(--color-text-light);
-            padding: var(--space-s) var(--space-l);
-            border: none;
-            border-radius: 0.25rem;
-            cursor: pointer;
-            font-size: 1rem;
-            transition: background-color 0.2s ease;
-        }
-
-        button:hover,
-        button:focus {
-            background-color: var(--color-secondary);
-            outline: none;
-        }
-
-        footer {
-            background-color: #333;
-            color: #fff;
-            text-align: center;
-            padding: var(--space-s);
-        }
-
-        /* Dark Mode Toggle Button */
-        .dark-mode-toggle {
-            position: fixed;
-            top: var(--space-m);
-            right: var(--space-m);
-            background-color: rgba(0, 0, 0, 0.2);
-            color: var(--color-text-light);
-            border: none;
-            border-radius: 50%;
-            width: 36px;
-            height: 36px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-            z-index: 10;
-        }
-
-        .dark-mode-toggle:hover {
-            background-color: rgba(0, 0, 0, 0.4);
-        }
-
-        .dark-mode-toggle:focus {
-            outline: none;
-            box-shadow: 0 0 0 2px var(--color-primary);
-        }
-
-        /* Placeholder Styles */
-        .placeholder-circle {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            background-color: #ddd;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 1.5rem;
-            color: #999;
-        }
-
-        .placeholder-rectangle {
-            background-color: #eee;
-            height: 1rem;
-            margin-bottom: var(--space-xs);
-        }
-
-        .placeholder-rectangle-large {
-            height: 2rem;
+            font-weight: var(--font-weight-bold);
             margin-bottom: var(--space-s);
         }
 
-        /* Responsive Typography */
-        h1 {
-            font-size: clamp(1.75rem, 4vw, 2.5rem); /* Responsive heading size */
+        .profile-field input, .profile-field textarea {
+            width: 100%;
+            padding: var(--space-m);
+            border: 1px solid #ccc;
+            border-radius: var(--border-radius);
+            font-size: var(--font-size-base);
+            transition: border-color 0.2s ease;
         }
 
-        .form-group input,
-        .form-group textarea,
-        .form-group select {
-          font-size: clamp(0.9rem, 2vw, 1rem); /* Responsive input size */
+        .profile-field input:focus, .profile-field textarea:focus {
+            outline: none;
+            border-color: var(--color-primary);
         }
 
-        /* CSS Icons - Simplified examples */
-        .icon-edit::before {
-            content: '\270E'; /* Pencil icon */
-            margin-right: 0.5rem;
+        .button {
+            display: inline-block;
+            padding: var(--space-m) var(--space-l);
+            background-color: var(--color-primary);
+            color: var(--color-surface);
+            text-decoration: none;
+            border-radius: var(--border-radius);
+            font-weight: var(--font-weight-bold);
+            transition: background-color 0.2s ease, transform 0.1s ease;
+            box-shadow: var(--shadow-small);
+            border: none;
+            cursor: pointer;
         }
 
-        .icon-password::before {
-            content: '\1F511'; /* Key icon */
-            margin-right: 0.5rem;
+        .button:hover {
+            background-color: var(--color-primary-dark);
+            transform: translateY(-2px);
         }
 
-        .icon-address::before {
-            content: '\1F3E0'; /* House icon */
-            margin-right: 0.5rem;
+        .button:active {
+            transform: translateY(0);
         }
 
-        .icon-dependents::before {
-            content: '\1F46A'; /* Family icon */
-            margin-right: 0.5rem;
+        .button--secondary {
+            background-color: var(--color-accent);
+        }
+
+        .button--secondary:hover {
+            background-color: darken(var(--color-accent), 10%);
+        }
+
+        footer {
+            text-align: center;
+            padding: var(--space-m);
+            border-top: 1px solid #eee;
+            color: #777;
+            font-size: 0.8rem;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .container {
+                margin: 0 var(--space-m);
+            }
         }
 
     </style>
 </head>
 <body>
-
-    <button class="dark-mode-toggle" aria-label="Toggle Dark Mode">☀️</button> <!-- Sun/Moon icon changes with JS -->
-
-    <header>
-        <h1>User Profile & Settings</h1>
-    </header>
-
-    <nav>
-        <ul>
-            <li><a href="#">Dashboard</a></li>
-            <li><a href="#" class="active">Profile</a></li>
-            <li><a href="#">Notifications</a></li>
-            <li><a href="#">Security</a></li>
-            <li><a href="#">Help</a></li>
-        </ul>
-    </nav>
-
     <div class="container">
+        <header>
+            <h1>My Profile</h1>
+            <div class="avatar-container">
+            </div>
+        </header>
+
         <main>
-            <aside>
-                <div class="placeholder-circle">JD</div>
-                <h2>John Doe</h2>
-                <p>Software Engineer</p>
-                <ul>
-                    <li><a href="#"><span class="icon-edit">Edit Profile</span></a></li>
-                    <li><a href="#"><span class="icon-password">Change Password</span></a></li>
-                    <li><a href="#"><span class="icon-address">Manage Addresses</span></a></li>
-                    <li><a href="#"><span class="icon-dependents">Dependents</span></a></li>
-                    <li><a href="#">Settings</a></li>
-                </ul>
-            </aside>
+            <section class="profile-section">
+                <h2>Profile Details</h2>
+                <div class="profile-field">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" value="johndoe" readonly>
+                </div>
+                <div class="profile-field">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" value="john.doe@example.com" readonly>
+                </div>
+                <div class="profile-field">
+                    <label for="bio">Bio</label>
+                    <textarea id="bio" rows="4" readonly>A passionate developer and designer.</textarea>
+                </div>
+                <button class="button">Edit Profile</button>
+                <button class="button button--secondary">Logout</button>
+            </section>
 
-            <article>
-                <section class="profile-section">
-                    <h2>Personal Information</h2>
-                    <div class="form-group">
-                        <label for="firstName">First Name</label>
-                        <input type="text" id="firstName" placeholder="John">
-                    </div>
-                    <div class="form-group">
-                        <label for="lastName">Last Name</label>
-                        <input type="text" id="lastName" placeholder="Doe">
-                    </div>
-                    <div class="form-group">
-                        <label for="email">Email</label>
-                        <input type="email" id="email" placeholder="john.doe@example.com">
-                    </div>
-                    <div class="form-group">
-                        <label for="phone">Phone Number</label>
-                        <input type="tel" id="phone" placeholder="+1 (555) 123-4567">
-                    </div>
-                    <button>Update Information</button>
-                </section>
-
-                <section class="profile-section">
-                    <h2>Address</h2>
-                    <div class="form-group">
-                        <label for="addressLine1">Address Line 1</label>
-                        <input type="text" id="addressLine1" placeholder="123 Main St">
-                    </div>
-                    <div class="form-group">
-                        <label for="addressLine2">Address Line 2</label>
-                        <input type="text" id="addressLine2" placeholder="Apt 4B">
-                    </div>
-                    <div class="form-group">
-                        <label for="city">City</label>
-                        <input type="text" id="city" placeholder="Anytown">
-                    </div>
-                    <div class="form-group">
-                        <label for="state">State</label>
-                        <input type="text" id="state" placeholder="CA">
-                    </div>
-                    <div class="form-group">
-                        <label for="zipCode">Zip Code</label>
-                        <input type="text" id="zipCode" placeholder="91234">
-                    </div>
-                    <button>Save Address</button>
-                </section>
-
-                <section class="profile-section">
-                    <h2>Dependents</h2>
-                    <div class="form-group">
-                        <label for="dependentName">Dependent Name</label>
-                        <input type="text" id="dependentName" placeholder="Jane Doe">
-                    </div>
-                    <div class="form-group">
-                        <label for="relationship">Relationship</label>
-                        <select id="relationship">
-                            <option value="spouse">Spouse</option>
-                            <option value="child">Child</option>
-                            <option value="other">Other</option>
-                        </select>
-                    </div>
-                    <button>Add Dependent</button>
-                </section>
-
-                <section class="profile-section">
-                    <h2>Account Settings</h2>
-                    <div class="form-group">
-                        <label for="notificationPreferences">Notification Preferences</label>
-                        <textarea id="notificationPreferences" rows="4" placeholder="Receive important updates..."></textarea>
-                    </div>
-                    <button>Update Settings</button>
-                </section>
-            </article>
         </main>
+
+        <footer>
+            <p>&copy; 2024 User Profile</p>
+        </footer>
     </div>
 
-    <footer>
-        <p>&copy; 2024 Company Name. All rights reserved.</p>
-    </footer>
-
-    <script>
-        const toggleButton = document.querySelector('.dark-mode-toggle');
-        const body = document.body;
-
-        // Function to toggle dark mode
-        function toggleDarkMode() {
-            body.classList.toggle('dark-mode');
-            // Update button text/icon dynamically.
-            toggleButton.textContent = body.classList.contains('dark-mode') ? '🌙' : '☀️'; // Use emojis for the icon
-        }
-
-        // Attach event listener to the toggle button
-        toggleButton.addEventListener('click', toggleDarkMode);
-
-        // Optional: Check for system preference on initial load.
-        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-           toggleDarkMode(); // Apply dark mode if the system prefers it.
-        }
-    </script>
 </body>
 </html>

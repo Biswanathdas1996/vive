@@ -6,372 +6,302 @@
     <title>Modern Chat Interface</title>
     <style>
         :root {
-            /* Theme Colors */
-            --color-primary: #4a69ff;
-            --color-secondary: #a0baff;
-            --color-accent: #e6e9ff;
-            --color-text-light: #ffffff;
-            --color-text-dark: #333333;
-            --color-bg-light: #ffffff;
-            --color-bg-dark: #22272e;
-            --color-bg-panel: rgba(255, 255, 255, 0.2); /* Subtle Panel Background */
-            --color-shadow-light: rgba(0, 0, 0, 0.1);
-            --color-shadow-dark: rgba(0, 0, 0, 0.3);
-
-            /* Spacing */
-            --spacing-small: 0.5rem;
-            --spacing-medium: 1rem;
-            --spacing-large: 1.5rem;
-
-            /* Font */
+            --primary-color: #6c5ce7; /* Soft Purple */
+            --secondary-color: #ffeaa7; /* Light Yellow */
+            --accent-color: #ff7675; /* Coral */
+            --background-color: #f8f9fa; /* Light Gray */
+            --text-color: #2d3436; /* Dark Gray */
+            --shadow-color: rgba(0, 0, 0, 0.1);
+            --border-radius: 12px;
+            --padding-small: 0.75rem;
+            --padding-medium: 1rem;
+            --padding-large: 1.5rem;
             --font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            --font-size-base: 1rem; /* Default font size for responsiveness */
-            --line-height-base: 1.6;
+            --transition-duration: 0.3s;
 
-            /* Border Radius */
-            --border-radius: 0.75rem;
-        }
-
-        /* General Reset and Body Styling */
-        *, *::before, *::after {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
+            /* Dark Theme */
+            --dark-primary-color: #a29bfe;
+            --dark-secondary-color: #ffe4c0;
+            --dark-background-color: #1e272e;
+            --dark-text-color: #f5f6fa;
+            --dark-shadow-color: rgba(0, 0, 0, 0.3);
         }
 
         body {
             font-family: var(--font-family);
-            font-size: var(--font-size-base);
-            line-height: var(--line-height-base);
-            background-color: var(--color-bg-light);
-            color: var(--color-text-dark);
+            background-color: var(--background-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 0;
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            padding: var(--spacing-medium);
-            transition: background-color 0.3s ease, color 0.3s ease;
+            transition: background-color var(--transition-duration), color var(--transition-duration);
         }
 
-        /* Container for the Chat Interface */
-        .chat-container {
-            background-color: var(--color-bg-light);
-            border-radius: var(--border-radius);
-            box-shadow: 0px 10px 20px var(--color-shadow-light);
-            overflow: hidden; /* Prevent content overflow */
+        /* Dark Mode Toggle Button */
+        #theme-toggle {
+            position: fixed;
+            top: 1rem;
+            right: 1rem;
+            background-color: rgba(0,0,0,0.1);
+            border: none;
+            border-radius: 50%;
+            width: 3rem;
+            height: 3rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            z-index: 10;
+            transition: background-color var(--transition-duration);
+        }
+
+        #theme-toggle:hover {
+            background-color: rgba(0,0,0,0.2);
+        }
+
+        #theme-toggle::before {
+            content: '\f185'; /* Moon icon */
+            font-family: 'Font Awesome 5 Free';
+            font-weight: 900;
+            font-size: 1.2rem;
+            color: var(--text-color);
+            transition: color var(--transition-duration);
+        }
+
+        body.dark-mode {
+            background-color: var(--dark-background-color);
+            color: var(--dark-text-color);
+        }
+        body.dark-mode #theme-toggle::before {
+            content: '\f186'; /* Sun icon */
+            color: var(--dark-text-color);
+        }
+        body.dark-mode #theme-toggle {
+            background-color: rgba(255,255,255,0.1);
+        }
+        body.dark-mode #theme-toggle:hover {
+            background-color: rgba(255,255,255,0.2);
+        }
+
+        .container {
             width: 100%;
-            max-width: 800px;
+            max-width: 450px;
+            background-color: rgba(255, 255, 255, 0.8); /* Glassmorphism */
+            border-radius: var(--border-radius);
+            box-shadow: 0 8px 32px var(--shadow-color);
+            padding: var(--padding-large);
             display: flex;
             flex-direction: column;
-            height: 80vh;
-            transition: background-color 0.3s ease, box-shadow 0.3s ease; /* Smooth transitions */
+            gap: var(--padding-medium);
+            backdrop-filter: blur(10px);
+            transition: background-color var(--transition-duration), box-shadow var(--transition-duration);
+        }
+        body.dark-mode .container {
+            background-color: rgba(30, 39, 46, 0.8);
+            box-shadow: 0 8px 32px var(--dark-shadow-color);
+        }
+        /* Chat Header */
+        .chat-header {
+            display: flex;
+            align-items: center;
+            gap: var(--padding-medium);
         }
 
-        /* Chat Header (Optional) */
-        .chat-header {
-            background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
-            color: var(--color-text-light);
-            padding: var(--spacing-medium);
-            text-align: center;
+        .user-icon {
+            width: 3rem;
+            height: 3rem;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
             font-size: 1.2rem;
             font-weight: bold;
         }
 
-        /* Chat Messages Display */
-        .chat-messages {
-            flex-grow: 1;
-            padding: var(--spacing-medium);
-            overflow-y: auto; /* Allow scrolling for long conversations */
-            scrollbar-width: thin; /* For Firefox */
-            scrollbar-color: var(--color-primary) transparent; /* For Firefox */
-            background-color: var(--color-bg-panel);
+        .user-status {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+        .user-name {
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+        .online-status {
+            font-size: 0.8rem;
+            color: #4cd137;
         }
 
+        /* Chat Messages */
+        .chat-messages {
+            flex-grow: 1;
+            overflow-y: auto;
+            padding: var(--padding-small);
+            border-radius: var(--border-radius);
+            background-color: rgba(255, 255, 255, 0.5);
+            backdrop-filter: blur(5px);
+            transition: background-color var(--transition-duration);
+        }
+        body.dark-mode .chat-messages {
+            background-color: rgba(0,0,0,0.3);
+        }
+        .message {
+            background-color: var(--secondary-color);
+            padding: var(--padding-small);
+            margin-bottom: 0.5rem;
+            border-radius: var(--border-radius);
+            box-shadow: 0 2px 4px var(--shadow-color);
+            word-break: break-word;
+            transition: background-color var(--transition-duration);
+        }
+        body.dark-mode .message {
+            background-color: var(--dark-secondary-color);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+        }
+        .message.self {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        body.dark-mode .message.self {
+            background-color: var(--dark-primary-color);
+        }
+        .message-sender {
+            font-size: 0.8rem;
+            color: #777;
+            margin-bottom: 0.25rem;
+        }
+        body.dark-mode .message-sender {
+            color: #aaa;
+        }
+
+        /* Message Input */
+        .message-input {
+            display: flex;
+            gap: var(--padding-small);
+        }
+
+        .message-input input[type="text"] {
+            flex-grow: 1;
+            padding: var(--padding-small);
+            border: 1px solid #ccc;
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            transition: border-color var(--transition-duration);
+        }
+        .message-input input[type="text"]:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+        .message-input button {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: var(--border-radius);
+            padding: var(--padding-small) var(--padding-medium);
+            cursor: pointer;
+            transition: background-color var(--transition-duration);
+        }
+        .message-input button:hover {
+            background-color: #574b90;
+        }
+        .message-input button:active {
+            transform: scale(0.98);
+        }
+
+        /* Scrollbar Styling (Optional) */
         .chat-messages::-webkit-scrollbar {
             width: 8px;
         }
 
         .chat-messages::-webkit-scrollbar-track {
-            background: transparent;
+            background: rgba(0, 0, 0, 0.1);
         }
 
         .chat-messages::-webkit-scrollbar-thumb {
-            background-color: var(--color-primary);
-            border-radius: var(--border-radius);
-        }
-
-        /* Message Styling */
-        .message {
-            margin-bottom: var(--spacing-small);
-            padding: var(--spacing-small) var(--spacing-medium);
-            border-radius: var(--border-radius);
-            word-break: break-word; /* Handle long words */
-            box-shadow: 0px 4px 8px var(--color-shadow-light); /* Subtle shadow */
-            background-color: var(--color-bg-light); /* Default background */
-            transition: background-color 0.3s ease, box-shadow 0.3s ease;
-        }
-
-        .message.user {
-            background-color: var(--color-secondary);
-            color: var(--color-text-light);
-            align-self: flex-end;
-        }
-
-        .message.ai {
-            background-color: var(--color-accent);
-            color: var(--color-text-dark);
-            align-self: flex-start;
-        }
-
-        /* Message Bubbles */
-        .message::before {
-           content: "";
-           position: absolute;
-           width: 0;
-           height: 0;
-           border: 8px solid transparent;
-        }
-
-        .message.user::before {
-            border-left-color: var(--color-secondary);
-            right: -8px;
-            top: 50%;
-            transform: translateY(-50%);
-        }
-
-        .message.ai::before {
-            border-right-color: var(--color-accent);
-            left: -8px;
-            top: 50%;
-            transform: translateY(-50%);
-        }
-
-
-        .message-text {
-            margin-bottom: var(--spacing-small);
-            line-height: var(--line-height-base);
-        }
-
-        .message-timestamp {
-            font-size: 0.8rem;
-            color: rgba(0, 0, 0, 0.5);
-            text-align: right; /* or left, depending on alignment */
-        }
-
-        /* Chat Input Area */
-        .chat-input {
-            display: flex;
-            padding: var(--spacing-medium);
-            border-top: 1px solid rgba(0, 0, 0, 0.1);
-            background-color: var(--color-bg-light);
-        }
-
-        .input-field {
-            flex-grow: 1;
-            padding: var(--spacing-small) var(--spacing-medium);
-            border: none;
-            border-radius: var(--border-radius);
-            background-color: var(--color-bg-panel);
-            color: var(--color-text-dark);
-            font-size: var(--font-size-base);
-            transition: background-color 0.3s ease, box-shadow 0.3s ease;
-            outline: none; /* Remove default focus outline */
-        }
-
-        .input-field:focus {
-            box-shadow: 0 0 5px var(--color-primary);
-        }
-
-        .send-button {
-            padding: var(--spacing-small) var(--spacing-medium);
-            border: none;
-            border-radius: var(--border-radius);
-            background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
-            color: var(--color-text-light);
-            font-weight: bold;
-            cursor: pointer;
-            transition: background 0.3s ease, transform 0.1s ease;
-            margin-left: var(--spacing-small);
-        }
-
-        .send-button:hover {
-            background: linear-gradient(135deg, var(--color-secondary), var(--color-primary));
-        }
-
-        .send-button:active {
-            transform: scale(0.95);
-        }
-
-
-        /* Placeholder for AI Response (Initially Hidden) */
-        .ai-response {
-            margin-top: var(--spacing-medium);
-            padding: var(--spacing-small) var(--spacing-medium);
-            border-radius: var(--border-radius);
-            background-color: var(--color-accent);
-            color: var(--color-text-dark);
-            display: none; /* Initially hidden */
-            box-shadow: 0px 4px 8px var(--color-shadow-light);
-        }
-
-        /* Dark Mode Toggle */
-        .dark-mode-toggle {
-            position: fixed;
-            top: var(--spacing-medium);
-            right: var(--spacing-medium);
-            padding: var(--spacing-small) var(--spacing-medium);
-            border: none;
-            border-radius: var(--border-radius);
-            background: var(--color-primary);
-            color: var(--color-text-light);
-            font-weight: bold;
-            cursor: pointer;
-            transition: background 0.3s ease;
-            z-index: 10; /* Ensure toggle is on top */
-        }
-
-        .dark-mode-toggle:hover {
-            background: var(--color-secondary);
-        }
-
-        /* Responsive Design - Mobile First */
-        @media (max-width: 600px) {
-            .chat-container {
-                height: 90vh;
-            }
-
-            .input-field, .send-button {
-                font-size: 0.9rem;
-            }
+            background: var(--primary-color);
+            border-radius: 4px;
         }
     </style>
 </head>
 <body>
-
-    <button class="dark-mode-toggle" onclick="toggleDarkMode()">Toggle Dark Mode</button>
-
-    <div class="chat-container">
+    <button id="theme-toggle" aria-label="Toggle Dark Mode"></button>
+    <div class="container">
+        <!-- Chat Header -->
         <div class="chat-header">
-            Modern Chat Interface
+            <div class="user-icon">JD</div>
+            <div class="user-status">
+                <div class="user-name">John Doe</div>
+                <div class="online-status">Online</div>
+            </div>
         </div>
-        <div class="chat-messages">
+
+        <!-- Chat Messages -->
+        <div class="chat-messages" id="chat-messages">
             <!-- Messages will be dynamically added here -->
         </div>
-        <div class="chat-input">
-            <input type="text" class="input-field" id="messageInput" placeholder="Type your message...">
-            <button class="send-button" onclick="sendMessage()">Send</button>
+
+        <!-- Message Input -->
+        <div class="message-input">
+            <input type="text" id="message-input" placeholder="Type a message...">
+            <button id="send-button">Send</button>
         </div>
     </div>
 
     <script>
-        // Function to add a message to the chat
-        function addMessage(text, sender, timestamp) {
-            const chatMessages = document.querySelector('.chat-messages');
+        // Function to add a new message
+        function addMessage(sender, messageText, isSelf) {
+            const messagesContainer = document.getElementById('chat-messages');
             const messageDiv = document.createElement('div');
-            messageDiv.classList.add('message', sender); // Add 'user' or 'ai' class
-
-            const messageText = document.createElement('p');
-            messageText.classList.add('message-text');
-            messageText.textContent = text;
-
-            const timestampSpan = document.createElement('span');
-            timestampSpan.classList.add('message-timestamp');
-            timestampSpan.textContent = timestamp;
-
-            messageDiv.appendChild(messageText);
-            messageDiv.appendChild(timestampSpan);
-            chatMessages.appendChild(messageDiv);
-            chatMessages.scrollTop = chatMessages.scrollHeight;  // Scroll to the bottom
-        }
-
-
-        // Function to simulate AI response (replace with actual API call)
-        function simulateAIResponse(userMessage) {
-            return new Promise(resolve => {
-                // Simulate a delay for "thinking"
-                setTimeout(() => {
-                    const responses = [
-                        "That's interesting!",
-                        "I see. Tell me more.",
-                        "Processing...",
-                        "Thanks for sharing!",
-                        "Could you please rephrase that?",
-                    ];
-                    const randomIndex = Math.floor(Math.random() * responses.length);
-                    resolve(responses[randomIndex]);
-                }, 1000); // Simulate 1 second delay
-            });
-        }
-
-
-        // Function to handle sending a message
-        async function sendMessage() {
-            const inputField = document.getElementById('messageInput');
-            const messageText = inputField.value.trim(); // Trim whitespace
-
-            if (messageText) {
-                const timestamp = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-                addMessage(messageText, 'user', timestamp);
-                inputField.value = '';
-                inputField.focus(); // Keep focus on the input
-
-                // Simulate AI response
-                const aiResponse = await simulateAIResponse(messageText);
-                const aiTimestamp = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-                addMessage(aiResponse, 'ai', aiTimestamp);
+            messageDiv.classList.add('message');
+            if (isSelf) {
+                messageDiv.classList.add('self');
             }
+            const senderDiv = document.createElement('div');
+            senderDiv.classList.add('message-sender');
+            senderDiv.textContent = sender;
+            messageDiv.appendChild(senderDiv);
+            messageDiv.textContent = messageText;
+            messagesContainer.appendChild(messageDiv);
+            messagesContainer.scrollTop = messagesContainer.scrollHeight; // Auto-scroll to bottom
         }
 
-        // Dark Mode Functionality
-        function toggleDarkMode() {
-            const body = document.body;
-            const chatContainer = document.querySelector('.chat-container');
-            const isDarkMode = body.classList.toggle('dark-mode');
-
-            if (isDarkMode) {
-                // Set dark mode styles
-                body.style.backgroundColor = '--color-bg-dark';
-                body.style.color = '--color-text-light';
-                chatContainer.style.backgroundColor = '--color-bg-dark';
-                chatContainer.style.boxShadow = '0px 10px 20px var(--color-shadow-dark)';
-
-
-                //Additional style modifications (example)
-                document.querySelectorAll('.message').forEach(message => {
-                  if(message.classList.contains('user')) {
-                      message.style.backgroundColor = '--color-primary';
-                  } else {
-                      message.style.backgroundColor = '--color-secondary';
-                  }
-                  message.style.boxShadow = '0px 4px 8px var(--color-shadow-dark)';
-                });
-
-                document.querySelector('.chat-input').style.backgroundColor = 'rgba(0,0,0,0.3)';
-
-            } else {
-                // Set light mode styles (reset)
-                body.style.backgroundColor = 'var(--color-bg-light)';
-                body.style.color = 'var(--color-text-dark)';
-                chatContainer.style.backgroundColor = 'var(--color-bg-light)';
-                chatContainer.style.boxShadow = '0px 10px 20px var(--color-shadow-light)';
-
-                // Reset message styles
-                document.querySelectorAll('.message').forEach(message => {
-                  message.style.backgroundColor = ''; // Use default styles
-                  message.style.boxShadow = '0px 4px 8px var(--color-shadow-light)'; // Reset shadows
-                });
-                document.querySelector('.chat-input').style.backgroundColor = '';
-
-            }
-        }
-
-        // Add event listener for Enter key in the input field
-        document.getElementById('messageInput').addEventListener('keydown', function(event) {
-            if (event.key === 'Enter') {
-                event.preventDefault(); // Prevent the default form submission behavior
-                sendMessage();
+        // Event listener for the send button
+        document.getElementById('send-button').addEventListener('click', () => {
+            const messageInput = document.getElementById('message-input');
+            const messageText = messageInput.value.trim();
+            if (messageText !== "") {
+                addMessage("You", messageText, true);
+                messageInput.value = ""; // Clear the input
             }
         });
+        // Example messages (can be replaced with API calls)
+        addMessage("Jane Doe", "Hey there!", false);
+        addMessage("John Doe", "Hello!", true);
+        addMessage("Jane Doe", "How are you doing today?", false);
+        addMessage("John Doe", "I'm doing great, thanks!", true);
+
+
+        // Dark Mode Toggle
+        const themeToggle = document.getElementById('theme-toggle');
+        themeToggle.addEventListener('click', () => {
+            document.body.classList.toggle('dark-mode');
+        });
+
+        // Font Awesome (replace with local import if needed)
+        const head = document.head;
+        const link = document.createElement('link');
+        link.rel = 'stylesheet';
+        link.href = 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css';
+        link.integrity = 'sha512-1ycn6I8+wS0xRzU3Gf+l2kG5n5/2XgH+pI+G9Jt6841b1w2z2d74P2x7O/W/5J/tB+gW+jL7iP2X9z0w1eA9zQ==';
+        link.crossOrigin = 'anonymous';
+        link.referrerPolicy = 'no-referrer';
+        head.appendChild(link);
+
     </script>
 </body>
 </html>
