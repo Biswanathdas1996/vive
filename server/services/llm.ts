@@ -44,7 +44,7 @@ Analyze this web application request: ${prompt}`;
     analysisResult: AnalysisResult,
   ): Promise<FileStructure> {
     try {
-      const prompt = `You are an expert web developer and project architect. Generate a file structure with small descriptive prompts for each HTML file that will be used to generate content later.
+      const prompt = `You are an expert web developer and project architect. Generate a file structure with  descriptive prompts with all feature content, forms, cards, menus, content needed for each HTML file that will be used to generate content later.
 
 Return a JSON object representing the file structure where each HTML file contains a small text prompt describing what should be generated for that file. Use this exact format:
 
@@ -99,14 +99,17 @@ Requirements:
     try {
       // Extract the specific prompt for this file from the structure
       let filePrompt = "Create a basic HTML page";
-      if (fileStructure.public?.children?.[fileName] && 'prompt' in fileStructure.public.children[fileName]) {
+      if (
+        fileStructure.public?.children?.[fileName] &&
+        "prompt" in fileStructure.public.children[fileName]
+      ) {
         filePrompt = (fileStructure.public.children[fileName] as any).prompt;
       }
 
-      const prompt = `You are an expert web developer. Generate a complete, self-contained HTML file with ALL styles and JavaScript embedded within the HTML file using <style> and <script> tags. Do NOT reference external CSS or JS files.
+      const prompt = `You are an expert web developer. Generate a complete, self-contained modern HTML5 file with ALL styles and JavaScript embedded within the HTML file using <style> and <script> tags. Do NOT reference external CSS or JS files.
 
 Requirements:
-- Complete HTML5 document with DOCTYPE
+- Complete modern HTML5 document with DOCTYPE
 - All CSS styles embedded in <style> tags in the <head>
 - All JavaScript embedded in <script> tags
 - Modern, responsive design using CSS Grid/Flexbox
@@ -114,6 +117,7 @@ Requirements:
 - Full functionality for the requested features
 - Mobile-responsive design
 - Proper semantic HTML
+-for any image or icon, use placeholder text or a simple shape (e.g., a colored rectangle)
 
 File: ${fileName}
 Specific requirements: ${filePrompt}

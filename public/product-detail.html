@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Detail</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 20px auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .product-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
+        }
+
+        @media (min-width: 768px) {
+            .product-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        .product-images {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .product-images img {
+            width: 100%;
+            margin-bottom: 10px;
+            border-radius: 4px;
+        }
+
+        .product-info {
+            padding: 10px;
+        }
+
+        .product-title {
+            font-size: 1.8em;
+            margin-bottom: 10px;
+        }
+
+        .product-price {
+            font-size: 1.5em;
+            color: #e44d26;
+            margin-bottom: 15px;
+        }
+
+        .product-description {
+            margin-bottom: 20px;
+        }
+
+        .product-options label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        .product-options select,
+        .product-options input[type="number"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        .add-to-cart-button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 15px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 1em;
+            cursor: pointer;
+            border-radius: 4px;
+            border: none;
+            width: 100%;
+        }
+
+        @media (min-width: 768px) {
+            .add-to-cart-button {
+                width: auto;
+            }
+        }
+
+        .add-to-cart-button:hover {
+            background-color: #3e8e41;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="product-grid">
+            <div class="product-images">
+                <img src="https://via.placeholder.com/600x400/999999/FFFFFF?text=Product+Image+1" alt="Product Image 1">
+                <img src="https://via.placeholder.com/600x400/777777/FFFFFF?text=Product+Image+2" alt="Product Image 2">
+                <img src="https://via.placeholder.com/600x400/555555/FFFFFF?text=Product+Image+3" alt="Product Image 3">
+            </div>
+            <div class="product-info">
+                <h1 class="product-title">Product Name</h1>
+                <p class="product-price">$99.99</p>
+                <p class="product-description">
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+                </p>
+                <div class="product-options">
+                    <label for="size">Size:</label>
+                    <select id="size">
+                        <option value="s">S</option>
+                        <option value="m">M</option>
+                        <option value="l">L</option>
+                        <option value="xl">XL</option>
+                    </select>
+                    <label for="color">Color:</label>
+                    <select id="color">
+                        <option value="red">Red</option>
+                        <option value="blue">Blue</option>
+                        <option value="green">Green</option>
+                    </select>
+                    <label for="quantity">Quantity:</label>
+                    <input type="number" id="quantity" value="1" min="1">
+                </div>
+                <button class="add-to-cart-button" onclick="addToCart()">Add to Cart</button>
+            </div>
+        </div>
+    </div>
+    <script>
+        function addToCart() {
+            const size = document.getElementById('size').value;
+            const color = document.getElementById('color').value;
+            const quantity = document.getElementById('quantity').value;
+
+            alert(`Added to cart:\nSize: ${size}\nColor: ${color}\nQuantity: ${quantity}`);
+        }
+    </script>
+</body>
+</html>

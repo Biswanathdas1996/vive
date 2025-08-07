@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Listing</title>
+    <style>
+        :root {
+            --primary-color: #007bff;
+            --secondary-color: #6c757d;
+            --light-gray: #f8f9fa;
+            --dark-gray: #343a40;
+            --text-color: #212529;
+            --border-radius: 5px;
+        }
+
+        body {
+            font-family: sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--light-gray);
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1rem;
+        }
+
+        header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 1rem 0;
+            text-align: center;
+            margin-bottom: 1rem;
+        }
+
+        .product-listing {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+        }
+
+        .product-card {
+            background-color: white;
+            border: 1px solid #dee2e6;
+            border-radius: var(--border-radius);
+            padding: 1rem;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .product-card img {
+            max-width: 100%;
+            height: auto;
+            margin-bottom: 0.5rem;
+        }
+
+        .product-card h3 {
+            margin-top: 0;
+            margin-bottom: 0.5rem;
+            font-size: 1.2rem;
+        }
+
+        .product-card p {
+            margin-bottom: 0.5rem;
+        }
+
+        .product-card .price {
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+
+        .product-card button {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+            margin-top: auto; /* Push the button to the bottom */
+        }
+
+        .product-card button:hover {
+            background-color: #0056b3;
+        }
+
+        .filters {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .filters label,
+        .filters select {
+            margin-right: 0.5rem;
+            margin-bottom: 0.5rem; /* Add margin to separate from other elements */
+        }
+
+
+        .pagination {
+            display: flex;
+            justify-content: center;
+            margin-top: 1rem;
+        }
+
+        .pagination button {
+            background-color: var(--secondary-color);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            margin: 0 0.25rem;
+            transition: background-color 0.2s ease;
+        }
+
+        .pagination button:hover {
+            background-color: #545b62;
+        }
+
+        @media (max-width: 768px) {
+            .filters {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .filters label,
+            .filters select {
+                margin-right: 0;
+                margin-bottom: 0.25rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Product Listing</h1>
+    </header>
+
+    <div class="container">
+
+        <div class="filters">
+            <div>
+                <label for="category-filter">Category:</label>
+                <select id="category-filter">
+                    <option value="all">All</option>
+                    <option value="electronics">Electronics</option>
+                    <option value="clothing">Clothing</option>
+                    <option value="books">Books</option>
+                </select>
+            </div>
+            <div>
+                <label for="price-filter">Price:</label>
+                <select id="price-filter">
+                    <option value="all">All</option>
+                    <option value="low-to-high">Low to High</option>
+                    <option value="high-to-low">High to Low</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="product-listing" id="product-listing">
+            <!-- Product cards will be dynamically added here -->
+        </div>
+
+        <div class="pagination" id="pagination">
+            <!-- Pagination buttons will be dynamically added here -->
+        </div>
+
+    </div>
+
+    <script>
+        const products = [
+            { id: 1, name: "Laptop", category: "electronics", price: 1200, image: "https://via.placeholder.com/250x150?text=Laptop" },
+            { id: 2, name: "T-Shirt", category: "clothing", price: 25, image: "https://via.placeholder.com/250x150?text=T-Shirt" },
+            { id: 3, name: "Book - The Great Gatsby", category: "books", price: 15, image: "https://via.placeholder.com/250x150?text=Book" },
+            { id: 4, name: "Headphones", category: "electronics", price: 100, image: "https://via.placeholder.com/250x150?text=Headphones" },
+            { id: 5, name: "Jeans", category: "clothing", price: 50, image: "https://via.placeholder.com/250x150?text=Jeans" },
+            { id: 6, name: "Book - 1984", category: "books", price: 12, image: "https://via.placeholder.com/250x150?text=Book" },
+            { id: 7, name: "Smartphone", category: "electronics", price: 800, image: "https://via.placeholder.com/250x150?text=Smartphone" },
+            { id: 8, name: "Dress", category: "clothing", price: 75, image: "https://via.placeholder.com/250x150?text=Dress" },
+            { id: 9, name: "Book - To Kill a Mockingbird", category: "books", price: 18, image: "https://via.placeholder.com/250x150?text=Book" },
+            { id: 10, name: "Tablet", category: "electronics", price: 300, image: "https://via.placeholder.com/250x150?text=Tablet" }
+        ];
+
+        const productListing = document.getElementById('product-listing');
+        const categoryFilter = document.getElementById('category-filter');
+        const priceFilter = document.getElementById('price-filter');
+        const pagination = document.getElementById('pagination');
+
+        let currentPage = 1;
+        const productsPerPage = 6; // Adjust as needed
+        let filteredProducts = [...products]; // Start with a copy of all products
+
+        function displayProducts(productsToDisplay) {
+            productListing.innerHTML = ''; // Clear existing products
+
+            const startIndex = (currentPage - 1) * productsPerPage;
+            const endIndex = startIndex + productsPerPage;
+            const productsToShow = productsToDisplay.slice(startIndex, endIndex);
+
+
+            productsToShow.forEach(product => {
+                const productCard = document.createElement('div');
+                productCard.classList.add('product-card');
+                productCard.innerHTML = `
+                    <img src="${product.image}" alt="${product.name}">
+                    <h3>${product.name}</h3>
+                    <p>${product.category}</p>
+                    <p class="price">$${product.price}</p>
+                    <button>Add to Cart</button>
+                `;
+                productListing.appendChild(productCard);
+            });
+            updatePagination(productsToDisplay.length);
+        }
+
+        function filterProducts() {
+            filteredProducts = [...products]; // Reset to all products
+            const selectedCategory = categoryFilter.value;
+            const selectedPrice = priceFilter.value;
+
+            if (selectedCategory !== 'all') {
+                filteredProducts = filteredProducts.filter(product => product.category === selectedCategory);
+            }
+
+            if (selectedPrice === 'low-to-high') {
+                filteredProducts.sort((a, b) => a.price - b.price);
+            } else if (selectedPrice === 'high-to-low') {
+                filteredProducts.sort((a, b) => b.price - a.price);
+            }
+            currentPage = 1; // Reset page to 1 after filtering
+            displayProducts(filteredProducts);
+        }
+
+        function updatePagination(totalProducts) {
+            pagination.innerHTML = '';
+            const pageCount = Math.ceil(totalProducts / productsPerPage);
+
+            if (pageCount <= 1) return;  // Don't show pagination if only one page
+
+            const prevButton = document.createElement('button');
+            prevButton.textContent = 'Previous';
+            prevButton.disabled = currentPage === 1;
+            prevButton.addEventListener('click', () => {
+                if (currentPage > 1) {
+                    currentPage--;
+                    displayProducts(filteredProducts);
+                }
+            });
+            pagination.appendChild(prevButton);
+
+            for (let i = 1; i <= pageCount; i++) {
+                const pageButton = document.createElement('button');
+                pageButton.textContent = i;
+                pageButton.classList.toggle('active', i === currentPage); // Style active page
+                pageButton.addEventListener('click', () => {
+                    currentPage = i;
+                    displayProducts(filteredProducts);
+                });
+                pagination.appendChild(pageButton);
+            }
+
+            const nextButton = document.createElement('button');
+            nextButton.textContent = 'Next';
+            nextButton.disabled = currentPage === pageCount;
+            nextButton.addEventListener('click', () => {
+                if (currentPage < pageCount) {
+                    currentPage++;
+                    displayProducts(filteredProducts);
+                }
+            });
+            pagination.appendChild(nextButton);
+        }
+
+
+        categoryFilter.addEventListener('change', filterProducts);
+        priceFilter.addEventListener('change', filterProducts);
+
+        // Initial display
+        displayProducts(filteredProducts);
+    </script>
+</body>
+</html>

@@ -305,10 +305,10 @@ export function ChatInterface({
             <div className="flex-1">
               <Card className={`${
                 message.role === "user" 
-                  ? "bg-blue-600 border-blue-600 max-w-2xl ml-auto" 
-                  : "bg-slate-800 border-slate-700 max-w-4xl"
+                  ? "bg-blue-600 border-blue-600 max-w-lg ml-auto" 
+                  : "bg-slate-800 border-slate-700 max-w-2xl"
               }`}>
-                <CardContent className="p-4">
+                <CardContent className="p-3">
                   {message.workflow && (
                     <div className="flex items-center space-x-2 mb-3">
                       {getWorkflowIcon(message.workflow.step, message.workflow.status)}
@@ -330,11 +330,11 @@ export function ChatInterface({
                   </p>
                   
                   {message.workflow?.data && (
-                    <div className="bg-slate-900 rounded-lg p-4 mt-4">
-                      <div className="text-sm font-medium text-slate-300 mb-2">
+                    <div className="bg-slate-900 rounded-lg p-3 mt-3">
+                      <div className="text-xs font-medium text-slate-300 mb-2">
                         📋 Analysis Results:
                       </div>
-                      <div className="bg-slate-950 rounded p-3 font-mono text-xs text-slate-300 overflow-x-auto">
+                      <div className="bg-slate-950 rounded p-2 font-mono text-xs text-slate-300 overflow-x-auto max-h-32 overflow-y-auto">
                         <pre>{JSON.stringify(message.workflow.data, null, 2)}</pre>
                       </div>
                     </div>
@@ -362,20 +362,20 @@ export function ChatInterface({
               <Loader className="w-4 h-4 text-white animate-spin" />
             </div>
             <div className="flex-1">
-              <Card className="bg-slate-800 border-slate-700 max-w-2xl">
-                <CardContent className="p-4">
-                  <div className="text-sm font-medium text-slate-300 mb-3">🚀 Generation Progress</div>
-                  <div className="space-y-3">
+              <Card className="bg-slate-800 border-slate-700 max-w-lg">
+                <CardContent className="p-3">
+                  <div className="text-xs font-medium text-slate-300 mb-2">🚀 Generation Progress</div>
+                  <div className="space-y-2">
                     <div className="flex items-center justify-between">
-                      <span className="text-sm text-slate-300">Analysis</span>
+                      <span className="text-xs text-slate-300">Analysis</span>
                       <span className="text-xs bg-emerald-600 px-2 py-1 rounded">Complete</span>
                     </div>
                     <div className="flex items-center justify-between">
-                      <span className="text-sm text-slate-300">File Structure</span>
+                      <span className="text-xs text-slate-300">File Structure</span>
                       <span className="text-xs bg-emerald-600 px-2 py-1 rounded">Complete</span>
                     </div>
                     <div className="flex items-center justify-between">
-                      <span className="text-sm text-slate-300">Content Generation</span>
+                      <span className="text-xs text-slate-300">Content Generation</span>
                       <span className="text-xs bg-blue-600 px-2 py-1 rounded animate-pulse">Generating...</span>
                     </div>
                   </div>

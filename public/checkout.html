@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout - My Awesome Store</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1, h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .checkout-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="tel"],
+        input[type="number"],
+        select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+            margin-bottom: 10px;
+        }
+
+        button {
+            background-color: #007bff;
+            color: #fff;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        .order-summary {
+            border: 1px solid #ccc;
+            padding: 15px;
+            border-radius: 4px;
+        }
+
+        .order-summary h3 {
+            margin-bottom: 10px;
+        }
+
+        .item-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+        }
+
+        .total-row {
+            font-weight: bold;
+            margin-top: 10px;
+            border-top: 1px solid #ccc;
+            padding-top: 10px;
+        }
+
+        .payment-options {
+            margin-top: 20px;
+        }
+
+        .payment-options label {
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        .payment-options input[type="radio"] {
+            margin-right: 5px;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+            .checkout-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Checkout</h1>
+
+        <div class="checkout-grid">
+            <div>
+                <h2>Shipping Information</h2>
+                <form id="shipping-form">
+                    <div class="form-group">
+                        <label for="shipping-name">Full Name:</label>
+                        <input type="text" id="shipping-name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="shipping-address">Address:</label>
+                        <input type="text" id="shipping-address" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="shipping-city">City:</label>
+                        <input type="text" id="shipping-city" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="shipping-state">State/Province:</label>
+                        <input type="text" id="shipping-state" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="shipping-zip">Zip Code:</label>
+                        <input type="text" id="shipping-zip" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="shipping-country">Country:</label>
+                        <input type="text" id="shipping-country" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="shipping-phone">Phone:</label>
+                        <input type="tel" id="shipping-phone">
+                    </div>
+                </form>
+            </div>
+
+            <div>
+                <h2>Billing Information</h2>
+                <form id="billing-form">
+                    <div class="form-group">
+                        <label for="billing-same-as-shipping">
+                            <input type="checkbox" id="billing-same-as-shipping" checked>
+                            Same as Shipping
+                        </label>
+                    </div>
+                    <div id="billing-info-fields">
+                        <div class="form-group">
+                            <label for="billing-name">Full Name:</label>
+                            <input type="text" id="billing-name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="billing-address">Address:</label>
+                            <input type="text" id="billing-address" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="billing-city">City:</label>
+                            <input type="text" id="billing-city" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="billing-state">State/Province:</label>
+                            <input type="text" id="billing-state" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="billing-zip">Zip Code:</label>
+                            <input type="text" id="billing-zip" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="billing-country">Country:</label>
+                            <input type="text" id="billing-country" required>
+                        </div>
+                    </div>
+                </form>
+
+                <div class="payment-options">
+                    <h3>Payment Method</h3>
+                    <label>
+                        <input type="radio" name="payment-method" value="credit-card" checked>
+                        Credit Card
+                    </label>
+                    <label>
+                        <input type="radio" name="payment-method" value="paypal">
+                        PayPal (Coming Soon)
+                    </label>
+                    <div id="credit-card-fields">
+                        <div class="form-group">
+                            <label for="card-number">Card Number:</label>
+                            <input type="text" id="card-number">
+                        </div>
+                        <div class="form-group">
+                            <label for="card-expiry">Expiry Date:</label>
+                            <input type="text" id="card-expiry">
+                        </div>
+                        <div class="form-group">
+                            <label for="card-cvv">CVV:</label>
+                            <input type="text" id="card-cvv">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div>
+                <h2>Order Summary</h2>
+                <div class="order-summary">
+                    <h3>Your Order</h3>
+                    <div id="order-items">
+                        <!-- Order items will be dynamically added here -->
+                    </div>
+                    <div class="total-row">
+                        Total: <span id="order-total">$0.00</span>
+                    </div>
+                </div>
+                <button id="place-order-button">Place Order</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Sample order items (replace with your actual data)
+        const orderItems = [
+            { name: "Product 1", price: 25.00, quantity: 2 },
+            { name: "Product 2", price: 15.00, quantity: 1 },
+        ];
+
+        // Function to calculate order total
+        function calculateTotal() {
+            let total = 0;
+            orderItems.forEach(item => {
+                total += item.price * item.quantity;
+            });
+            return total;
+        }
+
+        // Function to populate order summary
+        function populateOrderSummary() {
+            const orderItemsContainer = document.getElementById('order-items');
+            orderItemsContainer.innerHTML = ""; // Clear existing items
+            let total = 0;
+
+            orderItems.forEach(item => {
+                const itemRow = document.createElement('div');
+                itemRow.classList.add('item-row');
+                itemRow.innerHTML = `
+                    <span>${item.name} x ${item.quantity}</span>
+                    <span>$${(item.price * item.quantity).toFixed(2)}</span>
+                `;
+                orderItemsContainer.appendChild(itemRow);
+                total += item.price * item.quantity;
+            });
+
+            document.getElementById('order-total').textContent = `$${total.toFixed(2)}`;
+        }
+
+        // Function to handle "Same as shipping" checkbox
+        function handleSameAsShipping() {
+            const sameAsShippingCheckbox = document.getElementById('billing-same-as-shipping');
+            const billingInfoFields = document.getElementById('billing-info-fields');
+            const shippingForm = document.getElementById('shipping-form');
+            const billingForm = document.getElementById('billing-form');
+
+            if (sameAsShippingCheckbox.checked) {
+                billingInfoFields.style.display = 'none';
+                //Pre-populate billing fields with shipping data if available
+                if(shippingForm.shipping-name.value) billingForm.billing-name.value = shippingForm.shipping-name.value;
+                if(shippingForm.shipping-address.value) billingForm.billing-address.value = shippingForm.shipping-address.value;
+                if(shippingForm.shipping-city.value) billingForm.billing-city.value = shippingForm.shipping-city.value;
+                if(shippingForm.shipping-state.value) billingForm.billing-state.value = shippingForm.shipping-state.value;
+                if(shippingForm.shipping-zip.value) billingForm.billing-zip.value = shippingForm.shipping-zip.value;
+                if(shippingForm.shipping-country.value) billingForm.billing-country.value = shippingForm.shipping-country.value;
+
+            } else {
+                billingInfoFields.style.display = 'block';
+            }
+        }
+
+        // Function to simulate payment processing (replace with actual gateway integration)
+        function placeOrder() {
+            const shippingForm = document.getElementById('shipping-form');
+            const billingForm = document.getElementById('billing-form');
+            const creditCardFields = document.getElementById('credit-card-fields');
+            let paymentMethod = document.querySelector('input[name="payment-method"]:checked').value;
+            let isValid = true;
+
+            // Basic validation
+            if (!shippingForm.checkValidity()) {
+                alert("Please fill out the shipping information.");
+                isValid = false;
+            }
+
+            if (!billingForm.checkValidity()) {
+                alert("Please fill out the billing information.");
+                isValid = false;
+            }
+
+
+            if(paymentMethod === 'credit-card' && ( !document.getElementById('card-number').value || !document.getElementById('card-expiry').value || !document.getElementById('card-cvv').value)){
+                 alert("Please enter valid credit card details.");
+                isValid = false;
+            }
+
+            if (isValid) {
+               alert("Order placed successfully! (This is a simulation)");
+
+                // Clear forms after successful order (optional)
+                shippingForm.reset();
+                billingForm.reset();
+                document.getElementById('billing-same-as-shipping').checked = true;
+                handleSameAsShipping();
+            }
+        }
+
+        // Event listeners
+        document.addEventListener('DOMContentLoaded', () => {
+            populateOrderSummary();
+
+            const sameAsShippingCheckbox = document.getElementById('billing-same-as-shipping');
+            sameAsShippingCheckbox.addEventListener('change', handleSameAsShipping);
+
+            const placeOrderButton = document.getElementById('place-order-button');
+            placeOrderButton.addEventListener('click', placeOrder);
+
+            handleSameAsShipping(); // Initially hide billing info if same as shipping is checked.
+        });
+
+    </script>
+</body>
+</html>
