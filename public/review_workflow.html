@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Review Workflow Status</title>
+    <style>
+        :root {
+            /* Colors */
+            --color-primary: #4a69bd;
+            --color-primary-light: #6a83d0;
+            --color-primary-dark: #34498a;
+            --color-secondary: #f0932b;
+            --color-secondary-light: #f4ad51;
+            --color-secondary-dark: #b3701e;
+            --color-background: #f8f9fa;
+            --color-surface: #ffffff;
+            --color-text: #333;
+            --color-text-light: #666;
+            --color-border: rgba(0, 0, 0, 0.1);
+            --color-shadow: rgba(0, 0, 0, 0.15);
+
+            /* Spacing */
+            --space-xs: 0.5rem;
+            --space-s: 1rem;
+            --space-m: 1.5rem;
+            --space-l: 2rem;
+            --space-xl: 3rem;
+
+            /* Font */
+            --font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+            --font-size-base: 1rem;
+            --font-size-small: 0.875rem;
+            --font-size-large: 1.25rem;
+            --line-height: 1.6;
+
+            /* Border Radius */
+            --border-radius: 0.75rem;
+
+            /* Transition */
+            --transition-duration: 0.3s;
+            --transition-easing: ease-in-out;
+        }
+
+        body {
+            font-family: var(--font-family);
+            font-size: var(--font-size-base);
+            line-height: var(--line-height);
+            background-color: var(--color-background);
+            color: var(--color-text);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow-x: hidden; /* Prevent horizontal scroll */
+        }
+
+        .container {
+            width: 100%;
+            max-width: 800px;
+            padding: var(--space-l);
+        }
+
+        .card {
+            background-color: var(--color-surface);
+            border-radius: var(--border-radius);
+            box-shadow: 0px 5px 15px var(--color-shadow);
+            padding: var(--space-m);
+            margin-bottom: var(--space-l);
+            transition: all var(--transition-duration) var(--transition-easing);
+            border: 1px solid var(--color-border);
+        }
+
+        .card:hover {
+            box-shadow: 0px 8px 20px var(--color-shadow);
+            transform: translateY(-2px);
+        }
+
+
+        header {
+            text-align: center;
+            margin-bottom: var(--space-l);
+        }
+
+        h1 {
+            font-size: var(--font-size-large);
+            margin-bottom: var(--space-s);
+            color: var(--color-primary);
+        }
+
+        .workflow-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: var(--space-m);
+            padding: var(--space-s);
+            border-radius: var(--border-radius);
+            background-color: var(--color-background);
+            transition: background-color var(--transition-duration) var(--transition-easing);
+        }
+
+        .workflow-item:hover {
+            background-color: rgba(220,230,240,0.5);
+        }
+
+        .workflow-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .status-icon {
+            width: 2rem;
+            height: 2rem;
+            border-radius: 50%;
+            margin-right: var(--space-m);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: var(--font-size-small);
+            color: var(--color-surface);
+            font-weight: bold;
+            transition: background-color var(--transition-duration) var(--transition-easing);
+        }
+
+        .status-icon.pending {
+            background-color: var(--color-secondary);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+
+        .status-icon.approved {
+            background-color: #2ecc71; /* Green */
+        }
+
+        .status-icon.rejected {
+            background-color: #e74c3c; /* Red */
+        }
+
+
+        .details {
+            flex-grow: 1;
+        }
+
+        .details h3 {
+            font-size: var(--font-size-base);
+            margin-bottom: var(--space-xs);
+        }
+
+        .details p {
+            font-size: var(--font-size-small);
+            color: var(--color-text-light);
+        }
+
+        .comment {
+            margin-top: var(--space-s);
+            padding: var(--space-s);
+            border-radius: var(--border-radius);
+            background-color: var(--color-surface);
+            border: 1px solid var(--color-border);
+            box-shadow: 0 1px 3px var(--color-shadow);
+        }
+        .comment p {
+           font-size: var(--font-size-small);
+           color: var(--color-text-light);
+           margin:0;
+
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .container {
+                padding: var(--space-m);
+            }
+
+            h1 {
+                font-size: 1.75rem;
+            }
+            .workflow-item {
+              flex-direction: column;
+              align-items: flex-start;
+            }
+            .status-icon {
+                margin-right: 0;
+                margin-bottom: var(--space-s);
+            }
+
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Document Review Workflow</h1>
+            <p>Document: Sales Proposal - 2024-05-15</p>
+        </header>
+
+        <section class="card">
+            <div class="workflow-item">
+                <div class="status-icon approved">✔</div>
+                <div class="details">
+                    <h3>Sales Manager</h3>
+                    <p>Approved: May 15, 2024 - 10:15 AM</p>
+                </div>
+            </div>
+
+            <div class="workflow-item">
+                <div class="status-icon approved">✔</div>
+                <div class="details">
+                    <h3>Legal Reviewer</h3>
+                    <p>Approved: May 15, 2024 - 11:30 AM</p>
+                    <div class="comment">
+                        <p>"Minor edits made to clause 3."</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="workflow-item">
+                <div class="status-icon pending">...</div>
+                <div class="details">
+                    <h3>Finance Director</h3>
+                    <p>Pending Approval</p>
+                </div>
+            </div>
+        </section>
+    </div>
+</body>
+</html>

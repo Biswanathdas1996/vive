@@ -239,6 +239,7 @@ export function PreviewPanel({ projectId, selectedFile, isChatCollapsed, isFileE
               <div className={`h-full ${getDeviceClass()}`}>
                 <div className="h-full bg-white rounded-lg shadow-2xl overflow-hidden">
                   <iframe
+                    id="preview-frame"
                     src={currentFile.url}
                     className="w-full h-full border-0"
                     title={`Preview of ${currentFile.fileName}`}

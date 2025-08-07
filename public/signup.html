@@ -3,19 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Signup - Modern Web App</title>
+    <title>Sign Up - Modern Web App</title>
     <style>
         :root {
-            /* Colors */
-            --color-primary: #5a7dfa;
-            --color-primary-light: #7897ff;
-            --color-primary-dark: #4660d6;
-            --color-secondary: #f2f7ff;
-            --color-accent: #ffc107;
-            --color-text-light: #f0f0f0;
-            --color-text-dark: #333;
-            --color-background: #e9e9ee;
-            --color-border: rgba(0, 0, 0, 0.1);
+            /* Color Palette */
+            --color-primary: #64b5f6; /* Light Blue */
+            --color-secondary: #90caf9; /* Lighter Blue */
+            --color-accent: #42a5f5; /* Darker Blue */
+            --color-text-light: #ffffff; /* White */
+            --color-text-dark: #212121; /* Dark Gray */
+            --color-background-light: #f0f4c3; /* Light Green-Yellow */
+            --color-background-dark: #303030; /* Dark Gray */
+            --color-shadow: rgba(0, 0, 0, 0.1);
+            --color-border: rgba(0, 0, 0, 0.15);
+
 
             /* Spacing */
             --space-s: 0.5rem;
@@ -23,15 +24,19 @@
             --space-l: 1.5rem;
             --space-xl: 2rem;
 
-            /* Font */
+            /* Typography */
             --font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             --font-size-base: 1rem;
-            --font-weight-normal: 400;
-            --font-weight-bold: 600;
             --line-height-base: 1.6;
+
+            /* Animation */
+            --transition-duration: 0.3s;
+            --transition-easing: ease-in-out;
         }
 
-        *, *::before, *::after {
+        *,
+        *::before,
+        *::after {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
@@ -40,115 +45,151 @@
         body {
             font-family: var(--font-family);
             font-size: var(--font-size-base);
-            font-weight: var(--font-weight-normal);
             line-height: var(--line-height-base);
-            background-color: var(--color-background);
+            background-color: var(--color-background-light);
             color: var(--color-text-dark);
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            padding: var(--space-l);
+            padding: var(--space-m);
         }
 
         .container {
-            background: rgba(255, 255, 255, 0.8);
+            background: rgba(255, 255, 255, 0.75);
             border-radius: 20px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-            backdrop-filter: blur(10px);
+            box-shadow: 0 10px 20px var(--color-shadow);
             padding: var(--space-xl);
             width: 100%;
-            max-width: 400px;
-            text-align: center;
-            transition: transform 0.3s ease;
-            border: 1px solid var(--color-border);
+            max-width: 500px;
+            backdrop-filter: blur(10px);
+            transition: background var(--transition-duration) var(--transition-easing);
         }
 
-        .container:hover {
-            transform: translateY(-5px);
-        }
 
         h1 {
-            font-size: 2rem;
-            font-weight: var(--font-weight-bold);
+            text-align: center;
             margin-bottom: var(--space-xl);
             color: var(--color-primary);
+            font-size: clamp(1.8rem, 4vw, 2.5rem);
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-m);
         }
 
         .form-group {
-            margin-bottom: var(--space-m);
-            text-align: left;
+            display: flex;
+            flex-direction: column;
         }
 
         label {
-            display: block;
+            font-weight: bold;
             margin-bottom: var(--space-s);
-            font-weight: var(--font-weight-bold);
             color: var(--color-text-dark);
         }
 
         input[type="text"],
         input[type="email"],
         input[type="password"] {
-            width: 100%;
             padding: var(--space-m);
             border: 1px solid var(--color-border);
             border-radius: 10px;
-            background-color: rgba(255, 255, 255, 0.9);
             font-size: var(--font-size-base);
-            transition: border-color 0.2s ease;
+            transition: border-color var(--transition-duration) var(--transition-easing), box-shadow var(--transition-duration) var(--transition-easing);
+            background-color: rgba(255, 255, 255, 0.9);
+        }
+
+        input:focus {
             outline: none;
-        }
-
-        input[type="text"]:focus,
-        input[type="email"]:focus,
-        input[type="password"]:focus {
             border-color: var(--color-primary);
+            box-shadow: 0 0 5px var(--color-primary);
         }
 
-        .error-message {
-            color: #dc3545;
-            font-size: 0.8rem;
-            margin-top: var(--space-s);
+        button {
+            padding: var(--space-m);
+            border: none;
+            border-radius: 10px;
+            background-color: var(--color-primary);
+            color: var(--color-text-light);
+            font-size: var(--font-size-base);
+            cursor: pointer;
+            transition: background-color var(--transition-duration) var(--transition-easing), transform var(--transition-duration) var(--transition-easing);
+        }
+
+        button:hover {
+            background-color: var(--color-accent);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 10px var(--color-shadow);
+        }
+
+        button:active {
+            transform: translateY(0);
+            box-shadow: none;
+        }
+
+        .signup-success {
+            background-color: #c8e6c9;
+            color: #388e3c;
+            padding: var(--space-m);
+            border-radius: 10px;
+            margin-bottom: var(--space-m);
+            text-align: center;
             display: none;
         }
 
-        .btn {
-            display: inline-block;
-            padding: var(--space-m) var(--space-xl);
-            background: linear-gradient(135deg, var(--color-primary), var(--color-primary-light));
-            color: var(--color-text-light);
-            text-decoration: none;
+        .signup-error {
+            background-color: #ffcdd2;
+            color: #d32f2f;
+            padding: var(--space-m);
             border-radius: 10px;
-            font-weight: var(--font-weight-bold);
-            border: none;
-            cursor: pointer;
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin-bottom: var(--space-m);
+            text-align: center;
+            display: none;
         }
 
-        .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .container {
+                padding: var(--space-l);
+            }
         }
 
-        .btn:focus {
-           outline: 2px solid var(--color-primary);
-           outline-offset: 2px;
+        @media (prefers-color-scheme: dark) {
+            body {
+                background-color: var(--color-background-dark);
+                color: var(--color-text-light);
+            }
+
+            .container {
+                background: rgba(0, 0, 0, 0.75);
+                box-shadow: 0 10px 20px rgba(255, 255, 255, 0.1);
+            }
+
+            input[type="text"],
+            input[type="email"],
+            input[type="password"] {
+                background-color: rgba(50, 50, 50, 0.8);
+                border-color: rgba(255, 255, 255, 0.1);
+                color: var(--color-text-light);
+            }
+
+            label {
+                color: var(--color-text-light);
+            }
+
+            button {
+                background-color: var(--color-secondary);
+                color: var(--color-text-dark);
+            }
+
+            button:hover {
+                background-color: var(--color-primary);
+            }
         }
 
-        .btn:active {
-            transform: translateY(0);
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-
-        .form-group.error .error-message {
-            display: block;
-        }
-
-        .form-group.error input {
-            border-color: #dc3545;
-        }
 
     </style>
 </head>
@@ -156,73 +197,70 @@
     <div class="container">
         <h1>Sign Up</h1>
 
-        <form id="signupForm" novalidate>
+        <div class="signup-success" id="signupSuccess">
+            Account created successfully!
+        </div>
+
+        <div class="signup-error" id="signupError">
+            An error occurred. Please try again.
+        </div>
+
+        <form id="signupForm">
             <div class="form-group">
-                <label for="username">Username</label>
-                <input type="text" id="username" name="username" required>
-                <div class="error-message" id="usernameError">Please enter a username.</div>
+                <label for="name">Name</label>
+                <input type="text" id="name" name="name" required placeholder="Enter your name">
             </div>
 
             <div class="form-group">
                 <label for="email">Email</label>
-                <input type="email" id="email" name="email" required>
-                <div class="error-message" id="emailError">Please enter a valid email address.</div>
+                <input type="email" id="email" name="email" required placeholder="Enter your email">
             </div>
 
             <div class="form-group">
                 <label for="password">Password</label>
-                <input type="password" id="password" name="password" required>
-                <div class="error-message" id="passwordError">Please enter a password.</div>
+                <input type="password" id="password" name="password" required placeholder="Enter your password">
             </div>
 
-            <button type="submit" class="btn">Sign Up</button>
+            <button type="submit">Sign Up</button>
         </form>
     </div>
 
     <script>
-        const form = document.getElementById('signupForm');
+        const signupForm = document.getElementById('signupForm');
+        const signupSuccess = document.getElementById('signupSuccess');
+        const signupError = document.getElementById('signupError');
 
-        form.addEventListener('submit', function(event) {
-            event.preventDefault(); // Prevent form submission
+        signupForm.addEventListener('submit', async (event) => {
+            event.preventDefault(); // Prevent default form submission
 
-            let isValid = true;
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
 
-            // Clear existing errors
-            const errorMessages = document.querySelectorAll('.error-message');
-            errorMessages.forEach(message => {
-                message.style.display = 'none';
-                message.parentElement.classList.remove('error');
-            });
-
-            // Username validation
-            const usernameInput = document.getElementById('username');
-            if (usernameInput.value.trim() === '') {
-                document.getElementById('usernameError').style.display = 'block';
-                usernameInput.parentElement.classList.add('error');
-                isValid = false;
+            // Basic client-side validation (optional - more robust validation recommended)
+            if (!name || !email || !password) {
+                alert('Please fill in all fields.');
+                return;
             }
 
-            // Email validation
-            const emailInput = document.getElementById('email');
-            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            if (!emailRegex.test(emailInput.value.trim())) {
-                document.getElementById('emailError').style.display = 'block';
-                emailInput.parentElement.classList.add('error');
-                isValid = false;
-            }
+            // Simulate an API call (replace with your actual API endpoint)
+            try {
+                // Simulate a successful API response after a short delay
+                await new Promise(resolve => setTimeout(resolve, 1000));
 
-            // Password validation
-            const passwordInput = document.getElementById('password');
-            if (passwordInput.value.trim() === '') {
-                document.getElementById('passwordError').style.display = 'block';
-                passwordInput.parentElement.classList.add('error');
-                isValid = false;
-            }
+                // Replace this with your actual API call logic using fetch or axios
+                console.log('Sign-up data:', { name, email, password });
 
-            if (isValid) {
-                // Simulate successful signup (replace with actual API call)
-                alert('Signup successful!');
-                form.reset(); // Optionally reset the form
+                // Simulate successful signup
+                signupSuccess.style.display = 'block';
+                signupError.style.display = 'none';
+                signupForm.reset(); // Clear the form
+            } catch (error) {
+                console.error('Signup error:', error);
+                signupError.style.display = 'block';
+                signupSuccess.style.display = 'none';
+            } finally {
+                // Reset form submission state (optional, if needed)
             }
         });
     </script>

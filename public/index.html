@@ -3,229 +3,281 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chat Interface</title>
+    <title>Document Control System</title>
     <style>
         :root {
-            /* Color Palette */
-            --primary-color: #64b5f6; /* Light Blue */
-            --secondary-color: #1e88e5; /* Darker Blue */
-            --background-color: #f0f4c3; /* Light Cream */
-            --text-color: #333; /* Dark Grey */
-            --accent-color: #e57373; /* Red */
-            --border-color: rgba(0, 0, 0, 0.1);
-            --glass-color: rgba(255, 255, 255, 0.2);
-            --shadow-color: rgba(0, 0, 0, 0.15);
+            /* Colors - Light Theme */
+            --color-primary-light: #4CAF50;
+            --color-secondary-light: #2196F3;
+            --color-background-light: #f5f5f5;
+            --color-surface-light: #ffffff;
+            --color-text-light: #333333;
+            --color-text-secondary-light: #666666;
+            --color-border-light: rgba(0, 0, 0, 0.1);
+            --color-shadow-light: rgba(0, 0, 0, 0.1);
+
+            /* Colors - Dark Theme (Optional) */
+            --color-primary-dark: #8BC34A;
+            --color-secondary-dark: #64B5F6;
+            --color-background-dark: #212121;
+            --color-surface-dark: #303030;
+            --color-text-dark: #ffffff;
+            --color-text-secondary-dark: #bbbbbb;
+            --color-border-dark: rgba(255, 255, 255, 0.1);
+            --color-shadow-dark: rgba(0, 0, 0, 0.2);
 
             /* Spacing */
-            --space-s: 0.5rem;
-            --space-m: 1rem;
-            --space-l: 1.5rem;
-            --space-xl: 2rem;
+            --space-xs: 0.5rem;
+            --space-sm: 1rem;
+            --space-md: 1.5rem;
+            --space-lg: 2rem;
+            --space-xl: 3rem;
+
+            /* Border Radius */
+            --border-radius-sm: 0.25rem;
+            --border-radius-md: 0.5rem;
+            --border-radius-lg: 0.75rem;
 
             /* Font */
             --font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            --font-size-base: 16px; /* Base font size */
+            --font-size-base: 1rem;
+            --line-height-base: 1.6;
 
-            /* Rounded Corners */
-            --border-radius: 0.75rem;
+            /* Transition */
+            --transition-duration: 0.2s;
+            --transition-timing-function: ease-in-out;
         }
 
+        /* General Styles */
         body {
             font-family: var(--font-family);
             font-size: var(--font-size-base);
-            line-height: 1.6;
-            background-color: var(--background-color);
-            color: var(--text-color);
+            line-height: var(--line-height-base);
+            background-color: var(--color-background-light);
+            color: var(--color-text-light);
             margin: 0;
             padding: 0;
             display: flex;
-            justify-content: center;
-            align-items: center;
+            flex-direction: column;
             min-height: 100vh;
+            transition: background-color var(--transition-duration) var(--transition-timing-function),
+                        color var(--transition-duration) var(--transition-timing-function);
         }
 
-        .container {
-            width: 100%;
-            max-width: 500px;
-            margin: var(--space-m);
-            border-radius: var(--border-radius);
-            overflow: hidden;
-            box-shadow: 0 4px 12px var(--shadow-color);
-            background-color: var(--glass-color);
-            backdrop-filter: blur(10px);
-            border: 1px solid var(--border-color);
-        }
-
-
+        /* Header */
         header {
-            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            background: linear-gradient(135deg, var(--color-primary-light), var(--color-secondary-light));
             color: white;
-            padding: var(--space-l);
+            padding: var(--space-md);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
             text-align: center;
-            font-size: 1.2rem;
-            font-weight: 600;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
         }
 
-        .chat-window {
-            padding: var(--space-l);
-            overflow-y: auto;
-            max-height: 400px;
+        /* Main Content */
+        main {
+            flex: 1;
+            display: grid;
+            grid-template-columns: 1fr;
+            padding: var(--space-md);
+            gap: var(--space-md);
+            max-width: 1200px;
+            margin: 0 auto;
         }
 
-        .message {
-            margin-bottom: var(--space-m);
-            padding: var(--space-m);
-            border-radius: var(--border-radius);
-            box-shadow: 0 2px 6px var(--shadow-color);
-            clear: both; /* Ensure messages clear the floats */
+        /* Section */
+        section {
+            background-color: var(--color-surface-light);
+            border-radius: var(--border-radius-lg);
+            box-shadow: 0 2px 5px var(--color-shadow-light);
+            padding: var(--space-md);
+            transition: box-shadow var(--transition-duration) var(--transition-timing-function);
         }
 
-        .user-message {
-            background-color: var(--primary-color);
-            color: white;
-            float: right;
-            clear: both;
-            text-align: right;
+        section:hover {
+            box-shadow: 0 4px 8px var(--color-shadow-light);
         }
 
-        .bot-message {
-            background-color: #fff;
-            color: var(--text-color);
-            float: left;
-            clear: both;
-            text-align: left;
+        h1, h2, h3 {
+            margin-top: 0;
+            margin-bottom: var(--space-sm);
         }
 
-        .bot-message::before{ /* CSS Icon for bot */
-            content: '';
-            display: inline-block;
-            width: 15px;
-            height: 15px;
-            border-radius: 50%;
-            background-color: var(--secondary-color);
-            margin-right: var(--space-s);
-        }
-
-        .input-area {
+        /* Login Form */
+        .login-form {
             display: flex;
-            padding: var(--space-m);
-            border-top: 1px solid var(--border-color);
-            background-color: #fff;
+            flex-direction: column;
+            gap: var(--space-sm);
         }
 
-        #message-input {
-            flex-grow: 1;
-            padding: var(--space-m);
-            border: 1px solid var(--border-color);
-            border-radius: var(--border-radius);
-            margin-right: var(--space-m);
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-xs);
         }
 
-        #send-button {
-            background-color: var(--accent-color);
+        label {
+            font-weight: bold;
+        }
+
+        input[type="text"],
+        input[type="password"] {
+            padding: var(--space-sm);
+            border: 1px solid var(--color-border-light);
+            border-radius: var(--border-radius-sm);
+            font-size: var(--font-size-base);
+            transition: border-color var(--transition-duration) var(--transition-timing-function), box-shadow var(--transition-duration) var(--transition-timing-function);
+        }
+
+        input[type="text"]:focus,
+        input[type="password"]:focus {
+            border-color: var(--color-secondary-light);
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(33, 150, 243, 0.2);
+        }
+
+        button {
+            padding: var(--space-sm) var(--space-md);
+            background: linear-gradient(135deg, var(--color-secondary-light), var(--color-primary-light));
             color: white;
             border: none;
-            padding: var(--space-m) var(--space-l);
-            border-radius: var(--border-radius);
+            border-radius: var(--border-radius-md);
+            font-size: var(--font-size-base);
             cursor: pointer;
-            transition: background-color 0.2s ease;
+            transition: background-color var(--transition-duration) var(--transition-timing-function),
+                        transform var(--transition-duration) var(--transition-timing-function);
+            box-shadow: 0 2px 5px var(--color-shadow-light);
         }
 
-        #send-button:hover {
-            background-color: darken(var(--accent-color), 10%);
+        button:hover {
+            background: linear-gradient(135deg, var(--color-primary-light), var(--color-secondary-light));
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px var(--color-shadow-light);
+        }
+
+        button:active {
+            transform: translateY(0);
+            box-shadow: 0 1px 3px var(--color-shadow-light);
+        }
+
+        /* Footer */
+        footer {
+            background-color: var(--color-surface-light);
+            color: var(--color-text-secondary-light);
+            text-align: center;
+            padding: var(--space-md);
+            border-top: 1px solid var(--color-border-light);
         }
 
         /* Responsive Design */
-        @media (max-width: 768px) {
-            .container {
-                margin: var(--space-s);
-                max-width: 95%;
+        @media (min-width: 768px) {
+            main {
+                grid-template-columns: 1fr 1fr;
             }
-            header {
-                font-size: 1rem;
-                padding: var(--space-m);
+        }
+
+        @media (min-width: 992px) {
+            main {
+                grid-template-columns: 2fr 1fr;
             }
-            .chat-window {
-                padding: var(--space-m);
-                max-height: 300px;
-            }
-            #message-input, #send-button {
-                padding: var(--space-s);
-                font-size: 0.9rem;
-            }
+        }
+
+        /* Utility Classes */
+        .text-center {
+            text-align: center;
+        }
+
+        .gradient-background {
+            background: linear-gradient(135deg, #8BC34A, #2196F3);
+        }
+
+        .icon {
+            display: inline-block;
+            width: 1.5em;
+            height: 1.5em;
+            vertical-align: middle;
+            fill: currentColor;
+        }
+
+        /* Additional styling for visual appeal (Glassmorphism, Neumorphism) */
+        section {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.05);
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <header>
-            Chat Interface
-        </header>
-        <main>
-            <div class="chat-window" id="chat-window">
-                <div class="bot-message message">
-                    Welcome!  How can I help you today?
+    <header>
+        <h1>Document Control System</h1>
+        <p>Your centralized hub for document management and collaboration.</p>
+    </header>
+
+    <main>
+        <section>
+            <h2>Welcome to the Document Control System</h2>
+            <p>
+                This system is designed to streamline your document management processes.  Features include version control, access control, and audit trails.  It is designed to improve efficiency, enhance compliance, and secure sensitive information.
+            </p>
+            <ul>
+                <li>Secure Document Storage</li>
+                <li>Version Control</li>
+                <li>Role-based access control</li>
+                <li>Audit Trails</li>
+            </ul>
+            <p>
+               Click the login form to get started.
+            </p>
+        </section>
+
+        <section>
+            <h2 class="text-center">Login</h2>
+            <form class="login-form">
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" name="username" placeholder="Enter your username">
                 </div>
-                <div class="bot-message message">
-                    You can ask me anything.
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" placeholder="Enter your password">
                 </div>
-            </div>
-            <div class="input-area">
-                <input type="text" id="message-input" placeholder="Type your message here...">
-                <button id="send-button">Send</button>
-            </div>
-        </main>
-    </div>
+                <button type="submit">Login</button>
+            </form>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 Document Control System. All rights reserved.</p>
+    </footer>
 
     <script>
-        const chatWindow = document.getElementById('chat-window');
-        const messageInput = document.getElementById('message-input');
-        const sendButton = document.getElementById('send-button');
+        // Optional JavaScript for further interactivity (e.g., form validation, theme switching)
+        // Example: Basic form validation
+        const form = document.querySelector('.login-form');
 
-        function addMessage(message, sender) {
-            const messageDiv = document.createElement('div');
-            messageDiv.classList.add('message', sender === 'user' ? 'user-message' : 'bot-message');
-            messageDiv.textContent = message;
-            chatWindow.appendChild(messageDiv);
-            chatWindow.scrollTop = chatWindow.scrollHeight;  // Scroll to bottom
+        if (form) {
+            form.addEventListener('submit', function(event) {
+                event.preventDefault(); // Prevent default form submission
+
+                const usernameInput = document.getElementById('username');
+                const passwordInput = document.getElementById('password');
+
+                if (usernameInput.value.trim() === "") {
+                    alert("Please enter your username.");
+                    usernameInput.focus();
+                    return;
+                }
+
+                if (passwordInput.value.trim() === "") {
+                    alert("Please enter your password.");
+                    passwordInput.focus();
+                    return;
+                }
+
+                // In a real application, you would send this data to the server for authentication
+                alert("Login successful! (Simulated)");
+            });
         }
-
-        function simulateBotResponse(userMessage) {
-            // Simple bot logic (replace with your actual bot logic)
-            let response = "I'm sorry, I didn't understand that.";
-            if (userMessage.toLowerCase().includes('hello') || userMessage.toLowerCase().includes('hi')) {
-                response = "Hello there!";
-            } else if (userMessage.toLowerCase().includes('how are you')) {
-                response = "I'm doing well, thank you!";
-            } else if (userMessage.toLowerCase().includes('goodbye') || userMessage.toLowerCase().includes('bye')) {
-                response = "Goodbye!  Have a great day!";
-            }
-            else if(userMessage.toLowerCase().includes("weather")){
-              response = "I am unable to provide real-time weather information at this time.";
-            }
-
-            setTimeout(() => {
-                addMessage(response, 'bot');
-            }, 500);
-        }
-
-
-        sendButton.addEventListener('click', () => {
-            const message = messageInput.value.trim();
-            if (message) {
-                addMessage(message, 'user');
-                messageInput.value = ''; // Clear input
-                simulateBotResponse(message); // Simulate bot response
-            }
-        });
-
-
-        messageInput.addEventListener('keydown', (event) => {
-            if (event.key === 'Enter') {
-                sendButton.click(); // Trigger send on Enter key
-            }
-        });
     </script>
 </body>
 </html>

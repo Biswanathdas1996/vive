@@ -231,6 +231,15 @@ export function ChatInterface({
       // Refresh chat messages and project files after successful modification
       queryClient.invalidateQueries({ queryKey: ["/api/chat", chatSessionId] });
       queryClient.invalidateQueries({ queryKey: ["/api/projects", projectId, "files"] });
+      
+      // Auto-refresh preview after file modification
+      setTimeout(() => {
+        const previewFrame = document.querySelector('#preview-frame') as HTMLIFrameElement;
+        if (previewFrame && previewFrame.contentWindow) {
+          previewFrame.contentWindow.location.reload();
+        }
+      }, 500);
+      
       toast({
         title: "File Modified",
         description: `${data.fileName} has been updated successfully`,
@@ -532,7 +541,7 @@ export function ChatInterface({
                         </div>
                       )}
                       
-                      <p className={`text-sm ${
+                      <div className={`text-sm ${
                         message.role === "user" ? "text-white" : 
                         (message as any).isError ? "text-red-400" : "text-slate-300"
                       }`}>
@@ -544,7 +553,7 @@ export function ChatInterface({
                         ) : (
                           message.content
                         )}
-                      </p>
+                      </div>
                       
                       {message.workflow?.data && (
                         <div className="bg-slate-900 rounded-lg p-3 mt-3">

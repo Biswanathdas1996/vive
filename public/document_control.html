@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document Control Dashboard</title>
+    <style>
+        :root {
+            /* Colors */
+            --primary-color: #4CAF50;
+            --secondary-color: #FF9800;
+            --accent-color: #00BCD4;
+            --background-color-light: #f9f9f9;
+            --background-color-dark: #222;
+            --text-color-light: #333;
+            --text-color-dark: #eee;
+            --border-color: rgba(0, 0, 0, 0.1);
+            --shadow-color: rgba(0, 0, 0, 0.15);
+            --shadow-color-hover: rgba(0, 0, 0, 0.2);
+            --gradient-start: rgba(76, 175, 80, 0.2);
+            --gradient-end: rgba(76, 175, 80, 0);
+
+            /* Spacing */
+            --spacing-small: 0.5rem;
+            --spacing-medium: 1rem;
+            --spacing-large: 1.5rem;
+
+            /* Typography */
+            --font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            --font-size-base: 16px;
+
+        }
+
+        body {
+            font-family: var(--font-family);
+            font-size: var(--font-size-base);
+            line-height: 1.6;
+            background-color: var(--background-color-light);
+            color: var(--text-color-light);
+            margin: 0;
+            padding: 0;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        .dark-mode {
+            background-color: var(--background-color-dark);
+            color: var(--text-color-dark);
+        }
+
+        header {
+            background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: var(--spacing-medium) var(--spacing-large);
+            text-align: center;
+            box-shadow: 0 2px 5px var(--shadow-color);
+            margin-bottom: var(--spacing-large);
+        }
+
+        nav {
+            display: flex;
+            justify-content: center;
+            margin-bottom: var(--spacing-medium);
+        }
+
+        nav button {
+            background-color: transparent;
+            border: none;
+            color: var(--text-color-light);
+            padding: var(--spacing-small) var(--spacing-medium);
+            margin: 0 var(--spacing-small);
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.2s ease, color 0.2s ease;
+        }
+
+        nav button:hover,
+        nav button:focus {
+            background-color: rgba(0, 0, 0, 0.1);
+            color: var(--primary-color);
+            outline: none;
+        }
+
+        main {
+            padding: var(--spacing-large);
+            max-width: 90%;
+            margin: 0 auto;
+        }
+
+
+        .document-filter {
+            display: flex;
+            align-items: center;
+            margin-bottom: var(--spacing-medium);
+            gap: var(--spacing-medium);
+        }
+
+        .document-filter input[type="text"],
+        .document-filter select {
+            padding: var(--spacing-small);
+            border: 1px solid var(--border-color);
+            border-radius: 5px;
+            font-size: 1rem;
+            transition: border-color 0.2s ease;
+        }
+        .document-filter input[type="text"]:focus,
+        .document-filter select:focus {
+            border-color: var(--primary-color);
+            outline: none;
+        }
+
+        .document-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: var(--spacing-medium);
+        }
+
+        .document-item {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px var(--shadow-color);
+            padding: var(--spacing-medium);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .document-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 15px var(--shadow-color-hover);
+        }
+
+        .document-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(to right, var(--gradient-start), var(--gradient-end));
+            border-radius: 10px 10px 0 0;
+        }
+
+        .document-item h3 {
+            margin-top: 0;
+            margin-bottom: var(--spacing-small);
+            font-size: 1.3rem;
+        }
+
+        .document-item p {
+            margin-bottom: var(--spacing-small);
+            color: #555;
+        }
+
+
+        .document-item .status {
+            display: inline-block;
+            padding: var(--spacing-small) var(--spacing-medium);
+            border-radius: 5px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            color: white;
+            margin-bottom: var(--spacing-small);
+        }
+
+        .document-item .status.active {
+            background-color: var(--primary-color);
+        }
+
+        .document-item .status.pending {
+            background-color: var(--secondary-color);
+        }
+
+        .document-item .status.draft {
+            background-color: #aaa;
+        }
+
+        .document-item .access {
+            font-size: 0.9rem;
+            color: #777;
+        }
+
+        .document-item .version {
+            font-style: italic;
+            color: #999;
+        }
+
+        footer {
+            text-align: center;
+            padding: var(--spacing-medium);
+            font-size: 0.8rem;
+            color: #888;
+            margin-top: var(--spacing-large);
+            border-top: 1px solid var(--border-color);
+        }
+
+        /* Media Queries for Responsiveness */
+        @media (max-width: 768px) {
+            .document-filter {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .document-filter input[type="text"],
+            .document-filter select {
+                width: 100%;
+            }
+
+            main {
+                padding: var(--spacing-medium);
+            }
+        }
+
+
+        /* Dark Mode Styles */
+        .dark-mode header {
+            background: linear-gradient(to right, #2E7D32, #FF8F00); /* Adjusted Dark Mode Header */
+        }
+        .dark-mode nav button {
+            color: var(--text-color-dark);
+        }
+        .dark-mode nav button:hover,
+        .dark-mode nav button:focus {
+            background-color: rgba(255, 255, 255, 0.1);
+            color: var(--accent-color);
+        }
+
+        .dark-mode .document-item {
+            background-color: #333;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .dark-mode .document-item:hover {
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.4);
+        }
+
+        .dark-mode .document-item::before {
+            background: linear-gradient(to right, rgba(76, 175, 80, 0.4), rgba(76, 175, 80, 0.1));
+        }
+
+        .dark-mode .status.active {
+            background-color: #4CAF50;
+        }
+
+        .dark-mode .status.pending {
+            background-color: #FF9800;
+        }
+
+        .dark-mode .status.draft {
+            background-color: #999;
+        }
+
+        .dark-mode .document-item p,
+        .dark-mode .document-item .access,
+        .dark-mode .document-item .version {
+            color: #aaa;
+        }
+
+        .dark-mode footer {
+            color: #666;
+        }
+
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Document Control Dashboard</h1>
+    </header>
+
+    <nav>
+        <button id="filter-all">All</button>
+        <button id="filter-active">Active</button>
+        <button id="filter-pending">Pending</button>
+        <button id="filter-draft">Draft</button>
+        <button id="sort-version">Sort by Version</button>
+        <button id="toggle-theme">Toggle Theme</button>
+    </nav>
+
+    <main>
+        <div class="document-filter">
+            <input type="text" id="search" placeholder="Search documents...">
+            <select id="sort-by">
+                <option value="">Sort By</option>
+                <option value="name">Name</option>
+                <option value="version">Version</option>
+                <!-- Add more sort options as needed -->
+            </select>
+        </div>
+
+        <div class="document-list" id="document-list">
+            <!-- Documents will be dynamically added here -->
+        </div>
+    </main>
+
+    <footer>
+        &copy; 2024 Document Control Dashboard
+    </footer>
+
+    <script>
+        const documents = [
+            { id: 1, name: "Project Proposal", version: "1.2", status: "active", access: "Public" },
+            { id: 2, name: "Design Specifications", version: "2.0", status: "pending", access: "Restricted" },
+            { id: 3, name: "User Manual", version: "1.0", status: "active", access: "Public" },
+            { id: 4, name: "Technical Report", version: "1.1", status: "draft", access: "Internal" },
+            { id: 5, name: "Meeting Minutes", version: "1.5", status: "active", access: "Restricted" },
+            { id: 6, name: "Code of Conduct", version: "2.1", status: "pending", access: "Public" },
+            { id: 7, name: "Budget Plan", version: "1.0", status: "draft", access: "Internal" },
+            { id: 8, name: "Marketing Strategy", version: "1.3", status: "active", access: "Public" }
+        ];
+
+        const documentList = document.getElementById('document-list');
+        const searchInput = document.getElementById('search');
+        const sortBySelect = document.getElementById('sort-by');
+        const filterAllButton = document.getElementById('filter-all');
+        const filterActiveButton = document.getElementById('filter-active');
+        const filterPendingButton = document.getElementById('filter-pending');
+        const filterDraftButton = document.getElementById('filter-draft');
+        const sortVersionButton = document.getElementById('sort-version');
+        const toggleThemeButton = document.getElementById('toggle-theme');
+
+        let currentTheme = localStorage.getItem('theme') || 'light';
+        document.body.classList.add(currentTheme === 'dark' ? 'dark-mode' : '');
+
+        function renderDocuments(docs) {
+            documentList.innerHTML = '';
+            docs.forEach(doc => {
+                const documentItem = document.createElement('div');
+                documentItem.classList.add('document-item');
+                documentItem.innerHTML = `
+                    <h3>${doc.name}</h3>
+                    <p class="version">Version: ${doc.version}</p>
+                    <span class="status ${doc.status}">${doc.status.charAt(0).toUpperCase() + doc.status.slice(1)}</span>
+                    <p class="access">Access: ${doc.access}</p>
+                `;
+                documentList.appendChild(documentItem);
+            });
+        }
+
+        function filterDocuments(status = null) {
+            let filteredDocs = documents;
+
+            if (status) {
+                filteredDocs = filteredDocs.filter(doc => doc.status === status);
+            }
+            const searchTerm = searchInput.value.toLowerCase();
+            filteredDocs = filteredDocs.filter(doc => doc.name.toLowerCase().includes(searchTerm));
+
+            sortByDocuments(filteredDocs);
+        }
+
+
+        function sortByDocuments(docs) {
+            let sortedDocs = [...docs]; // Create a copy to avoid modifying the original array
+
+            const sortByValue = sortBySelect.value;
+
+            if (sortByValue === "name") {
+                sortedDocs.sort((a, b) => a.name.localeCompare(b.name));
+            } else if (sortByValue === "version") {
+                sortedDocs.sort((a, b) => {
+                    const versionA = parseFloat(a.version);
+                    const versionB = parseFloat(b.version);
+                    return versionB - versionA;
+                });
+            }
+
+            renderDocuments(sortedDocs);
+        }
+
+        searchInput.addEventListener('input', () => {
+            filterDocuments();
+        });
+        sortBySelect.addEventListener('change', () => {
+            filterDocuments();
+        });
+
+
+        filterAllButton.addEventListener('click', () => filterDocuments());
+        filterActiveButton.addEventListener('click', () => filterDocuments('active'));
+        filterPendingButton.addEventListener('click', () => filterDocuments('pending'));
+        filterDraftButton.addEventListener('click', () => filterDocuments('draft'));
+
+        sortVersionButton.addEventListener('click', () => {
+            sortBySelect.value = 'version';
+            sortByDocuments(documents);
+        });
+
+        toggleThemeButton.addEventListener('click', () => {
+            document.body.classList.toggle('dark-mode');
+            currentTheme = document.body.classList.contains('dark-mode') ? 'dark' : 'light';
+            localStorage.setItem('theme', currentTheme);
+        });
+
+        renderDocuments(documents);
+
+    </script>
+</body>
+</html>

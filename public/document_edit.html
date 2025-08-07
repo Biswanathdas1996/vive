@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document Editor</title>
+    <style>
+        :root {
+            /* Color Palette */
+            --primary-color: #4a69bd;
+            --secondary-color: #f09433;
+            --accent-color: #f4d35e;
+            --background-color: #f8f8fa;
+            --text-color: #333;
+            --border-color: rgba(0, 0, 0, 0.1);
+            --shadow-color: rgba(0, 0, 0, 0.15);
+
+            /* Spacing */
+            --padding-small: 0.75rem;
+            --padding-medium: 1rem;
+            --padding-large: 1.5rem;
+            --border-radius: 0.75rem;
+
+            /* Font */
+            --font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            --font-size-base: 1rem;
+            --line-height-base: 1.6;
+        }
+
+        body {
+            font-family: var(--font-family);
+            font-size: var(--font-size-base);
+            line-height: var(--line-height-base);
+            color: var(--text-color);
+            background-color: var(--background-color);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--primary-color), #58a6ff);
+            color: white;
+            padding: var(--padding-medium);
+            box-shadow: 0 2px 5px var(--shadow-color);
+            text-align: center;
+        }
+
+        nav {
+            background-color: #fff;
+            padding: var(--padding-small);
+            box-shadow: 0 1px 3px var(--shadow-color);
+        }
+
+        nav ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            justify-content: space-around;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: var(--text-color);
+            padding: var(--padding-small) var(--padding-medium);
+            border-radius: var(--border-radius);
+            transition: background-color 0.2s ease, color 0.2s ease;
+        }
+
+        nav a:hover {
+            background-color: rgba(0, 0, 0, 0.05);
+        }
+
+        main {
+            padding: var(--padding-medium);
+            flex-grow: 1;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: var(--padding-medium);
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        @media (min-width: 768px) {
+            main {
+                grid-template-columns: 2fr 1fr; /* Two columns on larger screens */
+            }
+        }
+
+        .editor-container, .version-history {
+            background-color: #fff;
+            border-radius: var(--border-radius);
+            padding: var(--padding-medium);
+            box-shadow: 0 4px 8px var(--shadow-color);
+            transition: box-shadow 0.2s ease;
+        }
+
+        .editor-container:hover, .version-history:hover {
+            box-shadow: 0 6px 12px var(--shadow-color);
+        }
+
+        .editor-container {
+            display: flex;
+            flex-direction: column;
+        }
+
+        textarea {
+            font-family: var(--font-family);
+            font-size: var(--font-size-base);
+            line-height: var(--line-height-base);
+            padding: var(--padding-medium);
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            resize: vertical;
+            min-height: 300px;
+            transition: border-color 0.2s ease;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+
+        .save-button {
+            background: linear-gradient(135deg, var(--secondary-color), #ff8a00);
+            color: white;
+            border: none;
+            padding: var(--padding-medium);
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            font-weight: bold;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            margin-top: var(--padding-medium);
+        }
+
+        .save-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 3px 6px var(--shadow-color);
+        }
+
+        .save-button:active {
+            transform: scale(0.98);
+        }
+
+
+        .version-history h2 {
+            margin-top: 0;
+            margin-bottom: var(--padding-medium);
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: var(--padding-small);
+        }
+
+        .version-item {
+            padding: var(--padding-small);
+            border-bottom: 1px solid var(--border-color);
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+
+        .version-item:last-child {
+            border-bottom: none;
+        }
+
+        .version-item:hover {
+            background-color: rgba(0, 0, 0, 0.05);
+        }
+
+        footer {
+            text-align: center;
+            padding: var(--padding-medium);
+            background-color: #eee;
+            color: #666;
+            font-size: 0.85rem;
+        }
+
+        /* CSS Icons using ::before */
+        .save-button::before {
+            content: '\f0c7'; /* Font Awesome save icon unicode */
+            font-family: 'Font Awesome 5 Free';
+            font-weight: 900;
+            margin-right: 0.5rem;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            main {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha512-1ycn6I9t2w3r2v3u8yV5qHn7jJb984W9rUv0jW0y6qO4u3Lz0i9s6v4G5b5+5O2G5J5C5F5e" crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+<body>
+
+    <header>
+        <h1>Document Editor</h1>
+    </header>
+
+    <nav>
+        <ul>
+            <li><a href="#">File</a></li>
+            <li><a href="#">Edit</a></li>
+            <li><a href="#">View</a></li>
+            <li><a href="#">Help</a></li>
+        </ul>
+    </nav>
+
+    <main>
+        <section class="editor-container">
+            <textarea id="documentContent" placeholder="Start writing your document..."></textarea>
+            <button class="save-button" onclick="saveDocument()">Save</button>
+        </section>
+
+        <aside class="version-history">
+            <h2>Version History</h2>
+            <div id="versionList">
+                <!-- Version items will be added here dynamically -->
+            </div>
+        </aside>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 Document Editor. All rights reserved.</p>
+    </footer>
+
+    <script>
+        // Mock data for version history (replace with actual data from your backend)
+        let versions = [
+            { id: 1, timestamp: "2024-01-26 10:00", content: "Initial content" },
+            { id: 2, timestamp: "2024-01-26 10:15", content: "Added some text" },
+        ];
+
+        // Function to display versions
+        function displayVersions() {
+            const versionList = document.getElementById('versionList');
+            versionList.innerHTML = ''; // Clear previous versions
+            versions.forEach(version => {
+                const versionItem = document.createElement('div');
+                versionItem.classList.add('version-item');
+                versionItem.textContent = `Version ${version.id} - ${version.timestamp}`;
+                versionItem.addEventListener('click', () => loadVersion(version.content));
+                versionList.appendChild(versionItem);
+            });
+        }
+
+        // Function to load a specific version's content
+        function loadVersion(content) {
+            document.getElementById('documentContent').value = content;
+        }
+
+
+        // Function to save the document (mock save - replace with your backend logic)
+        function saveDocument() {
+            const content = document.getElementById('documentContent').value;
+            const timestamp = new Date().toLocaleString();
+            const newVersion = {
+                id: versions.length + 1,
+                timestamp: timestamp,
+                content: content
+            };
+
+            versions.push(newVersion);
+            displayVersions();
+            alert('Document saved!'); // Replace with a more user-friendly notification
+        }
+
+
+        // Initial display of versions on page load
+        displayVersions();
+    </script>
+</body>
+</html>
