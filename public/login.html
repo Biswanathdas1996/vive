@@ -6,26 +6,37 @@
     <title>Login - Modern Web App</title>
     <style>
         :root {
-            --primary-color: #6200EE;
-            --secondary-color: #03DAC5;
-            --accent-color: #BB86FC;
-            --background-color: #121212; /* Dark Mode */
-            --surface-color: #212121; /* Dark Mode */
-            --text-color: #FFFFFF;
-            --text-secondary-color: #BDBDBD;
-            --shadow-color: rgba(0, 0, 0, 0.3);
+            /* Colors */
+            --color-primary: #3498db; /* A vibrant blue */
+            --color-secondary: #f39c12; /* A warm orange */
+            --color-accent: #e74c3c; /* A bold red */
+            --color-text-light: #f0f4f8; /* Light text color */
+            --color-text-dark: #2c3e50; /* Dark text color */
+            --color-bg-light: #ecf0f1; /* Light background */
+            --color-bg-dark: #2c3e50; /* Dark background */
+            --color-border: rgba(0, 0, 0, 0.1); /* Subtle border */
+            --color-shadow: rgba(0, 0, 0, 0.1); /* Shadow color */
 
-            --border-radius: 12px;
-            --padding-small: 12px;
-            --padding-medium: 16px;
-            --padding-large: 24px;
+            /* Spacing */
+            --space-s: 0.5rem;
+            --space-m: 1rem;
+            --space-l: 1.5rem;
+            --space-xl: 2rem;
 
+            /* Font */
             --font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            --font-size-base: 1rem;
+            --line-height: 1.6;
 
-            --transition-duration: 0.3s;
+            /* Border Radius */
+            --border-radius: 0.5rem;
+
         }
 
-        *, *::before, *::after {
+        /* General Styles */
+        *,
+        *::before,
+        *::after {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
@@ -33,233 +44,203 @@
 
         body {
             font-family: var(--font-family);
-            background-color: var(--background-color);
-            color: var(--text-color);
+            font-size: var(--font-size-base);
+            line-height: var(--line-height);
+            color: var(--color-text-dark);
+            background-color: var(--color-bg-light);
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            overflow: hidden; /* Prevents scrollbars if content overflows initially */
+            transition: background-color 0.3s ease; /* Smooth theme transition */
         }
 
         .container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            background-color: var(--surface-color);
-            border-radius: var(--border-radius);
-            box-shadow: 0 4px 16px var(--shadow-color);
-            padding: var(--padding-large);
-            width: 90%;
+            width: 100%;
             max-width: 400px;
-            transition: background-color var(--transition-duration) ease, box-shadow var(--transition-duration) ease;
-            position: relative; /* for pseudo elements and animations */
-            overflow: hidden; /* for rounded corners and clipping effects */
-        }
-
-        .container::before {
-            content: "";
-            position: absolute;
-            top: -15px;
-            left: -15px;
-            width: calc(100% + 30px);
-            height: calc(100% + 30px);
-            background: linear-gradient(135deg, rgba(98, 0, 238, 0.5), rgba(3, 218, 197, 0.5));
-            z-index: -1;
-            filter: blur(20px);
+            padding: var(--space-xl);
+            background-color: rgba(255, 255, 255, 0.8); /* Glassmorphism */
             border-radius: var(--border-radius);
-            opacity: 0;
-            transition: opacity var(--transition-duration) ease;
-        }
-
-        .container:hover::before {
-            opacity: 1;
+            box-shadow: 0 10px 20px var(--color-shadow);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--color-border);
+            transition: all 0.3s ease;
         }
 
         h1 {
-            font-size: clamp(1.8rem, 3vw, 2.5rem);
-            margin-bottom: var(--padding-medium);
             text-align: center;
-            color: var(--text-color);
+            margin-bottom: var(--space-xl);
+            color: var(--color-primary);
         }
 
         .form-group {
-            margin-bottom: var(--padding-medium);
-            width: 100%;
+            margin-bottom: var(--space-l);
         }
 
         label {
             display: block;
-            font-size: 0.9rem;
-            color: var(--text-secondary-color);
-            margin-bottom: 4px;
+            margin-bottom: var(--space-s);
+            font-weight: bold;
+            color: var(--color-text-dark);
         }
 
         input[type="email"],
         input[type="password"] {
             width: 100%;
-            padding: var(--padding-small);
-            border: none;
+            padding: var(--space-m);
+            border: 1px solid var(--color-border);
             border-radius: var(--border-radius);
-            background-color: rgba(255, 255, 255, 0.08);
-            color: var(--text-color);
-            font-size: 1rem;
-            transition: background-color var(--transition-duration) ease, box-shadow var(--transition-duration) ease;
-            outline: none; /* Remove default browser outline */
+            font-size: var(--font-size-base);
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+            background-color: rgba(255, 255, 255, 0.6);
         }
 
         input[type="email"]:focus,
         input[type="password"]:focus {
-            background-color: rgba(255, 255, 255, 0.12);
-            box-shadow: 0 0 0 2px var(--accent-color); /* Subtle focus effect */
-        }
-
-        input[type="email"]:hover,
-        input[type="password"]:hover {
-            background-color: rgba(255, 255, 255, 0.1); /* Subtle hover effect */
+            outline: none;
+            border-color: var(--color-primary);
+            box-shadow: 0 0 5px rgba(52, 152, 219, 0.5);
         }
 
         button {
             width: 100%;
-            padding: var(--padding-medium);
-            background-color: var(--primary-color);
-            color: var(--text-color);
+            padding: var(--space-m);
             border: none;
             border-radius: var(--border-radius);
-            font-size: 1rem;
+            background-color: var(--color-primary);
+            color: var(--color-text-light);
+            font-size: var(--font-size-base);
+            font-weight: bold;
             cursor: pointer;
-            transition: background-color var(--transition-duration) ease, transform var(--transition-duration) ease;
+            transition: background-color 0.3s ease;
         }
 
         button:hover {
-            background-color: #7E57C2; /* Slightly darker shade for hover */
+            background-color: #2980b9;
         }
 
-        button:active {
-            transform: translateY(1px);
+        button:focus {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.3);
+        }
+
+        .error-message {
+            color: var(--color-accent);
+            margin-top: var(--space-s);
+            font-size: 0.9rem;
         }
 
         .links {
-            display: flex;
-            justify-content: space-between;
-            margin-top: var(--padding-small);
-            font-size: 0.9rem;
-            color: var(--text-secondary-color);
-            width: 100%;
+            text-align: center;
+            margin-top: var(--space-l);
         }
 
         .links a {
-            color: var(--text-secondary-color);
+            color: var(--color-primary);
             text-decoration: none;
-            transition: color var(--transition-duration) ease;
+            transition: color 0.2s ease;
         }
 
         .links a:hover {
-            color: var(--accent-color);
+            color: #2980b9;
         }
 
-        .footer {
-            margin-top: var(--padding-medium);
-            font-size: 0.8rem;
-            color: var(--text-secondary-color);
-            text-align: center;
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .container {
+                padding: var(--space-l);
+            }
         }
 
-        /* CSS for loading state on button */
-        .loading {
-            position: relative;
-        }
-
-        .loading::after {
-            content: "";
+        /* Dark Mode Toggle (Example - Not Fully Functional) */
+        .theme-toggle {
             position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 20px;
-            height: 20px;
-            border: 3px solid rgba(255, 255, 255, 0.2);
-            border-top-color: var(--text-color);
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-            display: none;
+            top: var(--space-m);
+            right: var(--space-m);
+            background-color: var(--color-bg-dark);
+            color: var(--color-text-light);
+            border: none;
+            border-radius: var(--border-radius);
+            padding: var(--space-s) var(--space-m);
+            cursor: pointer;
+            transition: background-color 0.3s ease, color 0.3s ease;
         }
 
-        .loading.is-loading::after {
-            display: block;
-        }
-
-        .is-loading {
-            pointer-events: none; /* Prevent clicks during loading */
-            opacity: 0.7;
-        }
-
-
-        @keyframes spin {
-            0% { transform: translate(-50%, -50%) rotate(0deg); }
-            100% { transform: translate(-50%, -50%) rotate(360deg); }
+        .theme-toggle:hover {
+            background-color: #34495e;
         }
     </style>
 </head>
 <body>
-
+    <button class="theme-toggle" onclick="toggleTheme()">🌙</button>
     <div class="container">
         <h1>Login</h1>
-
         <form id="loginForm">
             <div class="form-group">
                 <label for="email">Email</label>
                 <input type="email" id="email" name="email" required placeholder="your@email.com">
+                <div class="error-message" id="emailError"></div>
             </div>
-
             <div class="form-group">
                 <label for="password">Password</label>
-                <input type="password" id="password" name="password" required placeholder="Your password">
+                <input type="password" id="password" name="password" required placeholder="********">
+                <div class="error-message" id="passwordError"></div>
             </div>
-
-            <button type="submit" id="loginButton">Login</button>
+            <button type="submit">Login</button>
+            <div class="links">
+                <p>Don't have an account? <a href="#">Sign up</a></p>
+            </div>
         </form>
-
-        <div class="links">
-            <a href="#">Register</a>
-            <a href="#">Forgot Password?</a>
-        </div>
-
-        <div class="footer">
-            &copy; 2024 Modern Web App. All rights reserved.
-        </div>
     </div>
 
-
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const form = document.getElementById('loginForm');
-            const button = document.getElementById('loginButton');
+        // Client-side validation
+        const loginForm = document.getElementById('loginForm');
+        const emailError = document.getElementById('emailError');
+        const passwordError = document.getElementById('passwordError');
 
-            form.addEventListener('submit', (event) => {
-                event.preventDefault(); // Prevent default form submission
+        loginForm.addEventListener('submit', (event) => {
+            event.preventDefault(); // Prevent default form submission
 
-                // Add loading state to button
-                button.classList.add('is-loading', 'loading');
-                button.disabled = true; // Prevent further clicks
+            let isValid = true;
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
 
-                // Simulate an API call (replace with your actual login logic)
-                setTimeout(() => {
-                    // Successful login
-                    // Assuming successful login, redirect to another page
-                    window.location.href = 'dashboard.html'; // Replace with your desired URL
+            // Email validation
+            if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+                emailError.textContent = 'Please enter a valid email address.';
+                isValid = false;
+            } else {
+                emailError.textContent = '';
+            }
 
-                    // Alternatively, for an error:
-                    // alert('Login failed.  Check your credentials.');
+            // Password validation (simple example - consider stronger validation)
+            if (password.length < 6) {
+                passwordError.textContent = 'Password must be at least 6 characters long.';
+                isValid = false;
+            } else {
+                passwordError.textContent = '';
+            }
 
-                    // Remove loading state
-                    button.classList.remove('is-loading', 'loading');
-                    button.disabled = false;
-
-                }, 2000); // Simulate 2 seconds of loading
-            });
+            if (isValid) {
+                // Simulate successful login (replace with actual API call)
+                alert('Login successful! (Simulated)');
+                // You would typically redirect the user here
+            }
         });
-    </script>
 
+        // Theme Toggle (Placeholder - Requires more robust implementation for dark mode)
+        function toggleTheme() {
+            const body = document.body;
+            if (body.style.backgroundColor === 'var(--color-bg-dark)') {
+                body.style.backgroundColor = 'var(--color-bg-light)';
+                body.style.color = 'var(--color-text-dark)';
+            } else {
+                body.style.backgroundColor = 'var(--color-bg-dark)';
+                body.style.color = 'var(--color-text-light)';
+            }
+        }
+
+    </script>
 </body>
 </html>

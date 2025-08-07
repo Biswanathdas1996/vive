@@ -215,11 +215,38 @@ export function ChatInterface({
       return response.json();
     },
     onSuccess: (data) => {
+      // Refresh chat messages and project files after successful modification
       queryClient.invalidateQueries({ queryKey: ["/api/chat", chatSessionId] });
       queryClient.invalidateQueries({ queryKey: ["/api/projects", projectId, "files"] });
       toast({
         title: "File Modified",
         description: `${data.fileName} has been updated successfully`,
+      });
+    },
+    onError: (error: any) => {
+      // Remove the loading message and show error
+      queryClient.setQueryData(["/api/chat", chatSessionId], (oldData: any) => {
+        if (!oldData) return oldData;
+        const messages = oldData.messages || [];
+        // Remove the last message if it's a loading message
+        const filteredMessages = messages.filter((msg: any) => !msg.isLoading);
+        const errorMessage = {
+          id: crypto.randomUUID(),
+          role: "assistant" as const,
+          content: `Error modifying file: ${error.message || "Something went wrong"}`,
+          timestamp: new Date(),
+          isError: true,
+        };
+        return {
+          ...oldData,
+          messages: [...filteredMessages, errorMessage],
+        };
+      });
+      
+      toast({
+        title: "Modification Error",
+        description: error.message || "Failed to modify the file",
+        variant: "destructive",
       });
     },
   });
@@ -263,17 +290,44 @@ export function ChatInterface({
   const handleSubmit = () => {
     if (!inputValue.trim()) return;
 
+    const userMessage = inputValue;
+
     if (!chatSessionId) {
       // First chat - start new project
       setIsGenerating(true);
-      startChatMutation.mutate(inputValue);
+      startChatMutation.mutate(userMessage);
     } else {
-      // Subsequent chats - modify selected file or default to index.html
+      // Subsequent chats - immediately add user message and show agent working
+      const tempUserMessage = {
+        id: crypto.randomUUID(),
+        role: "user" as const,
+        content: userMessage,
+        timestamp: new Date(),
+      };
+
+      const tempAgentMessage = {
+        id: crypto.randomUUID(),
+        role: "assistant" as const,
+        content: "Agent is working...",
+        timestamp: new Date(),
+        isLoading: true,
+      };
+
+      // Update messages immediately for instant UI feedback
+      queryClient.setQueryData(["/api/chat", chatSessionId], (oldData: any) => {
+        if (!oldData) return oldData;
+        return {
+          ...oldData,
+          messages: [...(oldData.messages || []), tempUserMessage, tempAgentMessage],
+        };
+      });
+
+      // Trigger the actual modification
       const fileName = selectedFile || "index.html";
       modifyFileMutation.mutate({
         sessionId: chatSessionId,
         fileName,
-        modificationRequest: inputValue
+        modificationRequest: userMessage
       });
     }
 
@@ -445,9 +499,17 @@ export function ChatInterface({
                       )}
                       
                       <p className={`text-sm ${
-                        message.role === "user" ? "text-white" : "text-slate-300"
+                        message.role === "user" ? "text-white" : 
+                        (message as any).isError ? "text-red-400" : "text-slate-300"
                       }`}>
-                        {message.content}
+                        {(message as any).isLoading ? (
+                          <div className="flex items-center space-x-2">
+                            <Loader className="w-4 h-4 text-blue-400 animate-spin" />
+                            <span className="text-blue-400">Agent is working...</span>
+                          </div>
+                        ) : (
+                          message.content
+                        )}
                       </p>
                       
                       {message.workflow?.data && (
@@ -464,10 +526,18 @@ export function ChatInterface({
                       )}
                     </CardContent>
                   </Card>
-                  <div className="text-xs text-slate-500 mt-2">
-                    {message.role === "user" ? "You" : "AI Assistant"} • {
-                      new Date(message.timestamp).toLocaleTimeString()
-                    }
+                  <div className="text-xs text-slate-500 mt-2 flex items-center space-x-2">
+                    <span>
+                      {message.role === "user" ? "You" : "AI Assistant"} • {
+                        new Date(message.timestamp).toLocaleTimeString()
+                      }
+                    </span>
+                    {(message as any).isLoading && (
+                      <div className="flex items-center space-x-1">
+                        <div className="w-2 h-2 bg-blue-400 rounded-full animate-pulse"></div>
+                        <span className="text-blue-400 text-xs">Processing...</span>
+                      </div>
+                    )}
                   </div>
                 </div>
 

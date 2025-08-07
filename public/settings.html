@@ -3,35 +3,46 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chat Settings</title>
+    <title>Settings</title>
     <style>
         :root {
-            /* Colors */
-            --primary-color: #64b5f6; /* Light Blue */
-            --secondary-color: #90caf9; /* Lighter Blue */
-            --accent-color: #ff8a65;  /* Coral */
-            --background-color: #f5f5f5; /* Light Gray */
-            --text-color: #333;
-            --text-color-light: #666;
-            --border-color: rgba(0, 0, 0, 0.1);
-            --shadow-color: rgba(0, 0, 0, 0.15);
+            /* Color Palette */
+            --color-primary: #4c6ef5;
+            --color-secondary: #6b89f7;
+            --color-background: #f7f9fc;
+            --color-surface: #ffffff;
+            --color-text-primary: #333;
+            --color-text-secondary: #555;
+            --color-border: rgba(0, 0, 0, 0.1);
+            --color-toggle-bg: rgba(0, 0, 0, 0.05);
+
+            /* Dark Mode Colors */
+            --color-dark-background: #121212;
+            --color-dark-surface: #212121;
+            --color-dark-text-primary: #f0f0f0;
+            --color-dark-text-secondary: #bbb;
+            --color-dark-border: rgba(255, 255, 255, 0.1);
+            --color-dark-toggle-bg: rgba(255, 255, 255, 0.1);
+
 
             /* Spacing */
-            --spacing-small: 0.5rem;
-            --spacing-medium: 1rem;
-            --spacing-large: 1.5rem;
+            --space-xs: 0.5rem;
+            --space-sm: 1rem;
+            --space-md: 1.5rem;
+            --space-lg: 2rem;
+            --space-xl: 3rem;
+
+            /* Radius */
+            --border-radius: 0.75rem;
 
             /* Font */
             --font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-
-            /* Border Radius */
-            --border-radius: 0.75rem;
         }
 
         body {
             font-family: var(--font-family);
-            background-color: var(--background-color);
-            color: var(--text-color);
+            background-color: var(--color-background);
+            color: var(--color-text-primary);
             margin: 0;
             padding: 0;
             display: flex;
@@ -39,290 +50,168 @@
             align-items: center;
             min-height: 100vh;
             transition: background-color 0.3s ease, color 0.3s ease;
+            overflow-x: hidden; /* Prevent horizontal scroll */
+        }
+
+        body.dark-mode {
+            background-color: var(--color-dark-background);
+            color: var(--color-dark-text-primary);
         }
 
         .container {
-            width: min(90%, 600px);
-            padding: var(--spacing-large);
-            background-color: #fff;
+            width: clamp(300px, 90vw, 600px);
+            background-color: var(--color-surface);
             border-radius: var(--border-radius);
-            box-shadow: 0 0.5rem 1rem var(--shadow-color);
-            transition: box-shadow 0.3s ease;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+            padding: var(--space-md);
+            transition: background-color 0.3s ease, color 0.3s ease;
         }
 
-        .container:hover {
-            box-shadow: 0 0.75rem 1.5rem var(--shadow-color);
-        }
-
-        header {
-            text-align: center;
-            margin-bottom: var(--spacing-large);
+        body.dark-mode .container {
+            background-color: var(--color-dark-surface);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
         }
 
         h1 {
-            font-size: clamp(1.75rem, 4vw, 2.25rem);
-            margin-bottom: var(--spacing-medium);
-        }
-
-        .section {
-            margin-bottom: var(--spacing-large);
-        }
-
-        h2 {
-            font-size: clamp(1.25rem, 3vw, 1.75rem);
-            margin-bottom: var(--spacing-medium);
-            border-bottom: 1px solid var(--border-color);
-            padding-bottom: var(--spacing-small);
-        }
-
-        label {
-            display: block;
-            margin-bottom: var(--spacing-small);
-            font-weight: 500;
-            color: var(--text-color);
-        }
-
-        input[type="checkbox"],
-        input[type="radio"] {
-            margin-right: var(--spacing-small);
-            cursor: pointer;
-        }
-
-        select {
-            appearance: none;
-            padding: var(--spacing-small) var(--spacing-medium);
-            border: 1px solid var(--border-color);
-            border-radius: var(--border-radius);
-            background-color: #fff;
-            width: 100%;
-            font-family: var(--font-family);
-            color: var(--text-color);
-            margin-bottom: var(--spacing-medium);
-            cursor: pointer;
-            transition: border-color 0.3s ease, box-shadow 0.3s ease;
-        }
-
-        select:hover {
-            border-color: var(--primary-color);
-        }
-
-        select:focus {
-            outline: none;
-            border-color: var(--primary-color);
-            box-shadow: 0 0 0.25rem rgba(100, 181, 246, 0.4);
-        }
-
-        .radio-group {
-            display: flex;
-            flex-direction: column;
-            margin-bottom: var(--spacing-medium);
-        }
-
-        .radio-group label {
-            margin-bottom: var(--spacing-small);
-            cursor: pointer;
-        }
-
-        button {
-            background-color: var(--primary-color);
-            color: #fff;
-            border: none;
-            border-radius: var(--border-radius);
-            padding: var(--spacing-medium) var(--spacing-large);
-            font-size: 1rem;
-            cursor: pointer;
-            transition: background-color 0.3s ease, box-shadow 0.3s ease;
-            width: 100%;
-        }
-
-        button:hover {
-            background-color: #50a0e0;
-        }
-
-        button:focus {
-            outline: none;
-            box-shadow: 0 0 0.25rem rgba(100, 181, 246, 0.4);
-        }
-
-        button:active {
-            transform: translateY(1px);
-        }
-
-        .theme-options {
-            display: flex;
-            gap: var(--spacing-medium);
-        }
-
-        .theme-option {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            cursor: pointer;
-            border: 2px solid var(--border-color);
-            transition: border-color 0.3s ease;
-        }
-
-        .theme-option:hover {
-            border-color: var(--primary-color);
-        }
-
-        .theme-option.active {
-            border-color: var(--accent-color);
-        }
-
-        .theme-option[data-theme="light"] {
-            background-color: #fff;
-        }
-
-        .theme-option[data-theme="dark"] {
-            background-color: #333;
-        }
-
-        .theme-option[data-theme="blue"] {
-            background: linear-gradient(135deg, #64b5f6, #2196f3);
-        }
-
-        .theme-option[data-theme="green"] {
-            background: linear-gradient(135deg, #66bb6a, #388e3c);
-        }
-
-        .notification-preview {
-            padding: var(--spacing-medium);
-            border-radius: var(--border-radius);
-            background-color: var(--secondary-color);
-            color: #fff;
+            font-size: 1.75rem;
+            margin-bottom: var(--space-md);
             text-align: center;
-            font-weight: bold;
-            margin-bottom: var(--spacing-medium);
-            box-shadow: 0 0.25rem 0.5rem var(--shadow-color);
         }
 
-
-        /* Dark Mode */
-        body.dark-mode {
-            --primary-color: #90caf9; /* Light Blue */
-            --secondary-color: #42a5f5; /* Lighter Blue */
-            --accent-color: #ffab91;  /* Coral */
-            --background-color: #212121; /* Dark Gray */
-            --text-color: #f5f5f5;
-            --text-color-light: #ccc;
-            --border-color: rgba(255, 255, 255, 0.1);
-            --shadow-color: rgba(0, 0, 0, 0.3);
+        .setting-group {
+            margin-bottom: var(--space-lg);
         }
 
+        .setting-group h2 {
+            font-size: 1.25rem;
+            margin-bottom: var(--space-sm);
+            border-bottom: 1px solid var(--color-border);
+            padding-bottom: var(--space-xs);
+        }
 
-        /* CSS Icons (Example) */
-        .icon {
-            display: inline-block;
-            width: 1.5em;
-            height: 1.5em;
-            vertical-align: middle;
-            margin-right: 0.5em;
+        body.dark-mode .setting-group h2 {
+            border-bottom-color: var(--color-dark-border);
+        }
+
+        .setting-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: var(--space-sm) 0;
+            border-bottom: 1px solid var(--color-border);
+            transition: background-color 0.2s ease;
+            cursor: pointer;
+        }
+
+        body.dark-mode .setting-item {
+            border-bottom-color: var(--color-dark-border);
+        }
+
+        .setting-item:last-child {
+            border-bottom: none;
+        }
+
+        .setting-item:hover {
+            background-color: rgba(0, 0, 0, 0.02);
+        }
+
+        body.dark-mode .setting-item:hover {
+            background-color: rgba(255, 255, 255, 0.05);
+        }
+
+        .setting-item label {
+            font-size: 1rem;
+            color: var(--color-text-primary);
+            transition: color 0.3s ease;
+        }
+        body.dark-mode .setting-item label{
+            color: var(--color-dark-text-primary);
+        }
+
+        .setting-item input[type="checkbox"] {
+            appearance: none;
+            width: 2.5rem;
+            height: 1.25rem;
+            background-color: var(--color-toggle-bg);
+            border-radius: 0.625rem;
             position: relative;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            outline: none;
         }
 
-        .icon::before {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 1em;
-            height: 1em;
-            background-color: var(--accent-color);
-            border-radius: 50%;
+        body.dark-mode .setting-item input[type="checkbox"] {
+            background-color: var(--color-dark-toggle-bg);
         }
 
-        .icon-bell::after {
+        .setting-item input[type="checkbox"]:checked {
+            background-color: var(--color-primary);
+        }
+        .setting-item input[type="checkbox"]:checked::before {
+            left: calc(100% - 1.25rem - 0.125rem);
+        }
+
+
+        .setting-item input[type="checkbox"]::before {
             content: '';
             position: absolute;
-            top: 10%;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 0.25em;
-            height: 0.25em;
+            width: 1.125rem;
+            height: 1.125rem;
             border-radius: 50%;
             background-color: white;
+            top: 0.0625rem;
+            left: 0.125rem;
+            transition: left 0.3s ease;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
         }
 
-    </style>
-</head>
-<body>
-    <div class="container">
-        <header>
-            <h1>Chat Settings</h1>
-        </header>
+        body.dark-mode .setting-item input[type="checkbox"]::before {
+            background-color: var(--color-dark-surface);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.4);
+        }
 
-        <section class="section">
-            <h2>Appearance</h2>
-            <div class="theme-options">
-                <div class="theme-option active" data-theme="light" aria-label="Light Theme"></div>
-                <div class="theme-option" data-theme="dark" aria-label="Dark Theme"></div>
-                <div class="theme-option" data-theme="blue" aria-label="Blue Theme"></div>
-                <div class="theme-option" data-theme="green" aria-label="Green Theme"></div>
-            </div>
-        </section>
+        .setting-description {
+            font-size: 0.875rem;
+            color: var(--color-text-secondary);
+            margin-top: var(--space-xs);
+        }
+        body.dark-mode .setting-description{
+            color: var(--color-dark-text-secondary);
+        }
+        .gradient-button {
+            background: linear-gradient(to right, var(--color-primary), var(--color-secondary));
+            color: white;
+            border: none;
+            padding: var(--space-md) var(--space-lg);
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            cursor: pointer;
+            transition: opacity 0.3s ease;
+            display: block;
+            width: 100%;
+            text-align: center;
+            margin-top: var(--space-md);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            outline: none;
+        }
 
-        <section class="section">
-            <h2>Notifications</h2>
-            <label for="notifications-enabled">
-                <input type="checkbox" id="notifications-enabled" name="notifications-enabled" checked> Enable Notifications
-            </label>
+        .gradient-button:hover {
+            opacity: 0.8;
+        }
 
-            <div class="notification-preview">
-                <span class="icon icon-bell"></span>
-                Notification Preview
-            </div>
+        .gradient-button:active {
+            transform: scale(0.98);
+        }
 
-            <label for="notification-sound">Notification Sound:</label>
-            <select id="notification-sound" name="notification-sound">
-                <option value="default">Default Sound</option>
-                <option value="ding">Ding</option>
-                <option value="chime">Chime</option>
-            </select>
-        </section>
+        /* CSS Icons (Example - Notification Bell) */
+        .icon-bell::before {
+            content: '\f0f3'; /* Unicode for a bell icon (Font Awesome) - or use any character */
+            font-family: FontAwesome; /* Requires including a font or defining a custom one */
+            font-size: 1.2rem;
+            margin-right: var(--space-sm);
+        }
 
-        <section class="section">
-            <h2>Bot Personality (If Available)</h2>
-            <div class="radio-group">
-                <label>
-                    <input type="radio" name="bot-personality" value="friendly"> Friendly
-                </label>
-                <label>
-                    <input type="radio" name="bot-personality" value="witty" checked> Witty
-                </label>
-                <label>
-                    <input type="radio" name="bot-personality" value="professional"> Professional
-                </label>
-            </div>
-        </section>
-
-        <button id="save-settings">Save Settings</button>
-    </div>
-
-    <script>
-        const themeOptions = document.querySelectorAll('.theme-option');
-        const body = document.body;
-        const saveButton = document.getElementById('save-settings');
-
-        themeOptions.forEach(option => {
-            option.addEventListener('click', () => {
-                themeOptions.forEach(opt => opt.classList.remove('active'));
-                option.classList.add('active');
-                const selectedTheme = option.getAttribute('data-theme');
-
-                if (selectedTheme === 'dark') {
-                    body.classList.add('dark-mode');
-                } else {
-                    body.classList.remove('dark-mode');
-                }
-                //Add more theme options for blue and green when available
-            });
-        });
-
-        saveButton.addEventListener('click', () => {
-            alert('Settings saved (functionality not implemented)');
-        });
-    </script>
-</body>
-</html>
+        /* Font Awesome (Minimal - Only needed for icon example) */
+        @font-face {
+            font-family: 'FontAwesome';
+            src: url('data:application/font-woff;charset=utf-8;base64,d09GRgABAAAAAAf4AA0AAAAABxwAAQAAAAAAAAAAAAAAAAAAAABk/3/hAQ0AAAAAB0J8Fv4AAAABAAAAACAAAAABAAADUv9gA9gAAABQAAQABAAAAAAADjQAAA8AAQAAABEAAQAAAAAAAABgYgAAAAAAAAAAAAABAAABAAAAAQAAwAAABAAIAAAABAAEAAQAAAAAAAgACAAUAAQAAACIA/QAAAAEAAQAAAAAAAgACAAYAAQAAABYAAQAAAAAAAABgYgAAAAAAAAAAAAAAAAAAAAABAAABAAAAAQAAwAAABAAIAAAABAAEAAQAAAAAAAwACAAMAAQAAABEAAQAAAAAAAABgYgAAAAAAAAAAAAABAAABAAAAAQAAwAAABAAIAAAABAAEAAQAAAAAAAwACAAMAAQAAABYAAQAAAAAAAABgYgAAAAAAAAAAAAAAAAAAAAABAAABAAAAAQAAwAAABAAIAAAABAAEAAQAAAAAAAgACAAUAAQAAACIA/QAAAAEAAQAAAAAAAgACAAYAAQAAABYAAQAAAAAAAABgYgAAAAAAAAAAAAAAAAAAAAABAAABAAAAAQAAwAAABAAIAAAABAAEAAQAAAAAAAgACAAUAAQAAACIA/QAAAAEAAQAAAAAAAgACAAYAAQAAABYAAQAAAAAAAABgYgAAAAAAAAAAAAAAAAAAAAABAAABAAAAAQAAwAAABAAIAAAABAAEAAQAAAAAAAwACAAMAAQAAABEAAQAAAAAAAABgYgAAAAAAAAAAAAABAAABAAAAAQAAwAAABAAIAAAABAAEAAQAAAAAAAwACAAMAAQAAABEAAQAAAAAAAABgYgAAAAAAAAAAAAABAAABAAAAAQAAwAAABAAIAAAABAAEAAQAAAAAAAgACAAUAAQAAACIA/QAAAAEAAQAAAAAAAgACAAYAAQAAABYAAQAAAAAAAABgYgAAAAAAAAAAAAAAAAAAAAABAAABAAAAAQAAwAAABAAIAAAABAAEAAQAAAAAAAwACAAMAAQAAABEAAQAAAAAAAABgYgAAAAAAAAAAAAABAAABAAAAAQAAwAAABAAIAAAABAAEAAQAAAAAAAwACAAMAAQAAABEAAQAAAAAAAABgYgAAAAAAAAAAAAABAAABAAAAAQAAwAAABAAIAAAABAAEAAQAAAAAAAgACAAUAAQAAACIA/QAAAAEAAQAAAAAAAgACAAYAAQAAABYAAQAAAAAAAABgYgAAAAAAAAAAAAAAAAAAAAABAAABAAAAAQAAwAAABAAIAAAABAAEAAQAAAAAAAgACAAUAAQAAACIA/QAAAAEAAQAAAAAAAgACAAYAAQAAABYAAQAAAAAAAABgYgAAAAAAAAAAAAAAAAAAAAABAAABAAAAAQAAwAAABAAIAAAABAAEAAQAAAAAAAwACAAMAAQAAABEAAQAAAAAAAABgYgAAAAAAAAAAAAABAAABAAAAAQAAwAAABAAIAAAABAAEAAQAAAAAAAwACAAMAAQAAABEAAQAAAAAAAABgYgAAAAAAAAAAAAABAAABAAAAAQAAwAAABAAIAAAABAAEAAQAAAAAAAgACAAUAAQAAACIA/QAAAAEAAQAAAAAAAgACAAYAAQAAABYAAQAAAAAAAABgYgAAAAAAAAAAAAAAAAAAAAABAAABAAAAAQAAwAAABAAIAAAABAAEAAQAAAAAAAwACAAMAAQAAABEAAQAAAAAAAABgYgAAAAAAAAAAAAABAAABAAAAAQAAwAAABAAIAAAABAAEAAQAAAAAAAgACAAUAAQAAACIA/QAAAAEAAQAAAAAAAgACAAYAAQAAABYAAQAAAAAAAABgYgAAAAAAAAAAAAAAAAAAAAABAAABAAAAAQAAwAAABAAIAAAABAAEAAQAAAAAAAwACAAMAAQAAABEAAQAAAAAAAABgYgAAAAAAAAAAAAABAAABAAAAAQAAwAAABAAIAAAABAAEAAQAAAAAAAgACAAUAAQAAACIA/QAAAAEAAQAAAAAAAgACAAYAAQAAABYAAQAAAAAAAABgYgAAAAAAAAAAAAAAAAAAAAABAAABAAAAAQAAwAAABAAIAAAABAAEAAQAAAAAAAgACAAUAAQAAACIA/QAAAAEAAQAAAAAAAgACAAYAAQAAABYAAQAAAAAAAABgYgAAAAAAAAAAAAAAAAAAAAABAAABAAAAAQAAwAAABAAIAAAABAAEAAQAAAAAAAgACAAUAAQAAACIA/QAAAAEAAQAAAAAAAgACAAYAAQAAABYAAQAAAAAAAABgYgAAAAAAAAAAAAAAAAAAAAABAAABAAAAAQAAwAAABAAIAAAABAAEAAQAAAAAAAwACAAMAAQAAABEAAQAAAAAAAABgYgAAAAAAAAAAAAABAAABAAAAAQAAwAAABAAIAAAABAAEAAQAAAAAAAgACAAUAAQAAACIA/QAAAAEAAQAAAAAAAgACAAYAAQAAABYAAQAAAAAAAABgYgAAAAAAAAAAAAAAAAAAAAABAAABAAAAAQAAwAAABAAIAAAABAAEAAQAAAAAAAwACAAMAAQAAABEAAQAAAAAAAABgYgAAAAAAAAAAAAABAAABAAAAAQAAwAAABAAIAAAABAAEAAQAAAAAAAgACAAUAAQAAACIA/QAAAAEAAQAAAAAAAgACAAYAAQAAABYAAQAAAAAAAABgYgAAAAAAAAAAAAAAAAAAAAABAAABAAAAAQAAwAAABAAIAAAABAAEAAQAAAAAAAgACAAUAAQAAACIA/QAAAAEAAQAAAAAAAgACAAYAAQAAABYAAQAAAAAAAABgYgAAAAAAAAAAAAAAAAAAAAABAAABAAAAAQAAwAAABAAIAAAABAAEAAQAAAAAAAwACAAMAAQAAABEAAQAAAAAAAABgYgAAAAAAAAAAAAABAAABAAAAAQAAwAAABAAIAAAABAAEAAQAAAAAAAwACAAMAAQAAABEAAQAAAAAAAABgYgAAAAAAAAAAAAABAAABAAAAAQAAwAAABAAIAAAABAAEAAQAAAAAAAgACAAUAAQAAACIA/QAAAAEAAQAAAAAAAgACAAYAAQAAABYAAQAAAAAAAABgYgAAAAAAAAAAAAAAAAAAAAABAAABAAAAAQAAwAAABAAIAAAABAAEAAQAAAAAAAgACAAUAAQAAACIA/QAAAAEAAQAAAAAAAgACAAYAAQAAABYAAQAAAAAAAABgYgAAAAAAAAAAAAAAAAAAAAABAAABAAAAAQAAwAAABAAIAAAABAAEAAQAAAAAAAgACAAUAAQAAACIA/QAAAAEAAQAAAAAAAgACAAYAAQAAABYAAQAAAAAAAABgYgAAAAAAAAAAAAAAAAAAAAABAAABAAAAAQAAwAAABAAIAAAABAAEAAQAAAAAAAwACAAMAAQAAABEAAQAAAAAAAABgYgAAAAAAAAAAAAABAAABAAAAAQAAwAAABAAIAAAABAAEAAQAAAAAAAwACAAMAAQAAABEAAQAAAAAAAABgYgAAAAAAAAAAAAABAAABAAAAAQAAwAAABAAIAAAABAAEAAQAAAAAAAgACAAUAAQAAACIA/QAAAAEAAQAAAAAAAgACAAYAAQAAABYAAQAAAAAAAABgYgAAAAAAAAAAAAAAAAAAAAABAAABAAAAAQAAwAAABAAIAAAABAAEAAQAAAAAAAwACAAMAAQAAABEAAQAAAAAAAABgYgAAAAAAAAAAAAABAAABAAAAAQAAwAAABAAIAAAABAAEAAQAAAAAAAwACAAMAAQAAABEAAQAAAAAAAABgYgAAAAAAAAAAAAABAAABAAAAAQAAwAAABAAIAAAABAAEAAQAAAAAAAgACAAUAAQAAACIA/QAAAAEAAQAAAAAAAgACAAYAAQAAABYAAQAAAAAAAABgYgAAAAAAAAAAAAAAAAAAAAABAAABAAAAAQAAwAAABAAIAAAABAAEAAQAAAAAAAwACAAMAAQAAABEAAQAAAAAAAABgYgAAAAAAAAAAAAABAAABAAAAAQAAwAAABAAIAAAABAAEAAQAAAAAAAgACAAUAAQAAACIA/QAAAAEAAQAAAAAAAgACAAYAAQAAABYAAQAAAAAAAABgYgAAAAAAAAAAAAAAAAAAAAABAAABAAAAAQAAwAAABAAIAAAABAAEAAQAAAAAAAwACAAMAAQAAABEAAQAAAAAAAABgYgAAAAAAAAAAAAABAAABAAAAAQAAwAAABAAIAAAABAAEAAQAAAAAAAwACAAMAAQAAABEAAQAAAAAAAABgYgAAAAAAAAAAAAABAAABAAAAAQAAwAAABAAIAAAABAAEAAQAAAAAAAgACAAUAAQAAACIA/QAAAAEAAQAAAAAAAgACAAYAAQAAABYAAQAAAAAAAABgYgAAAAAAAAAAAAAAAAAAAAABAAABAAAAAQAAwAAABAAIAAAABAAEAAQAAAAAAAgACAAUAAQAAACIA/QAAAAEAAQAAAAAAAgACAAYAAQAAABYAAQAAAAAAAABgYgAAAAAAAAAAAAAAAAAAAAABAAABAAAAAQAAwAAABAAIAAAABAAEAAQAAAAAAAwACAAMAAQAAABEAAQAAAAAAAABgYgAAAAAAAAAAAAABAAABAAAAAQAAwAAABAAIAAAABAAEAAQAAAAAAAgACAAUAAQAAACIA/QAAAAEAAQAAAAAAAgACAAYAAQAAABYAAQAAAAAAAABgYgAAAAAAAAAAAAAAAAAAAAABAAABAAAAAQAAwAAABAAIAAAABAAEAAQAAAAAAAwACAAMAAQAAABEAAQAAAAAAAABgYgAAAAAAAAAAAAABAAABAAAAAQAAwAAABAAIAAAABAAEAAQAAAAAAAwACAAMAAQAAABEAAQAAAAAAAABgYgAAAAAAAAAAAAABAAABAAAAAQAAwAAABAAIAAAABAAEAAQAAAAAAAgACAAUAAQAAACIA/QAAAAEAAQAAAAAAAgACAAYAAQAAABYAAQAAAAAAAABgYgAAAAAAAAAAAAAAAAAAAAABAAABAAAAAQAAwAAABAAIAAAABAAEAAQAAAAAAAgACAAUAAQAAACIA/QAAAAEAAQAAAAAAAgACAAYAAQAAABYAAQAAAAAAAABgYgAAAAAAAAAAAAAAAAAAAAABAAABAAAAAQAAwAAABAAIAAAABAAEAAQAAAAAAAwACAAMAAQAAABEAAQAAAAAAAABgYgAAAAAAAAAAAAABAAABAAAAAQAAwAAABAAIAAAABAAEAAQAAAAAAAgACAAUAAQAAACIA/QAAAAEAAQAAAAAAAgACAAYAAQAAABYAAQAAAAAAAABgYgAAAAAAAAAAAAAAAAAAAAABAAABAAAAAQAAwAAABAAIAAAABAAEAAQAAAAAAAwACAAMAAQAAABEAAQAAAAAAAABgYgAAAAAAAAAAAAABAAABAAAAAQAAwAAABAAIAAAABAAEAAQAAAAAAAgACAAUAAQAAACIA/QAAAAEAAQAAAAAAAgACAAYAAQAAABYAAQAAAAAAAABgYgAAAAAAAAAAAAAAAAAAAAABAAABAAAAAQAAwAAABAAIAAAABAAEAAQAAAAAAAwACAAMAAQAAABEAAQAAAAAAAABgYgAAAAAAAAAAAAABAAABAAAAAQAAwAAABAAIAAAABAAEAAQAAAAAAAgACAAUAAQAAACIA/QAAAAEAAQAAAAAAAgACAAYAAQAAABYAAQAAAAAAAABgYgAAAAAAAAAAAAAAAAAAAAABAAABAAAAAQAAwAAABAAIAAAABAAEAAQAAAAAAAwACAAMAAQAAABEAAQAAAAAAAABgYgAAAAAAAAAAAAABAAABAAAAAQAAwAAABAAIAAAABAAEAAQAAAAAAAwACAAMAAQAAABEAAQAAAAAAAABgYgAAAAAAAAAAAAABAAABAAAAAQAAwAAABAAIAAAABAAEAAQAAAAAAAwACAAMAAQAAABEAAQAAAAAAAABgYgAAAAAAAAAAAAABAAABAAAAAQAAwAAABAAIAAAABAAEAAQAAAAAAAgACAAUAAQAAACIA/QAAAAEAAQAAAAAAAgACAAYAAQAAABYAAQAAAAAAAABgYgAAAAAAAAAAAAAAAAAAAAABAAABAAAAAQAAwAAABAAIAAAABAAEAAQAAAAAAAwACAAMAAQAAABEAAQAAAAAAAABgYgAAAAAAAAAAAAABAAABAAAAAQAAwAAABAAIAAAABAAEAAQAAAAAAAwACAAMAAQAAABEAAQAAAAAAAABgYgAAAAAAAAAAAAABAAABAAAAAQAAwAAABAAIAAAABAAEAAQAAAAAAAgACAAUAAQAAACIA/QAAAAEAAQAAAAAAAgACAAYAAQAAABYAAQAAAAAAAABgYgAAAAAAAAAAAAAAAAAAAAABAAABAAAAAQAAwAAABAAIAAAABAAEAAQAAAAAAAgACAAUAAQAAACIA/QAAAAEAAQAAAAAAAgACAAYAAQAAABYAAQAAAAAAAABgYgAAAAAAAAAAAAAAAAAAAAABAAABAAAAAQAAwAAABAAIAAAABAAEAAQAAAAAAAwACAAMAAQAAABEAAQAAAAAAAABgYgAAAAAAAAAAAAABAAABAAAAAQAAwAAABAAIAAAABAAEAAQAAAAAAAwACAAMAAQAAABEAAQAAAAAAAABgYgAAAAAAAAAAAAABAAABAAAAAQAAwAAABAAIAAAABAAEAAQAAAAAAAgACAAUAAQAAACIA/QAAAAEAAQAAAAAAAgACAAYAAQAAABYAAQAAAAAAAABgYgAAAAAAAAAAAAAAAAAAAAABAAABAAAAAQAAwAAABAAIAAAABAAEAAQAAAAAAAwACAAMAAQAAABEAAQAAAAAAAABgYgAAAAAAAAAAAAABAAABAAAAAQAAwAAABAAIAAAABAAEAAQAAAAAAAwACAAMAAQAAABEAAQAAAAAAAABgYgAAAAAAAAAAAAABAAABAAAAAQAAwAAABAAIAAAABAAEAAQAAAAAAAwACAAMAAQAAABEAAQAAAAAAAABgYgAAAAAAAAAAAAABAAABAAAAAQAAwAAABAAIAAAABAAEAAQAAAAAAAgACAAUAAQAAACIA/QAAAAEAAQAAAAAAAgACAAYAAQAAABYAAQAAAAAAAABgYgAAAAAAAAAAAAAAAAAAAAABAAABAAAAAQAAwAAABAAIAAAABAAEAAQAAAAAAAwACAAMAAQAAABEAAQAAAAAAAABgYgAAAAAAAAAAAAABAAABAAAAAQAAwAAABAAIAAAABAAEAAQAAAAAAAwACAAMAAQAAABEAAQAAAAAAAABgYgAAAAAAAAAAAAABAAABAAAAAQAAwAAABAAIAAAABAAEAAQAAAAAAAgACAAUAAQAAACIA/QAAAAEAAQAAAAAAAgACAAYAAQAAABYAAQAAAAAAAABgYgAAAAAAAAAAAAAAAAAAAAABAAABAAAAAQAAwAAABAAIAAAABAAEAAQAAAAAAAwACAAMAAQAAABEAAQAAAAAAAABgYgAAAAAAAAAAAAABAAABAAAAAQAAwAAABAAIAAAABAAEAAQAAAAAAAwACAAMAAQAAABEAAQAAAAAAAABgYgAAAAAAAAAAAAABAAABAAAAAQAAwAAABAAIAAAABAAEAAQAAAAAAAgACAAUAAQAAACIA/QAAAAEAAQAAAAAAAgACAAYAAQAAABYAAQAAAAAAAABgYgAAAAAAAAAAAAAAAAAAAAABAAABAAAAAQAAwAAABAAIAAAABAAEAAQAAAAAAAwACAAMAAQAAABEAAQAAAAAAAABgYgAAAAAAAAAAAAABAAABAAAAAQAAwAAABAAIAAAABAAEAAQAAAAAAAwACAAMAAQAAABEAAQAAAAAAAABgYgAAAAAAAAAAAAABAAABAAAAAQAAwAAABAAIAAAABAAEAAQAAAAAAAwACAAMAAQAAABEAAQAAAAAAAABgYgAAAAAAAAAAAAABAAABAAAAAQAAwAAABAAIAAAABAAEAAQAAAAAAAgACAAUAAQAAACIA/QAAAAEAAQAAAAAAAgACAAYAAQAAABYAAQAAAAAAAABgYgAAAAAAAAAAAAAAAAAAAAABAAABAAAAAQAAwAAABAAIAAAABAAEAAQAAAAAAAwACAAMAAQAAABEAAQAAAAAAAABgYgAAAAAAAAAAAAABAAABAAAAAQAAwAAABAAIAAAABAAEAAQAAAAAAAgACAAUAAQAAACIA/QAAAAEAAQAAAAAAAgACAAYAAQAAABYAAQAAAAAAAABgYgAAAAAAAAAAAAAAAAAAAAABAAABAAAAAQAAwAAABAAIAAAABAAEAAQAAAAAAAwACAAMAAQAAABEAAQAAAAAAAABgYgAAAAAAAAAAAAABAAABAAAAAQAAwAAABAAIAAAABAAEAAQAAAAAAAwACAAMAAQAAABEAAQAAAAAAAABgYgAAAAAAAAAAAAABAAABAAAAAQAAwAAABAAIAAAABAAEAAQAAAAAAAgACAAUAAQAAACIA/QAAAAEAAQAAAAAAAgACAAYAAQAAABYAAQAAAAAAAABgYgAAAAAAAAAAAAAAAAAAAAABAAABAAAAAQAAwAAABAAIAAAABAAEAAQAAAAAAAwACAAMAAQAAABEAAQAAAAAAAABgYgAAAAAAAAAAAAABAAABAAAAAQAAwAAABAAIAAAABAAEAAQAAAAAAAwACAAMAAQAAABEAAQAAAAAAAABgYgAAAAAAAAAAAAABAAABAAAAAQAAwAAABAAIAAAABAAEAAQAAAAAAAgACAAUAAQAAACIA/QAAAAEAAQAAAAAAAgACAAYAAQAAABYAAQAAAAAAAABgYgAAAAAAAAAAAAAAAAAAAAABAAABAAAAAQAAwAAABAAIAAAABAAEAAQAAAAAAAwACAAMAAQAAABEAAQAAAAAAAABgYgAAAAAAAAAAAAABAAABAAAAAQAAwAAABAAIAAAABAAEAAQAAAAAAAgACAAUAAQAAACIA/QAAAAEAAQAAAAAAAgACAAYAAQAAABYAAQAAAAAAAABgYgAAAAAAAAAAAAAAAAAAAAABAAABAAAAAQAAwAAABAAIAAAABAAEAAQAAAAAAAwACAAMAAQAAABEAAQAAAAAAAABgYgAAAAAAAAAAAAABAAABAAAAAQAAwAAABAAIAAAABAAEAAQAAAAAAAgACAAUAAQAAACIA/QAAAAEAAQAAAAAAAgACAAYAAQAAABYAAQAAAAAAAABgYgAAAAAAAAAAAAAAAAAAAAABAAABAAAAAQAAwAAABAAIAAAABAAEAAQAAAAAAAwACAAMAAQAAABEAAQAAAAAAAABgYgAAAAAAAAAAAAABAAABAAAAAQAAwAAABAAIAAAABAAEAAQAAAAAAAgACAAUAAQAAACIA/QAAAAEAAQAAAAAAAgACAAYAAQAAABYAAQAAAAAAAABgYgAAAAAAAAAAAAAAAAAAAAABAAABAAAAAQAAwAAABAAIAAAABAAEAAQAAAAAAAwACAAMAAQAAABEAAQAAAAAAAABgYgAAAAAAAAAAAAABAAABAAAAAQAAwAAABAAIAAAABAAEAAQAAAAAAAgACAAUAAQAAACIA/QAAAAEAAQAAAAAAAgACAAYAAQAAABYAAQAAAAAAAABgYgAAAAAAAAAAAAAAAAAAAAABAAABAAAAAQAAwAAABAAIAAAABAAEAAQAAAAAAAwACAAMAAQAAABEAAQAAAAAAAABgYgAAAAAAAAAAAAABAAABAAAAAQAAwAAABAAIAAAABAAEAAQAAAAAAAwACAAMAAQAAABEAAQAAAAAAAABgYgAAAAAAAAAAAAABAAABAAAAAQAAwAAABAAIAAAABAAEAAQAAAAAAAgACAAUAAQAAACIA/QAAAAEAAQAAAAAAAgACAAYAAQAAABYAAQAAAAAAAABgYgAAAAAAAAAAAAAAAAAAAAABAAABAAAAAQAAwAAABAAIAAAABAAEAAQAAAAAAAgACAAUAAQAAACIA/QAAAAEAAQAAAAAAAgACAAYAAQAAABYAAQAAAAAAAABgYgAAAAAAAAAAAAAAAAAAAAABAAABAAAAAQAAwAAABAAIAAAABAAEAAQAAAAAAAwACAAMAAQAAABEAAQAAAAAAAABgYgAAAAAAAAAAAAABAAABAAAAAQAAwAAABAAIAAAABAAEAAQAAAAAAAgACAAUAAQAAACIA/QAAAAEAAQAAAAAAAgACAAYAAQAAABYAAQAAAAAAAABgYgAAAAAAAAAAAAAAAAAAAAABAAABAAAAAQAAwAAABAAIAAAABAAEAAQAAAAAAAwACAAMAAQAAABEAAQAAAAAAAABgYgAAAAAAAAAAAAABAAABAAAAAQAAwAAABAAIAAAABAAEAAQAAAAAAAgACAAUAAQAAACIA/QAAAAEAAQAAAAAAAgACAAYAAQAAABYAAQAAAAAAAABgYgAAAAAAAAAAAAAAAAAAAAABAAABAAAAAQAAwAAABAAIAAAABAAEAAQAAAAAAAwACAAMAAQAAABEAAQAAAAAAAABgYgAAAAAAAAAAAAABAAABAAAAAQAAwAAABAAIAAAABAAEAAQAAAAAAAgACAAUAAQAAACIA/QAAAAEAAQAAAAAAAgACAAYAAQAAABYAAQAAAAAAAABgYgAAAAAAAAAAAAAAAAAAAAABAAABAAAAAQAAwAAABAAIAAAABAAEAAQAAAAAAAwACAAMAAQAAABEAAQAAAAAAAABgYgAAAAAAAAAAAAABAAABAAAAAQAAwAAABAAIAAAABAAEAAQAAAAAAAgACAAUAAQAAACIA/QAAAAEAAQAAAAAAAgACAAYAAQAAABYAAQAAAAAAAABgYgAAAAAAAAAAAAAAAAAAAAABAAABAAAAAQAAwAAABAAIAAAABAAEAAQAAAAAAAwACAAMAAQAAABEAAQAAAAAAAABgYgAAAAAAAAAAAAABAAABAAAAAQAAwAAABAAIAAAABAAEAAQAAAAAAAgACAAUAAQAAACIA/QAAAAEAAQAAAAAAAgACAAYAAQAAABYAAQAAAAAAAABgYgAAAAAAAAAAAAAAAAAAAAABAAABAAAAAQAAwAAABAAIAAAABAAEAAQAAAAAAAwACAAMAAQAAABEAAQAAAAAAAABgYgAAAAAAAAAAAAABAAABAAAAAQAAwAAABAAIAAAABAAEAAQAAAAAAAgACAAUAAQAAACIA/QAAAAEAAQAAAAAAAgACAAYAAQAAABYAAQAAAAAAAABgYgAAAAAAAAAAAAAAAAAAAAABAAABAAAAAQAAwAAABAAIAAAABAAEAAQAAAAAAAwACAAMAAQAAABEAAQAAAAAAAABgYgAAAAAAAAAAAAABAAABAAAAAQAAwAAABAAIAAAABAAEAAQAAAAAAAgACAAUAAQAAACIA/QAAAAEAAQAAAAAAAgACAAYAAQAAABYAAQAAAAAAAABgYgAAAAAAAAAAAAAAAAAAAAABAAABAAAAAQAAwAAABAAIAAAABAAEAAQAAAAAAAwACAAMAAQAAABEAAQAAAAAAAABgYgAAAAAAAAAAAAABAAABAAAAAQAAwAAABAAIAAAABAAEAAQAAAAAAAgACAAUAAQAAACIA/QAAAAEAAQAAAAAAAgACAAYAAQAAABYAAQAAAAAAAABgYgAAAAAAAAAAAAAAAAAAAAABAAABAAAAAQAAwAAABAAIAAAABAAEAAQAAAAAAAgACAAUAAQAAACIA/QAAAAEAAQAAAAAAAgACAAYAAQAAABYAAQAAAAAAAABgYgAAAAAAAAAAAAAAAAAAAAABAAABAAAAAQAAwAAABAAIAAAABAAEAAQAAAAAAAwACAAMAAQAAABEAAQAAAAAAAABgYgAAAAAAAAAAAAABAAABAAAAAQAAwAAABAAIAAAABAAEAAQAAAAAAAgACAAUAAQAAACIA/QAAAAEAAQAAAAAAAgACAAYAAQAAABYAAQAAAAAAAABgYgAAAAAAAAAAAAAAAAAAAAABAAABAAAAAQAAwAAABAAIAAAABAAEAAQAAAAAAAwACAAMAAQAAABEAAQAAAAAAAABgYgAAAAAAAAAAAAABAAABAAAAAQAAwAAABAAIAAAABAAEAAQAAAAAAAgACAAUAAQAAACIA/QAAAAEAAQAAAAAAAgACAAYAAQAAABYAAQAAAAAAAABgYgAAAAAAAAAAAAAAAAAAAAABAAABAAAAAQAAwAAABAAIAAAABAAEAAQAAAAAAAwACAAMAAQAAABEAAQAAAAAAAABgYgAAAAAAAAAAAAABAAABAAAAAQAAwAAABAAIAAAABAAEAAQAAAAAAAwACAAMAAQAAABEAAQAAAAAAAABgYgAAAAAAAAAAAAABAAABAAAAAQAAwAAABAAIAAAABAAEAAQAAAAAAAwACAAMAAQAAABEAAQAAAAAAAABgYgAAAAAAAAAAAAABAAABAAAAAQAAwAAABAAIAAAABAAEAAQAAAAAAAgACAAUAAQAAACIA/QAAAAEAAQAAAAAAAgACAAYAAQAAABYAAQAAAAAAAABgYgAAAAAAAAAAAAAAAAAAAAABAAABAAAAAQAAwAAABAAIAAAABAAEAAQAAAAAAAwACAAMAAQAAABEAAQAAAAAAAABgYgAAAAAAAAAAAAABAAABAAAAAQAAwAAABAAIAAAABAAEAAQAAAAAAAwACAAMAAQAAABEAAQAAAAAAAABgYgAAAAAAAAAAAAABAAABAAAAAQAAwAAABAAIAAAABAAEAAQAAAAAAAgACAAUAAQAAACIA/QAAAAEAAQAAAAAAAgACAAYAAQAAABYAAQAAAAAAAABgYgAAAAAAAAAAAAAAAAAAAAABAAABAAAAAQAAwAAABAAIAAAABAAEAAQAAAAAAAwACAAMAAQAAABEAAQAAAAAAAABgYgAAAAAAAAAAAAABAAABAAAAAQAAwAAABAAIAAAABAAEAAQAAAAAAAwACAAMAAQAAABEAAQAAAAAAAABgYgAAAAAAAAAAAAABAAABAAAAAQAAwAAABAAIAAAABAAEAAQAAAAAAAgACAAUAAQAAACIA/QAAAAEAAQAAAAAAAgACAAYAAQAAABYAAQAAAAAAAABgYgAAAAAAAAAAAAAAAAAAAAABAAABAAAAAQAAwAAABAAIAAAABAAEAAQAAAAAAAwACAAMAAQAAABEAAQAAAAAAAABgYgAAAAAAAAAAAAABAAABAAAAAQAAwAAABAAIAAAABAAEAAQAAAAAAAgACAAUAAQAAACIA/QAAAAEAAQAAAAAAAgACAAYAAQAAABYAAQAAAAAAAABgYgAAAAAAAAAAAAAAAAAAAAABAAABAAAAAQAAwAAABAAIAAAABAAEAAQAAAAAAAwACAAMAAQAAABEAAQAAAAAAAABgYgAAAAAAAAAAAAABAAABAAAAAQAAwAAABAAIAAAABAAEAAQAAAAAAAwACAAMAAQAAABEAAQAAAAAAAABgYgAAAAAAAAAAAAABAAABAAAAAQAAwAAABAAIAAAABAAEAAQAAAAAAAgACAAUAAQAAACIA/QAAAAEAAQAAAAAAAgACAAYAAQAAABYAAQAAAAAAAABgYgAAAAAAAAAAAAAAAAAAAAABAAABAAAAAQAAwAAABAAIAAAABAAEAAQAAAAAAAwACAAMAAQAAABEAAQAAAAAAAABgYgAAAAAAAAAAAAABAAABAAAAAQAAwAAABAAIAAAABAAEAAQAAAAAAAwACAAMAAQAAABEAAQAAAAAAAABgYgAAAAAAAAAAAAABAAABAAAAAQAAwAAABAAIAAAABAAEAAQAAAAAAAgACAAUAAQAAACIA/QAAAAEAAQAAAAAAAgACAAYAAQAAABYAAQAAAAAAAABgYgAAAAAAAAAAAAAAAAAAAAABAAABAAAAAQAAwAAABAAIAAAABAAEAAQAAAAAAAwACAAMAAQAAABEAAQAAAAAAAABgYgAAAAAAAAAAAAABAA
