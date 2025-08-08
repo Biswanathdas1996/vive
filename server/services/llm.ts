@@ -1,8 +1,12 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import { AnalysisResult, FileStructure } from "@shared/schema";
 
-const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY || "");
-const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash-lite" });
+const genAI = new GoogleGenerativeAI(
+  process.env.GOOGLE_API_KEY || "AIzaSyAUwIZJSoHYFp2IZQs1NMdBVH-78yHk6tI"
+);
+const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+
+console.log("Google API Key:", process.env.GOOGLE_API_KEY);
 
 export class LLMService {
   async analyzePrompt(prompt: string): Promise<AnalysisResult> {
@@ -35,18 +39,21 @@ Analyze this web application request: ${prompt}`;
       return parsedResult as AnalysisResult;
     } catch (error) {
       throw new Error(
-        `Failed to analyze prompt: ${error instanceof Error ? error.message : String(error)}`,
+        `Failed to analyze prompt: ${
+          error instanceof Error ? error.message : String(error)
+        }`
       );
     }
   }
 
   async generateFileStructure(
-    analysisResult: AnalysisResult,
+    analysisResult: AnalysisResult
   ): Promise<FileStructure> {
     try {
       const prompt = `You are an expert web developer and project architect. Generate a file structure with  descriptive prompts with all feature content, forms, cards, menus, content needed for each HTML file that will be used to generate content later.
 
-Return a JSON object representing the file structure where each HTML file contains a small text prompt describing what should be generated for that file. Use this exact format:
+Do not generate any nested directories or complex structures. Each file should be a top-level HTML file in the "public" directory.      
+Return a JSON object representing the file structure where each HTML file contains a detail text prompt describing what should be generated for that file, try to add as much element as it can be fit into this page. Use this exact format:
 
 {
   "public": {
@@ -64,7 +71,9 @@ Return a JSON object representing the file structure where each HTML file contai
   }
 }
 
-Generate file structure with small prompts for: ${JSON.stringify(analysisResult)}
+Generate file structure with small prompts for: ${JSON.stringify(
+        analysisResult
+      )}
 
 Requirements:
 - Each file should have a short, descriptive "prompt" field (1-2 sentences)
@@ -86,7 +95,9 @@ Requirements:
       return parsedResult as FileStructure;
     } catch (error) {
       throw new Error(
-        `Failed to generate file structure: ${error instanceof Error ? error.message : String(error)}`,
+        `Failed to generate file structure: ${
+          error instanceof Error ? error.message : String(error)
+        }`
       );
     }
   }
@@ -94,7 +105,7 @@ Requirements:
   async generateFileContent(
     fileName: string,
     analysisResult: AnalysisResult,
-    fileStructure: FileStructure,
+    fileStructure: FileStructure
   ): Promise<string> {
     try {
       // Extract the specific prompt for this file from the structure
@@ -159,7 +170,9 @@ Generate a production-ready, visually stunning HTML5 application that demonstrat
       return cleanContent;
     } catch (error) {
       throw new Error(
-        `Failed to generate content for ${fileName}: ${error instanceof Error ? error.message : String(error)}`,
+        `Failed to generate content for ${fileName}: ${
+          error instanceof Error ? error.message : String(error)
+        }`
       );
     }
   }
@@ -167,7 +180,7 @@ Generate a production-ready, visually stunning HTML5 application that demonstrat
   async modifyFileContent(
     fileName: string,
     currentContent: string,
-    modificationRequest: string,
+    modificationRequest: string
   ): Promise<string> {
     try {
       const prompt = `You are an expert web developer. Modify the existing HTML file based on the user's request. The file must remain completely self-contained with all CSS in <style> tags and all JavaScript in <script> tags. Do not reference external files.
@@ -199,7 +212,9 @@ Return ONLY the complete modified HTML content, no markdown formatting.`;
       return cleanContent;
     } catch (error) {
       throw new Error(
-        `Failed to modify ${fileName}: ${error instanceof Error ? error.message : String(error)}`,
+        `Failed to modify ${fileName}: ${
+          error instanceof Error ? error.message : String(error)
+        }`
       );
     }
   }
