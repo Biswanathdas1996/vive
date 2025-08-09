@@ -2,7 +2,7 @@ import { GoogleGenerativeAI } from "@google/generative-ai";
 import { AnalysisResult, FileStructure } from "@shared/schema";
 
 const genAI = new GoogleGenerativeAI(
-  process.env.GOOGLE_API_KEY || "AIzaSyAUwIZJSoHYFp2IZQs1NMdBVH-78yHk6tI"
+  process.env.GOOGLE_API_KEY || "AIzaSyAUwIZJSoHYFp2IZQs1NMdBVH-78yHk6tI",
 );
 const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
@@ -41,60 +41,44 @@ Analyze this web application request: ${prompt}`;
       throw new Error(
         `Failed to analyze prompt: ${
           error instanceof Error ? error.message : String(error)
-        }`
+        }`,
       );
     }
   }
 
   async generateFileStructure(
-    analysisResult: AnalysisResult
+    analysisResult: AnalysisResult,
   ): Promise<FileStructure> {
     try {
-      const prompt = `You are an expert web developer and project architect. Generate a comprehensive file structure with extremely detailed prompts containing extensive feature content, forms, cards, menus, interactive elements, and UI components for each HTML file.
+      const prompt = `You're a web dev and architect. Craft a file structure with detailed prompts, rich in UI elements, features, and interactivity for each HTML file.
 
-Do not generate any nested directories or complex structures. Each file should be a top-level HTML file in the "public" directory.      
+Keep files top-level in the "public" directory, maintaining simplicity.
 
-Return a JSON object representing the file structure where each HTML file contains an extremely detailed, comprehensive prompt describing ALL content, features, and UI elements that should be generated for that file. Include as many elements as possible to create rich, feature-complete pages.
+Return a JSON of the file structure, each HTML file with a detailed prompt including as many elements as possible for robust pages.
 
-Use this exact format:
-
+Format:
 {
   "public": {
     "type": "directory",
     "children": {
       "index.html": { 
         "type": "file",
-        "prompt": "Create a comprehensive landing page with at least 10 distinct UI elements: [1] responsive navigation bar including logo, menu items (Home, Products, Services, About, Contact), mobile hamburger menu; [2] hero section with compelling headline, subheadline, call-to-action buttons, background image/video; [3] features section with icon cards highlighting key benefits; [4] statistics counter with animated numbers; [5] testimonials carousel with client quotes and photos; [6] services overview with service cards including icons, descriptions, and pricing; [7] about us preview section with team photos; [8] newsletter signup form with email validation; [9] social media integration widget; [10] footer with company info, social media links, quick links, contact details, copyright; [11] live chat widget; [12] scroll-to-top button; [13] cookie consent banner; [14] search bar with autocomplete; [15] breadcrumb navigation. Include modern animations, hover effects, smooth scrolling navigation, modal popups, responsive grid layouts, parallax scrolling, and interactive elements with accessibility features."
+        "prompt": "Create a landing page with at least 10 UI elements: [1] responsive navbar, [2] hero section with CTA, [3] features section, [4] statistics counter, [5] testimonials carousel, [6] services overview, [7] about us section, [8] newsletter signup, [9] social widget, [10] footer with details. Use animations, effects, and interactive elements."
       },
       "dashboard.html": { 
         "type": "file",
-        "prompt": "Create a feature-rich dashboard with at least 10 distinct UI elements: [1] top navigation bar with user profile dropdown, notifications bell, search bar, settings gear; [2] sidebar navigation with collapsible menu items, user avatar, role indicator; [3] main content area with welcome message and personalized greeting; [4] statistics cards with charts/graphs showing KPIs; [5] data tables with sorting/filtering/pagination controls; [6] progress bars showing completion status; [7] activity feed with real-time updates; [8] quick action buttons for common tasks; [9] calendar widget showing upcoming events; [10] weather widget with location-based data; [11] recent activities list with timestamps; [12] performance metrics dashboard; [13] notification center with toast messages; [14] user profile modal with edit capabilities; [15] settings panel with form controls for preferences, theme switcher, account management options; [16] dark/light mode toggle; [17] interactive charts with drill-down functionality; [18] export/download buttons; [19] help tooltip system; [20] breadcrumb navigation. Include responsive layout, data visualization, real-time updates, drag-and-drop widgets, and comprehensive accessibility features."
+        "prompt": "Create a dashboard with at least 10 UI elements: [1] top navbar, [2] sidebar with menu, [3] content area, [4] statistics cards, [5] data tables, [6] progress bars, [7] activity feed, [8] quick actions, [9] calendar widget, [10] weather widget. Include responsive layout, data visualization, real-time updates."
       }
     }
   }
 }
 
-Generate comprehensive file structure with extremely detailed prompts for: ${JSON.stringify(
-        analysisResult
-      )}
+Generate for: ${JSON.stringify(analysisResult)}
 
-Requirements:
-- Each prompt should be extremely detailed (10-20+ sentences minimum)
-- MANDATORY: Each page MUST include at least 10 distinct UI elements from different categories
-- Include ALL possible UI components: navigation bars, hero sections, feature cards, testimonial carousels, pricing tables, contact forms, login/signup forms, data tables with sorting/filtering, modal dialogs, dropdown menus, accordions, tabs, progress bars, charts/graphs, statistics counters, image galleries, video players, search bars, filters, pagination, breadcrumbs, tooltips, alerts, notifications, sidebars, footers with multiple sections, banners, call-to-action buttons, social media widgets, rating systems, comment sections, subscription boxes, countdown timers, loading spinners, progress indicators, status badges, tag clouds, comparison tables, slider controls, toggle switches, step indicators, breadcrumb navigation, mega menus, floating action buttons, sticky headers, scroll-to-top buttons, image carousels, video backgrounds, parallax sections, testimonial cards, team member cards, service showcase grids, product catalog displays
-- Specify comprehensive interactive elements: hover animations, click effects, smooth transitions, parallax scrolling, sticky navigation, mobile hamburger menus, carousel controls, form validation with real-time feedback, multi-step wizards, collapsible sections, expandable cards, infinite scroll, drag-and-drop functionality, sortable lists, resizable panels, interactive maps, zoom functionality, lightbox galleries, video players with custom controls, audio players, interactive timelines, filterable portfolios, live search suggestions, real-time chat interfaces, notification toasts, modal overlays, slide-out panels, accordion menus, tabbed content areas, progress tracking, step-by-step guides, interactive tutorials, gamification elements
-- Detail extensive content sections: multi-level navigation, hero with video/image backgrounds, feature highlight areas, service/product showcases, team member profiles, client testimonials, FAQ sections, blog previews, social media feeds, newsletter signups, company information, location maps, contact details, pricing comparison tables, feature matrices, case studies, portfolio galleries, resource libraries, download centers, event calendars, news sections, press releases, career listings, partner showcases, award displays, certification badges, security compliance indicators
-- Include advanced modern web features: fully responsive layouts for all screen sizes, progressive web app features, dark/light theme toggles, accessibility compliance, SEO optimization, performance optimization, lazy loading, image optimization, offline functionality, push notifications, geolocation services, camera integration, voice search, AI chatbots, real-time collaboration, live updates, websocket connections, API integrations, third-party service connections
-- Specify comprehensive form elements: text inputs with validation, email fields, password fields with strength indicators, select dropdowns, multi-select options, radio buttons, checkboxes, date pickers, time pickers, color pickers, range sliders, file upload with drag-drop, WYSIWYG editors, markdown editors, code editors, search with autocomplete, filters with real-time results, conditional form fields, multi-step forms, form progress indicators, field dependencies, dynamic form generation, form templates, autosave functionality, form analytics
-- Add extensive data visualization: interactive charts (line, bar, pie, donut, scatter, bubble, radar, heatmap, treemap, candlestick), real-time dashboards, progress indicators, KPI cards, comparison tables, trend graphs, analytics panels, data tables with advanced filtering, sorting and pagination, export functionality, data drill-down capabilities, custom date range selectors, metric calculators, performance benchmarks, goal tracking displays, conversion funnels, user journey maps
-- Include complete user interface systems: user authentication (login/signup/forgot password/2FA), user profiles with avatars and settings, notification systems, messaging interfaces, admin panels, role-based access controls, activity logs, preference settings, account management, billing interfaces, subscription management, permission systems, audit trails, system monitoring dashboards, user onboarding flows, help systems, knowledge bases, ticketing systems, feedback collection
-- Consider comprehensive accessibility: ARIA labels, keyboard navigation, screen reader compatibility, color contrast compliance, focus indicators, semantic HTML structure, alternative text for images, captions for videos, high contrast modes, font size controls, screen reader announcements, skip navigation links, focus management
-- ENFORCE MINIMUM REQUIREMENT: Count and explicitly list at least 10 different UI elements for each page using numbered format [1], [2], [3], etc.
-- FORMAT REQUIREMENT: Each prompt must start with "Create a [page type] with at least 10 distinct UI elements:" followed by numbered list of elements
-- VALIDATION: Verify each page has minimum 10 numbered UI elements before generating the JSON
-- Make each page a complete, production-ready application with maximum features and functionality
-
-CRITICAL: Every single page must have numbered UI elements [1] through [10] minimum. If a page has fewer than 10 elements, add more until it reaches at least 10 numbered elements.`;
+Criteria:
+- Every prompt must list at least 10 UI elements
+- Each page includes navigation bars, feature cards, forms, tables, modals, sliders, alerts, notifications, footers, banners, buttons, sidebar, headers, carousels, images, and videos.
+- ENFORCE: Must have at least 10 UI elements per page.`;
 
       const result = await model.generateContent(prompt);
       const response = await result.response;
@@ -112,7 +96,7 @@ CRITICAL: Every single page must have numbered UI elements [1] through [10] mini
       throw new Error(
         `Failed to generate file structure: ${
           error instanceof Error ? error.message : String(error)
-        }`
+        }`,
       );
     }
   }
@@ -120,57 +104,56 @@ CRITICAL: Every single page must have numbered UI elements [1] through [10] mini
   async enhanceFilePrompt(
     basePrompt: string,
     fileName: string,
-    analysisResult: AnalysisResult
+    analysisResult: AnalysisResult,
   ): Promise<string> {
     try {
-      const enhancementPrompt = `You are an expert UI/UX designer and modern web developer. Enhance the following file prompt by adding detailed specifications for modern web elements and components. 
+      const enhancementPrompt = `Analyze this page prompt and generate a comprehensive modern UI feature list:
 
-Original prompt: ${basePrompt}
+BASE PROMPT: ${basePrompt}
+PAGE: ${fileName}
+CONTEXT: ${JSON.stringify(analysisResult)}
 
-Enhance this prompt with specific modern element names and detailed descriptions including:
+Return a structured list of specific modern web elements and features for this page. Format as:
 
-MODERN UI COMPONENTS TO INCLUDE:
-- Navigation elements: navbar, breadcrumb, mega-menu, sidebar, hamburger menu, tab navigation, pagination, stepper navigation
-- Layout components: hero section, card grid, masonry layout, sidebar layout, sticky header, floating action button
-- Content elements: carousel, accordion, modal, tooltip, popover, drawer, collapse, dropdown, alert, badge, chip, tag
-- Form elements: input fields, select dropdown, multi-select, checkbox, radio buttons, toggle switch, slider, date picker, file upload, search bar
-- Interactive elements: button variants, icon buttons, floating buttons, loading spinners, progress bars, skeleton loaders
-- Data display: tables, charts, graphs, timeline, calendar, statistics cards, comparison tables, pricing tables
-- Media elements: image gallery, video player, audio player, carousel, lightbox, zoom functionality
-- Social elements: testimonials, reviews, ratings, social media feeds, comment sections, share buttons
-- Advanced components: chatbot interface, notification center, user profile menu, dashboard widgets, analytics panels
+LAYOUT & NAVIGATION:
+- [specific element]: [brief description]
+- [specific element]: [brief description]
 
-MODERN DESIGN PATTERNS TO SPECIFY:
-- Glassmorphism effects with backdrop-filter blur
-- Neumorphism with subtle shadows and highlights
-- Gradient overlays and color transitions
-- Micro-interactions and hover animations
-- Dark/light theme toggle functionality
-- Responsive breakpoints for mobile, tablet, desktop
-- Custom CSS properties for consistent theming
-- Modern typography with font stacks and fluid sizing
-- Accessibility features with ARIA labels and semantic HTML
+INTERACTIVE COMPONENTS:
+- [specific element]: [brief description]
+- [specific element]: [brief description]
 
-TECHNICAL SPECIFICATIONS TO ADD:
-- CSS Grid and Flexbox layouts
-- CSS custom properties and calc() functions
-- Transform and transition animations
-- Scroll-triggered animations
-- Intersection Observer implementations
-- Progressive web app features
-- Performance optimization techniques
-- SEO-friendly semantic structure
+CONTENT SECTIONS:
+- [specific element]: [brief description]
+- [specific element]: [brief description]
 
-File: ${fileName}
-Project context: ${JSON.stringify(analysisResult)}
+MODERN FEATURES:
+- [specific element]: [brief description]
+- [specific element]: [brief description]
 
-Return an enhanced, highly detailed prompt that specifies exactly which modern elements to include, their styling approach, interactions, and technical implementation. Make it comprehensive and specific for production-ready modern web development.`;
+DESIGN PATTERNS:
+- [specific styling]: [implementation note]
+- [specific effect]: [implementation note]
+
+Focus on:
+• Contemporary UI patterns (glassmorphism, neumorphism, gradients)
+• Interactive elements (modals, dropdowns, carousels, accordions)
+• Modern forms (multi-step, validation, file upload, search)
+• Data visualization (charts, progress bars, statistics cards)
+• Responsive layouts (CSS Grid, Flexbox, mobile-first)
+• Accessibility features (ARIA, semantic HTML, keyboard nav)
+• Performance optimizations (lazy loading, animations)
+
+Make each element specific and actionable for ${fileName}. Be concise but comprehensive.`;
 
       const result = await model.generateContent(enhancementPrompt);
       const response = await result.response;
       return response.text().trim();
     } catch (error) {
-      console.warn(`Failed to enhance prompt for ${fileName}, using original:`, error);
+      console.warn(
+        `Failed to enhance prompt for ${fileName}, using original:`,
+        error,
+      );
       return basePrompt; // Fallback to original prompt if enhancement fails
     }
   }
@@ -178,7 +161,7 @@ Return an enhanced, highly detailed prompt that specifies exactly which modern e
   async generateFileContent(
     fileName: string,
     analysisResult: AnalysisResult,
-    fileStructure: FileStructure
+    fileStructure: FileStructure,
   ): Promise<string> {
     try {
       // Extract the specific prompt for this file from the structure
@@ -194,7 +177,7 @@ Return an enhanced, highly detailed prompt that specifies exactly which modern e
       const enhancedFilePrompt = await this.enhanceFilePrompt(
         filePrompt,
         fileName,
-        analysisResult
+        analysisResult,
       );
 
       const prompt = `You are an expert modern web developer specialized in creating high-quality, contemporary HTML5 applications. Generate a complete, self-contained HTML5 file with ALL styles and JavaScript embedded using <style> and <script> tags. Do NOT reference external CSS, JS, or image files.
@@ -232,7 +215,7 @@ CSS STYLE GUIDELINES:
 - Create depth with layered shadows and subtle gradients
 
 File: ${fileName}
-Enhanced Specific Requirements: ${enhancedFilePrompt}
+Must have Requirements: ${enhancedFilePrompt}
 Project context: ${JSON.stringify(analysisResult)}
 
 Generate a production-ready, visually stunning HTML5 application that demonstrates modern web development best practices. Return ONLY the complete HTML content without markdown formatting.`;
@@ -252,7 +235,7 @@ Generate a production-ready, visually stunning HTML5 application that demonstrat
       throw new Error(
         `Failed to generate content for ${fileName}: ${
           error instanceof Error ? error.message : String(error)
-        }`
+        }`,
       );
     }
   }
@@ -260,7 +243,7 @@ Generate a production-ready, visually stunning HTML5 application that demonstrat
   async modifyFileContent(
     fileName: string,
     currentContent: string,
-    modificationRequest: string
+    modificationRequest: string,
   ): Promise<string> {
     try {
       const prompt = `You are an expert web developer. Modify the existing HTML file based on the user's request. The file must remain completely self-contained with all CSS in <style> tags and all JavaScript in <script> tags. Do not reference external files.
@@ -294,7 +277,7 @@ Return ONLY the complete modified HTML content, no markdown formatting.`;
       throw new Error(
         `Failed to modify ${fileName}: ${
           error instanceof Error ? error.message : String(error)
-        }`
+        }`,
       );
     }
   }

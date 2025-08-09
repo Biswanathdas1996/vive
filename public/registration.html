@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Registration/Login</title>
+<style>
+:root {
+  --primary-color: #673ab7;
+  --secondary-color: #9c27b0;
+  --background-color: #f4f4f4;
+  --text-color: #333;
+  --shadow-color: rgba(0,0,0,0.2);
+  --border-radius: 8px;
+  --spacing: 1rem;
+}
+
+body {
+  font-family: 'system-ui', sans-serif;
+  line-height: 1.6;
+  margin: 0;
+  background-color: var(--background-color);
+  color: var(--text-color);
+}
+
+.container {
+  max-width: 600px;
+  margin: 2rem auto;
+  padding: var(--spacing);
+  background-color: rgba(255, 255, 255, 0.8);
+  border-radius: var(--border-radius);
+  box-shadow: 0 2px 10px var(--shadow-color);
+}
+
+header {
+  background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+  color: white;
+  padding: 1rem 0;
+  text-align: center;
+}
+
+nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.toggle-btn {
+  background: #fff;
+  color: var(--primary-color);
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: var(--border-radius);
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.toggle-btn:hover {
+  background-color: #eee;
+}
+
+.form-container {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--spacing);
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+label {
+  font-weight: bold;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="password"] {
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: var(--border-radius);
+}
+
+button[type="submit"] {
+  background-color: var(--primary-color);
+  color: white;
+  padding: 0.8rem 1.5rem;
+  border: none;
+  border-radius: var(--border-radius);
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+button[type="submit"]:hover {
+  background-color: darken(var(--primary-color), 10%);
+}
+
+footer {
+  text-align: center;
+  padding: 1rem 0;
+  background-color: #f0f0f0;
+}
+
+@media (max-width: 768px) {
+  nav {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .form-container {
+    grid-template-columns: 1fr;
+  }
+}
+</style>
+</head>
+<body>
+<header>
+  <nav>
+    <h1>Registration/Login</h1>
+    <button class="toggle-btn" onclick="toggleForm()">Switch Form</button>
+  </nav>
+</header>
+
+<main class="container">
+  <div id="registration-form" class="form-container" style="display: block;">
+    <div class="form-group">
+      <label for="firstName">First Name:</label>
+      <input type="text" id="firstName" required>
+    </div>
+    <div class="form-group">
+      <label for="lastName">Last Name:</label>
+      <input type="text" id="lastName" required>
+    </div>
+    <div class="form-group">
+      <label for="email">Email:</label>
+      <input type="email" id="email" required>
+    </div>
+    <div class="form-group">
+      <label for="password">Password:</label>
+      <input type="password" id="password" required>
+    </div>
+    <div class="form-group">
+      <label for="confirmPassword">Confirm Password:</label>
+      <input type="password" id="confirmPassword" required>
+    </div>
+    <button type="submit">Register</button>
+  </div>
+
+  <div id="login-form" class="form-container" style="display: none;">
+    <div class="form-group">
+      <label for="loginEmail">Email:</label>
+      <input type="email" id="loginEmail" required>
+    </div>
+    <div class="form-group">
+      <label for="loginPassword">Password:</label>
+      <input type="password" id="loginPassword" required>
+    </div>
+    <button type="submit">Login</button>
+  </div>
+</main>
+
+<footer>
+  &copy; 2023 My App. All rights reserved.
+</footer>
+
+<script>
+function toggleForm() {
+  const registrationForm = document.getElementById('registration-form');
+  const loginForm = document.getElementById('login-form');
+
+  registrationForm.style.display = registrationForm.style.display === 'none' ? 'block' : 'none';
+  loginForm.style.display = loginForm.style.display === 'none' ? 'block' : 'none';
+}
+</script>
+</body>
+</html>

@@ -1,244 +1,126 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tax Payment</title>
-    <style>
-        :root {
-            /* Colors */
-            --primary-color: #5c6bc0; /* Light Indigo */
-            --secondary-color: #9fa8da; /* Light Lavender */
-            --accent-color: #ffb74d; /* Light Orange */
-            --text-color: #333;
-            --text-color-light: #fff;
-            --background-color: #f0f0f0;
-            --card-background: rgba(255, 255, 255, 0.8); /* Semi-transparent white */
-            --shadow-color: rgba(0, 0, 0, 0.1);
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Payment Page</title>
+<style>
+:root {
+  --primary-color: #673ab7;
+  --secondary-color: #9c27b0;
+  --background-color: #f4f4f4;
+  --text-color: #333;
+  --shadow-color: rgba(0,0,0,0.2);
+  --accent-color: #ff9800;
+  --light-background: #fff;
+  --dark-background: #222;
+  --dark-text: #eee;
+}
 
-            /* Spacing */
-            --spacing-small: 0.5rem;
-            --spacing-medium: 1rem;
-            --spacing-large: 1.5rem;
-            --border-radius: 0.75rem;
-            --font-size-base: 1rem;
+body {
+  font-family: 'Poppins', sans-serif;
+  margin: 0;
+  background-color: var(--background-color);
+  color: var(--text-color);
+  line-height: 1.6;
+  transition: background-color 0.3s ease;
+}
 
-            /* Font */
-            --font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
+body.dark-theme {
+  background-color: var(--dark-background);
+  color: var(--dark-text);
+}
 
-        body {
-            font-family: var(--font-family);
-            background-color: var(--background-color);
-            color: var(--text-color);
-            margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            overflow-x: hidden;
-        }
+.neumorphic {
+  background-color: var(--light-background);
+  box-shadow: 5px 5px 10px rgba(0,0,0,0.1), -5px -5px 10px rgba(255,255,255,0.8);
+  border-radius: 10px;
+  padding: 20px;
+  transition: box-shadow 0.3s ease;
+}
 
-        .container {
-            width: 90%;
-            max-width: 600px;
-            padding: var(--spacing-large);
-            background: var(--card-background);
-            border-radius: var(--border-radius);
-            box-shadow: 0 4px 16px var(--shadow-color);
-            backdrop-filter: blur(10px); /* Glassmorphism */
-            margin: var(--spacing-medium);
-        }
+.neumorphic:hover {
+  box-shadow: 7px 7px 15px rgba(0,0,0,0.2), -7px -7px 15px rgba(255,255,255,0.9);
+}
 
-        header {
-            text-align: center;
-            margin-bottom: var(--spacing-medium);
-        }
+body.dark-theme .neumorphic {
+  background-color: var(--dark-background);
+  box-shadow: 5px 5px 10px rgba(0,0,0,0.4), -5px -5px 10px rgba(0,0,0,0.6);
+}
 
-        h1 {
-            color: var(--primary-color);
-            font-size: clamp(1.75rem, 3vw, 2.25rem);
-            margin-bottom: var(--spacing-small);
-        }
+body.dark-theme .neumorphic:hover {
+  box-shadow: 7px 7px 15px rgba(0,0,0,0.5), -7px -7px 15px rgba(0,0,0,0.7);
+}
 
-        .payment-details {
-            margin-bottom: var(--spacing-medium);
-        }
 
-        .payment-details p {
-            font-size: calc(var(--font-size-base) * 0.9);
-            margin-bottom: var(--spacing-small);
-        }
+header {
+  position: sticky;
+  top: 0;
+  background-color: var(--light-background);
+  padding: 1rem;
+  z-index: 10;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
 
-        .amount {
-            font-size: 1.5rem;
-            font-weight: bold;
-            color: var(--accent-color);
-            margin-bottom: var(--spacing-medium);
-        }
+.glassmorphism {
+  background-color: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(10px);
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
 
-        .form-group {
-            margin-bottom: var(--spacing-medium);
-        }
-
-        label {
-            display: block;
-            font-weight: bold;
-            margin-bottom: var(--spacing-small);
-            font-size: calc(var(--font-size-base) * 0.9);
-        }
-
-        input[type="text"],
-        input[type="number"] {
-            width: 100%;
-            padding: var(--spacing-small);
-            border: 1px solid var(--secondary-color);
-            border-radius: var(--border-radius);
-            font-size: var(--font-size-base);
-            background-color: var(--card-background);
-            box-shadow: 0 2px 4px var(--shadow-color);
-            transition: border-color 0.2s ease;
-            color: var(--text-color);
-        }
-
-        input[type="text"]:focus,
-        input[type="number"]:focus {
-            border-color: var(--primary-color);
-            outline: none;
-        }
-
-        button {
-            background-color: var(--primary-color);
-            color: var(--text-color-light);
-            padding: var(--spacing-medium);
-            border: none;
-            border-radius: var(--border-radius);
-            font-size: var(--font-size-base);
-            cursor: pointer;
-            width: 100%;
-            transition: background-color 0.2s ease, transform 0.1s ease;
-            box-shadow: 0 2px 8px var(--shadow-color);
-        }
-
-        button:hover {
-            background-color: #64b5f6; /* Slightly lighter blue */
-        }
-
-        button:active {
-            transform: translateY(1px);
-        }
-
-        .error-message {
-            color: #e53935; /* Red */
-            margin-top: var(--spacing-small);
-            font-size: calc(var(--font-size-base) * 0.8);
-        }
-
-        /* Geometric Placeholder for Logo (Simple Circle) */
-        .logo-placeholder {
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: var(--spacing-small);
-        }
-
-        /* Responsive Design */
-        @media (max-width: 768px) {
-            .container {
-                width: 95%;
-            }
-        }
-    </style>
+/* Rest of the styles... */
+</style>
 </head>
 <body>
-    <div class="container">
-        <header>
-            <div class="logo-placeholder">
-                <!-- Could replace with a proper logo image if needed -->
-            </div>
-            <h1>Tax Payment</h1>
-        </header>
-
-        <div class="payment-details">
-            <p><strong>Payment Due:</strong> 2024-08-15</p>
-            <p><strong>Account Number:</strong> 1234567890</p>
-            <div class="amount">$1,250.00</div>
-        </div>
-
-        <form id="paymentForm">
-            <div class="form-group">
-                <label for="cardNumber">Card Number</label>
-                <input type="text" id="cardNumber" name="cardNumber" placeholder="XXXX XXXX XXXX XXXX" required>
-            </div>
-            <div class="form-group">
-                <label for="expiry">Expiry Date</label>
-                <input type="text" id="expiry" name="expiry" placeholder="MM/YY" required>
-            </div>
-            <div class="form-group">
-                <label for="cvv">CVV</label>
-                <input type="number" id="cvv" name="cvv" placeholder="CVV" required>
-            </div>
-            <div class="form-group">
-                <label for="cardholderName">Cardholder Name</label>
-                <input type="text" id="cardholderName" name="cardholderName" placeholder="John Doe" required>
-            </div>
-            <div class="error-message" id="errorMessage"></div>
-            <button type="submit">Pay Now</button>
-        </form>
+<header>
+  <nav>
+    <button id="themeToggle">Toggle Theme</button>
+    <button id="hamburger">&#9776;</button>
+    <ul id="megaMenu" style="display:none;">
+      <li><a href="#">Dashboard</a></li>
+    </ul>
+  </nav>
+</header>
+<main>
+  <nav aria-label="breadcrumb">
+    <ol>
+      <li>Dashboard</li>
+      <li>Make Payment</li>
+    </ol>
+  </nav>
+  <section class="payment-section">
+    <div class="neumorphic amount-due">
+      <h2>Amount Due: $100</h2>
     </div>
+    <div>
+      {/* Payment gateway integration would go here */}
+    </div>
+  </section>
+  <section class="transaction-history">
+    {/* Transaction history would go here */}
+  </section>
+</main>
+<footer>
+  {/* Footer content */}
+</footer>
 
-    <script>
-        // Basic JavaScript for form validation and simulation (no real payment processing)
-        const form = document.getElementById('paymentForm');
-        const errorMessage = document.getElementById('errorMessage');
+<script>
+const hamburger = document.getElementById('hamburger');
+const megaMenu = document.getElementById('megaMenu');
+const themeToggle = document.getElementById('themeToggle');
+const body = document.body;
 
-        form.addEventListener('submit', (event) => {
-            event.preventDefault();
-            errorMessage.textContent = '';
+hamburger.addEventListener('click', () => {
+  megaMenu.style.display = megaMenu.style.display === 'none' ? 'block' : 'none';
+});
 
-            const cardNumber = document.getElementById('cardNumber').value;
-            const expiry = document.getElementById('expiry').value;
-            const cvv = document.getElementById('cvv').value;
-            const cardholderName = document.getElementById('cardholderName').value;
-
-
-            // Simple validation (replace with more robust validation for real-world scenarios)
-            if (!cardNumber || !expiry || !cvv || !cardholderName) {
-                errorMessage.textContent = 'Please fill out all fields.';
-                return;
-            }
-
-            if (isNaN(cvv) || cvv.length < 3) {
-                errorMessage.textContent = "Invalid CVV";
-                return;
-            }
-
-
-            // Simulate payment processing
-            errorMessage.textContent = 'Processing payment...';
-            form.querySelector('button').disabled = true;
+themeToggle.addEventListener('click', () => {
+  body.classList.toggle('dark-theme');
+});
 
 
-            setTimeout(() => {
-                form.querySelector('button').disabled = false;
-                const randomNumber = Math.random();
-                if (randomNumber > 0.1) {
-                   errorMessage.textContent = 'Payment successful! Redirecting...';
-                   // Simulate redirection or further action.
-                   setTimeout(() => {
-                      window.location.href = '/payment-success.html'; // Replace with actual redirect
-                   }, 2000);
-
-                } else {
-                    errorMessage.textContent = 'Payment failed. Please try again.';
-                }
-            }, 2000); // Simulate a 2-second processing time
-        });
-    </script>
+</script>
 </body>
 </html>

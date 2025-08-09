@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Dashboard</title>
+<style>
+:root {
+  --primary-color: #3f51b5;
+  --secondary-color: #6200ee;
+  --accent-color: #ffcc80;
+  --bg-color: #f4f4f4;
+  --text-color: #333;
+  --shadow-color: rgba(0,0,0,0.2);
+  --border-radius: 8px;
+  --font-family: 'Roboto', sans-serif;
+  --spacing-unit: 1rem;
+}
+
+body {
+  font-family: var(--font-family);
+  margin: 0;
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  line-height: 1.6;
+}
+
+.sticky {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background-color: white;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* Navbar */
+.navbar {
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  padding: var(--spacing-unit);
+  align-items: center;
+}
+
+.navbar-brand{
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.user-profile {
+  cursor: pointer;
+}
+
+.user-profile img {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+}
+
+.notification-icon {
+  cursor: pointer;
+  margin-left: auto;
+}
+
+/* Sidebar */
+.sidebar {
+  background-color: #f0f0f0;
+  padding: var(--spacing-unit);
+  width: 250px;
+  height: 100vh;
+  position: fixed;
+  left: 0;
+  top: 0;
+  transition: transform 0.3s ease-in-out;
+  transform: translateX(-100%);
+}
+
+.sidebar.open {
+  transform: translateX(0);
+}
+
+.sidebar ul {
+  list-style: none;
+  padding: 0;
+}
+
+.sidebar li {
+  margin-bottom: var(--spacing-unit);
+}
+
+.sidebar a {
+  display: block;
+  padding: var(--spacing-unit);
+  color: var(--text-color);
+  text-decoration: none;
+}
+
+.sidebar a:hover {
+  background-color: #ddd;
+}
+
+
+/* Main content */
+.main-content {
+  margin-left: 250px;
+  padding: var(--spacing-unit);
+  transition: margin-left 0.3s ease-in-out;
+}
+
+.main-content.open {
+  margin-left: 0;
+}
+
+
+/* Cards */
+.card {
+  background-color: white;
+  border-radius: var(--border-radius);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  padding: var(--spacing-unit);
+  margin-bottom: var(--spacing-unit);
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+  .sidebar {
+    width: 80%;
+  }
+  .main-content {
+    margin-left: 0;
+  }
+  .navbar {
+    grid-template-columns: 1fr auto;
+  }
+}
+
+/* Placeholder styles */
+.placeholder {
+  width: 100px;
+  height: 100px;
+  background-color: lightblue;
+  margin: 1rem;
+  border-radius: 10px;
+}
+
+/* Animations */
+.fade-in {
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+</style>
+</head>
+<body>
+
+<header class="sticky">
+  <nav class="navbar">
+    <div class="navbar-brand">Admin Dashboard</div>
+    <div class="user-profile">
+      <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI1MCUiIGhlaWdodD0iNTAlIj48Y2lyY2xlIGN4PSI1MCUiIGN5PSI1MCUiIHI9IjQ1JSIgZmlsbD0icmVkIiAvPjwvc3ZnPg==" alt="User Avatar">
+    </div>
+    <div class="notification-icon">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 10V14" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </div>
+  </nav>
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="#">Home</a></li>
+      <li class="breadcrumb-item active" aria-current="page">Dashboard</li>
+    </ol>
+  </nav>
+</header>
+
+<aside class="sidebar">
+  <button id="sidebarToggle" onclick="toggleSidebar()">&#9776;</button>
+  <ul>
+    <li><a href="#">Users</a></li>
+    <li><a href="#">Loans</a></li>
+    <li><a href="#">Reports</a></li>
+    <li><a href="#">Settings</a></li>
+  </ul>
+</aside>
+
+
+<main class="main-content">
+  <section class="hero">
+    <h1>Welcome to the Admin Dashboard</h1>
+    <div class="kpi-grid">
+      <div class="card kpi-card">
+        <h2>Total Loan Applications</h2>
+        <p>150</p>
+      </div>
+      <div class="card kpi-card">
+        <h2>Approved Loans</h2>
+        <p>100</p>
+      </div>
+      <div class="card kpi-card">
+        <h2>Rejected Loans</h2>
+        <p>50</p>
+      </div>
+      <div class="card kpi-card">
+        <h2>Repayments Received</h2>
+        <p>$10,000</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="data-tables">
+    <h2>Users</h2>
+    <div class="placeholder"></div>
+    <h2>Loans</h2>
+    <div class="placeholder"></div>
+  </section>
+
+</main>
+
+<footer>
+  <p>&copy; 2023 Loan Management System</p>
+</footer>
+
+<script>
+function toggleSidebar() {
+  const sidebar = document.querySelector('.sidebar');
+  const mainContent = document.querySelector('.main-content');
+  sidebar.classList.toggle('open');
+  mainContent.classList.toggle('open');
+}
+</script>
+
+</body>
+</html>

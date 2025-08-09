@@ -108,4 +108,11 @@ Added a new `enhanceFilePrompt()` method to the LLMService that uses an addition
 - Fallback handling: Uses original prompt if enhancement fails
 - Production-ready specifications for comprehensive web applications
 
-This enhancement ensures generated HTML files include extensive modern web elements with detailed styling and interaction specifications, resulting in more sophisticated and feature-rich applications.
+**Latest Update:** Streamlined the enhancement prompt to be more compact and structured, focusing on generating organized feature lists with specific categories:
+- Layout & Navigation elements with descriptions
+- Interactive Components with implementation notes
+- Content Sections with specifications
+- Modern Features with technical details
+- Design Patterns with styling approaches
+
+The new format produces more actionable and organized enhancement outputs, resulting in better structured HTML applications with clearly defined modern UI elements.

@@ -3,164 +3,252 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Modern Dashboard</title>
+<title>Loan Management Dashboard</title>
 <style>
 :root {
-  --primary-color: #673ab7;
-  --secondary-color: #ff9800;
-  --bg-color: #f4f4f4;
+  --primary-color: #3f51b5;
+  --secondary-color: #6200ee;
+  --background-color: #f4f4f4;
   --text-color: #333;
   --shadow-color: rgba(0,0,0,0.2);
   --border-radius: 8px;
-  --spacing-unit: 1rem;
 }
 
 body {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background-color: var(--bg-color);
-  color: var(--text-color);
+  font-family: 'Roboto', sans-serif;
   margin: 0;
-  display: grid;
-  grid-template-rows: auto 1fr auto;
-  min-height: 100vh;
+  background-color: var(--background-color);
+  color: var(--text-color);
+  line-height: 1.6;
 }
 
+/* Navigation */
 header {
-  background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
-  color: white;
-  padding: 2rem;
-  text-align: center;
-}
-
-main {
-  padding: var(--spacing-unit);
+  position: sticky;
+  top: 0;
+  background-color: white;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  z-index: 10;
+  padding: 1rem;
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  grid-gap: var(--spacing-unit);
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
 }
 
-.chart-container {
+.logo {
+  font-weight: bold;
+  font-size: 1.2rem;
+}
+
+.hamburger-menu {
+  display: none;
+  cursor: pointer;
+}
+
+.hamburger-menu::before {
+  content: '\u2630'; /* Hamburger icon */
+  font-size: 2rem;
+}
+
+.user-profile {
+  display: flex;
+  align-items: center;
+}
+
+.user-profile img {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  margin-right: 0.5rem;
+}
+
+.user-profile-menu {
+  position: absolute;
+  display: none;
+  background-color: white;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  border-radius: var(--border-radius);
+}
+
+.user-profile-menu li {
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+}
+
+.user-profile:hover .user-profile-menu {
+  display: block;
+}
+
+
+/* Sidebar */
+aside {
+  background-color: #f0f0f0;
+  padding: 1rem;
+  width: 250px;
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  left: 0;
+  transition: transform 0.3s ease-in-out;
+  overflow-y: auto;
+}
+
+aside.collapsed {
+  transform: translateX(-100%);
+}
+
+aside nav {
+  display: flex;
+  flex-direction: column;
+}
+
+aside nav ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+aside nav li {
+  margin-bottom: 1rem;
+}
+
+aside nav a {
+  display: block;
+  padding: 0.8rem 1.2rem;
   background-color: white;
   border-radius: var(--border-radius);
-  box-shadow: 0 2px 4px var(--shadow-color);
-  padding: var(--spacing-unit);
+  text-decoration: none;
+  color: var(--text-color);
+  transition: background-color 0.3s ease;
 }
 
-.chart-title {
-  font-size: 1.2rem;
-  margin-bottom: var(--spacing-unit);
+aside nav a:hover {
+  background-color: #e0e0e0;
 }
 
-.chart {
-  width: 100%;
-  height: 200px;
-  background: linear-gradient(to right, #4CAF50, #8BC34A);
+/* Main Content */
+main {
+  padding: 2rem;
+  margin-left: 250px; /* Adjust for sidebar width */
+  transition: margin-left 0.3s ease-in-out;
+}
+
+main.collapsed {
+  margin-left: 0;
+}
+
+
+/* Cards */
+.card {
+  background-color: white;
+  padding: 1rem;
   border-radius: var(--border-radius);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  margin-bottom: 1rem;
 }
 
-
-.filter-controls {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: var(--spacing-unit);
+.card-header {
+  font-weight: bold;
+  margin-bottom: 0.5rem;
 }
 
-.filter-select {
-  padding: 0.5rem;
-  border: 1px solid #ccc;
-  border-radius: var(--border-radius);
-}
-
-/* Responsive adjustments */
+/* Responsive styles */
 @media (max-width: 768px) {
+  header {
+    grid-template-columns: 1fr auto;
+  }
+  .hamburger-menu {
+    display: block;
+  }
+  aside {
+    width: 100%;
+  }
   main {
-    grid-template-columns: 1fr;
+    margin-left: 0;
   }
 }
 
-/* Neumorphism styles (example) */
-.neumorph-button {
-  background-color: #fff;
-  border-radius: var(--border-radius);
-  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1), -2px -2px 5px rgba(255, 255, 255, 0.9);
-  padding: 0.8rem 1.5rem;
-  cursor: pointer;
-  transition: box-shadow 0.2s ease;
-}
 
-.neumorph-button:hover {
-  box-shadow: 3px 3px 7px rgba(0, 0, 0, 0.2), -3px -3px 7px rgba(255, 255, 255, 0.95);
-}
-
-
-.glassmorphism-element {
-  background: rgba(255, 255, 255, 0.2);
-  border-radius: 16px;
-  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+/* Sample content */
+.loan-overview {
   backdrop-filter: blur(5px);
-  -webkit-backdrop-filter: blur(5px);
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  padding: 1rem;
+  background-color: rgba(255,255,255,0.8);
 }
 
-footer {
-    background-color: #333;
-    color: white;
-    text-align: center;
-    padding: 1rem;
+.progress-bar {
+  width: 100%;
+  height: 20px;
+  background-color: #f0f0f0;
+  border-radius: var(--border-radius);
+  overflow: hidden;
 }
+
+.progress-bar progress {
+  width: 100%;
+  height: 100%;
+  appearance: none;
+  background-color: transparent;
+}
+
+.progress-bar progress::-webkit-progress-bar {
+  background-color: transparent;
+}
+
+.progress-bar progress::-webkit-progress-value {
+  background-image: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+}
+
+/* more styles for other components omitted for brevity */
 
 </style>
 </head>
 <body>
 <header>
-  <h1>Modern Dashboard</h1>
+  <div class="logo">LoanApp</div>
+  <button class="hamburger-menu"></button>
+  <div class="user-profile">
+    <div style="background-color:lightblue; width:30px; height:30px; border-radius:50%;"></div>
+    <div>User</div>
+    <ul class="user-profile-menu">
+      <li>Profile</li>
+      <li>Logout</li>
+    </ul>
+  </div>
 </header>
+
+<aside>
+  <nav>
+    <ul>
+      <li><a href="#">Loan Details</a></li>
+      <li><a href="#">Payment History</a></li>
+      <li><a href="#">Repayment Schedule</a></li>
+      <li><a href="#">Settings</a></li>
+    </ul>
+  </nav>
+</aside>
+
 <main>
-  <section class="chart-container">
-    <h2 class="chart-title">Sales</h2>
-    <div class="chart"></div>
-  </section>
-  <section class="chart-container">
-    <h2 class="chart-title">Forecast</h2>
-    <div class="chart" style="background: linear-gradient(to right, #FFC107, #FF9800);"></div>
-  </section>
-  <section class="glassmorphism-element">
-      <h3>Settings</h3>
-      <div class="filter-controls">
-          <select class="filter-select">
-              <option value="daily">Daily</option>
-              <option value="weekly">Weekly</option>
-              <option value="monthly">Monthly</option>
-          </select>
-          <button class="neumorph-button">Apply</button>
-      </div>
-  </section>
-</main>
-<footer>
-  <p>&copy; 2023</p>
-</footer>
+  <h1>Welcome, User!</h1>
+  <div class="card loan-overview">
+    <h3>Loan Overview</h3>
+    <p>Loan Amount: $10,000</p>
+    <p>Interest Rate: 5%</p>
+    <p>Due Date: 2024-12-31</p>
+    <div class="progress-bar">
+      <progress value="60" max="100"></progress>
+    </div>
+  </div>
+  </main>
 
 <script>
-// Add interactive chart functionality here (placeholder)
+const hamburgerMenu = document.querySelector('.hamburger-menu');
+const aside = document.querySelector('aside');
+const main = document.querySelector('main');
 
-const charts = document.querySelectorAll('.chart');
-charts.forEach(chart => {
-  chart.addEventListener('click', () => {
-    chart.style.backgroundColor = `linear-gradient(to right, ${getRandomColor()}, ${getRandomColor()})`;
-  })
+hamburgerMenu.addEventListener('click', () => {
+  aside.classList.toggle('collapsed');
+  main.classList.toggle('collapsed');
 });
-
-function getRandomColor() {
-    const letters = '0123456789ABCDEF';
-    let color = '#';
-    for (let i = 0; i < 6; i++) {
-      color += letters[Math.floor(Math.random() * 16)];
-    }
-    return color;
-}
-
 
 </script>
 </body>

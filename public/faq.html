@@ -3,144 +3,233 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Loan Application FAQ</title>
+<title>FAQ</title>
 <style>
 :root {
-  --primary-color: #673ab7;
-  --secondary-color: #f44336;
-  --background-color: #f5f5f5;
+  --primary-color: #3f51b5;
+  --secondary-color: #6200ee;
+  --bg-color: #f4f4f4;
   --text-color: #333;
-  --accent-color: #FFC107;
   --shadow-color: rgba(0,0,0,0.2);
-  --border-radius: 8px;
-  --spacing-unit: 1rem;
+  --accent-color: #ffcc80;
+  --spacing: 1rem;
 }
 
 body {
-  font-family: 'Roboto', sans-serif;
+  font-family: 'Inter', sans-serif;
   line-height: 1.6;
-  background-color: var(--background-color);
-  color: var(--text-color);
   margin: 0;
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  transition: background-color 0.3s ease;
+}
+
+.dark-theme {
+  --bg-color: #222;
+  --text-color: #eee;
 }
 
 header {
-  background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+  background-color: var(--primary-color);
   color: white;
-  padding: var(--spacing-unit) 0;
-  text-align: center;
+  padding: var(--spacing);
+  position: sticky;
+  top: 0;
+  z-index: 100;
 }
 
-h1 {
-  font-size: 2rem;
-  margin: 0;
+nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
-section {
-  padding: var(--spacing-unit);
-  max-width: 800px;
-  margin: auto;
+.logo {
+  font-size: 1.5rem;
+  font-weight: bold;
 }
 
-.faq-item {
-  background-color: white;
-  border-radius: var(--border-radius);
-  box-shadow: 0 2px 4px var(--shadow-color);
-  margin-bottom: var(--spacing-unit);
-  overflow: hidden;
+.menu-toggle {
+  display: none;
+  cursor: pointer;
+  font-size: 1.5rem;
+}
+
+.menu-toggle::before {
+  content: '\2630';
+}
+
+.menu-toggle.active::before {
+  content: '\2716';
+}
+
+.nav-links {
+  display: flex;
+}
+
+.nav-link {
+  margin: 0 var(--spacing);
+  text-decoration: none;
+  color: white;
+}
+
+main {
+  padding: var(--spacing);
+}
+
+.faq-section {
+  margin-bottom: var(--spacing);
 }
 
 .faq-question {
-  padding: var(--spacing-unit);
+  background-color: white;
+  padding: var(--spacing);
+  border-radius: 0.5rem;
+  box-shadow: 0 2px 4px var(--shadow-color);
   cursor: pointer;
-  background: linear-gradient(to right, #673ab7, #FFC107);
-  color: white;
+  transition: transform 0.2s ease;
 }
 
-.faq-question:hover {
-  background: linear-gradient(to right, #8e54e9, #FFD740);
-}
-
-.faq-question::before {
-  content: '\279C'; /* Right arrow */
-  margin-right: var(--spacing-unit);
+.faq-question.active {
+  transform: scale(1.02);
 }
 
 .faq-answer {
-  padding: var(--spacing-unit);
+  background-color: white;
+  padding: var(--spacing);
+  border-radius: 0.5rem;
+  box-shadow: 0 2px 4px var(--shadow-color);
   max-height: 0;
   overflow: hidden;
-  transition: max-height 0.3s ease-out;
+  transition: max-height 0.3s ease;
 }
 
-.faq-item.active .faq-answer {
+.faq-answer.active {
   max-height: 500px;
 }
 
-.faq-item.active .faq-question::before {
-  content: '\2796'; /* Down arrow */
+.contact-form {
+  margin-top: 2rem;
+  padding: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 0.5rem;
+}
+
+label {
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+input, textarea {
+  width: 100%;
+  padding: 0.5rem;
+  margin-bottom: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 0.5rem;
+}
+
+button {
+  background-color: var(--primary-color);
+  color: white;
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+button:hover {
+  background-color: var(--secondary-color);
 }
 
 
 @media (max-width: 768px) {
-  h1 {
-    font-size: 1.5rem;
+  .nav-links {
+    display: none;
+  }
+
+  .menu-toggle {
+    display: block;
+  }
+
+  .menu-toggle.active + .nav-links {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .nav-links {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background-color: var(--primary-color);
+    width: 100%;
+  }
+
+  .nav-link {
+    margin: var(--spacing);
   }
 }
+
 </style>
 </head>
 <body>
 <header>
-  <h1>Frequently Asked Questions</h1>
+  <nav>
+    <div class="logo">FAQ</div>
+    <div class="menu-toggle" onclick="toggleMenu()"></div>
+    <div class="nav-links">
+      <a href="#" class="nav-link">Home</a>
+      <a href="#" class="nav-link">About</a>
+      <a href="#" class="nav-link">Services</a>
+    </div>
+  </nav>
 </header>
-<section>
-  <div class="faq-item" aria-expanded="false">
-    <div class="faq-question" role="button" tabindex="0" aria-controls="answer1">What are the eligibility criteria for a loan?</div>
-    <div id="answer1" class="faq-answer" role="region" aria-labelledby="question1">You must be over 18, have a steady income, and meet our credit requirements.  Details can be found on our website's application page.</div>
-  </div>
-
-  <div class="faq-item" aria-expanded="false">
-    <div class="faq-question" role="button" tabindex="0" aria-controls="answer2">How long does the application process take?</div>
-    <div id="answer2" class="faq-answer" role="region" aria-labelledby="question2">Typically, the process takes 1-3 business days. However, processing times may vary depending on the complexity of the application.</div>
-  </div>
-
-  <div class="faq-item" aria-expanded="false">
-    <div class="faq-question" role="button" tabindex="0" aria-controls="answer3">What documents do I need to apply?</div>
-    <div id="answer3" class="faq-answer" role="region" aria-labelledby="question3">You'll need your ID, proof of income (payslips, tax returns), and proof of address.</div>
-  </div>
-
-  <div class="faq-item" aria-expanded="false">
-    <div class="faq-question" role="button" tabindex="0" aria-controls="answer4">What interest rates do you offer?</div>
-    <div id="answer4" class="faq-answer" role="region" aria-labelledby="question4">Our interest rates vary depending on your credit score and loan amount.  Contact us for a personalized quote.</div>
-  </div>
-</section>
+<main>
+  <section class="faq-section">
+    <h2>Loan Application</h2>
+    <div class="faq-question" onclick="toggleAnswer(this)">How do I apply for a loan?</div>
+    <div class="faq-answer">Answer goes here.</div>
+    <div class="faq-question" onclick="toggleAnswer(this)">What documents are required?</div>
+    <div class="faq-answer">Answer goes here.</div>
+  </section>
+  <section class="faq-section">
+    <h2>Repayment</h2>
+    <div class="faq-question" onclick="toggleAnswer(this)">How do I make a payment?</div>
+    <div class="faq-answer">Answer goes here.</div>
+    <div class="faq-question" onclick="toggleAnswer(this)">What are the repayment options?</div>
+    <div class="faq-answer">Answer goes here.</div>
+  </section>
+  <section class="contact-form">
+  <h2>Contact Us</h2>
+  <form>
+    <label for="name">Name:</label>
+    <input type="text" id="name">
+    <label for="email">Email:</label>
+    <input type="email" id="email">
+    <label for="message">Message:</label>
+    <textarea id="message"></textarea>
+    <button type="submit">Submit</button>
+  </form>
+  </section>
+</main>
 <footer>
-  <p>&copy; 2023 Loan Application</p>
+  <p>&copy; 2023 My Company</p>
 </footer>
 <script>
-const faqItems = document.querySelectorAll('.faq-item');
+function toggleMenu() {
+  const menuToggle = document.querySelector('.menu-toggle');
+  menuToggle.classList.toggle('active');
+}
 
-faqItems.forEach(item => {
-  const question = item.querySelector('.faq-question');
-  const answer = item.querySelector('.faq-answer');
+function toggleAnswer(element) {
+  element.nextElementSibling.classList.toggle('active');
+  element.classList.toggle('active');
+}
 
-  question.addEventListener('click', () => {
-    item.classList.toggle('active');
-    item.setAttribute('aria-expanded', item.classList.contains('active'));
-  });
-
-  question.addEventListener('keydown', (event) => {
-    if (event.key === 'Enter' || event.key === 'Space') {
-      item.classList.toggle('active');
-      item.setAttribute('aria-expanded', item.classList.contains('active'));
-      event.preventDefault(); //prevent page scroll
-    }
-  });
-});
+const darkThemeToggle = document.createElement('button');
+darkThemeToggle.textContent = 'Dark Theme';
+darkThemeToggle.onclick = () => document.body.classList.toggle('dark-theme');
+document.body.appendChild(darkThemeToggle);
 </script>
-
 </body>
 </html>
