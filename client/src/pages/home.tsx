@@ -3,6 +3,7 @@ import { ChatInterface } from "@/components/ChatInterface";
 import { FileExplorer } from "@/components/FileExplorer";
 import { PreviewPanel } from "@/components/PreviewPanel";
 import { Settings, Cog } from "lucide-react";
+import { Link } from "wouter";
 
 export default function Home() {
   const [currentProject, setCurrentProject] = useState<string | null>(null);
@@ -29,9 +30,11 @@ export default function Home() {
             <div className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></div>
             <span>LLM Connected</span>
           </div>
-          <button className="p-2 hover:bg-slate-800 rounded-lg transition-colors">
-            <Cog className="w-4 h-4 text-slate-400" />
-          </button>
+          <Link href="/settings">
+            <button className="p-2 hover:bg-slate-800 rounded-lg transition-colors">
+              <Cog className="w-4 h-4 text-slate-400" />
+            </button>
+          </Link>
         </div>
       </header>
 

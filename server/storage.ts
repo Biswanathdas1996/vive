@@ -5,6 +5,8 @@ import {
   type InsertChatSession,
   type GeneratedFile,
   type InsertGeneratedFile,
+  type Settings,
+  type InsertSettings,
   type ChatMessage
 } from "@shared/schema";
 import { randomUUID } from "crypto";
@@ -24,23 +26,31 @@ export interface IStorage {
   createGeneratedFile(file: InsertGeneratedFile): Promise<GeneratedFile>;
   getGeneratedFile(id: string): Promise<GeneratedFile | undefined>;
   getProjectFiles(projectId: string): Promise<GeneratedFile[]>;
+  
+  // Settings methods
+  getSettings(userId?: string): Promise<Settings | undefined>;
+  upsertSettings(settings: InsertSettings): Promise<Settings>;
 }
 
 export class MemStorage implements IStorage {
   private projects: Map<string, Project>;
   private chatSessions: Map<string, ChatSession>;
   private generatedFiles: Map<string, GeneratedFile>;
+  private settings: Map<string, Settings>;
 
   constructor() {
     this.projects = new Map();
     this.chatSessions = new Map();
     this.generatedFiles = new Map();
+    this.settings = new Map();
   }
 
   async createProject(insertProject: InsertProject): Promise<Project> {
     const id = randomUUID();
     const project: Project = { 
       ...insertProject, 
+      description: insertProject.description || null,
+      fileStructure: insertProject.fileStructure || null,
       id,
       createdAt: new Date()
     };
@@ -56,6 +66,9 @@ export class MemStorage implements IStorage {
     const id = randomUUID();
     const session: ChatSession = { 
       ...insertSession, 
+      projectId: insertSession.projectId || null,
+      messages: insertSession.messages || [],
+      status: insertSession.status || "active",
       id,
       createdAt: new Date()
     };
@@ -80,6 +93,8 @@ export class MemStorage implements IStorage {
     const id = randomUUID();
     const file: GeneratedFile = { 
       ...insertFile, 
+      projectId: insertFile.projectId || null,
+      status: insertFile.status || "generated",
       id,
       createdAt: new Date()
     };
@@ -95,6 +110,26 @@ export class MemStorage implements IStorage {
     return Array.from(this.generatedFiles.values()).filter(
       file => file.projectId === projectId
     );
+  }
+
+  async getSettings(userId: string = "default"): Promise<Settings | undefined> {
+    return this.settings.get(userId);
+  }
+
+  async upsertSettings(insertSettings: InsertSettings): Promise<Settings> {
+    const userId = insertSettings.userId || "default";
+    const existing = this.settings.get(userId);
+    
+    const settings: Settings = {
+      ...insertSettings,
+      id: existing?.id || randomUUID(),
+      userId,
+      createdAt: existing?.createdAt || new Date(),
+      updatedAt: new Date()
+    };
+    
+    this.settings.set(userId, settings);
+    return settings;
   }
 }
 

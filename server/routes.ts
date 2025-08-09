@@ -1,7 +1,7 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
-import { llmService } from "./services/llm";
+import { enhancedLLMService } from "./services/enhancedLLM";
 import { fileGeneratorService } from "./services/fileGenerator";
 import { ObjectStorageService, ObjectPermission } from "./objectStorage";
 import { imageAnalysisService } from "./services/imageAnalysis";
@@ -25,7 +25,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
 
       // Step 1: Analyze prompt
-      const analysisResult = await llmService.analyzePrompt(prompt);
+      const analysisResult = await enhancedLLMService.analyzePrompt(prompt);
 
       // Create project
       const project = await storage.createProject({
@@ -85,7 +85,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const { analysisResult } = req.body;
 
       const fileStructure =
-        await llmService.generateFileStructure(analysisResult);
+        await enhancedLLMService.generateFileStructure(analysisResult);
       console.log("Generated file structure:", fileStructure);
       // Update chat session
       const chatSession = await storage.getChatSession(sessionId);
@@ -138,7 +138,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const { sessionId } = req.params;
       const { fileName, analysisResult, fileStructure } = req.body;
 
-      const content = await llmService.generateFileContent(
+      const content = await enhancedLLMService.generateFileContent(
         fileName,
         analysisResult,
         fileStructure,
@@ -188,7 +188,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const { fileName, modificationRequest } = req.body;
 
       const currentContent = await fileGeneratorService.readFile(fileName);
-      const modifiedContent = await llmService.modifyFileContent(
+      const modifiedContent = await enhancedLLMService.modifyFileContent(
         fileName,
         currentContent,
         modificationRequest,
@@ -292,6 +292,60 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Object storage routes for image uploads
+  // Settings routes
+  app.get("/api/settings", async (req, res) => {
+    try {
+      const userId = req.query.userId as string || "default";
+      let settings = await storage.getSettings(userId);
+      
+      // Return default settings if none exist
+      if (!settings) {
+        settings = {
+          id: "default",
+          userId: "default",
+          aiProvider: "gemini",
+          aiModel: "gemini-1.5-flash",
+          apiKeys: {},
+          preferences: {
+            theme: "dark",
+            language: "en",
+            autoSave: true,
+            showAdvanced: false
+          },
+          createdAt: new Date(),
+          updatedAt: new Date()
+        };
+      }
+      
+      res.json(settings);
+    } catch (error) {
+      res.status(500).json({
+        error: error instanceof Error ? error.message : String(error),
+      });
+    }
+  });
+
+  app.post("/api/settings", async (req, res) => {
+    try {
+      const settingsData = req.body;
+      const userId = settingsData.userId || "default";
+      
+      const settings = await storage.upsertSettings({
+        userId,
+        aiProvider: settingsData.aiProvider,
+        aiModel: settingsData.aiModel,
+        apiKeys: settingsData.apiKeys || {},
+        preferences: settingsData.preferences || {}
+      });
+      
+      res.json(settings);
+    } catch (error) {
+      res.status(500).json({
+        error: error instanceof Error ? error.message : String(error),
+      });
+    }
+  });
+
   app.post("/api/objects/upload", async (req, res) => {
     try {
       const objectStorageService = new ObjectStorageService();
