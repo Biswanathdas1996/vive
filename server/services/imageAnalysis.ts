@@ -1,4 +1,5 @@
 import { GoogleGenAI } from "@google/genai";
+import { File } from "@google-cloud/storage";
 
 const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY || "" });
 
@@ -45,6 +46,48 @@ Provide a comprehensive description that a web developer could use to recreate t
       return result.text || "Could not analyze the image";
     } catch (error) {
       console.error("Error analyzing image:", error);
+      throw new Error(`Failed to analyze image: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    }
+  }
+
+  async analyzeImageFromFile(file: File): Promise<string> {
+    try {
+      // Download the file data directly from object storage
+      const [fileBuffer] = await file.download();
+      const imageBase64 = fileBuffer.toString('base64');
+      
+      // Get file metadata to determine MIME type
+      const [metadata] = await file.getMetadata();
+      const contentType = metadata.contentType || 'image/jpeg';
+      
+      const contents = [
+        {
+          inlineData: {
+            data: imageBase64,
+            mimeType: contentType,
+          },
+        },
+        `Analyze this design image in detail. Describe the visual elements, layout, color scheme, typography, UI components, and overall design style. Focus on:
+
+1. **Layout & Structure**: How elements are arranged, grid systems, spacing, alignment
+2. **Color Palette**: Primary and secondary colors, gradients, contrast levels
+3. **Typography**: Font styles, sizes, hierarchy, text treatments
+4. **UI Elements**: Buttons, cards, forms, navigation, icons, and their styles
+5. **Visual Style**: Modern/classic, minimalist/detailed, professional/casual tone
+6. **Interactive Elements**: Hover states, shadows, borders, rounded corners
+7. **Content Organization**: How information is grouped and presented
+
+Provide a comprehensive description that a web developer could use to recreate this design style in HTML/CSS.`,
+      ];
+
+      const result = await ai.models.generateContent({
+        model: "gemini-2.5-pro",
+        contents: contents,
+      });
+
+      return result.text || "Could not analyze the image";
+    } catch (error) {
+      console.error("Error analyzing image from file:", error);
       throw new Error(`Failed to analyze image: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
   }

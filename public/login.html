@@ -7,91 +7,91 @@
 <style>
 :root {
   --primary-color: #673ab7;
-  --secondary-color: #ff9800;
+  --secondary-color: #e91e63;
   --background-color: #f4f4f4;
   --text-color: #333;
   --shadow-color: rgba(0,0,0,0.2);
   --border-radius: 8px;
-  --spacing-unit: 1rem;
+  --spacing: 1rem;
 }
 
 body {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-family: 'Arial', sans-serif;
   background-color: var(--background-color);
   display: flex;
   justify-content: center;
   align-items: center;
   min-height: 100vh;
   margin: 0;
+  color: var(--text-color);
 }
 
 .login-container {
-  background: linear-gradient(to bottom right, #fff, #f0f0f0);
-  box-shadow: 0px 0px 20px var(--shadow-color);
+  background: linear-gradient(to bottom, rgba(255,255,255,0.8), rgba(255,255,255,0.2)), radial-gradient(circle at 50% 100%, var(--primary-color), rgba(255,255,255,0));
+  padding: 2rem;
   border-radius: var(--border-radius);
-  padding: 3rem;
-  width: 350px;
+  box-shadow: 0 0.5rem 1rem var(--shadow-color);
+  backdrop-filter: blur(10px);
   text-align: center;
 }
 
-h1 {
-  color: var(--primary-color);
-  font-size: 2.5rem;
-  margin-bottom: 1rem;
+.login-container h1 {
+  font-size: 2rem;
+  margin-bottom: var(--spacing);
 }
 
-label {
+.login-container label {
   display: block;
   margin-bottom: 0.5rem;
-  color: var(--text-color);
-  font-weight: bold;
 }
 
-input[type="text"],
-input[type="password"] {
+.login-container input[type="text"],
+.login-container input[type="password"] {
   width: 100%;
   padding: 1rem;
-  margin-bottom: 1rem;
   border: 1px solid #ccc;
   border-radius: var(--border-radius);
-  font-size: 1rem;
+  margin-bottom: var(--spacing);
+  box-sizing: border-box;
+  transition: border-color 0.3s ease;
 }
 
-button {
+.login-container input[type="text"]:focus,
+.login-container input[type="password"]:focus {
+  border-color: var(--primary-color);
+  outline: none;
+}
+
+.login-container button {
   background-color: var(--primary-color);
   color: white;
   padding: 1rem 2rem;
   border: none;
   border-radius: var(--border-radius);
-  font-size: 1rem;
   cursor: pointer;
   transition: background-color 0.3s ease;
 }
 
-button:hover {
-  background-color: darken(var(--primary-color), 10%);
+.login-container button:hover {
+  background-color: var(--secondary-color);
 }
 
-a {
-  color: var(--secondary-color);
+.login-container .error {
+  color: red;
+  margin-top: var(--spacing);
+}
+
+.login-container a {
+  color: var(--primary-color);
   text-decoration: none;
   display: block;
-  margin-top: 1rem;
+  margin-top: var(--spacing);
 }
 
-a:hover {
-  text-decoration: underline;
-}
-
-@keyframes shimmer {
-    0% {background-position: -100rem 0}
-    100% {background-position: 100rem 0}
-}
-
-.shimmer{
-  background: linear-gradient(to right, #eee, #ddd, #eee);
-  background-size: 20rem 100%;
-  animation: shimmer 1.5s linear infinite;
+@media (max-width: 500px) {
+    .login-container {
+        width: 90%;
+    }
 }
 
 </style>
@@ -99,32 +99,32 @@ a:hover {
 <body>
 <div class="login-container">
   <h1>Login</h1>
-  <form>
-    <label for="username">Username/Email:</label>
+  <form id="loginForm">
+    <label for="username">Username:</label>
     <input type="text" id="username" name="username" required>
     <label for="password">Password:</label>
     <input type="password" id="password" name="password" required>
+    <div id="error"></div>
     <button type="submit">Login</button>
   </form>
-  <a href="#">Register</a>
   <a href="#">Forgot Password?</a>
 </div>
 
 <script>
-  //Simple form submission prevention for demonstration
-  document.querySelector('form').addEventListener('submit', (e) => {
-    e.preventDefault();
-    alert('Login functionality would be implemented here.');
-  });
+document.getElementById('loginForm').addEventListener('submit', function(event) {
+  event.preventDefault();
+  const username = document.getElementById('username').value;
+  const password = document.getElementById('password').value;
+  const errorDiv = document.getElementById('error');
 
-  // Example of adding a subtle animation on hover (replace with more advanced animations as needed)
-  const loginButton = document.querySelector('button');
-  loginButton.addEventListener('mouseover', () => {
-    loginButton.style.boxShadow = '0 0 10px rgba(0,0,255,0.5)';
-  });
-  loginButton.addEventListener('mouseout', () => {
-    loginButton.style.boxShadow = 'none';
-  });
+  //Simulate API call (replace with actual authentication logic)
+  if (username === "user" && password === "password") {
+    errorDiv.textContent = ""; //Clear any previous error
+    alert("Login successful!"); //Replace with navigation to a new page
+  } else {
+    errorDiv.textContent = "Invalid username or password.";
+  }
+});
 </script>
 </body>
 </html>

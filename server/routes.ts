@@ -324,7 +324,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
       let imageAnalysis = "";
       try {
         console.log("Analyzing uploaded image:", imageURL);
-        imageAnalysis = await imageAnalysisService.analyzeImageFromUrl(imageURL);
+        // Get the object file for direct analysis
+        const objectFile = await objectStorageService.getObjectEntityFile(objectPath);
+        imageAnalysis = await imageAnalysisService.analyzeImageFromFile(objectFile);
         console.log("Image analysis complete:", imageAnalysis.substring(0, 200) + "...");
       } catch (analysisError) {
         console.error("Image analysis failed:", analysisError);

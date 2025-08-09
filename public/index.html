@@ -3,89 +3,103 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Modern Web App</title>
+<title>Data Analytics Dashboard</title>
 <style>
 :root {
   --primary-color: #673ab7;
-  --secondary-color: #f06292;
-  --background-color: #f5f5f5;
+  --secondary-color: #ff9800;
+  --background-color: #f4f4f4;
   --text-color: #333;
   --shadow-color: rgba(0,0,0,0.2);
-  --border-radius: 8px;
-  --spacing-unit: 1rem;
+  --border-radius: 10px;
+  --spacing: 1rem;
 }
 
 body {
-  font-family: 'Roboto', sans-serif;
+  font-family: 'Arial', sans-serif;
   line-height: 1.6;
   margin: 0;
   background-color: var(--background-color);
   color: var(--text-color);
-  overflow-x: hidden; /* Prevent horizontal scroll on animation */
+  overflow-x: hidden;
 }
 
 .container {
   max-width: 1200px;
   margin: 0 auto;
-  padding: var(--spacing-unit);
+  padding: var(--spacing);
 }
 
 header {
   background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
   color: white;
-  padding: 2rem 0;
+  padding: 2rem;
   text-align: center;
 }
 
 h1 {
-  font-size: 3rem;
-  margin-bottom: 1rem;
+  font-size: clamp(2rem, 4vw + 1rem, 3rem);
+  margin-bottom: var(--spacing);
 }
 
 section {
-  padding: var(--spacing-unit) 0;
+  padding: 2rem;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  gap: var(--spacing);
 }
 
 .feature {
-  display: flex;
-  align-items: center;
   background-color: white;
-  padding: 2rem;
-  border-radius: var(--border-radius);
   box-shadow: 0 2px 4px var(--shadow-color);
-  margin-bottom: var(--spacing-unit);
-  transition: transform 0.3s ease;
+  border-radius: var(--border-radius);
+  padding: 1.5rem;
+  flex: 1 0 300px;
+  min-width: 300px;
 }
 
-.feature:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 4px 8px var(--shadow-color);
+.feature h2 {
+  font-size: clamp(1.5rem, 2vw + 1rem, 2rem);
+  margin-bottom: var(--spacing) /2;
 }
 
-.feature-icon {
-  width: 60px;
-  height: 60px;
-  border-radius: 50%;
+.feature p {
+  line-height: 1.5;
+  margin-bottom: var(--spacing) /2;
+}
+
+.feature::before{
+    content: '';
+    display: block;
+    width: 50px;
+    height: 50px;
+    background-color: var(--primary-color);
+    border-radius: 50%;
+    margin: 0 auto var(--spacing) ;
+}
+
+.feature:nth-child(1)::before {
   background-color: var(--primary-color);
-  margin-right: 1rem;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  color: white;
-  font-size: 2rem;
 }
 
-.feature-text {
-  flex: 1;
+.feature:nth-child(2)::before {
+  background-color: var(--secondary-color);
 }
+
+.feature:nth-child(3)::before {
+    background-image: linear-gradient(to right, #00c6fb, #005bea);
+}
+
 
 .cta-button {
-  display: inline-block;
-  padding: 1rem 2rem;
   background-color: var(--primary-color);
   color: white;
-  text-decoration: none;
+  padding: 1rem 2rem;
+  border: none;
   border-radius: var(--border-radius);
+  font-size: 1.2rem;
+  cursor: pointer;
   transition: background-color 0.3s ease;
 }
 
@@ -98,52 +112,60 @@ footer {
   background-color: #333;
   color: white;
   text-align: center;
-  padding: 1rem 0;
+  padding: 1rem;
 }
 
-/*Responsive Styles*/
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.feature {
+    animation: fadeIn 1s ease;
+}
+
+/* Responsive adjustments */
 @media (max-width: 768px) {
-  .feature {
+  section {
     flex-direction: column;
-    align-items: center;
   }
-  .feature-icon {
-    margin-bottom: 1rem;
+  .feature {
+    flex: 1 0 100%;
+    max-width: 100%;
   }
 }
 </style>
 </head>
 <body>
 <header>
-  <h1>Modern Web App</h1>
+  <h1>Data Analytics Dashboard</h1>
 </header>
 <main class="container">
   <section>
-    <h2>Key Features</h2>
-    <div class="feature">
-      <div class="feature-icon"><i class="fas fa-chart-line"></i></div>
-      <div class="feature-text"><h3>AI Tracking</h3><p>Intelligent tracking and analysis.</p></div>
-    </div>
-    <div class="feature">
-      <div class="feature-icon"><i class="fas fa-bullseye"></i></div>
-      <div class="feature-text"><h3>Goal Setting</h3><p>Set and achieve your goals efficiently.</p></div>
-    </div>
-    <div class="feature">
-      <div class="feature-icon"><i class="fas fa-chart-bar"></i></div>
-      <div class="feature-text"><h3>Progress Visualization</h3><p>Clear and insightful progress tracking.</p></div>
-    </div>
+    <article class="feature">
+      <h2>Data Visualization</h2>
+      <p>Powerful charts and graphs to visualize your data effectively.</p>
+    </article>
+    <article class="feature">
+      <h2>Forecasting Accuracy</h2>
+      <p>Highly accurate predictive models to anticipate future trends.</p>
+    </article>
+    <article class="feature">
+      <h2>Ease of Use</h2>
+      <p>Intuitive interface designed for effortless data analysis.</p>
+    </article>
   </section>
-  <section>
-    <a href="#" class="cta-button">Register/Login</a>
-  </section>
+  <div style="text-align:center; margin-top: 2rem;">
+    <button class="cta-button">Explore Dashboard</button>
+  </div>
 </main>
 <footer>
-  <p>&copy; 2023 Modern Web App</p>
+  <p>&copy; 2023 Data Analytics</p>
 </footer>
 <script>
-// Simple JavaScript for potential future interactions (e.g., smooth scrolling)
-// Add your JavaScript logic here.  This is a placeholder.
+// Add any JavaScript interaction here if needed.  For example, smooth scrolling:
 
+//No interactive JS needed for this example.
 </script>
 </body>
 </html>

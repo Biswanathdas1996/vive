@@ -3,17 +3,16 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Progress Dashboard</title>
+<title>Modern Dashboard</title>
 <style>
 :root {
   --primary-color: #673ab7;
-  --secondary-color: #2196f3;
-  --accent-color: #ff9800;
+  --secondary-color: #ff9800;
   --bg-color: #f4f4f4;
   --text-color: #333;
-  --shadow-color: rgba(0,0,0,0.1);
+  --shadow-color: rgba(0,0,0,0.2);
   --border-radius: 8px;
-  --spacing: 1rem;
+  --spacing-unit: 1rem;
 }
 
 body {
@@ -24,169 +23,145 @@ body {
   display: grid;
   grid-template-rows: auto 1fr auto;
   min-height: 100vh;
-  grid-template-columns: 1fr; /*added for single column layout*/
 }
 
 header {
   background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
   color: white;
-  padding: var(--spacing);
+  padding: 2rem;
   text-align: center;
-}
-
-nav {
-  display: none; /* Hide navigation for this design */
 }
 
 main {
-  padding: var(--spacing);
-  display: flex;
-  flex-direction: column; /* Stack elements vertically */
-  gap: var(--spacing); /* Add spacing between elements */
+  padding: var(--spacing-unit);
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  grid-gap: var(--spacing-unit);
 }
-
-.goal-card {
-  background-color: white;
-  border-radius: var(--border-radius);
-  box-shadow: 0 2px 4px var(--shadow-color);
-  padding: var(--spacing);
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem; /*Added gap between title and progress bar*/
-}
-
-.goal-title {
-  font-size: 1.4rem;
-  font-weight: bold;
-  margin: 0; /*remove default margin*/
-}
-
-.progress-bar {
-  height: 20px;
-  width: 100%;
-  background-color: #ddd;
-  border-radius: var(--border-radius);
-  overflow: hidden;
-}
-
-.progress-bar-fill {
-  height: 100%;
-  background-color: var(--primary-color);
-  transition: width 0.5s ease;
-}
-
 
 .chart-container {
-  width: 100%;
-  height: 250px; /*Increased height*/
   background-color: white;
   border-radius: var(--border-radius);
   box-shadow: 0 2px 4px var(--shadow-color);
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  padding: var(--spacing-unit);
 }
 
-.chart-container canvas {
-  max-width: 100%;
-  max-height: 100%;
+.chart-title {
+  font-size: 1.2rem;
+  margin-bottom: var(--spacing-unit);
+}
+
+.chart {
+  width: 100%;
+  height: 200px;
+  background: linear-gradient(to right, #4CAF50, #8BC34A);
+  border-radius: var(--border-radius);
+}
+
+
+.filter-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--spacing-unit);
+}
+
+.filter-select {
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: var(--border-radius);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  main {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Neumorphism styles (example) */
+.neumorph-button {
+  background-color: #fff;
+  border-radius: var(--border-radius);
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1), -2px -2px 5px rgba(255, 255, 255, 0.9);
+  padding: 0.8rem 1.5rem;
+  cursor: pointer;
+  transition: box-shadow 0.2s ease;
+}
+
+.neumorph-button:hover {
+  box-shadow: 3px 3px 7px rgba(0, 0, 0, 0.2), -3px -3px 7px rgba(255, 255, 255, 0.95);
+}
+
+
+.glassmorphism-element {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 16px;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  padding: 1rem;
 }
 
 footer {
-  background-color: #333;
-  color: white;
-  padding: var(--spacing);
-  text-align: center;
+    background-color: #333;
+    color: white;
+    text-align: center;
+    padding: 1rem;
 }
-
-#createGoalButton {
-  background-color: var(--accent-color);
-  color: white;
-  padding: 0.8rem 1.5rem;
-  border: none;
-  border-radius: var(--border-radius);
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-  align-self: flex-end; /* Align button to the right */
-  margin-top: auto; /* Push button to the bottom */
-}
-
 
 </style>
 </head>
 <body>
 <header>
-  <h1>Progress Dashboard</h1>
+  <h1>Modern Dashboard</h1>
 </header>
 <main>
-  <div class="goal-card">
-    <h2 class="goal-title">Goal 1: Learn JavaScript</h2>
-    <div class="progress-bar">
-      <div class="progress-bar-fill" style="width: 75%;"></div>
-    </div>
-  </div>
-  <div class="goal-card">
-    <h2 class="goal-title">Goal 2: Build a Web App</h2>
-    <div class="progress-bar">
-      <div class="progress-bar-fill" style="width: 50%;"></div>
-    </div>
-  </div>
-  <div class="chart-container">
-    <canvas id="myChart"></canvas>
-  </div>
-  <button id="createGoalButton">Create New Goal</button>
+  <section class="chart-container">
+    <h2 class="chart-title">Sales</h2>
+    <div class="chart"></div>
+  </section>
+  <section class="chart-container">
+    <h2 class="chart-title">Forecast</h2>
+    <div class="chart" style="background: linear-gradient(to right, #FFC107, #FF9800);"></div>
+  </section>
+  <section class="glassmorphism-element">
+      <h3>Settings</h3>
+      <div class="filter-controls">
+          <select class="filter-select">
+              <option value="daily">Daily</option>
+              <option value="weekly">Weekly</option>
+              <option value="monthly">Monthly</option>
+          </select>
+          <button class="neumorph-button">Apply</button>
+      </div>
+  </section>
 </main>
 <footer>
-  &copy; 2023 Progress Dashboard
+  <p>&copy; 2023</p>
 </footer>
 
 <script>
-  const createGoalButton = document.getElementById('createGoalButton');
-  createGoalButton.addEventListener('click', () => {
-    alert('Create Goal functionality not yet implemented.');
-  });
+// Add interactive chart functionality here (placeholder)
 
-  setTimeout(() => {
-    document.querySelectorAll('.progress-bar-fill')[0].style.width = '90%';
-  }, 2000);
+const charts = document.querySelectorAll('.chart');
+charts.forEach(chart => {
+  chart.addEventListener('click', () => {
+    chart.style.backgroundColor = `linear-gradient(to right, ${getRandomColor()}, ${getRandomColor()})`;
+  })
+});
 
-  // Chart.js (replace with your chart library)
-  const ctx = document.getElementById('myChart').getContext('2d');
-  new Chart(ctx, {
-    type: 'bar',
-    data: {
-      labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
-      datasets: [{
-        label: 'Progress',
-        data: [12, 19, 3, 5, 2, 3],
-        backgroundColor: [
-          'rgba(54, 162, 235, 0.2)',
-          'rgba(54, 162, 235, 0.2)',
-          'rgba(54, 162, 235, 0.2)',
-          'rgba(54, 162, 235, 0.2)',
-          'rgba(54, 162, 235, 0.2)',
-          'rgba(54, 162, 235, 0.2)'
-        ],
-        borderColor: [
-          'rgba(54, 162, 235, 1)',
-          'rgba(54, 162, 235, 1)',
-          'rgba(54, 162, 235, 1)',
-          'rgba(54, 162, 235, 1)',
-          'rgba(54, 162, 235, 1)',
-          'rgba(54, 162, 235, 1)'
-        ],
-        borderWidth: 1
-      }]
-    },
-    options: {
-      scales: {
-        y: {
-          beginAtZero: true
-        }
-      }
+function getRandomColor() {
+    const letters = '0123456789ABCDEF';
+    let color = '#';
+    for (let i = 0; i < 6; i++) {
+      color += letters[Math.floor(Math.random() * 16)];
     }
-  });
-</script>
+    return color;
+}
 
+
+</script>
 </body>
 </html>
