@@ -3,175 +3,149 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Modern Chat Application</title>
+<title>AI Chat</title>
 <style>
 :root {
   --primary-color: #3f51b5;
   --secondary-color: #6200ee;
   --background-color: #f4f4f4;
   --text-color: #333;
-  --accent-color: #ff9800;
-  --shadow-color: rgba(0,0,0,0.2);
   --border-radius: 8px;
-  --spacing-unit: 8px;
+  --box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
 body {
-  font-family: 'Roboto', sans-serif;
-  margin: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   background-color: var(--background-color);
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  margin: 0;
   color: var(--text-color);
-  line-height: 1.6;
 }
 
-.navbar {
-  position: sticky;
-  top: 0;
-  background: linear-gradient(to right, #4CAF50, #8BC34A);
-  padding: var(--spacing-unit);
+.container {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  box-shadow: 0 2px 4px var(--shadow-color);
-  z-index: 10;
+  flex-direction: column;
+  width: 100%;
+  max-width: 800px;
+  margin: 20px auto;
+  border-radius: var(--border-radius);
+  box-shadow: var(--box-shadow);
+  background-color: white;
+  overflow: hidden;
 }
 
-.user-profile-menu {
-  display: flex;
-  align-items: center;
-}
-
-.user-avatar {
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  background-color: #ccc;
-  margin-right: var(--spacing-unit);
-}
-
-.sidebar {
-  background-color: #fff;
-  padding: var(--spacing-unit);
-  width: 250px;
-  height: 100vh;
-  position: fixed;
-  top: 0;
-  left: 0;
+.chat-window {
+  flex: 1;
+  padding: 20px;
   overflow-y: auto;
-  box-shadow: 2px 0 4px var(--shadow-color);
-  transition: transform 0.3s ease-in-out;
-}
-
-.sidebar.collapsed {
-  transform: translateX(-100%);
-}
-
-.sidebar ul {
-  list-style: none;
-  padding: 0;
-}
-
-.sidebar li {
-  display: flex;
-  align-items: center;
-  margin-bottom: var(--spacing-unit);
-}
-
-.sidebar .user-avatar {
-  width: 24px;
-  height: 24px;
-}
-
-.chat-area {
-  margin-left: 250px;
-  padding: var(--spacing-unit);
-  flex-grow: 1;
-  overflow-y: auto;
+  min-height: 200px;
 }
 
 .message-bubble {
-  padding: var(--spacing-unit);
+  padding: 10px 15px;
+  margin-bottom: 10px;
   border-radius: var(--border-radius);
-  margin-bottom: var(--spacing-unit);
   max-width: 70%;
+  word-break: break-word;
 }
 
-.message-bubble.sender {
-  background-color: var(--primary-color);
-  color: white;
+.message-bubble-user {
+  background-color: #f0f0f0;
   align-self: flex-end;
 }
 
-.message-bubble.receiver {
-  background-color: #f0f0f0;
+.message-bubble-bot {
+  background-color: #e0f7fa;
   align-self: flex-start;
 }
 
 .message-input {
-  position: fixed;
-  bottom: 0;
-  width: calc(100% - 250px);
-  background-color: #fff;
-  padding: var(--spacing-unit);
-  box-shadow: 0 -2px 4px var(--shadow-color);
-  display: flex;
-  align-items: center;
-}
-
-.message-input textarea {
-  flex-grow: 1;
-  padding: var(--spacing-unit);
-  border: none;
+  padding: 10px;
+  border: 1px solid #ccc;
   border-radius: var(--border-radius);
   resize: vertical;
+  margin-bottom: 10px;
 }
 
 
-/* Add more styles as needed */
+.send-button {
+  background-color: var(--primary-color);
+  color: white;
+  padding: 10px 15px;
+  border: none;
+  border-radius: var(--border-radius);
+  cursor: pointer;
+}
 
+.typing-indicator {
+  text-align: center;
+  margin-bottom: 10px;
+  animation: blink 1s infinite;
+}
 
+@keyframes blink {
+  50% { opacity: 0; }
+}
+
+/* Responsive Styles */
+@media (max-width: 600px) {
+  .container {
+    max-width: 95%;
+  }
+}
 </style>
 </head>
 <body>
-<header>
-  <nav class="navbar">
-    <div class="user-profile-menu">
-      <div class="user-avatar"></div>
-      <h6>User Name</h6>
+<div class="container">
+  <div class="chat-window" id="chat-window">
     </div>
-    <button>Settings</button>
-    <button>Logout</button>
-  </nav>
-</header>
-<main>
-  <aside class="sidebar">
-    <input type="search" placeholder="Search contacts">
-    <ul>
-      <li><div class="user-avatar"></div>Contact 1</li>
-      <li><div class="user-avatar"></div>Contact 2</li>
-    </ul>
-  </aside>
-  <section class="chat-area">
-    <div class="message-bubble sender">Message from sender</div>
-    <div class="message-bubble receiver">Message from receiver</div>
-  </section>
-</main>
-<footer>
-  <div class="message-input">
-    <textarea placeholder="Type your message..."></textarea>
-    <button>Send</button>
+  <div>
+    <textarea class="message-input" id="message-input" placeholder="Type your message..."></textarea>
+    <button class="send-button" id="send-button">Send</button>
   </div>
-</footer>
+  <div class="typing-indicator" id="typing-indicator"></div>
+</div>
 
 <script>
-// Add JavaScript functionality here.  For example:
-const sidebar = document.querySelector('.sidebar');
-const sidebarToggle = document.createElement('button');
-sidebarToggle.textContent = 'Toggle Sidebar';
-sidebarToggle.addEventListener('click', () => {
-  sidebar.classList.toggle('collapsed');
+const chatWindow = document.getElementById('chat-window');
+const messageInput = document.getElementById('message-input');
+const sendButton = document.getElementById('send-button');
+const typingIndicator = document.getElementById('typing-indicator');
+
+sendButton.addEventListener('click', sendMessage);
+messageInput.addEventListener('keyup', (event) => {
+  if (event.key === 'Enter') {
+    sendMessage();
+  }
 });
-document.body.insertBefore(sidebarToggle, sidebar);
+
+function sendMessage() {
+  const message = messageInput.value;
+  if (message.trim() === '') return;
+
+  displayMessage(message, 'user');
+  messageInput.value = '';
+
+  //Simulate API call and bot response (replace with actual API call)
+  typingIndicator.style.display = 'block';
+  setTimeout(() => {
+    typingIndicator.style.display = 'none';
+    const botResponse = "This is a bot response to: " + message;
+    displayMessage(botResponse, 'bot');
+  }, 1500);
+}
+
+function displayMessage(message, sender) {
+  const messageBubble = document.createElement('div');
+  messageBubble.classList.add('message-bubble');
+  messageBubble.classList.add(`message-bubble-${sender}`);
+  messageBubble.textContent = message;
+  chatWindow.appendChild(messageBubble);
+  chatWindow.scrollTop = chatWindow.scrollHeight;
+}
+
 
 </script>
 </body>
