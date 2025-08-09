@@ -292,6 +292,23 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Object storage routes for image uploads
+  // Current AI config route
+  app.get("/api/ai-config", async (req, res) => {
+    try {
+      const config = await enhancedLLMService.getCurrentConfig();
+      res.json({
+        provider: config.provider,
+        model: config.model,
+        hasApiKey: !!config.apiKey,
+        status: "active"
+      });
+    } catch (error) {
+      res.status(500).json({
+        error: error instanceof Error ? error.message : String(error),
+      });
+    }
+  });
+
   // Settings routes
   app.get("/api/settings", async (req, res) => {
     try {

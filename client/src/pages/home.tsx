@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { ChatInterface } from "@/components/ChatInterface";
 import { FileExplorer } from "@/components/FileExplorer";
 import { PreviewPanel } from "@/components/PreviewPanel";
+import { AIStatusIndicator } from "@/components/AIStatusIndicator";
 import { Settings, Cog } from "lucide-react";
 import { Link } from "wouter";
 
@@ -26,15 +27,14 @@ export default function Home() {
           <div className="text-slate-400 text-sm">AI-Powered Web App Generator</div>
         </div>
         <div className="flex items-center space-x-3">
-          <div className="flex items-center space-x-2 text-sm text-slate-400">
-            <div className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></div>
-            <span>LLM Connected</span>
+          <div className="flex items-center space-x-4">
+            <AIStatusIndicator />
+            <Link href="/settings">
+              <button className="p-2 hover:bg-slate-800 rounded-lg transition-colors">
+                <Cog className="w-4 h-4 text-slate-400" />
+              </button>
+            </Link>
           </div>
-          <Link href="/settings">
-            <button className="p-2 hover:bg-slate-800 rounded-lg transition-colors">
-              <Cog className="w-4 h-4 text-slate-400" />
-            </button>
-          </Link>
         </div>
       </header>
 
