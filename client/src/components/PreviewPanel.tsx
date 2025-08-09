@@ -154,7 +154,7 @@ export function PreviewPanel({ projectId, selectedFile, isChatCollapsed, isFileE
         {/* Preview Navigation Tabs */}
         {files.length > 0 && (
           <div className="flex space-x-1 mb-3">
-            {files.slice(0, 3).map((file) => (
+            {files.slice(0, 3).filter(file => file.fileName !== 'processing.html').map((file) => (
               <Button
                 key={file.id}
                 variant="outline"
@@ -169,13 +169,13 @@ export function PreviewPanel({ projectId, selectedFile, isChatCollapsed, isFileE
                 {file.fileName}
               </Button>
             ))}
-            {files.length > 3 && (
+            {files.filter(file => file.fileName !== 'processing.html').length > 3 && (
               <Button
                 variant="outline"
                 size="sm"
                 className="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-400 border-slate-600 text-xs"
               >
-                +{files.length - 3} more
+                +{files.filter(file => file.fileName !== 'processing.html').length - 3} more
               </Button>
             )}
           </div>
