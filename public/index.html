@@ -1,231 +1,155 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chat Interface</title>
-    <style>
-        :root {
-            /* Color Palette */
-            --primary-color: #64b5f6; /* Light Blue */
-            --secondary-color: #1e88e5; /* Darker Blue */
-            --background-color: #f0f4c3; /* Light Cream */
-            --text-color: #333; /* Dark Grey */
-            --accent-color: #e57373; /* Red */
-            --border-color: rgba(0, 0, 0, 0.1);
-            --glass-color: rgba(255, 255, 255, 0.2);
-            --shadow-color: rgba(0, 0, 0, 0.15);
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Loan Application</title>
+<style>
+:root {
+  --primary-color: #673ab7;
+  --secondary-color: #2196f3;
+  --accent-color: #ff9800;
+  --bg-color: #f4f4f4;
+  --text-color: #333;
+  --shadow-color: rgba(0,0,0,0.2);
+  --border-radius: 8px;
+  --spacing-unit: 1rem;
+}
 
-            /* Spacing */
-            --space-s: 0.5rem;
-            --space-m: 1rem;
-            --space-l: 1.5rem;
-            --space-xl: 2rem;
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  line-height: 1.6;
+  margin: 0;
+  background-color: var(--bg-color);
+  color: var(--text-color);
+}
 
-            /* Font */
-            --font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            --font-size-base: 16px; /* Base font size */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: var(--spacing-unit);
+}
 
-            /* Rounded Corners */
-            --border-radius: 0.75rem;
-        }
+header {
+  background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+  color: white;
+  padding: 2rem;
+  text-align: center;
+}
 
-        body {
-            font-family: var(--font-family);
-            font-size: var(--font-size-base);
-            line-height: 1.6;
-            background-color: var(--background-color);
-            color: var(--text-color);
-            margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-        }
+nav ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  justify-content: center;
+}
 
-        .container {
-            width: 100%;
-            max-width: 500px;
-            margin: var(--space-m);
-            border-radius: var(--border-radius);
-            overflow: hidden;
-            box-shadow: 0 4px 12px var(--shadow-color);
-            background-color: var(--glass-color);
-            backdrop-filter: blur(10px);
-            border: 1px solid var(--border-color);
-        }
+nav li {
+  margin: 0 var(--spacing-unit);
+}
 
+nav a {
+  text-decoration: none;
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: var(--border-radius);
+  transition: background-color 0.3s ease;
+}
 
-        header {
-            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-            color: white;
-            padding: var(--space-l);
-            text-align: center;
-            font-size: 1.2rem;
-            font-weight: 600;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-        }
+nav a:hover {
+  background-color: rgba(255,255,255,0.2);
+}
 
-        .chat-window {
-            padding: var(--space-l);
-            overflow-y: auto;
-            max-height: 400px;
-        }
+.hero {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: var(--spacing-unit);
+  padding: 2rem 0;
+}
 
-        .message {
-            margin-bottom: var(--space-m);
-            padding: var(--space-m);
-            border-radius: var(--border-radius);
-            box-shadow: 0 2px 6px var(--shadow-color);
-            clear: both; /* Ensure messages clear the floats */
-        }
+.hero-item {
+  background-color: white;
+  padding: 1rem;
+  border-radius: var(--border-radius);
+  box-shadow: 0 2px 4px var(--shadow-color);
+}
 
-        .user-message {
-            background-color: var(--primary-color);
-            color: white;
-            float: right;
-            clear: both;
-            text-align: right;
-        }
+.hero-item h2 {
+  margin-top: 0;
+}
 
-        .bot-message {
-            background-color: #fff;
-            color: var(--text-color);
-            float: left;
-            clear: both;
-            text-align: left;
-        }
+button {
+  background-color: var(--accent-color);
+  color: white;
+  border: none;
+  padding: 0.8rem 1.5rem;
+  border-radius: var(--border-radius);
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
 
-        .bot-message::before{ /* CSS Icon for bot */
-            content: '';
-            display: inline-block;
-            width: 15px;
-            height: 15px;
-            border-radius: 50%;
-            background-color: var(--secondary-color);
-            margin-right: var(--space-s);
-        }
+button:hover {
+  transform: scale(1.05);
+}
 
-        .input-area {
-            display: flex;
-            padding: var(--space-m);
-            border-top: 1px solid var(--border-color);
-            background-color: #fff;
-        }
-
-        #message-input {
-            flex-grow: 1;
-            padding: var(--space-m);
-            border: 1px solid var(--border-color);
-            border-radius: var(--border-radius);
-            margin-right: var(--space-m);
-        }
-
-        #send-button {
-            background-color: var(--accent-color);
-            color: white;
-            border: none;
-            padding: var(--space-m) var(--space-l);
-            border-radius: var(--border-radius);
-            cursor: pointer;
-            transition: background-color 0.2s ease;
-        }
-
-        #send-button:hover {
-            background-color: darken(var(--accent-color), 10%);
-        }
-
-        /* Responsive Design */
-        @media (max-width: 768px) {
-            .container {
-                margin: var(--space-s);
-                max-width: 95%;
-            }
-            header {
-                font-size: 1rem;
-                padding: var(--space-m);
-            }
-            .chat-window {
-                padding: var(--space-m);
-                max-height: 300px;
-            }
-            #message-input, #send-button {
-                padding: var(--space-s);
-                font-size: 0.9rem;
-            }
-        }
-    </style>
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .hero {
+    grid-template-columns: 1fr;
+  }
+}
+</style>
 </head>
 <body>
-    <div class="container">
-        <header>
-            Chat Interface
-        </header>
-        <main>
-            <div class="chat-window" id="chat-window">
-                <div class="bot-message message">
-                    Welcome!  How can I help you today?
-                </div>
-                <div class="bot-message message">
-                    You can ask me anything.
-                </div>
-            </div>
-            <div class="input-area">
-                <input type="text" id="message-input" placeholder="Type your message here...">
-                <button id="send-button">Send</button>
-            </div>
-        </main>
-    </div>
+<header>
+  <h1>Loan Application</h1>
+  <nav>
+    <ul>
+      <li><a href="#">Loan Products</a></li>
+      <li><a href="#">Application Form</a></li>
+      <li><a href="#">Login/Registration</a></li>
+      <li><a href="#">FAQ</a></li>
+      <li><a href="#">Contact Us</a></li>
+      <li><a href="#">Terms & Conditions</a></li>
+      <li><a href="#">Privacy Policy</a></li>
+    </ul>
+  </nav>
+</header>
+<main class="container">
+  <section class="hero">
+    <article class="hero-item">
+      <h2>Personal Loan</h2>
+      <p>Get a personal loan for your needs.</p>
+      <button>Apply Now</button>
+    </article>
+    <article class="hero-item">
+      <h2>Auto Loan</h2>
+      <p>Finance your dream car.</p>
+      <button>Learn More</button>
+    </article>
+    <article class="hero-item">
+      <h2>Home Loan</h2>
+      <p>Buy your dream home.</p>
+      <button>Apply Now</button>
+    </article>
+  </section>
+</main>
+<footer>
+  <p>&copy; 2023 Loan Application</p>
+</footer>
+<script>
+// Add JavaScript for interactive elements here if needed.  For example, smooth scrolling:
 
-    <script>
-        const chatWindow = document.getElementById('chat-window');
-        const messageInput = document.getElementById('message-input');
-        const sendButton = document.getElementById('send-button');
+document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function (e) {
+        e.preventDefault();
 
-        function addMessage(message, sender) {
-            const messageDiv = document.createElement('div');
-            messageDiv.classList.add('message', sender === 'user' ? 'user-message' : 'bot-message');
-            messageDiv.textContent = message;
-            chatWindow.appendChild(messageDiv);
-            chatWindow.scrollTop = chatWindow.scrollHeight;  // Scroll to bottom
-        }
-
-        function simulateBotResponse(userMessage) {
-            // Simple bot logic (replace with your actual bot logic)
-            let response = "I'm sorry, I didn't understand that.";
-            if (userMessage.toLowerCase().includes('hello') || userMessage.toLowerCase().includes('hi')) {
-                response = "Hello there!";
-            } else if (userMessage.toLowerCase().includes('how are you')) {
-                response = "I'm doing well, thank you!";
-            } else if (userMessage.toLowerCase().includes('goodbye') || userMessage.toLowerCase().includes('bye')) {
-                response = "Goodbye!  Have a great day!";
-            }
-            else if(userMessage.toLowerCase().includes("weather")){
-              response = "I am unable to provide real-time weather information at this time.";
-            }
-
-            setTimeout(() => {
-                addMessage(response, 'bot');
-            }, 500);
-        }
-
-
-        sendButton.addEventListener('click', () => {
-            const message = messageInput.value.trim();
-            if (message) {
-                addMessage(message, 'user');
-                messageInput.value = ''; // Clear input
-                simulateBotResponse(message); // Simulate bot response
-            }
+        document.querySelector(this.getAttribute('href')).scrollIntoView({
+            behavior: 'smooth'
         });
-
-
-        messageInput.addEventListener('keydown', (event) => {
-            if (event.key === 'Enter') {
-                sendButton.click(); // Trigger send on Enter key
-            }
-        });
-    </script>
+    });
+});
+</script>
 </body>
 </html>

@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Eligibility Checker</title>
+<style>
+:root {
+  --primary-color: #673ab7;
+  --secondary-color: #ff9800;
+  --background-color: #f4f4f4;
+  --text-color: #333;
+  --shadow-color: rgba(0,0,0,0.2);
+  --border-radius: 8px;
+  --spacing-unit: 1rem;
+}
+
+body {
+  font-family: 'Arial', sans-serif;
+  line-height: 1.6;
+  background-color: var(--background-color);
+  color: var(--text-color);
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+header {
+  background: linear-gradient(to right, #673ab7, #ff9800);
+  color: white;
+  padding: 2rem;
+  text-align: center;
+}
+
+h1 {
+  font-size: clamp(2rem, 4vw + 1rem, 3rem);
+  margin-bottom: 1rem;
+}
+
+main {
+  padding: 2rem;
+  flex: 1;
+}
+
+section {
+  background-color: white;
+  padding: 2rem;
+  margin-bottom: var(--spacing-unit);
+  border-radius: var(--border-radius);
+  box-shadow: 0 2px 4px var(--shadow-color);
+}
+
+label {
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+input[type="text"],
+input[type="number"] {
+  width: 100%;
+  padding: 0.5rem;
+  margin-bottom: 1rem;
+  border: 1px solid #ccc;
+  border-radius: var(--border-radius);
+  box-sizing: border-box;
+}
+
+button {
+  background-color: var(--primary-color);
+  color: white;
+  padding: 0.8rem 1.5rem;
+  border: none;
+  border-radius: var(--border-radius);
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+button:hover {
+  background-color: darken(var(--primary-color), 10%);
+}
+
+#result {
+  margin-top: 2rem;
+  padding: 1rem;
+  border: 1px solid #ccc;
+  border-radius: var(--border-radius);
+  background-color: #f0f0f0;
+}
+
+@keyframes pulse {
+  0% { box-shadow: 0 0 0 0 rgba(0,123,255,.4); }
+  70% { box-shadow: 0 0 0 10px rgba(0,123,255,0); }
+  100% { box-shadow: 0 0 0 0 rgba(0,123,255,0); }
+}
+
+.pulse {
+  animation: pulse 1s infinite;
+}
+
+/* Media Queries for Responsiveness */
+@media (max-width: 768px) {
+  main {
+    padding: 1rem;
+  }
+  section {
+    padding: 1rem;
+  }
+}
+
+</style>
+</head>
+<body>
+<header>
+  <h1>Loan Eligibility Checker</h1>
+</header>
+<main>
+  <section>
+    <form id="eligibilityForm">
+      <label for="income">Annual Income:</label>
+      <input type="number" id="income" required>
+
+      <label for="creditScore">Credit Score:</label>
+      <input type="number" id="creditScore" required>
+
+      <label for="loanAmount">Loan Amount:</label>
+      <input type="number" id="loanAmount" required>
+
+      <button type="submit">Check Eligibility</button>
+    </form>
+  </section>
+  <section id="result">
+    </section>
+</main>
+<footer>
+  <p>&copy; 2023 Loan Eligibility Checker</p>
+</footer>
+<script>
+const form = document.getElementById('eligibilityForm');
+const resultSection = document.getElementById('result');
+
+form.addEventListener('submit', (event) => {
+  event.preventDefault();
+  const income = parseFloat(document.getElementById('income').value);
+  const creditScore = parseFloat(document.getElementById('creditScore').value);
+  const loanAmount = parseFloat(document.getElementById('loanAmount').value);
+
+  let eligibility = '';
+  if (income >= 50000 && creditScore >= 650 && loanAmount <= 100000) {
+    eligibility = 'Congratulations! You are eligible for a loan.';
+  } else {
+    eligibility = 'Sorry, you do not meet the eligibility criteria.';
+  }
+
+  resultSection.innerHTML = `<p class="${eligibility.includes('Congratulations') ? 'pulse' : ''}">${eligibility}</p>`;
+});
+
+</script>
+</body>
+</html>

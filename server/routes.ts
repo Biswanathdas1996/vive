@@ -3,6 +3,7 @@ import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { llmService } from "./services/llm";
 import { fileGeneratorService } from "./services/fileGenerator";
+import { ObjectStorageService, ObjectPermission } from "./objectStorage";
 import express from "express";
 import path from "path";
 
@@ -286,6 +287,67 @@ export async function registerRoutes(app: Express): Promise<Server> {
         .json({
           error: error instanceof Error ? error.message : String(error),
         });
+    }
+  });
+
+  // Object storage routes for image uploads
+  app.post("/api/objects/upload", async (req, res) => {
+    try {
+      const objectStorageService = new ObjectStorageService();
+      const uploadURL = await objectStorageService.getObjectEntityUploadURL();
+      res.json({ uploadURL });
+    } catch (error) {
+      console.error("Error getting upload URL:", error);
+      res.status(500).json({ error: "Failed to get upload URL" });
+    }
+  });
+
+  app.put("/api/objects/design-image", async (req, res) => {
+    try {
+      const { imageURL, fileName } = req.body;
+      
+      if (!imageURL || !fileName) {
+        return res.status(400).json({ error: "imageURL and fileName are required" });
+      }
+
+      const objectStorageService = new ObjectStorageService();
+      const objectPath = await objectStorageService.trySetObjectEntityAclPolicy(
+        imageURL,
+        {
+          owner: "user", // Simple user identification for now
+          visibility: "public", // Make design images public for web app use
+        },
+      );
+
+      res.status(200).json({
+        objectPath: objectPath,
+        imageURL: imageURL,
+      });
+    } catch (error) {
+      console.error("Error setting design image:", error);
+      res.status(500).json({ error: "Internal server error" });
+    }
+  });
+
+  // Serve uploaded images
+  app.get("/objects/:objectPath(*)", async (req, res) => {
+    try {
+      const objectStorageService = new ObjectStorageService();
+      const objectFile = await objectStorageService.getObjectEntityFile(req.path);
+      const canAccess = await objectStorageService.canAccessObjectEntity({
+        objectFile,
+        userId: "user", // Simple user identification for now
+        requestedPermission: ObjectPermission.READ,
+      });
+      
+      if (!canAccess) {
+        return res.sendStatus(401);
+      }
+      
+      objectStorageService.downloadObject(objectFile, res);
+    } catch (error) {
+      console.error("Error accessing object:", error);
+      return res.sendStatus(404);
     }
   });
 

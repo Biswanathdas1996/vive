@@ -8,6 +8,8 @@ Preferred communication style: Simple, everyday language.
 
 Code generation preference: Generate only HTML files with embedded CSS and JavaScript. No separate CSS or JS files. File structure generation includes complete HTML content for each file in a single step. Modern design standards with high-quality visual elements using colored geometric shapes instead of images.
 
+Image upload functionality: For 2nd prompt onwards, users can upload images to change the design of the selected page. Images are stored in object storage and included as design reference context.
+
 # System Architecture
 
 ## Frontend Architecture
@@ -46,6 +48,12 @@ The client is built with **React 18** and **TypeScript**, using **Vite** as the 
 
 **File System**: Generated HTML applications are stored in the local file system under `/public` directory for serving static content. Each HTML file is completely self-contained with embedded CSS and JavaScript, featuring modern design patterns with colored geometric shapes replacing traditional images.
 
+**Object Storage**: **Replit Object Storage** integrated for user-uploaded images that serve as design references. Features include:
+- Presigned URL uploads for secure direct-to-cloud file transfers
+- Public visibility for design reference images
+- ACL policy management for object access control
+- Integration with chat interface for contextual design modifications
+
 ## Authentication and Authorization
 
 Currently implements a minimal user system with username-based identification. The storage interface is designed to accommodate future authentication enhancements through the `IStorage` interface pattern.
@@ -70,6 +78,12 @@ Currently implements a minimal user system with username-based identification. T
 - **Lucide React** for consistent iconography
 - **Font Awesome** for additional icons
 - **Google Fonts** (Inter, JetBrains Mono) for typography
+
+**File Upload Libraries**:
+- **Uppy** for comprehensive file upload functionality with dashboard interface
+- **@uppy/core** for core upload functionality
+- **@uppy/react** for React integration
+- **@uppy/aws-s3** for direct-to-S3 uploads via presigned URLs
 
 **Utility Libraries**:
 - **class-variance-authority** for component variant management

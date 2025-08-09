@@ -1,246 +1,148 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - Modern Web App</title>
-    <style>
-        :root {
-            /* Colors */
-            --color-primary: #3498db; /* A vibrant blue */
-            --color-secondary: #f39c12; /* A warm orange */
-            --color-accent: #e74c3c; /* A bold red */
-            --color-text-light: #f0f4f8; /* Light text color */
-            --color-text-dark: #2c3e50; /* Dark text color */
-            --color-bg-light: #ecf0f1; /* Light background */
-            --color-bg-dark: #2c3e50; /* Dark background */
-            --color-border: rgba(0, 0, 0, 0.1); /* Subtle border */
-            --color-shadow: rgba(0, 0, 0, 0.1); /* Shadow color */
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Applicant Login/Registration</title>
+<style>
+:root {
+  --primary-color: #4CAF50;
+  --secondary-color: #2196F3;
+  --bg-color: #f4f4f4;
+  --text-color: #333;
+  --shadow-color: rgba(0,0,0,0.2);
+  --border-radius: 8px;
+  --spacing-unit: 1rem;
+}
 
-            /* Spacing */
-            --space-s: 0.5rem;
-            --space-m: 1rem;
-            --space-l: 1.5rem;
-            --space-xl: 2rem;
+body {
+  font-family: 'Arial', sans-serif;
+  background-color: var(--bg-color);
+  margin: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #f2f2f2, #e0e0e0);
+}
 
-            /* Font */
-            --font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            --font-size-base: 1rem;
-            --line-height: 1.6;
+.container {
+  background-color: rgba(255,255,255,0.8);
+  backdrop-filter: blur(10px);
+  border-radius: var(--border-radius);
+  box-shadow: 0 0 20px var(--shadow-color);
+  padding: 2 * var(--spacing-unit);
+  width: 350px;
+}
 
-            /* Border Radius */
-            --border-radius: 0.5rem;
+h1 {
+  text-align: center;
+  color: var(--primary-color);
+  margin-bottom: 2 * var(--spacing-unit);
+}
 
-        }
+form {
+  display: flex;
+  flex-direction: column;
+}
 
-        /* General Styles */
-        *,
-        *::before,
-        *::after {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
+label {
+  margin-bottom: 0.5 * var(--spacing-unit);
+}
 
-        body {
-            font-family: var(--font-family);
-            font-size: var(--font-size-base);
-            line-height: var(--line-height);
-            color: var(--color-text-dark);
-            background-color: var(--color-bg-light);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            transition: background-color 0.3s ease; /* Smooth theme transition */
-        }
+input[type="text"],
+input[type="password"],
+input[type="email"] {
+  padding: 1 * var(--spacing-unit);
+  margin-bottom: 1 * var(--spacing-unit);
+  border: 1px solid #ccc;
+  border-radius: var(--border-radius);
+}
 
-        .container {
-            width: 100%;
-            max-width: 400px;
-            padding: var(--space-xl);
-            background-color: rgba(255, 255, 255, 0.8); /* Glassmorphism */
-            border-radius: var(--border-radius);
-            box-shadow: 0 10px 20px var(--color-shadow);
-            backdrop-filter: blur(10px);
-            border: 1px solid var(--color-border);
-            transition: all 0.3s ease;
-        }
+button {
+  background-color: var(--primary-color);
+  color: white;
+  padding: 1 * var(--spacing-unit);
+  border: none;
+  border-radius: var(--border-radius);
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
 
-        h1 {
-            text-align: center;
-            margin-bottom: var(--space-xl);
-            color: var(--color-primary);
-        }
+button:hover {
+  background-color: darken(var(--primary-color), 10%);
+}
 
-        .form-group {
-            margin-bottom: var(--space-l);
-        }
+a {
+  color: var(--secondary-color);
+  text-decoration: none;
+  margin-top: 1 * var(--spacing-unit);
+  display: block;
+  text-align: center;
+}
 
-        label {
-            display: block;
-            margin-bottom: var(--space-s);
-            font-weight: bold;
-            color: var(--color-text-dark);
-        }
+a:hover {
+  text-decoration: underline;
+}
 
-        input[type="email"],
-        input[type="password"] {
-            width: 100%;
-            padding: var(--space-m);
-            border: 1px solid var(--color-border);
-            border-radius: var(--border-radius);
-            font-size: var(--font-size-base);
-            transition: border-color 0.2s ease, box-shadow 0.2s ease;
-            background-color: rgba(255, 255, 255, 0.6);
-        }
+@keyframes shimmer {
+  0% { background-position: -400px 0; }
+  100% { background-position: 400px 0; }
+}
 
-        input[type="email"]:focus,
-        input[type="password"]:focus {
-            outline: none;
-            border-color: var(--color-primary);
-            box-shadow: 0 0 5px rgba(52, 152, 219, 0.5);
-        }
+.shimmer {
+  background: linear-gradient(to right, #eee 8%, #ddd 18%, #eee 33%);
+  background-size: 800px 100%;
+  animation: shimmer 1.3s linear infinite;
+}
 
-        button {
-            width: 100%;
-            padding: var(--space-m);
-            border: none;
-            border-radius: var(--border-radius);
-            background-color: var(--color-primary);
-            color: var(--color-text-light);
-            font-size: var(--font-size-base);
-            font-weight: bold;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-        }
-
-        button:hover {
-            background-color: #2980b9;
-        }
-
-        button:focus {
-            outline: none;
-            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.3);
-        }
-
-        .error-message {
-            color: var(--color-accent);
-            margin-top: var(--space-s);
-            font-size: 0.9rem;
-        }
-
-        .links {
-            text-align: center;
-            margin-top: var(--space-l);
-        }
-
-        .links a {
-            color: var(--color-primary);
-            text-decoration: none;
-            transition: color 0.2s ease;
-        }
-
-        .links a:hover {
-            color: #2980b9;
-        }
-
-        /* Responsive Design */
-        @media (max-width: 768px) {
-            .container {
-                padding: var(--space-l);
-            }
-        }
-
-        /* Dark Mode Toggle (Example - Not Fully Functional) */
-        .theme-toggle {
-            position: absolute;
-            top: var(--space-m);
-            right: var(--space-m);
-            background-color: var(--color-bg-dark);
-            color: var(--color-text-light);
-            border: none;
-            border-radius: var(--border-radius);
-            padding: var(--space-s) var(--space-m);
-            cursor: pointer;
-            transition: background-color 0.3s ease, color 0.3s ease;
-        }
-
-        .theme-toggle:hover {
-            background-color: #34495e;
-        }
-    </style>
+</style>
 </head>
 <body>
-    <button class="theme-toggle" onclick="toggleTheme()">🌙</button>
-    <div class="container">
-        <h1>Login</h1>
-        <form id="loginForm">
-            <div class="form-group">
-                <label for="email">Email</label>
-                <input type="email" id="email" name="email" required placeholder="your@email.com">
-                <div class="error-message" id="emailError"></div>
-            </div>
-            <div class="form-group">
-                <label for="password">Password</label>
-                <input type="password" id="password" name="password" required placeholder="********">
-                <div class="error-message" id="passwordError"></div>
-            </div>
-            <button type="submit">Login</button>
-            <div class="links">
-                <p>Don't have an account? <a href="#">Sign up</a></p>
-            </div>
-        </form>
-    </div>
+<div class="container">
+  <h1>Applicant Login</h1>
+  <form id="loginForm">
+    <label for="email">Email:</label>
+    <input type="email" id="email" name="email" required>
+    <label for="password">Password:</label>
+    <input type="password" id="password" name="password" required>
+    <button type="submit">Login</button>
+    <a href="#">Forgot Password?</a>
+  </form>
+  <div style="margin-top: 2rem;">
+      <h1>Applicant Registration</h1>
+      <form id="registrationForm">
+        <label for="regEmail">Email:</label>
+        <input type="email" id="regEmail" name="regEmail" required>
+        <label for="regPassword">Password:</label>
+        <input type="password" id="regPassword" name="regPassword" required>
+        <button type="submit">Register</button>
+      </form>
+  </div>
+</div>
 
-    <script>
-        // Client-side validation
-        const loginForm = document.getElementById('loginForm');
-        const emailError = document.getElementById('emailError');
-        const passwordError = document.getElementById('passwordError');
+<script>
+  document.getElementById('loginForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    // Add your login logic here.  This is a placeholder.
+    alert('Login submitted!');
+  });
 
-        loginForm.addEventListener('submit', (event) => {
-            event.preventDefault(); // Prevent default form submission
+  document.getElementById('registrationForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    // Add your registration logic here. This is a placeholder.
+    alert('Registration submitted!');
+  });
 
-            let isValid = true;
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
+  //Example of a simple animation using CSS transitions
+  const loginButton = document.querySelector('#loginForm button');
+  loginButton.addEventListener('mouseenter', () => {
+      loginButton.style.transform = 'scale(1.05)';
+  });
+  loginButton.addEventListener('mouseleave', () => {
+      loginButton.style.transform = 'scale(1)';
+  });
 
-            // Email validation
-            if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-                emailError.textContent = 'Please enter a valid email address.';
-                isValid = false;
-            } else {
-                emailError.textContent = '';
-            }
-
-            // Password validation (simple example - consider stronger validation)
-            if (password.length < 6) {
-                passwordError.textContent = 'Password must be at least 6 characters long.';
-                isValid = false;
-            } else {
-                passwordError.textContent = '';
-            }
-
-            if (isValid) {
-                // Simulate successful login (replace with actual API call)
-                alert('Login successful! (Simulated)');
-                // You would typically redirect the user here
-            }
-        });
-
-        // Theme Toggle (Placeholder - Requires more robust implementation for dark mode)
-        function toggleTheme() {
-            const body = document.body;
-            if (body.style.backgroundColor === 'var(--color-bg-dark)') {
-                body.style.backgroundColor = 'var(--color-bg-light)';
-                body.style.color = 'var(--color-text-dark)';
-            } else {
-                body.style.backgroundColor = 'var(--color-bg-dark)';
-                body.style.color = 'var(--color-text-light)';
-            }
-        }
-
-    </script>
+</script>
 </body>
 </html>

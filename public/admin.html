@@ -1,304 +1,170 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Panel</title>
-    <style>
-        :root {
-            /* Color Palette - Dark Mode */
-            --color-primary-dark: #22272e;
-            --color-secondary-dark: #343b45;
-            --color-accent-dark: #3f88c5;
-            --color-text-dark: #f0f6fc;
-            --color-text-muted-dark: #a0a7b3;
-            --color-border-dark: rgba(255, 255, 255, 0.1);
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Loan Application Admin Dashboard</title>
+<style>
+:root {
+  --primary-color: #673ab7;
+  --secondary-color: #ff9800;
+  --background-color: #f4f4f4;
+  --text-color: #333;
+  --accent-color: #4CAF50;
+  --shadow-color: rgba(0,0,0,0.2);
+  --border-radius: 8px;
+  --spacing-unit: 1rem;
+}
 
-            /* Spacing */
-            --space-xs: 0.5rem;
-            --space-s: 0.75rem;
-            --space-m: 1rem;
-            --space-l: 1.5rem;
-            --space-xl: 2rem;
+body {
+  font-family: 'Roboto', sans-serif;
+  line-height: 1.6;
+  margin: 0;
+  background-color: var(--background-color);
+  color: var(--text-color);
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  min-height: 100vh;
+}
 
-            /* Font */
-            --font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            --font-size-base: 1rem;
-            --line-height-base: 1.6;
+header {
+  background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+  color: white;
+  padding: var(--spacing-unit);
+  text-align: center;
+}
 
-            /* Transition */
-            --transition-duration: 0.3s;
-            --transition-easing: ease-in-out;
+nav {
+  display: flex;
+  justify-content: space-around;
+  padding: var(--spacing-unit);
+  background-color: rgba(255,255,255,0.8);
+  backdrop-filter: blur(10px);
+}
 
-            /* Box Shadow */
-            --shadow-light: 0 2px 5px rgba(0, 0, 0, 0.1);
-            --shadow-dark: 0 4px 10px rgba(0, 0, 0, 0.3);
+nav ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
 
-            /* Rounded Corners */
-            --border-radius: 0.5rem;
-        }
+nav li {
+  margin: 0 var(--spacing-unit);
+}
 
-        body {
-            font-family: var(--font-family);
-            font-size: var(--font-size-base);
-            line-height: var(--line-height-base);
-            background-color: var(--color-primary-dark);
-            color: var(--color-text-dark);
-            margin: 0;
-            padding: 0;
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
-            overflow-x: hidden;
-        }
+nav a {
+  text-decoration: none;
+  color: var(--text-color);
+  padding: var(--spacing-unit);
+  border-radius: var(--border-radius);
+  transition: background-color 0.3s ease;
+}
 
-        /* General Styles */
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: var(--space-l);
-            width: 100%;
-        }
+nav a:hover {
+  background-color: rgba(0,0,0,0.1);
+}
 
-        a {
-            color: var(--color-accent-dark);
-            text-decoration: none;
-            transition: color var(--transition-duration) var(--transition-easing);
-        }
+main {
+  padding: var(--spacing-unit);
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  grid-gap: var(--spacing-unit);
+}
 
-        a:hover {
-            color: #5ca8e7;
-        }
+section {
+  background-color: white;
+  padding: var(--spacing-unit);
+  border-radius: var(--border-radius);
+  box-shadow: 0 2px 4px var(--shadow-color);
+}
 
-        button {
-            background-color: var(--color-accent-dark);
-            color: var(--color-text-dark);
-            border: none;
-            padding: var(--space-s) var(--space-m);
-            border-radius: var(--border-radius);
-            cursor: pointer;
-            transition: background-color var(--transition-duration) var(--transition-easing);
-            font-family: inherit;
-        }
+.applicant-card {
+  display: flex;
+  align-items: center;
+  padding: 1rem;
+  border-radius: var(--border-radius);
+  background-color: white;
+  box-shadow: 0 2px 4px var(--shadow-color);
+  margin-bottom: var(--spacing-unit);
+}
 
-        button:hover {
-            background-color: #5ca8e7;
-        }
+.applicant-card .avatar {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background-color: var(--primary-color);
+  margin-right: var(--spacing-unit);
+}
 
-        /* Header */
-        header {
-            background-color: var(--color-secondary-dark);
-            padding: var(--space-l);
-            box-shadow: var(--shadow-dark);
-        }
+.applicant-card .info {
+  flex: 1;
+}
 
-        header h1 {
-            margin: 0;
-            font-size: 2rem;
-        }
 
-        /* Navigation */
-        nav {
-            background-color: var(--color-secondary-dark);
-            padding: var(--space-m);
-            box-shadow: var(--shadow-light);
-        }
+footer {
+  background-color: #333;
+  color: white;
+  text-align: center;
+  padding: var(--spacing-unit);
+}
 
-        nav ul {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-            display: flex;
-            gap: var(--space-l);
-        }
-
-        nav a {
-            color: var(--color-text-muted-dark);
-            transition: color var(--transition-duration) var(--transition-easing);
-        }
-
-        nav a:hover,
-        nav a.active {
-            color: var(--color-text-dark);
-        }
-
-        /* Main Content */
-        main {
-            flex: 1; /* Takes up remaining space */
-            padding: var(--space-l);
-        }
-
-        section {
-            background-color: var(--color-secondary-dark);
-            border-radius: var(--border-radius);
-            padding: var(--space-m);
-            margin-bottom: var(--space-l);
-            box-shadow: var(--shadow-dark);
-        }
-
-        section h2 {
-            margin-top: 0;
-            font-size: 1.5rem;
-        }
-
-        /* User Management */
-        .user-table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        .user-table th,
-        .user-table td {
-            padding: var(--space-s);
-            text-align: left;
-            border-bottom: 1px solid var(--color-border-dark);
-        }
-
-        .user-table th {
-            background-color: var(--color-primary-dark);
-            font-weight: bold;
-        }
-
-        /* Message Moderation */
-        .message-list {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-        }
-
-        .message-item {
-            background-color: var(--color-primary-dark);
-            padding: var(--space-m);
-            margin-bottom: var(--space-s);
-            border-radius: var(--border-radius);
-            box-shadow: var(--shadow-light);
-        }
-
-        .message-item:last-child {
-            margin-bottom: 0;
-        }
-
-        /* Footer */
-        footer {
-            background-color: var(--color-secondary-dark);
-            padding: var(--space-m);
-            text-align: center;
-            font-size: 0.8rem;
-        }
-
-        /* Responsive Design */
-        @media (max-width: 768px) {
-            .container {
-                padding: var(--space-m);
-            }
-
-            header h1 {
-                font-size: 1.5rem;
-            }
-
-            nav ul {
-                flex-direction: column;
-                align-items: center;
-                gap: var(--space-s);
-            }
-        }
-
-    </style>
+/*Responsive Styles*/
+@media (max-width: 768px) {
+  main {
+    grid-template-columns: 1fr;
+  }
+}
+</style>
 </head>
 <body>
+<header>
+  <h1>Loan Application Admin Dashboard</h1>
+</header>
+<nav>
+  <ul>
+    <li><a href="#">Applications</a></li>
+    <li><a href="#">Applicants</a></li>
+    <li><a href="#">Reports</a></li>
+    <li><a href="#">Settings</a></li>
+  </ul>
+</nav>
+<main>
+  <section>
+    <h2>Recent Applications</h2>
+    <div class="applicant-card">
+      <div class="avatar"></div>
+      <div class="info">
+        <h3>John Doe</h3>
+        <p>Application ID: 12345</p>
+        <p>Status: Pending</p>
+      </div>
+    </div>
+    <div class="applicant-card">
+      <div class="avatar" style="background-color: var(--secondary-color);"></div>
+      <div class="info">
+        <h3>Jane Smith</h3>
+        <p>Application ID: 67890</p>
+        <p>Status: Approved</p>
+      </div>
+    </div>
+  </section>
+  <section>
+    <h2>Search Applicants</h2>
+    <input type="text" placeholder="Search by name or ID">
+  </section>
+</main>
+<footer>
+  <p>&copy; 2023 Loan Application System</p>
+</footer>
+<script>
+//JavaScript for future interactions can be added here.  Example below:
 
-    <header>
-        <div class="container">
-            <h1>Admin Panel</h1>
-        </div>
-    </header>
+document.querySelectorAll('.applicant-card').forEach(card => {
+  card.addEventListener('click', () => {
+    card.classList.toggle('expanded');
+  });
+});
 
-    <nav>
-        <div class="container">
-            <ul>
-                <li><a href="#" class="active">Dashboard</a></li>
-                <li><a href="#">Users</a></li>
-                <li><a href="#">Messages</a></li>
-                <li><a href="#">Settings</a></li>
-            </ul>
-        </div>
-    </nav>
-
-    <main>
-        <div class="container">
-
-            <section>
-                <h2>Dashboard</h2>
-                <p>Welcome to the admin panel. Here you can manage users, moderate messages, and adjust settings.</p>
-            </section>
-
-            <section>
-                <h2>User Management</h2>
-                <table class="user-table">
-                    <thead>
-                        <tr>
-                            <th>Username</th>
-                            <th>Email</th>
-                            <th>Role</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>admin_user</td>
-                            <td>admin@example.com</td>
-                            <td>Admin</td>
-                            <td><button>Edit</button> <button>Delete</button></td>
-                        </tr>
-                        <tr>
-                            <td>regular_user</td>
-                            <td>user@example.com</td>
-                            <td>User</td>
-                            <td><button>Edit</button> <button>Delete</button></td>
-                        </tr>
-                    </tbody>
-                </table>
-            </section>
-
-            <section>
-                <h2>Message Moderation</h2>
-                <ul class="message-list">
-                    <li class="message-item">
-                        <p><strong>User:</strong> regular_user</p>
-                        <p><strong>Message:</strong> This is a sample message.</p>
-                        <button>Delete</button>
-                    </li>
-                    <li class="message-item">
-                        <p><strong>User:</strong> another_user</p>
-                        <p><strong>Message:</strong> Another sample message.</p>
-                        <button>Delete</button>
-                    </li>
-                </ul>
-            </section>
-
-        </div>
-    </main>
-
-    <footer>
-        <div class="container">
-            <p>&copy; 2024 Admin Panel. All rights reserved.</p>
-        </div>
-    </footer>
-
-
-    <script>
-        // Optional JavaScript for dynamic behavior
-        // Example:  Handling delete buttons
-        document.querySelectorAll('.message-item button').forEach(button => {
-            button.addEventListener('click', (event) => {
-                const messageItem = event.target.closest('.message-item');
-                if (messageItem) {
-                    messageItem.remove();
-                    alert("Message deleted (simulated)"); // Replace with actual API call
-                }
-            });
-        });
-    </script>
-
+</script>
 </body>
 </html>

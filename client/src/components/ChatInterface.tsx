@@ -6,7 +6,9 @@ import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { useToast } from "@/hooks/use-toast";
-import { Send, Trash2, Download, Brain, Search, Table, Cog, CheckCircle, Loader, ChevronUp, ChevronDown, ChevronLeft, ChevronRight } from "lucide-react";
+import { ObjectUploader } from "./ObjectUploader";
+import { Send, Trash2, Download, Brain, Search, Table, Cog, CheckCircle, Loader, ChevronUp, ChevronDown, ChevronLeft, ChevronRight, Image } from "lucide-react";
+import type { UploadResult } from "@uppy/core";
 
 // Generic JSON renderer that can handle any data structure
 const renderJsonData = (data: any, depth: number = 0): React.ReactNode => {
@@ -115,6 +117,7 @@ export function ChatInterface({
   const [isGenerating, setIsGenerating] = useState(false);
   const [currentWorkflow, setCurrentWorkflow] = useState<any>(null);
   const [isHeaderCollapsed, setIsHeaderCollapsed] = useState(false);
+  const [uploadedImages, setUploadedImages] = useState<string[]>([]);
   // Remove local state and use props instead
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const queryClient = useQueryClient();
@@ -217,6 +220,59 @@ export function ChatInterface({
       });
     },
   });
+
+  // Image upload mutations
+  const getUploadUrlMutation = useMutation({
+    mutationFn: async () => {
+      const response = await apiRequest("POST", "/api/objects/upload", {});
+      return response.json();
+    }
+  });
+
+  const setDesignImageMutation = useMutation({
+    mutationFn: async ({ imageURL, fileName }: { imageURL: string; fileName: string }) => {
+      const response = await apiRequest("PUT", "/api/objects/design-image", {
+        imageURL,
+        fileName
+      });
+      return response.json();
+    },
+    onSuccess: (data) => {
+      setUploadedImages(prev => [...prev, data.imageURL]);
+      toast({
+        title: "Image Uploaded",
+        description: "Image has been uploaded successfully and can be used for design modifications",
+      });
+    },
+    onError: (error: any) => {
+      toast({
+        title: "Upload Error",
+        description: error.message || "Failed to upload image",
+        variant: "destructive",
+      });
+    }
+  });
+
+  // Image upload functions
+  const handleGetUploadParameters = async () => {
+    const result = await getUploadUrlMutation.mutateAsync();
+    return {
+      method: "PUT" as const,
+      url: result.uploadURL,
+    };
+  };
+
+  const handleUploadComplete = (result: UploadResult<Record<string, unknown>, Record<string, unknown>>) => {
+    if (result.successful && result.successful.length > 0) {
+      const uploadedFile = result.successful[0];
+      if (uploadedFile.uploadURL) {
+        setDesignImageMutation.mutate({
+          imageURL: uploadedFile.uploadURL,
+          fileName: uploadedFile.name || "uploaded-image"
+        });
+      }
+    }
+  };
 
   // Modify file mutation
   const modifyFileMutation = useMutation({
@@ -358,10 +414,15 @@ export function ChatInterface({
 
       // Trigger the actual modification
       const fileName = selectedFile || "index.html";
+      // Include uploaded images in the modification request context
+      const modificationRequest = uploadedImages.length > 0 
+        ? `${userMessage}\n\nNote: User has uploaded ${uploadedImages.length} design reference image(s) that should influence the design. Consider these images when making modifications to match the visual style and layout shown in the uploaded references.`
+        : userMessage;
+
       modifyFileMutation.mutate({
         sessionId: chatSessionId,
         fileName,
-        modificationRequest: userMessage
+        modificationRequest
       });
     }
 
@@ -650,6 +711,30 @@ export function ChatInterface({
 
           {/* Chat Input */}
           <div className="border-t border-slate-700 p-4">
+            {/* Show uploaded images */}
+            {uploadedImages.length > 0 && (
+              <div className="mb-4 p-3 bg-slate-800 rounded-lg">
+                <div className="text-xs font-medium text-slate-300 mb-2">Uploaded Images for Design Reference:</div>
+                <div className="flex flex-wrap gap-2">
+                  {uploadedImages.map((imageUrl, index) => (
+                    <div key={index} className="relative">
+                      <img 
+                        src={imageUrl} 
+                        alt={`Uploaded design ${index + 1}`}
+                        className="w-16 h-16 object-cover rounded border border-slate-600"
+                      />
+                      <button 
+                        onClick={() => setUploadedImages(prev => prev.filter((_, i) => i !== index))}
+                        className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 text-white rounded-full flex items-center justify-center text-xs hover:bg-red-600"
+                      >
+                        ×
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
             <div className="flex items-end space-x-3">
               <div className="flex-1">
                 <Textarea
@@ -681,6 +766,21 @@ export function ChatInterface({
                   <div className="text-xs text-slate-500">{inputValue.length} / 1000</div>
                 </div>
               </div>
+              
+              {/* Image Upload Button - Only show for 2nd prompt onwards */}
+              {chatSessionId && (
+                <ObjectUploader
+                  maxNumberOfFiles={1}
+                  maxFileSize={10485760} // 10MB
+                  onGetUploadParameters={handleGetUploadParameters}
+                  onComplete={handleUploadComplete}
+                  buttonClassName="bg-slate-600 hover:bg-slate-700 px-4 py-3"
+                >
+                  <Image className="w-4 h-4 mr-2" />
+                  Upload Image
+                </ObjectUploader>
+              )}
+
               <Button
                 onClick={handleSubmit}
                 disabled={!inputValue.trim() || startChatMutation.isPending || modifyFileMutation.isPending}

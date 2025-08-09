@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Loan Products</title>
+<style>
+:root {
+  --primary-color: #4A6572;
+  --secondary-color: #A3B18A;
+  --accent-color: #F2E9E4;
+  --text-color: #333;
+  --background-color: #f4f4f4;
+  --shadow-color: rgba(0,0,0,0.1);
+  --spacing-unit: 1rem;
+  --border-radius: 0.5rem;
+}
+
+body {
+  font-family: 'Arial', sans-serif;
+  line-height: 1.6;
+  background-color: var(--background-color);
+  color: var(--text-color);
+  margin: 0;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  min-height: 100vh;
+}
+
+header {
+  background: linear-gradient(to right, #4A6572, #A3B18A);
+  color: white;
+  padding: 2rem;
+  text-align: center;
+}
+
+nav {
+  background-color: var(--primary-color);
+  padding: 1rem;
+  display: flex;
+  justify-content: center;
+}
+
+nav ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+}
+
+nav li {
+  margin: 0 var(--spacing-unit);
+}
+
+nav a {
+  color: white;
+  text-decoration: none;
+  padding: 0.5rem 1rem;
+  border-radius: var(--border-radius);
+  transition: background-color 0.3s ease;
+}
+
+nav a:hover {
+  background-color: rgba(255,255,255,0.2);
+}
+
+
+main {
+  padding: 2rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  grid-gap: var(--spacing-unit);
+}
+
+.loan-card {
+  background-color: white;
+  border-radius: var(--border-radius);
+  box-shadow: 0 2px 4px var(--shadow-color);
+  padding: 1rem;
+  transition: transform 0.2s ease;
+}
+
+.loan-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 4px 8px var(--shadow-color);
+}
+
+.loan-card h3 {
+  margin-top: 0;
+}
+
+.loan-card p {
+  margin-bottom: 0.5rem;
+}
+
+footer {
+  background-color: var(--primary-color);
+  color: white;
+  padding: 1rem;
+  text-align: center;
+}
+
+/*Responsive adjustments*/
+@media (max-width: 768px) {
+  nav ul {
+    flex-direction: column;
+  }
+  nav li {
+    margin: 0.5rem 0;
+  }
+}
+</style>
+</head>
+<body>
+<header>
+  <h1>Loan Products</h1>
+</header>
+<nav>
+  <ul>
+    <li><a href="#">Personal Loans</a></li>
+    <li><a href="#">Home Loans</a></li>
+    <li><a href="#">Auto Loans</a></li>
+  </ul>
+</nav>
+<main>
+  <article class="loan-card">
+    <h3>Personal Loan</h3>
+    <p>Interest Rate: 8%</p>
+    <p>Term: 1-5 years</p>
+    <p>Eligibility: Good credit history</p>
+    <a href="#">Learn More</a>
+  </article>
+  <article class="loan-card">
+    <h3>Home Loan</h3>
+    <p>Interest Rate: 6%</p>
+    <p>Term: 15-30 years</p>
+    <p>Eligibility: Credit score above 650</p>
+    <a href="#">Learn More</a>
+  </article>
+  <article class="loan-card">
+    <h3>Auto Loan</h3>
+    <p>Interest Rate: 7%</p>
+    <p>Term: 3-7 years</p>
+    <p>Eligibility: Valid Driver's License</p>
+    <a href="#">Learn More</a>
+  </article>
+</main>
+<footer>
+  <p>&copy; 2023 Loan Company</p>
+</footer>
+
+<script>
+// Add any JavaScript functionality here if needed (e.g., filtering, sorting).  This example is kept minimal for brevity.
+</script>
+
+</body>
+</html>
