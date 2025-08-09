@@ -4,6 +4,7 @@ import { storage } from "./storage";
 import { llmService } from "./services/llm";
 import { fileGeneratorService } from "./services/fileGenerator";
 import { ObjectStorageService, ObjectPermission } from "./objectStorage";
+import { imageAnalysisService } from "./services/imageAnalysis";
 import express from "express";
 import path from "path";
 
@@ -319,9 +320,22 @@ export async function registerRoutes(app: Express): Promise<Server> {
         },
       );
 
+      // Analyze the uploaded image to extract design information
+      let imageAnalysis = "";
+      try {
+        console.log("Analyzing uploaded image:", imageURL);
+        imageAnalysis = await imageAnalysisService.analyzeImageFromUrl(imageURL);
+        console.log("Image analysis complete:", imageAnalysis.substring(0, 200) + "...");
+      } catch (analysisError) {
+        console.error("Image analysis failed:", analysisError);
+        // Continue without analysis rather than failing the upload
+        imageAnalysis = "Image uploaded successfully but analysis failed. The image will still be used as a visual reference.";
+      }
+
       res.status(200).json({
         objectPath: objectPath,
         imageURL: imageURL,
+        imageAnalysis: imageAnalysis,
       });
     } catch (error) {
       console.error("Error setting design image:", error);

@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Achievement Log</title>
+<style>
+:root {
+  --primary-color: #673ab7;
+  --secondary-color: #e91e63;
+  --bg-color: #f4f4f4;
+  --text-color: #333;
+  --shadow-color: rgba(0,0,0,0.2);
+  --border-radius: 8px;
+  --spacing: 1rem;
+}
+
+body {
+  font-family: 'Roboto', sans-serif;
+  line-height: 1.6;
+  margin: 0;
+  background-color: var(--bg-color);
+  color: var(--text-color);
+}
+
+.container {
+  max-width: 960px;
+  margin: var(--spacing) auto;
+  padding: var(--spacing);
+}
+
+header {
+  background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+  color: white;
+  padding: 2rem;
+  text-align: center;
+  border-radius: var(--border-radius);
+  box-shadow: 0 2px 10px var(--shadow-color);
+}
+
+h1 {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+}
+
+section {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: var(--spacing);
+  margin-top: var(--spacing);
+}
+
+.achievement {
+  background-color: white;
+  padding: var(--spacing);
+  border-radius: var(--border-radius);
+  box-shadow: 0 2px 5px var(--shadow-color);
+  transition: transform 0.2s ease-in-out;
+}
+
+.achievement:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 4px 10px var(--shadow-color);
+}
+
+
+.achievement-badge {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.5rem;
+  margin-right: var(--spacing);
+}
+
+.achievement-timestamp {
+  font-style: italic;
+  color: #777;
+  margin-bottom: 0.5rem;
+}
+
+.achievement-description {
+  font-size: 1rem;
+}
+
+footer {
+    text-align: center;
+    padding: 1rem;
+    margin-top: 2rem;
+    background-color: #f0f0f0;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  section {
+    grid-template-columns: 1fr;
+  }
+}
+</style>
+</head>
+<body>
+<header>
+  <h1>Achievement Log</h1>
+</header>
+<div class="container">
+  <section id="achievements">
+    <article class="achievement">
+      <div class="achievement-badge">&#127881;</div>
+      <p class="achievement-timestamp">2024-03-08 10:00</p>
+      <p class="achievement-description">Completed Level 1 tutorial.</p>
+    </article>
+    <article class="achievement">
+      <div class="achievement-badge">&#9749;</div>
+      <p class="achievement-timestamp">2024-03-15 14:30</p>
+      <p class="achievement-description">Solved 5 coding challenges.</p>
+    </article>
+    <article class="achievement">
+      <div class="achievement-badge">&#128343;</div>
+      <p class="achievement-timestamp">2024-03-22 18:00</p>
+      <p class="achievement-description">Created first web application.</p>
+    </article>
+  </section>
+</div>
+<footer>
+  <p>&copy; 2024 My Achievements</p>
+</footer>
+
+<script>
+// Add JavaScript for filtering or dynamic content if needed.  For brevity, omitted here.
+</script>
+</body>
+</html>

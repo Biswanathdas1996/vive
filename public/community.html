@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Community Hub</title>
+<style>
+:root {
+  --primary: #673ab7;
+  --secondary: #f44336;
+  --bg: #f0f0f0;
+  --text: #333;
+  --accent: #4CAF50;
+  --shadow: rgba(0,0,0,0.2);
+  --spacing: 1rem;
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+  margin: 0;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  min-height: 100vh;
+}
+
+header {
+  background: linear-gradient(to right, var(--primary), var(--secondary));
+  color: white;
+  padding: var(--spacing);
+  text-align: center;
+}
+
+nav {
+  background: rgba(255,255,255,0.8);
+  backdrop-filter: blur(10px);
+  padding: var(--spacing);
+  display: flex;
+  justify-content: space-around;
+}
+
+nav a {
+  color: var(--text);
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+nav a:hover {
+  color: var(--accent);
+}
+
+main {
+  padding: var(--spacing);
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  grid-gap: var(--spacing);
+}
+
+.leaderboard {
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 5px 10px var(--shadow);
+  padding: var(--spacing);
+}
+
+.leaderboard h2 {
+  margin-top: 0;
+}
+
+.leaderboard ul {
+  list-style: none;
+  padding: 0;
+}
+
+.leaderboard li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid #eee;
+}
+
+
+footer {
+  background: var(--primary);
+  color: white;
+  padding: var(--spacing);
+  text-align: center;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  main {
+    grid-template-columns: 1fr;
+  }
+}
+</style>
+</head>
+<body>
+<header>
+  <h1>Community Hub</h1>
+</header>
+<nav>
+  <a href="#">Leaderboard</a>
+  <a href="#">Forums</a>
+  <a href="#">Profile</a>
+</nav>
+<main>
+  <section class="leaderboard">
+    <h2>Top Performers</h2>
+    <ul>
+      <li><span>User 1</span><span>1000 points</span></li>
+      <li><span>User 2</span><span>800 points</span></li>
+      <li><span>User 3</span><span>600 points</span></li>
+    </ul>
+  </section>
+  <section style="background-color: #fff; border-radius: 10px; box-shadow: 0 5px 10px var(--shadow); padding: var(--spacing);">
+    <h2>Discussion Forum (Placeholder)</h2>
+    <div style="background-color: lightblue; height: 200px; border-radius: 5px;"></div>
+  </section>
+</main>
+<footer>
+  &copy; 2023 Community Hub
+</footer>
+<script>
+// Placeholder for authentication and moderation - replace with actual implementation
+// This is a simplified example and should be expanded for a real-world application.
+const loginButton = document.createElement('button');
+loginButton.textContent = 'Login';
+loginButton.style.backgroundColor = 'var(--accent)';
+loginButton.style.padding = '0.5rem 1rem';
+loginButton.style.borderRadius = '5px';
+loginButton.style.cursor = 'pointer';
+document.body.appendChild(loginButton);
+
+loginButton.addEventListener('click', () => {
+  alert('Login functionality not implemented');
+});
+
+
+</script>
+</body>
+</html>

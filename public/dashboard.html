@@ -1,113 +1,192 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard</title>
-    <style>
-        body {
-            font-family: sans-serif;
-            margin: 0;
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            grid-gap: 20px;
-            padding: 20px;
-            background-color: #f4f4f4;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Progress Dashboard</title>
+<style>
+:root {
+  --primary-color: #673ab7;
+  --secondary-color: #2196f3;
+  --accent-color: #ff9800;
+  --bg-color: #f4f4f4;
+  --text-color: #333;
+  --shadow-color: rgba(0,0,0,0.1);
+  --border-radius: 8px;
+  --spacing: 1rem;
+}
 
-        .card {
-            background-color: white;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            padding: 20px;
-            overflow: hidden;
-        }
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  margin: 0;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  min-height: 100vh;
+  grid-template-columns: 1fr; /*added for single column layout*/
+}
 
-        .card h2 {
-            margin-top: 0;
-        }
+header {
+  background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+  color: white;
+  padding: var(--spacing);
+  text-align: center;
+}
 
-        .card p {
-            margin-bottom: 0;
-        }
+nav {
+  display: none; /* Hide navigation for this design */
+}
 
-        .chart-container {
-            width: 100%;
-            height: 200px;
-        }
+main {
+  padding: var(--spacing);
+  display: flex;
+  flex-direction: column; /* Stack elements vertically */
+  gap: var(--spacing); /* Add spacing between elements */
+}
 
-        @media (max-width: 768px) {
-            body {
-                grid-template-columns: 1fr;
-            }
-        }
+.goal-card {
+  background-color: white;
+  border-radius: var(--border-radius);
+  box-shadow: 0 2px 4px var(--shadow-color);
+  padding: var(--spacing);
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem; /*Added gap between title and progress bar*/
+}
 
-        .button {
-          background-color: #4CAF50;
-          border: none;
-          color: white;
-          padding: 10px 20px;
-          text-align: center;
-          text-decoration: none;
-          display: inline-block;
-          font-size: 16px;
-          margin: 4px 2px;
-          cursor: pointer;
-          border-radius: 5px;
-        }
-    </style>
+.goal-title {
+  font-size: 1.4rem;
+  font-weight: bold;
+  margin: 0; /*remove default margin*/
+}
+
+.progress-bar {
+  height: 20px;
+  width: 100%;
+  background-color: #ddd;
+  border-radius: var(--border-radius);
+  overflow: hidden;
+}
+
+.progress-bar-fill {
+  height: 100%;
+  background-color: var(--primary-color);
+  transition: width 0.5s ease;
+}
+
+
+.chart-container {
+  width: 100%;
+  height: 250px; /*Increased height*/
+  background-color: white;
+  border-radius: var(--border-radius);
+  box-shadow: 0 2px 4px var(--shadow-color);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.chart-container canvas {
+  max-width: 100%;
+  max-height: 100%;
+}
+
+footer {
+  background-color: #333;
+  color: white;
+  padding: var(--spacing);
+  text-align: center;
+}
+
+#createGoalButton {
+  background-color: var(--accent-color);
+  color: white;
+  padding: 0.8rem 1.5rem;
+  border: none;
+  border-radius: var(--border-radius);
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  align-self: flex-end; /* Align button to the right */
+  margin-top: auto; /* Push button to the bottom */
+}
+
+
+</style>
 </head>
 <body>
-
-    <div class="card">
-        <h2>Overview</h2>
-        <p>Total Users: <span id="totalUsers">0</span></p>
-        <p>Active Users: <span id="activeUsers">0</span></p>
-        <div class="chart-container">
-            <!-- Chart would go here -->
-        </div>
+<header>
+  <h1>Progress Dashboard</h1>
+</header>
+<main>
+  <div class="goal-card">
+    <h2 class="goal-title">Goal 1: Learn JavaScript</h2>
+    <div class="progress-bar">
+      <div class="progress-bar-fill" style="width: 75%;"></div>
     </div>
-
-    <div class="card">
-        <h2>Recent Activity</h2>
-        <ul id="activityList">
-          <!-- Activity items will be added here -->
-        </ul>
-        <button class="button" onclick="addActivity()">Add Activity</button>
+  </div>
+  <div class="goal-card">
+    <h2 class="goal-title">Goal 2: Build a Web App</h2>
+    <div class="progress-bar">
+      <div class="progress-bar-fill" style="width: 50%;"></div>
     </div>
+  </div>
+  <div class="chart-container">
+    <canvas id="myChart"></canvas>
+  </div>
+  <button id="createGoalButton">Create New Goal</button>
+</main>
+<footer>
+  &copy; 2023 Progress Dashboard
+</footer>
 
+<script>
+  const createGoalButton = document.getElementById('createGoalButton');
+  createGoalButton.addEventListener('click', () => {
+    alert('Create Goal functionality not yet implemented.');
+  });
 
-    <script>
-        let totalUsers = 150;
-        let activeUsers = 35;
-        let activityItems = [
-          {time:"10:00 AM", description: "User logged in"},
-          {time:"10:30 AM", description: "New user registered"}
-        ];
+  setTimeout(() => {
+    document.querySelectorAll('.progress-bar-fill')[0].style.width = '90%';
+  }, 2000);
 
-
-        document.getElementById("totalUsers").textContent = totalUsers;
-        document.getElementById("activeUsers").textContent = activeUsers;
-
-        function addActivity() {
-          let newActivity = {time: new Date().toLocaleTimeString(), description: "Test activity added"};
-          activityItems.push(newActivity);
-          updateActivityList();
+  // Chart.js (replace with your chart library)
+  const ctx = document.getElementById('myChart').getContext('2d');
+  new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+      datasets: [{
+        label: 'Progress',
+        data: [12, 19, 3, 5, 2, 3],
+        backgroundColor: [
+          'rgba(54, 162, 235, 0.2)',
+          'rgba(54, 162, 235, 0.2)',
+          'rgba(54, 162, 235, 0.2)',
+          'rgba(54, 162, 235, 0.2)',
+          'rgba(54, 162, 235, 0.2)',
+          'rgba(54, 162, 235, 0.2)'
+        ],
+        borderColor: [
+          'rgba(54, 162, 235, 1)',
+          'rgba(54, 162, 235, 1)',
+          'rgba(54, 162, 235, 1)',
+          'rgba(54, 162, 235, 1)',
+          'rgba(54, 162, 235, 1)',
+          'rgba(54, 162, 235, 1)'
+        ],
+        borderWidth: 1
+      }]
+    },
+    options: {
+      scales: {
+        y: {
+          beginAtZero: true
         }
-
-        function updateActivityList() {
-          const activityList = document.getElementById("activityList");
-          activityList.innerHTML = ''; //Clear existing items
-
-          activityItems.forEach(item => {
-            let listItem = document.createElement('li');
-            listItem.textContent = `${item.time} - ${item.description}`;
-            activityList.appendChild(listItem);
-          });
-        }
-
-        updateActivityList();
-    </script>
+      }
+    }
+  });
+</script>
 
 </body>
 </html>

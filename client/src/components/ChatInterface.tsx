@@ -118,6 +118,7 @@ export function ChatInterface({
   const [currentWorkflow, setCurrentWorkflow] = useState<any>(null);
   const [isHeaderCollapsed, setIsHeaderCollapsed] = useState(false);
   const [uploadedImages, setUploadedImages] = useState<string[]>([]);
+  const [imageAnalyses, setImageAnalyses] = useState<Record<string, string>>({});
   // Remove local state and use props instead
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const queryClient = useQueryClient();
@@ -239,10 +240,24 @@ export function ChatInterface({
     },
     onSuccess: (data) => {
       setUploadedImages(prev => [...prev, data.imageURL]);
-      toast({
-        title: "Image Uploaded",
-        description: "Image has been uploaded successfully and can be used for design modifications",
-      });
+      
+      // Store the image analysis text
+      if (data.imageAnalysis) {
+        setImageAnalyses(prev => ({
+          ...prev,
+          [data.imageURL]: data.imageAnalysis
+        }));
+        
+        toast({
+          title: "Image Analyzed",
+          description: "Image uploaded and analyzed successfully. The design elements have been extracted for use in modifications.",
+        });
+      } else {
+        toast({
+          title: "Image Uploaded",
+          description: "Image uploaded successfully but analysis failed. The image will still be used as a visual reference.",
+        });
+      }
     },
     onError: (error: any) => {
       toast({
@@ -414,10 +429,23 @@ export function ChatInterface({
 
       // Trigger the actual modification
       const fileName = selectedFile || "index.html";
-      // Include uploaded images in the modification request context
-      const modificationRequest = uploadedImages.length > 0 
-        ? `${userMessage}\n\nNote: User has uploaded ${uploadedImages.length} design reference image(s) that should influence the design. Consider these images when making modifications to match the visual style and layout shown in the uploaded references.`
-        : userMessage;
+      
+      // Include analyzed image descriptions in the modification request
+      let modificationRequest = userMessage;
+      
+      if (uploadedImages.length > 0) {
+        const imageDescriptions = uploadedImages
+          .map((imageUrl, index) => {
+            const analysis = imageAnalyses[imageUrl];
+            if (analysis) {
+              return `\n\n=== Design Analysis from Uploaded Image ${index + 1} ===\n${analysis}`;
+            }
+            return `\n\nImage ${index + 1}: ${imageUrl} (analysis not available)`;
+          })
+          .join('');
+        
+        modificationRequest = `${userMessage}\n\nNote: User has uploaded ${uploadedImages.length} design reference image(s). Use the following detailed design analysis to recreate and implement the visual style, layout, and design elements:${imageDescriptions}\n\nPlease implement the design elements described above in the HTML/CSS code.`;
+      }
 
       modifyFileMutation.mutate({
         sessionId: chatSessionId,
@@ -714,17 +742,45 @@ export function ChatInterface({
             {/* Show uploaded images */}
             {uploadedImages.length > 0 && (
               <div className="mb-4 p-3 bg-slate-800 rounded-lg">
-                <div className="text-xs font-medium text-slate-300 mb-2">Uploaded Images for Design Reference:</div>
+                <div className="text-xs font-medium text-slate-300 mb-2">Uploaded Images with Design Analysis:</div>
                 <div className="flex flex-wrap gap-2">
                   {uploadedImages.map((imageUrl, index) => (
-                    <div key={index} className="relative">
+                    <div key={index} className="relative group">
                       <img 
                         src={imageUrl} 
                         alt={`Uploaded design ${index + 1}`}
                         className="w-16 h-16 object-cover rounded border border-slate-600"
                       />
+                      
+                      {/* Analysis status indicator */}
+                      <div className="absolute bottom-0 left-0 right-0 bg-black bg-opacity-75 text-white text-xs px-1 py-0.5 rounded-b">
+                        {imageAnalyses[imageUrl] ? (
+                          <span className="text-green-400">✓ Analyzed</span>
+                        ) : setDesignImageMutation.isPending ? (
+                          <span className="text-blue-400">Analyzing...</span>
+                        ) : (
+                          <span className="text-yellow-400">Pending</span>
+                        )}
+                      </div>
+                      
+                      {/* Tooltip showing analysis preview */}
+                      {imageAnalyses[imageUrl] && (
+                        <div className="absolute bottom-full left-0 mb-2 bg-slate-900 text-slate-300 text-xs p-2 rounded shadow-lg max-w-xs opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-10 pointer-events-none">
+                          {imageAnalyses[imageUrl].substring(0, 150)}...
+                        </div>
+                      )}
+                      
                       <button 
-                        onClick={() => setUploadedImages(prev => prev.filter((_, i) => i !== index))}
+                        onClick={() => {
+                          const imageUrl = uploadedImages[index];
+                          setUploadedImages(prev => prev.filter((_, i) => i !== index));
+                          // Clean up the analysis data for removed image
+                          setImageAnalyses(prev => {
+                            const newAnalyses = { ...prev };
+                            delete newAnalyses[imageUrl];
+                            return newAnalyses;
+                          });
+                        }}
                         className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 text-white rounded-full flex items-center justify-center text-xs hover:bg-red-600"
                       >
                         ×

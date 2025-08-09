@@ -1,229 +1,156 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>User Profile</title>
-    <style>
-        :root {
-            /* Color Palette */
-            --color-primary: #64b5f6; /* Light Blue */
-            --color-primary-dark: #1e88e5;
-            --color-secondary: #ffab00; /* Amber */
-            --color-background: #f0f4c3; /* Light Green */
-            --color-surface: #ffffff; /* White */
-            --color-on-surface: #212121; /* Dark Grey */
-            --color-accent: #e57373; /* Red */
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>User Profile</title>
+<style>
+:root {
+  --primary-color: #673ab7;
+  --secondary-color: #2196f3;
+  --bg-color: #f4f4f4;
+  --text-color: #333;
+  --shadow-color: rgba(0,0,0,0.2);
+  --border-radius: 8px;
+  --spacing-unit: 1rem;
+}
 
-            /* Spacing */
-            --space-s: 0.75rem;
-            --space-m: 1rem;
-            --space-l: 1.5rem;
-            --space-xl: 2rem;
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: var(--bg-color);
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  color: var(--text-color);
+}
 
-            /* Typography */
-            --font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            --font-size-base: 1rem;
-            --line-height-base: 1.6;
-            --font-weight-light: 300;
-            --font-weight-regular: 400;
-            --font-weight-bold: 700;
+.container {
+  max-width: 960px;
+  margin: 2rem auto;
+  padding: 0 var(--spacing-unit);
+}
 
-            /* Border Radius */
-            --border-radius: 0.75rem;
+header {
+  background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+  color: white;
+  padding: 2rem 0;
+  text-align: center;
+}
 
-            /* Shadow */
-            --shadow-small: 0 1px 2px rgba(0, 0, 0, 0.1);
-            --shadow-medium: 0 2px 4px rgba(0, 0, 0, 0.15);
-            --shadow-large: 0 4px 8px rgba(0, 0, 0, 0.2);
-        }
+h1 {
+  font-size: 2.5rem;
+  margin-bottom: 0.5rem;
+}
 
-        *, *::before, *::after {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
+.profile-picture {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255,255,255,0.5), var(--primary-color));
+  margin: 2rem auto;
+}
 
-        body {
-            font-family: var(--font-family);
-            font-size: var(--font-size-base);
-            line-height: var(--line-height-base);
-            background-color: var(--color-background);
-            color: var(--color-on-surface);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            padding: var(--space-m);
-        }
+.profile-info {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--spacing-unit);
+}
 
-        .container {
-            width: 100%;
-            max-width: 800px;
-            background-color: var(--color-surface);
-            border-radius: var(--border-radius);
-            box-shadow: var(--shadow-medium);
-            overflow: hidden;
-        }
+.profile-section {
+  padding: 1rem;
+  background-color: white;
+  border-radius: var(--border-radius);
+  box-shadow: 0 2px 4px var(--shadow-color);
+}
 
-        header {
-            background: linear-gradient(to right, var(--color-primary), var(--color-secondary));
-            color: var(--color-surface);
-            padding: var(--space-xl);
-            text-align: center;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
+.profile-edit {
+  text-align: right;
+}
 
-        header h1 {
-            font-size: 2rem;
-            font-weight: var(--font-weight-bold);
-            margin-bottom: var(--space-s);
-        }
+button {
+  background-color: var(--primary-color);
+  color: white;
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: var(--border-radius);
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
 
-        .avatar-container {
-            width: 100px;
-            height: 100px;
-            border-radius: 50%;
-            background-color: rgba(255, 255, 255, 0.2);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin-bottom: var(--space-m);
-            overflow: hidden;
-            border: 2px solid rgba(255, 255, 255, 0.4);
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-        }
+button:hover {
+  background-color: darken(var(--primary-color), 10%);
+}
 
-        .avatar-container::before {
-            content: '';
-            display: block;
-            width: 60%;
-            height: 60%;
-            background-color: var(--color-secondary);
-            border-radius: 50%;
-        }
+.progress-summary {
+  background-color: white;
+  border-radius: var(--border-radius);
+  box-shadow: 0 2px 4px var(--shadow-color);
+  padding: 1rem;
+  margin-top: var(--spacing-unit);
+}
 
-        main {
-            padding: var(--space-l);
-        }
 
-        .profile-section {
-            margin-bottom: var(--space-l);
-        }
+.progress-bar {
+  height: 20px;
+  background-color: #e0e0e0;
+  border-radius: var(--border-radius);
+  overflow: hidden;
+}
 
-        .profile-section h2 {
-            font-size: 1.5rem;
-            font-weight: var(--font-weight-bold);
-            margin-bottom: var(--space-m);
-        }
+.progress-bar > div {
+  height: 100%;
+  background-color: var(--secondary-color);
+  transition: width 0.5s ease;
+}
 
-        .profile-field {
-            margin-bottom: var(--space-m);
-        }
+@keyframes fadeIn {
+  from {opacity: 0;}
+  to {opacity: 1;}
+}
 
-        .profile-field label {
-            display: block;
-            font-weight: var(--font-weight-bold);
-            margin-bottom: var(--space-s);
-        }
+.fade-in {
+  animation: fadeIn 0.5s ease-in-out;
+}
 
-        .profile-field input, .profile-field textarea {
-            width: 100%;
-            padding: var(--space-m);
-            border: 1px solid #ccc;
-            border-radius: var(--border-radius);
-            font-size: var(--font-size-base);
-            transition: border-color 0.2s ease;
-        }
-
-        .profile-field input:focus, .profile-field textarea:focus {
-            outline: none;
-            border-color: var(--color-primary);
-        }
-
-        .button {
-            display: inline-block;
-            padding: var(--space-m) var(--space-l);
-            background-color: var(--color-primary);
-            color: var(--color-surface);
-            text-decoration: none;
-            border-radius: var(--border-radius);
-            font-weight: var(--font-weight-bold);
-            transition: background-color 0.2s ease, transform 0.1s ease;
-            box-shadow: var(--shadow-small);
-            border: none;
-            cursor: pointer;
-        }
-
-        .button:hover {
-            background-color: var(--color-primary-dark);
-            transform: translateY(-2px);
-        }
-
-        .button:active {
-            transform: translateY(0);
-        }
-
-        .button--secondary {
-            background-color: var(--color-accent);
-        }
-
-        .button--secondary:hover {
-            background-color: darken(var(--color-accent), 10%);
-        }
-
-        footer {
-            text-align: center;
-            padding: var(--space-m);
-            border-top: 1px solid #eee;
-            color: #777;
-            font-size: 0.8rem;
-        }
-
-        /* Responsive Design */
-        @media (max-width: 768px) {
-            .container {
-                margin: 0 var(--space-m);
-            }
-        }
-
-    </style>
+</style>
 </head>
 <body>
-    <div class="container">
-        <header>
-            <h1>My Profile</h1>
-            <div class="avatar-container">
-            </div>
-        </header>
-
-        <main>
-            <section class="profile-section">
-                <h2>Profile Details</h2>
-                <div class="profile-field">
-                    <label for="username">Username</label>
-                    <input type="text" id="username" value="johndoe" readonly>
-                </div>
-                <div class="profile-field">
-                    <label for="email">Email</label>
-                    <input type="email" id="email" value="john.doe@example.com" readonly>
-                </div>
-                <div class="profile-field">
-                    <label for="bio">Bio</label>
-                    <textarea id="bio" rows="4" readonly>A passionate developer and designer.</textarea>
-                </div>
-                <button class="button">Edit Profile</button>
-                <button class="button button--secondary">Logout</button>
-            </section>
-
-        </main>
-
-        <footer>
-            <p>&copy; 2024 User Profile</p>
-        </footer>
+<header>
+  <h1>User Profile</h1>
+</header>
+<div class="container">
+  <div class="profile-picture fade-in"></div>
+  <div class="profile-info">
+    <div class="profile-section">
+      <h2>Personal Information</h2>
+      <p>Name: John Doe</p>
+      <p>Email: john.doe@example.com</p>
+      <div class="profile-edit">
+        <button>Edit Profile</button>
+      </div>
     </div>
+    <div class="profile-section">
+      <h2>Settings</h2>
+      <p>Notifications: On</p>
+      <p>Theme: Dark</p>
+    </div>
+  </div>
+  <div class="progress-summary fade-in">
+    <h2>Progress Summary</h2>
+    <p>Task Completion: 75%</p>
+    <div class="progress-bar">
+      <div style="width: 75%;"></div>
+    </div>
+  </div>
+</div>
+<script>
+//Add any javascript interactions here if needed.  Example below.
+const editButton = document.querySelector('.profile-edit button');
+editButton.addEventListener('click', () => {
+  alert('Edit profile functionality will go here.');
+});
 
+</script>
 </body>
 </html>
