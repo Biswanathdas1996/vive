@@ -90,7 +90,7 @@ export default function SettingsPage() {
 
   // Save settings mutation
   const saveSettingsMutation = useMutation({
-    mutationFn: (data: AppSettings) => apiRequest("POST", "/api/settings", data),
+    mutationFn: (data: AppSettings) => apiRequest("/api/settings", "POST", data),
     onSuccess: () => {
       toast({
         title: "Settings saved",

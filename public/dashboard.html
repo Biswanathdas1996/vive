@@ -1,294 +1,255 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard</title>
-    
-    <style>
-        :root {
-            --primary-color: #30a9de;
-            --secondary-color: #ff4e50;
-            --accent-color: #ffe47a;
-            --text-light: #f5f5f5;
-            --text-dark: #333;
-            --bg-light: #fff;
-            --bg-dark: #1a1a1a;
-            --shadow: rgba(0, 0, 0, 0.15);
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Loan Management Dashboard</title>
+<style>
+:root {
+  --primary-color: #3f51b5;
+  --secondary-color: #6200ee;
+  --background-color: #f4f4f4;
+  --text-color: #333;
+  --shadow-color: rgba(0,0,0,0.2);
+  --border-radius: 8px;
+}
 
-        body, html {
-            margin: 0;
-            padding: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: var(--bg-light);
-            color: var(--text-dark);
-            scroll-behavior: smooth;
-        }
+body {
+  font-family: 'Roboto', sans-serif;
+  margin: 0;
+  background-color: var(--background-color);
+  color: var(--text-color);
+  line-height: 1.6;
+}
 
-        /* Dark Mode */
-        body.dark-mode {
-            background-color: var(--bg-dark);
-            color: var(--text-light);
-        }
+/* Navigation */
+header {
+  position: sticky;
+  top: 0;
+  background-color: white;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  z-index: 10;
+  padding: 1rem;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+}
 
-        /* Layout */
-        header {
-            position: sticky;
-            top: 0;
-            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-            color: var(--text-light);
-            display: flex;
-            justify-content: space-between;
-            padding: 1rem;
-            box-shadow: 0 4px 8px var(--shadow);
-            z-index: 1000;
-        }
+.logo {
+  font-weight: bold;
+  font-size: 1.2rem;
+}
 
-        .logo {
-            font-size: 1.5rem;
-            font-weight: bold;
-        }
+.hamburger-menu {
+  display: none;
+  cursor: pointer;
+}
 
-        nav {
-            display: flex;
-            align-items: center;
-        }
+.hamburger-menu::before {
+  content: '\u2630'; /* Hamburger icon */
+  font-size: 2rem;
+}
 
-        nav a {
-            margin: 0 0.75rem;
-            color: var(--text-light);
-            text-decoration: none;
-            position: relative;
-        }
+.user-profile {
+  display: flex;
+  align-items: center;
+}
 
-        nav a:hover {
-            color: var(--accent-color);
-        }
+.user-profile img {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  margin-right: 0.5rem;
+}
 
-        .search-bar {
-            border: none;
-            padding: 0.5rem;
-            border-radius: 4px;
-        }
+.user-profile-menu {
+  position: absolute;
+  display: none;
+  background-color: white;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  border-radius: var(--border-radius);
+}
 
-        .sidebar {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 200px;
-            height: 100%;
-            background: linear-gradient(135deg, var(--secondary-color), var(--primary-color));
-            color: var(--text-light);
-            display: flex;
-            flex-direction: column;
-            padding-top: 60px;
-            transition: transform 0.3s ease;
-            transform: translateX(-220px);
-        }
+.user-profile-menu li {
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+}
 
-        .sidebar.active {
-            transform: translateX(0);
-        }
+.user-profile:hover .user-profile-menu {
+  display: block;
+}
 
-        .sidebar a {
-            padding: 1rem;
-            color: var(--text-light);
-            text-decoration: none;
-        }
 
-        .sidebar a:hover {
-            background-color: var(--primary-color);
-        }
+/* Sidebar */
+aside {
+  background-color: #f0f0f0;
+  padding: 1rem;
+  width: 250px;
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  left: 0;
+  transition: transform 0.3s ease-in-out;
+  overflow-y: auto;
+}
 
-        .sidebar-toggle {
-            display: block;
-            background-color: transparent;
-            border: none;
-            color: var(--text-light);
-            cursor: pointer;
-            padding: 1rem;
-        }
+aside.collapsed {
+  transform: translateX(-100%);
+}
 
-        main {
-            padding: 1rem;
-            margin-left: 200px;
-        }
+aside nav {
+  display: flex;
+  flex-direction: column;
+}
 
-        /* Content Sections */
-        .profile-card, .recent-activities, .data-table, .chat-window, .forms, .charts {
-            background-color: var(--bg-light);
-            box-shadow: 0 4px 8px var(--shadow);
-            margin: 1rem 0;
-            padding: 1rem;
-            border-radius: 8px;
-        }
+aside nav ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
 
-        .profile-card {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-        }
+aside nav li {
+  margin-bottom: 1rem;
+}
 
-        .profile-card::before {
-            content: '';
-            width: 70px;
-            height: 70px;
-            background: radial-gradient(circle, var(--accent-color), var(--secondary-color));
-            border-radius: 50%;
-        }
+aside nav a {
+  display: block;
+  padding: 0.8rem 1.2rem;
+  background-color: white;
+  border-radius: var(--border-radius);
+  text-decoration: none;
+  color: var(--text-color);
+  transition: background-color 0.3s ease;
+}
 
-        /* Data Table */
-        .data-table {
-            overflow-x: auto;
-        }
+aside nav a:hover {
+  background-color: #e0e0e0;
+}
 
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
+/* Main Content */
+main {
+  padding: 2rem;
+  margin-left: 250px; /* Adjust for sidebar width */
+  transition: margin-left 0.3s ease-in-out;
+}
 
-        th, td {
-            padding: 0.75rem;
-            text-align: left;
-            border-bottom: 1px solid var(--shadow);
-        }
+main.collapsed {
+  margin-left: 0;
+}
 
-        th {
-            background-color: var(--primary-color);
-            color: var(--text-light);
-        }
 
-        /* Form */
-        .form-step {
-            display: none;
-        }
+/* Cards */
+.card {
+  background-color: white;
+  padding: 1rem;
+  border-radius: var(--border-radius);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  margin-bottom: 1rem;
+}
 
-        .form-step.active {
-            display: block;
-        }
+.card-header {
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+}
 
-        /* Chat Window */
-        .chat-window {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            width: 400px;
-            height: 500px;
-            background-color: var(--bg-light);
-            border-radius: 8px;
-            box-shadow: 0 4px 8px var(--shadow);
-            display: none;
-            flex-direction: column;
-        }
+/* Responsive styles */
+@media (max-width: 768px) {
+  header {
+    grid-template-columns: 1fr auto;
+  }
+  .hamburger-menu {
+    display: block;
+  }
+  aside {
+    width: 100%;
+  }
+  main {
+    margin-left: 0;
+  }
+}
 
-        .chat-window.active {
-            display: flex;
-        }
 
-        /* Responsive Layouts */
-        @media (max-width: 768px) {
-            .search-bar {
-                display: none;
-            }
+/* Sample content */
+.loan-overview {
+  backdrop-filter: blur(5px);
+  background-color: rgba(255,255,255,0.8);
+}
 
-            .sidebar {
-                width: 60px;
-            }
+.progress-bar {
+  width: 100%;
+  height: 20px;
+  background-color: #f0f0f0;
+  border-radius: var(--border-radius);
+  overflow: hidden;
+}
 
-            main {
-                margin-left: 60px;
-            }
-        }
+.progress-bar progress {
+  width: 100%;
+  height: 100%;
+  appearance: none;
+  background-color: transparent;
+}
 
-    </style>
+.progress-bar progress::-webkit-progress-bar {
+  background-color: transparent;
+}
+
+.progress-bar progress::-webkit-progress-value {
+  background-image: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+}
+
+/* more styles for other components omitted for brevity */
+
+</style>
 </head>
 <body>
+<header>
+  <div class="logo">LoanApp</div>
+  <button class="hamburger-menu"></button>
+  <div class="user-profile">
+    <div style="background-color:lightblue; width:30px; height:30px; border-radius:50%;"></div>
+    <div>User</div>
+    <ul class="user-profile-menu">
+      <li>Profile</li>
+      <li>Logout</li>
+    </ul>
+  </div>
+</header>
 
-    <header>
-        <div class="logo">MyApp</div>
-        <nav>
-            <a href="#">Dashboard</a>
-            <a href="#">Reports</a>
-            <a href="#">Settings</a>
-            <input type="text" class="search-bar" placeholder="Search...">
-        </nav>
-    </header>
+<aside>
+  <nav>
+    <ul>
+      <li><a href="#">Loan Details</a></li>
+      <li><a href="#">Payment History</a></li>
+      <li><a href="#">Repayment Schedule</a></li>
+      <li><a href="#">Settings</a></li>
+    </ul>
+  </nav>
+</aside>
 
-    <button class="sidebar-toggle" onclick="toggleSidebar()">☰</button>
-    <aside class="sidebar">
-        <a href="#">Home</a>
-        <a href="#">Analytics</a>
-        <a href="#">Messaging</a>
-    </aside>
+<main>
+  <h1>Welcome, User!</h1>
+  <div class="card loan-overview">
+    <h3>Loan Overview</h3>
+    <p>Loan Amount: $10,000</p>
+    <p>Interest Rate: 5%</p>
+    <p>Due Date: 2024-12-31</p>
+    <div class="progress-bar">
+      <progress value="60" max="100"></progress>
+    </div>
+  </div>
+  </main>
 
-    <main>
-        <section class="profile-card">
-            <div>User Name</div>
-            <div>User Role</div>
-            <button>Edit Profile</button>
-        </section>
+<script>
+const hamburgerMenu = document.querySelector('.hamburger-menu');
+const aside = document.querySelector('aside');
+const main = document.querySelector('main');
 
-        <section class="recent-activities">
-            <h2>Recent Activity</h2>
-            <ul>
-                <li>Activity 1</li>
-                <li>Activity 2</li>
-            </ul>
-        </section>
+hamburgerMenu.addEventListener('click', () => {
+  aside.classList.toggle('collapsed');
+  main.classList.toggle('collapsed');
+});
 
-        <section class="data-table">
-            <h2>Data Table</h2>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Column 1</th>
-                        <th>Column 2</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>Row 1</td>
-                        <td>Data 1</td>
-                    </tr>
-                </tbody>
-            </table>
-        </section>
-
-        <section class="chat-window">
-            <h2>AI Chat</h2>
-            <div class="chat-content">
-                <!-- Chat interface -->
-            </div>
-        </section>
-
-        <section class="forms">
-            <h2>Multi-Step Form</h2>
-            <div class="form-step active">
-                <p>Step 1</p>
-            </div>
-            <div class="form-step">
-                <p>Step 2</p>
-            </div>
-        </section>
-
-    </main>
-
-    <script>
-        function toggleSidebar() {
-            document.querySelector('.sidebar').classList.toggle('active');
-        }
-
-        document.addEventListener('DOMContentLoaded', function() {
-            const themeSwitch = document.createElement('button');
-            themeSwitch.textContent = 'Toggle Dark Mode';
-            themeSwitch.onclick = function() {
-                document.body.classList.toggle('dark-mode');
-            };
-            document.body.appendChild(themeSwitch);
-        });
-
-    </script>
-
+</script>
 </body>
 </html>
