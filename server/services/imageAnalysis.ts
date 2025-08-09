@@ -11,13 +11,13 @@ export class ImageAnalysisService {
       if (!response.ok) {
         throw new Error(`Failed to fetch image: ${response.statusText}`);
       }
-      
+
       const imageBuffer = await response.arrayBuffer();
-      const imageBase64 = Buffer.from(imageBuffer).toString('base64');
-      
+      const imageBase64 = Buffer.from(imageBuffer).toString("base64");
+
       // Determine MIME type from the response headers or URL
-      const contentType = response.headers.get('content-type') || 'image/jpeg';
-      
+      const contentType = response.headers.get("content-type") || "image/jpeg";
+
       const contents = [
         {
           inlineData: {
@@ -39,14 +39,16 @@ Provide a comprehensive description that a web developer could use to recreate t
       ];
 
       const result = await ai.models.generateContent({
-        model: "gemini-2.5-pro",
+        model: "gemini-2.0-flash-lite",
         contents: contents,
       });
 
       return result.text || "Could not analyze the image";
     } catch (error) {
       console.error("Error analyzing image:", error);
-      throw new Error(`Failed to analyze image: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      throw new Error(
+        `Failed to analyze image: ${error instanceof Error ? error.message : "Unknown error"}`,
+      );
     }
   }
 
@@ -54,12 +56,12 @@ Provide a comprehensive description that a web developer could use to recreate t
     try {
       // Download the file data directly from object storage
       const [fileBuffer] = await file.download();
-      const imageBase64 = fileBuffer.toString('base64');
-      
+      const imageBase64 = fileBuffer.toString("base64");
+
       // Get file metadata to determine MIME type
       const [metadata] = await file.getMetadata();
-      const contentType = metadata.contentType || 'image/jpeg';
-      
+      const contentType = metadata.contentType || "image/jpeg";
+
       const contents = [
         {
           inlineData: {
@@ -81,14 +83,16 @@ Provide a comprehensive description that a web developer could use to recreate t
       ];
 
       const result = await ai.models.generateContent({
-        model: "gemini-2.5-pro",
+        model: "gemini-2.0-flash-lite",
         contents: contents,
       });
 
       return result.text || "Could not analyze the image";
     } catch (error) {
       console.error("Error analyzing image from file:", error);
-      throw new Error(`Failed to analyze image: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      throw new Error(
+        `Failed to analyze image: ${error instanceof Error ? error.message : "Unknown error"}`,
+      );
     }
   }
 }

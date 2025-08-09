@@ -50,10 +50,13 @@ Analyze this web application request: ${prompt}`;
     analysisResult: AnalysisResult
   ): Promise<FileStructure> {
     try {
-      const prompt = `You are an expert web developer and project architect. Generate a file structure with  descriptive prompts with all feature content, forms, cards, menus, content needed for each HTML file that will be used to generate content later.
+      const prompt = `You are an expert web developer and project architect. Generate a comprehensive file structure with extremely detailed prompts containing extensive feature content, forms, cards, menus, interactive elements, and UI components for each HTML file.
 
 Do not generate any nested directories or complex structures. Each file should be a top-level HTML file in the "public" directory.      
-Return a JSON object representing the file structure where each HTML file contains a detail text prompt describing what should be generated for that file, try to add as much element as it can be fit into this page. Use this exact format:
+
+Return a JSON object representing the file structure where each HTML file contains an extremely detailed, comprehensive prompt describing ALL content, features, and UI elements that should be generated for that file. Include as many elements as possible to create rich, feature-complete pages.
+
+Use this exact format:
 
 {
   "public": {
@@ -61,25 +64,31 @@ Return a JSON object representing the file structure where each HTML file contai
     "children": {
       "index.html": { 
         "type": "file",
-        "prompt": "Create the main landing page with navigation, hero section, and responsive design"
+        "prompt": "Create a comprehensive landing page with: responsive navigation bar including logo, menu items (Home, Products, Services, About, Contact), mobile hamburger menu; hero section with compelling headline, subheadline, call-to-action buttons, background image/video; features section with icon cards highlighting key benefits, statistics counter, testimonials carousel; services overview with service cards including icons, descriptions, and pricing; about us preview section; newsletter signup form; footer with company info, social media links, quick links, contact details, copyright. Include modern animations, hover effects, smooth scrolling navigation, modal popups, responsive grid layouts, and interactive elements."
       },
-      "about.html": { 
+      "dashboard.html": { 
         "type": "file",
-        "prompt": "Create an about page with company information and team section"
+        "prompt": "Create a feature-rich dashboard with: top navigation bar with user profile dropdown, notifications bell, search bar, settings gear; sidebar navigation with collapsible menu items, user avatar, role indicator; main content area with welcome message, statistics cards with charts/graphs, data tables with sorting/filtering, progress bars, activity feed, quick action buttons; widgets section with calendar widget, weather widget, recent activities list, performance metrics; notification center with toast messages; user profile modal with edit capabilities; settings panel with form controls for preferences, theme switcher, account management options. Include responsive layout, dark/light mode toggle, interactive charts, data visualization, and real-time updates."
       }
     }
   }
 }
 
-Generate file structure with small prompts for: ${JSON.stringify(
+Generate comprehensive file structure with extremely detailed prompts for: ${JSON.stringify(
         analysisResult
       )}
 
 Requirements:
-- Each file should have a short, descriptive "prompt" field (1-2 sentences)
-- The prompt should describe what content/features that specific file should have
-- Consider the overall project structure and how files relate to each other
-- Keep prompts focused on the specific purpose of each file`;
+- Each prompt should be extremely detailed (8-15+ sentences minimum)
+- Include ALL possible UI components: navigation bars, hero sections, feature cards, testimonial carousels, pricing tables, contact forms, login/signup forms, data tables with sorting/filtering, modal dialogs, dropdown menus, accordions, tabs, progress bars, charts/graphs, statistics counters, image galleries, video players, search bars, filters, pagination, breadcrumbs, tooltips, alerts, notifications, sidebars, footers with multiple sections
+- Specify comprehensive interactive elements: hover animations, click effects, smooth transitions, parallax scrolling, sticky navigation, mobile hamburger menus, carousel controls, form validation with real-time feedback, multi-step wizards, collapsible sections, expandable cards, infinite scroll, drag-and-drop functionality
+- Detail extensive content sections: multi-level navigation, hero with video/image backgrounds, feature highlight areas, service/product showcases, team member profiles, client testimonials, FAQ sections, blog previews, social media feeds, newsletter signups, company information, location maps, contact details
+- Include advanced modern web features: fully responsive layouts for all screen sizes, progressive web app features, dark/light theme toggles, accessibility compliance, SEO optimization, performance optimization, lazy loading, image optimization
+- Specify comprehensive form elements: text inputs with validation, email fields, password fields with strength indicators, select dropdowns, multi-select options, radio buttons, checkboxes, date pickers, file upload with drag-drop, WYSIWYG editors, search with autocomplete, filters with real-time results
+- Add extensive data visualization: interactive charts (line, bar, pie, donut), real-time dashboards, progress indicators, KPI cards, comparison tables, trend graphs, heatmaps, analytics panels
+- Include complete user interface systems: user authentication (login/signup/forgot password), user profiles with avatars and settings, notification systems, messaging interfaces, admin panels, role-based access controls, activity logs, preference settings
+- Consider comprehensive accessibility: ARIA labels, keyboard navigation, screen reader compatibility, color contrast compliance, focus indicators, semantic HTML structure
+- Make each page a complete, production-ready application with maximum features and functionality`;
 
       const result = await model.generateContent(prompt);
       const response = await result.response;

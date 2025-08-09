@@ -6,7 +6,7 @@ AgentCode is an AI-powered web application generator that enables users to creat
 
 Preferred communication style: Simple, everyday language.
 
-Code generation preference: Generate only HTML files with embedded CSS and JavaScript. No separate CSS or JS files. File structure generation includes complete HTML content for each file in a single step. Modern design standards with high-quality visual elements using colored geometric shapes instead of images.
+Code generation preference: Generate only HTML files with embedded CSS and JavaScript. No separate CSS or JS files. File structure generation includes extremely detailed prompts (8-15+ sentences) for each page with comprehensive UI components, interactive elements, forms, data visualization, modern web features, and accessibility compliance. Modern design standards with high-quality visual elements using colored geometric shapes instead of images.
 
 Image upload functionality: For 2nd prompt onwards, users can upload images to change the design of the selected page. Images are stored in object storage and included as design reference context.
 
