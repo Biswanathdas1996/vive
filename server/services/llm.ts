@@ -1,12 +1,13 @@
-import { GoogleGenerativeAI, GenerativeModel } from "@google/generative-ai";
+import { GoogleGenerativeAI } from "@google/generative-ai";
+import OpenAI from "openai";
+import Anthropic from "@anthropic-ai/sdk";
 import { AnalysisResult, FileStructure } from "@shared/schema";
+import { storage } from "../storage";
 
 /**
  * Configuration constants for the LLM service
  */
 const CONFIG = {
-  MODEL_NAME: "gemini-1.5-flash", //##gemini-2.5-flash
-  DEFAULT_API_KEY: "AIzaSyAUwIZJSoHYFp2IZQs1NMdBVH-78yHk6tI", // Consider moving to environment variables
   JSON_EXTRACTION_REGEX: /\{[\s\S]*\}/,
   MARKDOWN_CODE_BLOCK_REGEX: /```html\n?/g,
   MARKDOWN_END_REGEX: /```\n?$/g,
@@ -16,7 +17,7 @@ const CONFIG = {
  * Error messages for better error handling
  */
 const ERROR_MESSAGES = {
-  NO_API_KEY: "Google API key is not configured",
+  NO_API_KEY: "API key is not configured for the selected provider",
   NO_JSON_RESPONSE: "No valid JSON found in AI response",
   JSON_PARSE_ERROR: "Failed to parse JSON response from AI",
   CONTENT_GENERATION_FAILED: "Failed to generate content",
@@ -26,29 +27,97 @@ const ERROR_MESSAGES = {
   FILE_MODIFICATION_FAILED: "Failed to modify file content",
 } as const;
 
-/**
- * Initialize Google Generative AI client with proper error handling
- */
-const initializeGoogleAI = (): {
-  genAI: GoogleGenerativeAI;
-  model: GenerativeModel;
-} => {
-  const apiKey = process.env.GOOGLE_API_KEY || CONFIG.DEFAULT_API_KEY;
+// AI Model configurations
+const AI_MODELS = {
+  gemini: {
+    models: ["gemini-1.5-flash", "gemini-1.5-pro", "gemini-2.0-flash-exp"],
+    defaultModel: "gemini-1.5-flash"
+  },
+  openai: {
+    models: ["gpt-4o", "gpt-4o-mini", "gpt-4-turbo", "gpt-3.5-turbo"],
+    defaultModel: "gpt-4o"
+  },
+  claude: {
+    models: ["claude-sonnet-4-20250514", "claude-3-7-sonnet-20250219", "claude-3-5-sonnet-20241022", "claude-3-haiku-20240307"],
+    defaultModel: "claude-sonnet-4-20250514"
+  }
+} as const;
 
-  if (!apiKey) {
-    throw new Error(ERROR_MESSAGES.NO_API_KEY);
+interface AIConfig {
+  provider: keyof typeof AI_MODELS;
+  model: string;
+  apiKey: string;
+}
+
+/**
+ * Get AI configuration from settings or environment
+ */
+async function getAIConfig(): Promise<AIConfig> {
+  const settings = await storage.getSettings("default");
+  
+  if (!settings) {
+    // Default to Gemini with environment variable
+    return {
+      provider: "gemini",
+      model: "gemini-1.5-flash",
+      apiKey: process.env.GOOGLE_API_KEY || process.env.GEMINI_API_KEY || ""
+    };
   }
 
-  const genAI = new GoogleGenerativeAI(apiKey);
-  const model = genAI.getGenerativeModel({ model: CONFIG.MODEL_NAME });
+  const apiKey = (settings.apiKeys && settings.apiKeys[settings.aiProvider]) || 
+                 process.env[`${settings.aiProvider.toUpperCase()}_API_KEY`] || "";
 
-  // Log API key status (without exposing the actual key)
-  console.log("Google API Key status:", apiKey ? "✓ Configured" : "✗ Missing");
+  return {
+    provider: settings.aiProvider as keyof typeof AI_MODELS,
+    model: settings.aiModel,
+    apiKey
+  };
+}
 
-  return { genAI, model };
-};
+/**
+ * Generate content using the configured AI provider
+ */
+async function generateContent(prompt: string): Promise<string> {
+  const config = await getAIConfig();
 
-const { genAI, model } = initializeGoogleAI();
+  if (!config.apiKey) {
+    throw new Error(`${ERROR_MESSAGES.NO_API_KEY}: ${config.provider}`);
+  }
+
+  try {
+    switch (config.provider) {
+      case "gemini":
+        const genAI = new GoogleGenerativeAI(config.apiKey);
+        const geminiModel = genAI.getGenerativeModel({ model: config.model });
+        const geminiResult = await geminiModel.generateContent(prompt);
+        return geminiResult.response.text();
+
+      case "openai":
+        const openai = new OpenAI({ apiKey: config.apiKey });
+        const openaiResponse = await openai.chat.completions.create({
+          model: config.model,
+          messages: [{ role: "user", content: prompt }],
+          max_tokens: 4000
+        });
+        return openaiResponse.choices[0].message.content || "";
+
+      case "claude":
+        const claude = new Anthropic({ apiKey: config.apiKey });
+        const claudeResponse = await claude.messages.create({
+          model: config.model,
+          max_tokens: 4000,
+          messages: [{ role: "user", content: prompt }]
+        });
+        return claudeResponse.content[0].type === "text" ? claudeResponse.content[0].text : "";
+
+      default:
+        throw new Error(`Unsupported AI provider: ${config.provider}`);
+    }
+  } catch (error) {
+    console.error(`Error generating content with ${config.provider}:`, error);
+    throw new Error(`${config.provider} API error: ${error instanceof Error ? error.message : String(error)}`);
+  }
+}
 
 export class LLMService {
   async analyzePrompt(prompt: string): Promise<AnalysisResult> {
@@ -67,23 +136,19 @@ export class LLMService {
 
 Analyze this web application request: ${prompt}`;
 
-      const result = await model.generateContent(systemPrompt);
-      const response = await result.response;
-      const text = response.text();
+      const responseText = await generateContent(systemPrompt);
 
       // Extract JSON from response
-      const jsonMatch = text.match(/\{[\s\S]*\}/);
+      const jsonMatch = responseText.match(CONFIG.JSON_EXTRACTION_REGEX);
       if (!jsonMatch) {
-        throw new Error("No JSON found in response");
+        throw new Error(ERROR_MESSAGES.NO_JSON_RESPONSE);
       }
 
       const parsedResult = JSON.parse(jsonMatch[0]);
       return parsedResult as AnalysisResult;
     } catch (error) {
       throw new Error(
-        `Failed to analyze prompt: ${
-          error instanceof Error ? error.message : String(error)
-        }`
+        `${ERROR_MESSAGES.PROMPT_ANALYSIS_FAILED}: ${error instanceof Error ? error.message : String(error)}`,
       );
     }
   }
@@ -122,23 +187,19 @@ Criteria:
 - Each page includes navigation bars, feature cards, forms, tables, modals, sliders, alerts, notifications, footers, banners, buttons, sidebar, headers, carousels, images, and videos.
 - ENFORCE: Must have at least 10 UI elements per page.`;
 
-      const result = await model.generateContent(prompt);
-      const response = await result.response;
-      const text = response.text();
+      const responseText = await generateContent(prompt);
 
       // Extract JSON from response
-      const jsonMatch = text.match(/\{[\s\S]*\}/);
+      const jsonMatch = responseText.match(CONFIG.JSON_EXTRACTION_REGEX);
       if (!jsonMatch) {
-        throw new Error("No JSON found in response");
+        throw new Error(ERROR_MESSAGES.NO_JSON_RESPONSE);
       }
 
       const parsedResult = JSON.parse(jsonMatch[0]);
       return parsedResult as FileStructure;
     } catch (error) {
       throw new Error(
-        `Failed to generate file structure: ${
-          error instanceof Error ? error.message : String(error)
-        }`
+        `${ERROR_MESSAGES.FILE_STRUCTURE_FAILED}: ${error instanceof Error ? error.message : String(error)}`,
       );
     }
   }
@@ -189,9 +250,8 @@ Focus on including as many elements as possible, such as:
 
 Make each element specific, actionable, and tailored for ${fileName}. Be concise but comprehensive.`;
 
-      const result = await model.generateContent(enhancementPrompt);
-      const response = await result.response;
-      return response.text().trim();
+      const result = await generateContent(enhancementPrompt);
+      return result.trim();
     } catch (error) {
       console.warn(
         `Failed to enhance prompt for ${fileName}, using original:`,
@@ -269,20 +329,18 @@ Project context: ${JSON.stringify(analysisResult)}
 
 Generate a production-ready, visually stunning HTML5 application that demonstrates modern web development best practices. Return ONLY the complete HTML content without markdown formatting.`;
 
-      const result = await model.generateContent(prompt);
-      const response = await result.response;
-      const content = response.text();
+      const result = await generateContent(prompt);
 
       // Clean up any markdown code blocks if present
-      const cleanContent = content
-        .replace(/```html\n?/g, "")
-        .replace(/```\n?$/g, "")
+      const cleanContent = result
+        .replace(CONFIG.MARKDOWN_CODE_BLOCK_REGEX, "")
+        .replace(CONFIG.MARKDOWN_END_REGEX, "")
         .trim();
 
       return cleanContent;
     } catch (error) {
       throw new Error(
-        `Failed to generate content for ${fileName}: ${
+        `${ERROR_MESSAGES.CONTENT_GENERATION_FAILED} for ${fileName}: ${
           error instanceof Error ? error.message : String(error)
         }`
       );
@@ -311,20 +369,18 @@ Requirements:
 
 Return ONLY the complete modified HTML content, no markdown formatting.`;
 
-      const result = await model.generateContent(prompt);
-      const response = await result.response;
-      const content = response.text();
+      const result = await generateContent(prompt);
 
       // Clean up any markdown code blocks if present
-      const cleanContent = content
-        .replace(/```html\n?/g, "")
-        .replace(/```\n?$/g, "")
+      const cleanContent = result
+        .replace(CONFIG.MARKDOWN_CODE_BLOCK_REGEX, "")
+        .replace(CONFIG.MARKDOWN_END_REGEX, "")
         .trim();
 
       return cleanContent;
     } catch (error) {
       throw new Error(
-        `Failed to modify ${fileName}: ${
+        `${ERROR_MESSAGES.FILE_MODIFICATION_FAILED} for ${fileName}: ${
           error instanceof Error ? error.message : String(error)
         }`
       );
