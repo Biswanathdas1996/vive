@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Data Analytics Dashboard</title>
+<title>AI Conversational Interface</title>
 <style>
 :root {
   --primary-color: #673ab7;
@@ -11,8 +11,8 @@
   --background-color: #f4f4f4;
   --text-color: #333;
   --shadow-color: rgba(0,0,0,0.2);
-  --border-radius: 10px;
   --spacing: 1rem;
+  --border-radius: 8px;
 }
 
 body {
@@ -21,7 +21,7 @@ body {
   margin: 0;
   background-color: var(--background-color);
   color: var(--text-color);
-  overflow-x: hidden;
+  overflow-x: hidden; /* Prevent horizontal scroll on mobile */
 }
 
 .container {
@@ -31,66 +31,44 @@ body {
 }
 
 header {
-  background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+  background: linear-gradient(to right, #4CAF50, #8BC34A);
   color: white;
   padding: 2rem;
   text-align: center;
 }
 
 h1 {
-  font-size: clamp(2rem, 4vw + 1rem, 3rem);
+  font-size: clamp(2rem, 3vw + 1rem, 3.5rem);
   margin-bottom: var(--spacing);
 }
 
-section {
-  padding: 2rem;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-around;
-  gap: var(--spacing);
-}
-
-.feature {
-  background-color: white;
-  box-shadow: 0 2px 4px var(--shadow-color);
+.feature-card {
+  background-color: rgba(255,255,255,0.8);
   border-radius: var(--border-radius);
-  padding: 1.5rem;
-  flex: 1 0 300px;
-  min-width: 300px;
+  padding: 2rem;
+  margin: var(--spacing);
+  box-shadow: 0 2px 4px var(--shadow-color);
+  transition: transform 0.2s ease-in-out;
 }
 
-.feature h2 {
-  font-size: clamp(1.5rem, 2vw + 1rem, 2rem);
-  margin-bottom: var(--spacing) /2;
+.feature-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 4px 8px var(--shadow-color);
 }
 
-.feature p {
-  line-height: 1.5;
-  margin-bottom: var(--spacing) /2;
+.feature-icon {
+  font-size: 2rem;
+  margin-bottom: var(--spacing);
 }
 
-.feature::before{
-    content: '';
-    display: block;
-    width: 50px;
-    height: 50px;
-    background-color: var(--primary-color);
-    border-radius: 50%;
-    margin: 0 auto var(--spacing) ;
+.feature-title {
+  font-size: 1.5rem;
+  margin-bottom: var(--spacing);
 }
 
-.feature:nth-child(1)::before {
-  background-color: var(--primary-color);
+.feature-description {
+  font-size: 1rem;
 }
-
-.feature:nth-child(2)::before {
-  background-color: var(--secondary-color);
-}
-
-.feature:nth-child(3)::before {
-    background-image: linear-gradient(to right, #00c6fb, #005bea);
-}
-
 
 .cta-button {
   background-color: var(--primary-color);
@@ -107,65 +85,65 @@ section {
   background-color: darken(var(--primary-color), 10%);
 }
 
-
-footer {
-  background-color: #333;
-  color: white;
-  text-align: center;
-  padding: 1rem;
+/* Neumorphism effect */
+.neumorph {
+  background-color: #fff;
+  border-radius: 12px;
+  box-shadow: 6px 6px 12px rgba(0, 0, 0, 0.1), -6px -6px 12px rgba(255, 255, 255, 0.7);
+  padding: 20px;
 }
 
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
 
-.feature {
-    animation: fadeIn 1s ease;
-}
-
-/* Responsive adjustments */
+/* Responsive design */
 @media (max-width: 768px) {
-  section {
-    flex-direction: column;
+  .feature-card {
+    margin-bottom: 1rem;
   }
-  .feature {
-    flex: 1 0 100%;
-    max-width: 100%;
+  .feature-grid {
+    grid-template-columns: 1fr;
   }
 }
 </style>
 </head>
 <body>
 <header>
-  <h1>Data Analytics Dashboard</h1>
+  <h1>AI Conversational Interface</h1>
 </header>
 <main class="container">
-  <section>
-    <article class="feature">
-      <h2>Data Visualization</h2>
-      <p>Powerful charts and graphs to visualize your data effectively.</p>
-    </article>
-    <article class="feature">
-      <h2>Forecasting Accuracy</h2>
-      <p>Highly accurate predictive models to anticipate future trends.</p>
-    </article>
-    <article class="feature">
-      <h2>Ease of Use</h2>
-      <p>Intuitive interface designed for effortless data analysis.</p>
-    </article>
+  <section class="hero">
+    <div class="neumorph">
+      <p>Experience the future of conversation with our AI-powered interface.  We leverage cutting-edge NLP and NLG to provide contextual awareness and seamless interactions. </p>
+      <div style="display: flex; justify-content: space-around; margin-top: 20px;">
+        <div class="feature-card">
+          <i class="feature-icon fas fa-comment-dots"></i>
+          <h3 class="feature-title">Natural Language Processing (NLP)</h3>
+          <p class="feature-description">Understanding human language naturally.</p>
+        </div>
+        <div class="feature-card">
+          <i class="feature-icon fas fa-robot"></i>
+          <h3 class="feature-title">Natural Language Generation (NLG)</h3>
+          <p class="feature-description">Generating human-like responses.</p>
+        </div>
+      </div>
+        <div style="display: flex; justify-content: center; margin-top: 20px;">
+          <button class="cta-button">Start Chatting</button>
+        </div>
+    </div>
+
   </section>
-  <div style="text-align:center; margin-top: 2rem;">
-    <button class="cta-button">Explore Dashboard</button>
-  </div>
 </main>
 <footer>
-  <p>&copy; 2023 Data Analytics</p>
+  <p>&copy; 2023 AI Conversational Interface</p>
 </footer>
-<script>
-// Add any JavaScript interaction here if needed.  For example, smooth scrolling:
 
-//No interactive JS needed for this example.
+<script>
+// Add event listeners for interactive elements (e.g., buttons, forms) here.
+// Placeholder for JavaScript interactivity.
+document.querySelector('.cta-button').addEventListener('click', () => {
+  alert('Chat functionality will be added here!');
+});
+
+//You would add your more complex JavaScript logic here for chat functionality, etc.
 </script>
 </body>
 </html>

@@ -6,76 +6,56 @@
 <title>Privacy Policy</title>
 <style>
 :root {
-  --primary-color: #673ab7;
-  --secondary-color: #f06292;
-  --background-color: #f5f5f5;
+  --primary-color: #3f51b5;
+  --secondary-color: #6200ee;
+  --accent-color: #ffcc80;
+  --background-color: #f4f4f4;
   --text-color: #333;
   --shadow-color: rgba(0,0,0,0.2);
   --border-radius: 8px;
-  --spacing: 1rem;
+  --spacing-unit: 1rem;
 }
 
 body {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   line-height: 1.6;
-  margin: 0;
-  background-color: var(--background-color);
   color: var(--text-color);
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
+  background-color: var(--background-color);
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden; /*prevent horizontal scrollbar*/
 }
 
-header {
-  background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
-  color: white;
-  padding: var(--spacing);
-  text-align: center;
+h1, h2, h3 {
+  font-weight: 600;
+  margin-bottom: var(--spacing-unit);
 }
 
 h1 {
-  font-size: clamp(1.5rem, 3vw, 2.5rem);
-  margin: 0;
-}
-
-main {
-  padding: var(--spacing);
-  flex: 1;
-}
-
-section {
-  background-color: white;
-  border-radius: var(--border-radius);
-  padding: var(--spacing);
-  margin-bottom: var(--spacing);
-  box-shadow: 0 2px 4px var(--shadow-color);
+  font-size: clamp(2rem, 3vw + 1rem, 3rem);
 }
 
 h2 {
-  font-size: clamp(1.2rem, 2vw, 1.8rem);
-  margin-top: 0;
+  font-size: clamp(1.5rem, 2vw + 1rem, 2rem);
 }
 
-p {
-  margin-bottom: var(--spacing);
+h3 {
+  font-size: clamp(1.2rem, 1.5vw + 0.5rem, 1.5rem);
 }
 
-ul {
-  list-style-type: disc;
-  padding-left: 20px;
+section {
+  padding: var(--spacing-unit) 2*var(--spacing-unit);
+  margin-bottom: 2*var(--spacing-unit);
+  border-radius: var(--border-radius);
+  background: linear-gradient(to bottom right, #f0f0f0, #ffffff);
+  box-shadow: 5px 5px 10px var(--shadow-color), -5px -5px 10px var(--shadow-color);
 }
 
-li {
-  margin-bottom: 0.5rem;
+.container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: var(--spacing-unit);
 }
-
-footer {
-  background-color: #333;
-  color: white;
-  padding: var(--spacing);
-  text-align: center;
-}
-
 
 a {
   color: var(--primary-color);
@@ -87,60 +67,79 @@ a:hover {
 }
 
 /* Neumorphism Style */
-.neumorph {
-  background-color: white;
-  border-radius: var(--border-radius);
+.neumorph-box {
+  background: #fff;
   box-shadow: 5px 5px 10px rgba(0,0,0,0.1), -5px -5px 10px rgba(255,255,255,0.7);
-  padding: 1rem;
+  padding: 20px;
+  border-radius: 10px;
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: var(--spacing-unit);
+  }
 }
 
 </style>
 </head>
 <body>
 <header>
-  <h1>Privacy Policy</h1>
+  <div class="container">
+    <h1>Privacy Policy</h1>
+  </div>
 </header>
+
 <main>
-  <section class="neumorph">
-    <h2>Introduction</h2>
-    <p>This Privacy Policy explains how we collect, use, and protect your personal information when you use our website.</p>
-  </section>
+  <div class="container">
+    <section>
+      <h2>Information We Collect</h2>
+      <p>This website collects minimal data.  We utilize localStorage to enhance your user experience. This data is locally stored on your device and is not transmitted to any external servers.</p>
+      <p>The information stored includes user preferences, but does not include any personally identifiable information (PII) such as name, email address or location.</p>
+    </section>
 
-  <section class="neumorph">
-    <h2>Information We Collect</h2>
-    <ul>
-      <li>Personally Identifiable Information (PII): We may collect PII such as your name, email address, and other contact details if you choose to provide them.</li>
-      <li>Non-PII: We may collect non-PII such as your IP address, browser type, and device information automatically.</li>
-    </ul>
-  </section>
+    <section>
+      <h2>How We Use Your Information</h2>
+      <p>The information stored in localStorage is solely used to improve your experience on this website. This includes things like theme preference, if applicable. </p>
+    </section>
 
-  <section class="neumorph">
-    <h2>How We Use Your Information</h2>
-    <p>We use your information to:</p>
-    <ul>
-      <li>Respond to your inquiries.</li>
-      <li>Improve our website and services.</li>
-      <li>Personalize your experience.</li>
-    </ul>
-  </section>
+    <section>
+      <h2>Data Security</h2>
+      <p>We take reasonable measures to protect the security of the data stored in localStorage. However, please be aware that no method of transmission over the Internet, or method of electronic storage, is 100% secure.</p>
+    </section>
 
-  <section class="neumorph">
-    <h2>Data Security</h2>
-    <p>We take appropriate measures to protect your information from unauthorized access, use, or disclosure.</p>
-  </section>
+    <section>
+      <h2>Your Rights</h2>
+      <p>You have the right to access, correct, or delete the data stored in localStorage. You can do this by clearing your browser's data or by disabling localStorage functionality in your browser settings.</p>
+      <p>For further information or inquiries please contact us.</p>
+    </section>
 
-  <section class="neumorph">
-    <h2>Your Rights</h2>
-    <p>You have the right to access, update, or delete your personal information.</p>
-  </section>
-
-  <section class="neumorph">
-    <h2>Contact Us</h2>
-    <p>If you have any questions about this Privacy Policy, please contact us at <a href="#">info@example.com</a></p>
-  </section>
+    <section>
+      <h2>Changes to this Privacy Policy</h2>
+      <p>We may update this privacy policy from time to time.  Any changes will be posted on this page.</p>
+    </section>
+  </div>
 </main>
+
 <footer>
-  <p>&copy; 2023 My Website</p>
+  <div class="container">
+    <p>&copy; 2023 Your Website Name</p>
+  </div>
 </footer>
+
+<script>
+//Example of accessing and manipulating localStorage (Illustrative, adapt as needed)
+//  let theme = localStorage.getItem('theme');
+// if(theme){
+//   document.body.classList.add(theme);
+// }
+
+//Simple Event Listener example
+// document.getElementById("myButton").addEventListener("click", function() {
+//     //Your code here
+// });
+
+
+</script>
+
 </body>
 </html>

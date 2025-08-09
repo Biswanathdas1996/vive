@@ -1,434 +1,178 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Modern Chat</title>
-    <style>
-        :root {
-            /* Theme Colors */
-            --primary-color: #007BFF;
-            --secondary-color: #6c757d;
-            --background-color: #f8f9fa;
-            --text-color: #212529;
-            --accent-color: #E9ECEF;
-            --bubble-color: #ffffff;
-            --bubble-shadow: rgba(0, 0, 0, 0.08);
-            --online-color: #28a745;
-            --offline-color: #dc3545;
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Modern Chat</title>
+<style>
+:root {
+  --primary-color: #673ab7;
+  --secondary-color: #e91e63;
+  --bg-color: #f4f4f4;
+  --text-color: #333;
+  --shadow-color: rgba(0,0,0,0.2);
+  --border-radius: 8px;
+  --spacing: 1rem;
+}
 
-            /* Spacing */
-            --spacing-xs: 0.5rem;
-            --spacing-s: 0.75rem;
-            --spacing-m: 1rem;
-            --spacing-l: 1.5rem;
-            --spacing-xl: 2rem;
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: var(--bg-color);
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  margin: 0;
+  color: var(--text-color);
+}
 
-            /* Typography */
-            --font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            --font-size-base: 1rem; /* 16px */
-            --line-height-base: 1.6;
-            --font-weight-normal: 400;
-            --font-weight-bold: 700;
-        }
+.chat-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: var(--spacing);
+  overflow-y: auto;
+}
 
-        body {
-            font-family: var(--font-family);
-            font-size: var(--font-size-base);
-            line-height: var(--line-height-base);
-            color: var(--text-color);
-            background-color: var(--background-color);
-            margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-        }
+.message-container {
+  display: flex;
+  align-items: flex-end;
+  margin-bottom: var(--spacing);
+}
 
-        .chat-container {
-            width: clamp(300px, 90%, 600px);
-            background: rgba(255, 255, 255, 0.8);
-            backdrop-filter: blur(10px);
-            border-radius: 1rem;
-            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-        }
+.message {
+  max-width: 70%;
+  padding: var(--spacing);
+  border-radius: var(--border-radius);
+  background-color: white;
+  box-shadow: 2px 2px 5px var(--shadow-color);
+  margin-left: auto; /* for user messages */
+}
 
-        .chat-header {
-            padding: var(--spacing-l);
-            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-            color: white;
-            font-weight: var(--font-weight-bold);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-        }
+.message.bot {
+  background-color: var(--secondary-color);
+  color: white;
+  margin-right: auto; /* for bot messages */
+  margin-left:0;
+}
 
-        .chat-header h2 {
-            margin: 0;
-            font-size: 1.3rem;
-        }
+.message::before {
+  content: "";
+  position: absolute;
+  border-style: solid;
+  border-width: 0.6rem 0.6rem 0.6rem 0;
+  border-color: transparent transparent transparent white;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+}
 
-        .online-status {
-            display: flex;
-            align-items: center;
-            font-size: 0.8rem;
-        }
-
-        .online-indicator {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background-color: var(--online-color);
-            margin-right: var(--spacing-xs);
-        }
-
-        .offline-indicator {
-            background-color: var(--offline-color);
-        }
-
-        .chat-messages {
-            flex-grow: 1;
-            padding: var(--spacing-l);
-            overflow-y: auto;
-            scroll-behavior: smooth;
-        }
-
-        .chat-messages::-webkit-scrollbar {
-            width: 8px;
-        }
-
-        .chat-messages::-webkit-scrollbar-track {
-            background: var(--accent-color);
-        }
-
-        .chat-messages::-webkit-scrollbar-thumb {
-            background: var(--secondary-color);
-            border-radius: 4px;
-        }
-
-        .message {
-            margin-bottom: var(--spacing-m);
-            padding: var(--spacing-s) var(--spacing-m);
-            border-radius: 1rem;
-            background-color: var(--bubble-color);
-            box-shadow: 0 2px 5px var(--bubble-shadow);
-            word-wrap: break-word;
-        }
-
-        .message-sent {
-            align-self: flex-end;
-            background-color: var(--primary-color);
-            color: white;
-        }
-
-        .message-received {
-            align-self: flex-start;
-        }
-
-        .message-content {
-          font-size: 1rem;
-        }
-
-        .message-timestamp {
-            font-size: 0.75rem;
-            color: #999;
-            text-align: right;
-        }
+.message.bot::before {
+  border-color: transparent transparent transparent var(--secondary-color);
+}
 
 
-        .chat-input {
-            padding: var(--spacing-m);
-            border-top: 1px solid var(--accent-color);
-            display: flex;
-            align-items: center;
-        }
+.input-area {
+  display: flex;
+  padding: var(--spacing);
+}
 
-        .chat-input input[type="text"] {
-            flex-grow: 1;
-            padding: var(--spacing-s) var(--spacing-m);
-            border: 1px solid var(--accent-color);
-            border-radius: 2rem;
-            font-size: var(--font-size-base);
-            transition: border-color 0.2s ease;
-        }
+.input-field {
+  flex: 1;
+  padding: var(--spacing);
+  border: 1px solid #ccc;
+  border-radius: var(--border-radius);
+  margin-right: var(--spacing);
+}
 
-        .chat-input input[type="text"]:focus {
-            outline: none;
-            border-color: var(--primary-color);
-        }
+.send-button {
+  padding: var(--spacing);
+  background-color: var(--primary-color);
+  color: white;
+  border: none;
+  border-radius: var(--border-radius);
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
 
-        .chat-input button {
-            padding: var(--spacing-s) var(--spacing-m);
-            background-color: var(--primary-color);
-            color: white;
-            border: none;
-            border-radius: 2rem;
-            margin-left: var(--spacing-s);
-            cursor: pointer;
-            font-size: var(--font-size-base);
-            transition: background-color 0.2s ease;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-        }
+.send-button:hover {
+  background-color: darken(var(--primary-color), 10%);
+}
 
-        .chat-input button:hover {
-            background-color: #0056b3;
-        }
 
-        .chat-input button:focus {
-            outline: none;
-        }
+@media (max-width: 600px) {
+  .message {
+    max-width: 90%;
+  }
+}
 
-        /* Media Queries for responsiveness */
-        @media (max-width: 768px) {
-            .chat-container {
-                width: 95%;
-            }
-
-            .chat-header h2 {
-                font-size: 1.2rem;
-            }
-
-            .chat-input input[type="text"],
-            .chat-input button {
-                font-size: 0.9rem;
-            }
-        }
-
-        .graph-container {
-          width: 100%;
-          height: 300px;
-          margin-top: var(--spacing-m);
-          border: 1px solid var(--accent-color);
-          border-radius: 0.5rem;
-          overflow: hidden;
-          background-color: white;
-        }
-
-        #graphCanvas {
-          width: 100%;
-          height: 100%;
-        }
-    </style>
+</style>
 </head>
 <body>
-    <div class="chat-container">
-        <header class="chat-header">
-            <h2>Chat with User</h2>
-            <div class="online-status">
-                <div class="online-indicator"></div>
-                <span>Online</span>
-            </div>
-        </header>
-        <main class="chat-messages">
-            <div class="message message-received">
-                <div class="message-content">Hello there! How can I help you today?</div>
-                <div class="message-timestamp">10:00 AM</div>
-            </div>
-        </main>
-        <footer class="chat-input">
-            <input type="text" placeholder="Type your message...">
-            <button>Send</button>
-        </footer>
-    </div>
+<div class="chat-container" id="chatbox">
+</div>
+<div class="input-area">
+  <input type="text" class="input-field" id="messageInput" placeholder="Type your message...">
+  <button class="send-button" id="sendButton">Send</button>
+</div>
 
-    <script>
-        // JavaScript for adding messages and interactions (example)
-        const chatMessages = document.querySelector('.chat-messages');
-        const inputField = document.querySelector('.chat-input input[type="text"]');
-        const sendButton = document.querySelector('.chat-input button');
-        const apiKey = "AIzaSyDQJxSHTL7Mr8DDGY5bBaaW1QhsE1RHll4"; // Replace with your actual API key
-        const apiUrl = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-lite:generateContent?key=" + apiKey;
+<script>
+const chatbox = document.getElementById('chatbox');
+const messageInput = document.getElementById('messageInput');
+const sendButton = document.getElementById('sendButton');
 
+//Load chat history from localStorage
+let chatHistory = JSON.parse(localStorage.getItem('chatHistory')) || [];
+displayChatHistory(chatHistory);
 
-        function addMessage(messageText, isSent, timestamp) {
-            const messageDiv = document.createElement('div');
-            messageDiv.classList.add('message');
-            if (isSent) {
-                messageDiv.classList.add('message-sent');
-            } else {
-                messageDiv.classList.add('message-received');
-            }
+sendButton.addEventListener('click', sendMessage);
+messageInput.addEventListener('keyup', (event) => {
+  if (event.key === 'Enter') {
+    sendMessage();
+  }
+});
 
-            const messageContent = document.createElement('div');
-            messageContent.classList.add('message-content');
-            messageContent.textContent = messageText;
+function sendMessage() {
+  const message = messageInput.value.trim();
+  if (message !== '') {
+    const userMessage = { text: message, sender: 'user' };
+    chatHistory.push(userMessage);
+    displayMessage(userMessage);
+    messageInput.value = '';
 
-            const timestampDiv = document.createElement('div');
-            timestampDiv.classList.add('message-timestamp');
-            timestampDiv.textContent = timestamp;
+    //Simulate Bot Response
+    setTimeout(() => {
+      const botResponse = { text: "Bot: Hello there!", sender: 'bot' };
+      chatHistory.push(botResponse);
+      displayMessage(botResponse);
+    }, 500);
 
-            messageDiv.appendChild(messageContent);
-            messageDiv.appendChild(timestampDiv);
-            chatMessages.appendChild(messageDiv);
-            chatMessages.scrollTop = chatMessages.scrollHeight; // Scroll to bottom
-        }
+    localStorage.setItem('chatHistory', JSON.stringify(chatHistory));
+  }
+}
 
+function displayMessage(message) {
+  const messageElement = document.createElement('div');
+  messageElement.classList.add('message');
+  messageElement.classList.add(message.sender);
+  messageElement.textContent = message.text;
+  const messageContainer = document.createElement('div');
+  messageContainer.classList.add('message-container');
+  messageContainer.appendChild(messageElement);
+  chatbox.appendChild(messageContainer);
+  chatbox.scrollTop = chatbox.scrollHeight;
+}
 
-        function addGraph(graphData, isSent, timestamp) {
-            const messageDiv = document.createElement('div');
-            messageDiv.classList.add('message');
-            if (isSent) {
-                messageDiv.classList.add('message-sent');
-            } else {
-                messageDiv.classList.add('message-received');
-            }
+function displayChatHistory(history) {
+  history.forEach(message => displayMessage(message));
+}
 
-            const graphContainer = document.createElement('div');
-            graphContainer.classList.add('graph-container');
-
-            const canvas = document.createElement('canvas');
-            canvas.id = 'graphCanvas';
-            graphContainer.appendChild(canvas);
-
-            const timestampDiv = document.createElement('div');
-            timestampDiv.classList.add('message-timestamp');
-            timestampDiv.textContent = timestamp;
-
-            messageDiv.appendChild(graphContainer);
-            messageDiv.appendChild(timestampDiv);
-            chatMessages.appendChild(messageDiv);
-            chatMessages.scrollTop = chatMessages.scrollHeight;
-
-            drawGraph(canvas, graphData);
-        }
-
-        function getCurrentTime() {
-            const now = new Date();
-            const hours = String(now.getHours()).padStart(2, '0');
-            const minutes = String(now.getMinutes()).padStart(2, '0');
-            const ampm = hours >= 12 ? 'PM' : 'AM';
-            const formattedHours = hours % 12 || 12; // Convert 0 to 12
-            return `${formattedHours}:${minutes} ${ampm}`;
-        }
-
-
-        async function getGeminiResponse(userMessage) {
-            try {
-                const response = await fetch(apiUrl, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        contents: [{
-                            parts: [{
-                                text: userMessage
-                            }]
-                        }]
-                    })
-                });
-
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-
-                const data = await response.json();
-                if (data.candidates && data.candidates.length > 0 && data.candidates[0].content && data.candidates[0].content.parts && data.candidates[0].content.parts.length > 0) {
-                    return data.candidates[0].content.parts[0].text;
-                } else {
-                    return "Sorry, I couldn't understand that.";
-                }
-
-            } catch (error) {
-                console.error("Error fetching Gemini response:", error);
-                return "An error occurred while fetching the response. Please check your API key and ensure the Gemini API is accessible.";
-            }
-        }
-
-        function parseGraphData(responseText) {
-            // Basic parsing - adjust to fit your expected graph data format.
-            try {
-                const lines = responseText.split('\n');
-                const labels = [];
-                const data = [];
-                for (const line of lines) {
-                    const parts = line.split(',');
-                    if (parts.length === 2) {
-                        labels.push(parts[0].trim());
-                        data.push(parseFloat(parts[1].trim()));
-                    }
-                }
-                if (labels.length > 0 && data.length > 0) {
-                    return { labels, data };
-                }
-                return null;
-            } catch (error) {
-                console.error("Error parsing graph data:", error);
-                return null;
-            }
-        }
-
-
-        function drawGraph(canvas, graphData) {
-            if (!graphData || !graphData.labels || !graphData.data || graphData.labels.length === 0 || graphData.data.length === 0) {
-                console.warn("Invalid graph data");
-                return;
-            }
-
-            const ctx = canvas.getContext('2d');
-            if (!ctx) {
-                console.error("Could not get 2D rendering context");
-                return;
-            }
-
-            const { labels, data } = graphData;
-            const barWidth = canvas.width / labels.length;
-            const maxValue = Math.max(...data);
-            const scaleFactor = canvas.height / (maxValue > 0 ? maxValue : 1); // Avoid division by zero
-
-
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            ctx.fillStyle = '#007BFF'; // Bar color
-
-            for (let i = 0; i < labels.length; i++) {
-                const barHeight = data[i] * scaleFactor;
-                const x = i * barWidth;
-                const y = canvas.height - barHeight;
-
-                ctx.fillRect(x, y, barWidth * 0.8, barHeight); // Adjusted bar width
-                ctx.fillStyle = '#333'; // Label color
-                ctx.font = '10px Arial';
-                ctx.textAlign = 'center';
-                ctx.fillText(labels[i], x + barWidth / 2, canvas.height - 5); // Labels below bars
-            }
-        }
-
-
-        sendButton.addEventListener('click', async () => {
-            const messageText = inputField.value.trim();
-            if (messageText) {
-                const currentTime = getCurrentTime();
-                addMessage(messageText, true, currentTime);
-                inputField.value = ''; // Clear the input field
-
-                let geminiResponse = await getGeminiResponse(messageText);
-                const botTime = getCurrentTime();
-
-                if (messageText.toLowerCase().includes("graph") || messageText.toLowerCase().includes("chart")) {
-                    // Attempt to parse graph data
-                    const graphData = parseGraphData(geminiResponse);
-                    if (graphData) {
-                        addGraph(graphData, false, botTime);
-                    } else {
-                        addMessage("I tried to generate a graph, but the data was not in the correct format.", false, botTime);
-                        addMessage(geminiResponse, false, botTime); // show the raw response
-                    }
-                } else {
-                  addMessage(geminiResponse, false, botTime);
-                }
-            }
-        });
-
-        inputField.addEventListener('keydown', (event) => {
-          if (event.key === 'Enter') {
-            sendButton.click();
-          }
-        });
-    </script>
+function darken(color, amount) {
+  let [r, g, b] = color.match(/\d+/g).map(Number);
+  r -= amount;
+  g -= amount;
+  b -= amount;
+  return `rgb(${Math.max(0, r)}, ${Math.max(0, g)}, ${Math.max(0, b)})`;
+}
+</script>
 </body>
 </html>

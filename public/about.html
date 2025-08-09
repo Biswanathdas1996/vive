@@ -1,244 +1,141 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>About | AI Assistant</title>
-    <style>
-        /* CSS Custom Properties (Variables) */
-        :root {
-            --primary-color: #6a5af9; /* Deep Purple */
-            --secondary-color: #4ade80; /* Emerald Green */
-            --accent-color: #fde68a; /* Soft Yellow */
-            --background-color: #18181b; /* Dark Gray */
-            --text-color: #e2e8f0; /* Light Gray */
-            --shadow-color: rgba(0, 0, 0, 0.2);
-            --border-radius: 1.25rem;
-            --padding: 1.5rem;
-            --gap: 1rem;
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>About Us</title>
+<style>
+:root {
+  --primary-color: #673ab7;
+  --secondary-color: #f44336;
+  --bg-color: #f5f5f5;
+  --text-color: #333;
+  --accent-color: #4CAF50;
+  --shadow-color: rgba(0,0,0,0.2);
+  --spacing-unit: 1rem;
+}
 
-            --font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            --heading-size: clamp(2rem, 4vw, 2.5rem);
-            --subheading-size: clamp(1.2rem, 2.5vw, 1.5rem);
-            --text-size: clamp(1rem, 2vw, 1.1rem);
+body {
+  font-family: 'Roboto', sans-serif;
+  line-height: 1.6;
+  margin: 0;
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  overflow-x: hidden;
+}
 
-            /* Light Theme (Optional) */
-            --light-background-color: #f8fafc;
-            --light-text-color: #1e293b;
-            --light-shadow-color: rgba(0, 0, 0, 0.1);
-        }
+h1, h2, h3 {
+  font-weight: 700;
+}
 
+h1 {
+  font-size: clamp(2rem, 3vw + 1rem, 3.5rem);
+}
 
-        /* General Styles */
-        body {
-            font-family: var(--font-family);
-            font-size: var(--text-size);
-            color: var(--text-color);
-            background-color: var(--background-color);
-            margin: 0;
-            padding: 0;
-            line-height: 1.6;
-            overflow-x: hidden; /* Prevents horizontal scroll on mobile */
-        }
+h2 {
+  font-size: clamp(1.5rem, 2vw + 1rem, 2.5rem);
+}
 
-        .container {
-            max-width: 90%;
-            margin: 2rem auto;
-            padding: var(--padding);
-            border-radius: var(--border-radius);
-            background: rgba(255, 255, 255, 0.08); /* Glassmorphism effect */
-            box-shadow: 0 4px 30px var(--shadow-color);
-            backdrop-filter: blur(5px); /* Also glassmorphism effect */
-        }
+h3 {
+  font-size: clamp(1.2rem, 1.5vw + 0.5rem, 2rem);
+}
 
-        h1, h2, h3 {
-            color: var(--primary-color);
-            margin-bottom: 0.75rem;
-            font-weight: 600;
-        }
+section {
+  padding: var(--spacing-unit) 0;
+}
 
-        h1 {
-            font-size: var(--heading-size);
-        }
+.neumorphic-box {
+  background-color: #fff;
+  border-radius: 1rem;
+  box-shadow: 5px 5px 10px rgba(0,0,0,0.1), -5px -5px 10px rgba(255,255,255,0.7);
+  padding: var(--spacing-unit);
+  margin-bottom: var(--spacing-unit);
+}
 
-        h2 {
-            font-size: var(--subheading-size);
-        }
+.gradient-overlay {
+  background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  color: white;
+}
 
-        p {
-            margin-bottom: 1rem;
-        }
+.feature-icon {
+  font-size: 2rem;
+  margin-right: var(--spacing-unit);
+}
 
-        a {
-            color: var(--primary-color);
-            text-decoration: none;
-            transition: color 0.2s ease;
-        }
+.feature-list {
+  list-style: none;
+  padding: 0;
+}
 
-        a:hover {
-            color: var(--secondary-color);
-        }
+.feature-list li {
+  margin-bottom: 0.5rem;
+  display: flex;
+  align-items: center;
+}
 
-        /* Header/Navigation (Optional, but fits the project context) */
-        header {
-            background: linear-gradient(135deg, rgba(106, 90, 249, 0.8) 0%, rgba(74, 222, 128, 0.8) 100%);
-            padding: var(--padding);
-            border-bottom-left-radius: var(--border-radius);
-            border-bottom-right-radius: var(--border-radius);
-            margin-bottom: 1.5rem;
-            box-shadow: 0 2px 10px var(--shadow-color);
-        }
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
 
-        header h1 {
-            color: var(--text-color);
-            margin: 0;
-            font-size: 1.75rem;
-        }
+.fade-in {
+  animation: fadeIn 1s ease-in-out;
+}
 
-        nav ul {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-            display: flex;
-            justify-content: flex-end;
-        }
+.container {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 0 var(--spacing-unit);
+}
 
-        nav li {
-            margin-left: 1.5rem;
-        }
-
-        nav a {
-            color: var(--text-color);
-            font-weight: 500;
-            transition: opacity 0.2s ease;
-        }
-
-        nav a:hover {
-            opacity: 0.8;
-        }
-
-        /* Buttons - Simple Implementation */
-        .button {
-            display: inline-block;
-            padding: 0.75rem 1.5rem;
-            border-radius: var(--border-radius);
-            background: var(--primary-color);
-            color: var(--text-color);
-            text-decoration: none;
-            font-weight: 500;
-            transition: background 0.2s ease, transform 0.1s ease;
-            box-shadow: 0 2px 5px var(--shadow-color);
-            border: none;
-            cursor: pointer;
-            outline: none;
-            font-size: var(--text-size);
-        }
-
-        .button:hover {
-            background: var(--secondary-color);
-        }
-
-        .button:active {
-            transform: scale(0.98);
-            box-shadow: 0 1px 3px var(--shadow-color);
-        }
-
-        /* Card style */
-        .card {
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: var(--border-radius);
-            padding: var(--padding);
-            margin-bottom: var(--gap);
-            box-shadow: 0 4px 15px var(--shadow-color);
-            transition: transform 0.2s ease;
-        }
-
-        .card:hover {
-            transform: translateY(-3px);
-        }
-
-        /* Responsive Design */
-        @media (max-width: 768px) {
-            .container {
-                max-width: 95%;
-                margin: 1rem auto;
-                padding: var(--padding) 0.75rem;
-            }
-
-            header {
-                padding: 1rem;
-            }
-
-            header h1 {
-                font-size: 1.5rem;
-            }
-
-            nav ul {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-
-            nav li {
-                margin: 0.75rem 0;
-            }
-        }
-    </style>
+</style>
 </head>
 <body>
+<header>
+  <div class="container">
+    <h1>About Our Conversational Interface</h1>
+  </div>
+</header>
+<main>
+  <section class="container">
+    <div class="neumorphic-box fade-in">
+      <h2>Technology</h2>
+      <p>Our conversational interface leverages cutting-edge Natural Language Processing (NLP) and Natural Language Generation (NLG) techniques to understand and respond to user queries effectively.  We utilize advanced algorithms to analyze the intent behind user input, extract key information, and generate coherent, contextually relevant responses.</p>
+    </div>
+    <div class="neumorphic-box fade-in">
+      <h2>Key Features</h2>
+      <ul class="feature-list">
+        <li><span class="feature-icon">&#9745;</span> NLP & NLG Engine:  Sophisticated algorithms for understanding and generating human language.</li>
+        <li><span class="feature-icon">&#9746;</span> External Knowledge Base Integration: Access to and integration with a wide array of external information sources for enhanced accuracy and comprehensiveness.</li>
+        <li><span class="feature-icon">&#9747;</span> User Profile Management: Secure storage and management of user data for personalization and enhanced user experience.</li>
+        <li><span class="feature-icon">&#9748;</span> Personalization: Tailored responses and recommendations based on individual user preferences and past interactions.</li>
+      </ul>
+    </div>
+    <div class="neumorphic-box fade-in">
+      <h2>Future Development</h2>
+      <p>We are constantly refining our algorithms and expanding our capabilities.  Future developments will include improved context understanding, multilingual support, and more sophisticated personalization features.</p>
+    </div>
+  </section>
+</main>
+<footer>
+  <div class="container gradient-overlay">
+    <p>&copy; 2024 Conversational AI</p>
+  </div>
+</footer>
 
-    <header>
-        <h1>AI Assistant - About</h1>
-        <nav>
-            <ul>
-                <li><a href="#">Home</a></li>
-                <li><a href="#">Features</a></li>
-                <li><a href="#">Contact</a></li>
-            </ul>
-        </nav>
-    </header>
+<script>
+// Add any JavaScript for interactive elements here.  For example:
+// document.querySelectorAll('.neumorphic-box').forEach(box => {
+//   box.addEventListener('mouseover', () => {
+//     box.style.boxShadow = '3px 3px 6px rgba(0,0,0,0.3), -3px -3px 6px rgba(255,255,255,0.7)';
+//   });
+//   box.addEventListener('mouseout', () => {
+//     box.style.boxShadow = '5px 5px 10px rgba(0,0,0,0.1), -5px -5px 10px rgba(255,255,255,0.7)';
+//   });
+// });
 
-    <main class="container">
-        <h1>About the AI Assistant</h1>
-
-        <section>
-            <h2>Purpose</h2>
-            <p>This AI Assistant is designed to help you with various tasks, offering a blend of information, assistance, and creative capabilities.</p>
-            <p>It uses advanced language models to generate human-like text, answer your questions comprehensively, and assist with creative projects.</p>
-        </section>
-
-        <section>
-            <h2>How to Use</h2>
-            <p>Simply type your questions or requests into the input field.</p>
-            <ul>
-                <li>Ask questions directly.</li>
-                <li>Request summaries of text.</li>
-                <li>Ask it to create content (e.g., poems, code, scripts, musical pieces, email, letters, etc.)</li>
-                <li>...and more!</li>
-            </ul>
-        </section>
-
-        <section>
-            <h2>Limitations and Disclaimers</h2>
-            <p>This AI Assistant is a tool and should be used responsibly. While it's designed to provide helpful information, it has limitations:</p>
-            <ul>
-                <li><strong>Accuracy:</strong> The information provided may not always be accurate. Always verify critical information.</li>
-                <li><strong>Bias:</strong> The AI may reflect biases present in its training data.</li>
-                <li><strong>Dependence:</strong> Do not solely rely on this assistant for crucial decisions.</li>
-                <li><strong>Privacy:</strong> Your input may be used for model improvement, while respecting privacy best practices.</li>
-            </ul>
-        </section>
-
-        <section>
-            <h2>Contact and Support</h2>
-            <p>For any questions, issues, or suggestions, please contact us at <a href="mailto:support@example.com">support@example.com</a>.</p>
-        </section>
-    </main>
-
-    <footer>
-        <div class="container">
-            <p>&copy; 2024 AI Assistant. All rights reserved.</p>
-        </div>
-    </footer>
-
+</script>
 </body>
 </html>
