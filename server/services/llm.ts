@@ -386,6 +386,77 @@ Return ONLY the complete modified HTML content, no markdown formatting.`;
       );
     }
   }
+
+  async analyzeImageWithPrompt(prompt: string, imageBase64: string, mimeType: string): Promise<string> {
+    try {
+      const config = await getAIConfig();
+      
+      switch (config.provider) {
+        case "gemini":
+          const gemini = new GoogleGenerativeAI(config.apiKey);
+          const model = gemini.getGenerativeModel({ model: config.model });
+          const geminiResult = await model.generateContent([
+            {
+              inlineData: {
+                data: imageBase64,
+                mimeType: mimeType,
+              },
+            },
+            prompt
+          ]);
+          return geminiResult.response.text() || "";
+
+        case "openai":
+          const openai = new OpenAI({ apiKey: config.apiKey });
+          const openaiResponse = await openai.chat.completions.create({
+            model: config.model,
+            messages: [{
+              role: "user",
+              content: [
+                { type: "text", text: prompt },
+                {
+                  type: "image_url",
+                  image_url: {
+                    url: `data:${mimeType};base64,${imageBase64}`
+                  }
+                }
+              ]
+            }],
+            max_tokens: 4000
+          });
+          return openaiResponse.choices[0]?.message?.content || "";
+
+        case "claude":
+          const claude = new Anthropic({ apiKey: config.apiKey });
+          const claudeResponse = await claude.messages.create({
+            model: config.model,
+            max_tokens: 4000,
+            messages: [{
+              role: "user",
+              content: [
+                {
+                  type: "image",
+                  source: {
+                    type: "base64",
+                    media_type: mimeType as "image/jpeg" | "image/png" | "image/gif" | "image/webp",
+                    data: imageBase64
+                  }
+                },
+                { type: "text", text: prompt }
+              ]
+            }],
+          });
+          return claudeResponse.content[0]?.type === "text" ? claudeResponse.content[0].text : "";
+
+        default:
+          throw new Error(`Unsupported AI provider: ${config.provider}`);
+      }
+    } catch (error) {
+      const config = await getAIConfig();
+      console.error(`Error analyzing image with ${config.provider}:`, error);
+      throw new Error(`${config.provider} image analysis error: ${error instanceof Error ? error.message : String(error)}`);
+    }
+  }
 }
 
 export const llmService = new LLMService();

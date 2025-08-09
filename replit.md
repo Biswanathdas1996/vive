@@ -118,4 +118,12 @@ Implemented a comprehensive AI provider selection system that allows users to ch
 - Created unified content generation interface across all providers
 - Database schema supports storing user preferences and API keys
 
-**Latest Update:** Refactored the original llm.ts service to accommodate model selection from the frontend, consolidating the AI provider switching functionality into a single service while maintaining all existing features and improving extensibility for future AI providers.
+**Latest Update:** Refactored the original llm.ts service to accommodate model selection from the frontend, consolidating the AI provider switching functionality into a single service while maintaining all existing features and improving extensibility for future AI providers. All generation processes now consistently use settings-configured models:
+
+- **Prompt Analysis**: Uses selected AI provider and model from settings
+- **File Structure Generation**: Dynamic model switching based on user preferences
+- **Content Generation**: Respects user-selected provider configuration
+- **File Modification**: Applies settings-based model selection
+- **Image Analysis**: Integrated with multi-provider system for design analysis
+
+The system ensures 100% consistency across all AI operations, with proper fallback to environment variables when settings are unavailable.
