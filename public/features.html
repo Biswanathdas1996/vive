@@ -3,13 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Features</title>
+<title>Chatbot Features</title>
 <style>
 :root {
   --primary-color: #673ab7;
-  --secondary-color: #2196f3;
-  --accent-color: #ff9800;
-  --background-color: #f4f4f4;
+  --secondary-color: #f06292;
+  --bg-color: #f4f4f4;
   --text-color: #333;
   --shadow-color: rgba(0,0,0,0.2);
   --border-radius: 8px;
@@ -17,123 +16,116 @@
 }
 
 body {
-  font-family: 'Roboto', sans-serif;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   line-height: 1.6;
   margin: 0;
-  background-color: var(--background-color);
+  background-color: var(--bg-color);
   color: var(--text-color);
+  overflow-x: hidden; /* prevent horizontal scroll on smaller screens */
 }
 
 .container {
-  max-width: 960px;
-  margin: 0 auto;
-  padding: var(--spacing);
+  max-width: 1200px;
+  margin: var(--spacing) auto;
+  padding: 0 var(--spacing);
 }
 
-.feature {
+.feature-card {
   background-color: rgba(255,255,255,0.8);
+  padding: 2rem;
   border-radius: var(--border-radius);
-  padding: var(--spacing);
+  box-shadow: 0 2px 10px var(--shadow-color);
   margin-bottom: var(--spacing);
-  box-shadow: 0 2px 4px var(--shadow-color);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
 }
 
-.feature:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 8px var(--shadow-color);
+.feature-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 4px 20px var(--shadow-color);
 }
 
-.feature h3 {
-  margin-top: 0;
+.feature-card h3 {
   color: var(--primary-color);
+  margin-bottom: 1rem;
 }
 
-.feature p {
+.feature-card p {
   font-size: 1rem;
+  line-height: 1.5;
 }
 
-.feature__icon {
-  display: inline-block;
-  width: 40px;
-  height: 40px;
+.feature-icon {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 4rem;
+  height: 4rem;
   border-radius: 50%;
-  background-color: var(--accent-color);
+  background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
   color: white;
-  text-align: center;
-  line-height: 40px;
-  margin-right: var(--spacing);
+  margin-bottom: 1rem;
 }
 
-.feature__icon::before {
-  content: "\f080"; /* Example Font Awesome icon - replace as needed*/
-  font-family: "FontAwesome"; /*Requires Font Awesome inclusion if not replaced */
+.feature-icon::before {
+  content: '\f08c'; /*Example font-awesome icon, replace as needed*/
+  font-family: 'FontAwesome';
+  font-size: 2rem;
 }
 
-
-/* Responsive adjustments */
-@media (max-width: 768px) {
-  .feature {
-    flex-direction: column;
-    align-items: center;
+@media (min-width: 768px) {
+  .container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    grid-gap: var(--spacing);
   }
-  .feature__icon {
-    margin-bottom: var(--spacing);
+  .feature-card {
+    padding: 3rem;
   }
 }
+
 
 </style>
 </head>
 <body>
 <header>
-  <div class="container">
-    <h1>Features</h1>
-  </div>
+  <h1>Chatbot Features</h1>
 </header>
-<main>
-  <div class="container">
-    <section class="features">
-      <article class="feature">
-        <div class="feature__icon">AI</div>
-        <h3>AI-Powered Conversational Interface</h3>
-        <p>Experience seamless interaction with our intelligent AI, understanding your requests and providing relevant responses.</p>
-      </article>
-      <article class="feature">
-        <div class="feature__icon">NLP</div>
-        <h3>Natural Language Processing</h3>
-        <p>Our system uses advanced NLP to understand and interpret human language, enabling more natural conversations.</p>
-      </article>
-      <article class="feature">
-        <div class="feature__icon">TXT</div>
-        <h3>Text Generation</h3>
-        <p>Effortlessly generate various text formats tailored to your needs, enhancing efficiency and quality.</p>
-      </article>
-      <article class="feature">
-        <div class="feature__icon">CTX</div>
-        <h3>Contextual Awareness</h3>
-        <p>Benefit from context-aware processing, ensuring consistent and relevant interactions within conversations.</p>
-      </article>
-      <article class="feature">
-        <div class="feature__icon">REQ</div>
-        <h3>Concurrent Request Handling</h3>
-        <p>Our system effortlessly handles multiple requests simultaneously, guaranteeing optimal performance and responsiveness.</p>
-      </article>
-      <article class="feature">
-        <div class="feature__icon">SA</div>
-        <h3>Sentiment Analysis (Optional)</h3>
-        <p>Gain insights into user sentiment through our optional sentiment analysis feature, enhancing user understanding.</p>
-      </article>
-    </section>
-  </div>
+<main class="container">
+  <article class="feature-card">
+    <div class="feature-icon"></div>
+    <h3>AI-Powered Interaction</h3>
+    <p>Experience seamless and intelligent conversations powered by advanced AI algorithms.</p>
+  </article>
+  <article class="feature-card">
+    <div class="feature-icon"></div>
+    <h3>Natural Language Processing</h3>
+    <p>Our chatbot understands your requests effortlessly, interpreting natural language nuances for accurate responses.</p>
+  </article>
+  <article class="feature-card">
+    <div class="feature-icon"></div>
+    <h3>Contextual Responses</h3>
+    <p>Enjoy dynamic and relevant answers based on the ongoing conversation, ensuring a personalized and efficient interaction.</p>
+  </article>
+  <article class="feature-card">
+    <div class="feature-icon"></div>
+    <h3>Multi-Turn Conversations</h3>
+    <p>Engage in complex and extended dialogues, where the chatbot remembers previous exchanges for a coherent and satisfying experience.</p>
+  </article>
 </main>
 <footer>
-  <div class="container">
-    <p>&copy; 2023</p>
-  </div>
+  <p>&copy; 2023 Chatbot</p>
 </footer>
 
 <script>
-// Add JavaScript for any interactive elements here if needed.  For example, a simple animation on scroll could be added.
+// Add JavaScript for any interactive elements if needed.  For example, smooth scrolling:
+// document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+//   anchor.addEventListener('click', function (e) {
+//     e.preventDefault();
+//     document.querySelector(this.getAttribute('href')).scrollIntoView({
+//       behavior: 'smooth'
+//     });
+//   });
+// });
 
 </script>
 

@@ -7,135 +7,125 @@
 <style>
 :root {
   --primary-color: #673ab7;
-  --secondary-color: #f44336;
-  --bg-color: #f5f5f5;
+  --secondary-color: #ffcc80;
+  --accent-color: #4caf50;
+  --background-color: #f5f5f5;
   --text-color: #333;
-  --accent-color: #4CAF50;
   --shadow-color: rgba(0,0,0,0.2);
-  --spacing-unit: 1rem;
+  --border-radius: 10px;
+  --spacing: 1rem;
 }
 
 body {
-  font-family: 'Roboto', sans-serif;
+  font-family: 'Arial', sans-serif;
   line-height: 1.6;
   margin: 0;
-  background-color: var(--bg-color);
+  background-color: var(--background-color);
   color: var(--text-color);
   overflow-x: hidden;
 }
 
-h1, h2, h3 {
-  font-weight: 700;
+header {
+  background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+  color: white;
+  padding: 2rem;
+  text-align: center;
 }
 
 h1 {
-  font-size: clamp(2rem, 3vw + 1rem, 3.5rem);
-}
-
-h2 {
-  font-size: clamp(1.5rem, 2vw + 1rem, 2.5rem);
-}
-
-h3 {
-  font-size: clamp(1.2rem, 1.5vw + 0.5rem, 2rem);
+  font-size: clamp(2rem, 3vw + 1rem, 3rem);
+  margin-bottom: 1rem;
 }
 
 section {
-  padding: var(--spacing-unit) 0;
-}
-
-.neumorphic-box {
-  background-color: #fff;
-  border-radius: 1rem;
-  box-shadow: 5px 5px 10px rgba(0,0,0,0.1), -5px -5px 10px rgba(255,255,255,0.7);
-  padding: var(--spacing-unit);
-  margin-bottom: var(--spacing-unit);
-}
-
-.gradient-overlay {
-  background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-  padding: 0.5rem 1rem;
-  border-radius: 0.5rem;
-  color: white;
-}
-
-.feature-icon {
-  font-size: 2rem;
-  margin-right: var(--spacing-unit);
-}
-
-.feature-list {
-  list-style: none;
-  padding: 0;
-}
-
-.feature-list li {
-  margin-bottom: 0.5rem;
+  padding: 2rem;
   display: flex;
+  flex-direction: column;
   align-items: center;
+  gap: var(--spacing);
 }
 
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+.card {
+  background-color: rgba(255,255,255,0.8);
+  border-radius: var(--border-radius);
+  box-shadow: 0px 5px 10px var(--shadow-color);
+  padding: 2rem;
+  max-width: 80%;
+  width: 100%;
+  margin: 1rem auto;
 }
 
-.fade-in {
-  animation: fadeIn 1s ease-in-out;
+.highlight {
+  background-color: rgba(var(--accent-color),0.2);
+  padding: 0.5rem;
+  border-radius: 0.5rem;
 }
 
-.container {
-  max-width: 960px;
-  margin: 0 auto;
-  padding: 0 var(--spacing-unit);
+.feature-icon::before {
+    content: "\2713"; /* Check mark */
+    font-size: 1.5rem;
+    margin-right: 0.5rem;
+    color: var(--accent-color);
 }
 
+
+footer {
+  background-color: #333;
+  color: white;
+  text-align: center;
+  padding: 1rem;
+}
+
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  section {
+    flex-direction: column;
+    align-items: center;
+  }
+  .card {
+    max-width: 95%;
+  }
+}
 </style>
 </head>
 <body>
 <header>
-  <div class="container">
-    <h1>About Our Conversational Interface</h1>
-  </div>
+  <h1>About Our Chatbot</h1>
 </header>
+
 <main>
-  <section class="container">
-    <div class="neumorphic-box fade-in">
+  <section>
+    <article class="card">
       <h2>Technology</h2>
-      <p>Our conversational interface leverages cutting-edge Natural Language Processing (NLP) and Natural Language Generation (NLG) techniques to understand and respond to user queries effectively.  We utilize advanced algorithms to analyze the intent behind user input, extract key information, and generate coherent, contextually relevant responses.</p>
-    </div>
-    <div class="neumorphic-box fade-in">
-      <h2>Key Features</h2>
-      <ul class="feature-list">
-        <li><span class="feature-icon">&#9745;</span> NLP & NLG Engine:  Sophisticated algorithms for understanding and generating human language.</li>
-        <li><span class="feature-icon">&#9746;</span> External Knowledge Base Integration: Access to and integration with a wide array of external information sources for enhanced accuracy and comprehensiveness.</li>
-        <li><span class="feature-icon">&#9747;</span> User Profile Management: Secure storage and management of user data for personalization and enhanced user experience.</li>
-        <li><span class="feature-icon">&#9748;</span> Personalization: Tailored responses and recommendations based on individual user preferences and past interactions.</li>
-      </ul>
-    </div>
-    <div class="neumorphic-box fade-in">
-      <h2>Future Development</h2>
-      <p>We are constantly refining our algorithms and expanding our capabilities.  Future developments will include improved context understanding, multilingual support, and more sophisticated personalization features.</p>
-    </div>
+      <p>Our chatbot utilizes cutting-edge Natural Language Processing (NLP) to understand and respond to user input.  We employ advanced techniques for user input processing, ensuring accurate interpretation even with complex or ambiguous queries.</p>
+      <p>Contextual understanding is a core component, allowing the chatbot to maintain a coherent conversation and remember previous interactions. This improves the overall user experience and provides more relevant responses.</p>
+    </article>
+
+    <article class="card">
+      <h2>Knowledge Base & Customization</h2>
+      <p>The chatbot's knowledge is drawn from a combination of internal data and external knowledge bases, ensuring a comprehensive and up-to-date information source.  We are constantly working to expand these resources.</p>
+      <p>We are also exploring avenues for personality customization, allowing users to tailor the chatbot's responses to their preferences.  This includes the ability to adjust the chatbot's tone, style, and overall demeanor.</p>
+    </article>
+
+      <article class="card">
+        <h2>Key Features</h2>
+        <ul>
+          <li class="feature-icon">Advanced NLP Integration</li>
+          <li class="feature-icon">Sophisticated Contextual Understanding</li>
+          <li class="feature-icon">Dynamic Response Generation</li>
+          <li class="feature-icon">Potential for Personality Customization</li>
+        </ul>
+      </article>
   </section>
 </main>
+
 <footer>
-  <div class="container gradient-overlay">
-    <p>&copy; 2024 Conversational AI</p>
-  </div>
+  <p>&copy; 2024 Chatbot Inc.</p>
 </footer>
 
 <script>
-// Add any JavaScript for interactive elements here.  For example:
-// document.querySelectorAll('.neumorphic-box').forEach(box => {
-//   box.addEventListener('mouseover', () => {
-//     box.style.boxShadow = '3px 3px 6px rgba(0,0,0,0.3), -3px -3px 6px rgba(255,255,255,0.7)';
-//   });
-//   box.addEventListener('mouseout', () => {
-//     box.style.boxShadow = '5px 5px 10px rgba(0,0,0,0.1), -5px -5px 10px rgba(255,255,255,0.7)';
-//   });
-// });
-
+// Add any JavaScript for interactive elements here if needed.  For example, a smooth scroll function.
 </script>
 </body>
 </html>
