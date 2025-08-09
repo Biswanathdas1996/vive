@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Enhanced Product Page</title>
+<style>
+:root {
+  --primary-color: #3498db;
+  --secondary-color: #2ecc71;
+  --accent-color: #e74c3c;
+  --text-color: #333;
+  --bg-color: #f4f4f4;
+  --shadow-color: rgba(0,0,0,0.1);
+  --border-radius: 8px;
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  margin: 0;
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  line-height: 1.6;
+}
+
+nav {
+  position: sticky;
+  top: 0;
+  background-color: white;
+  box-shadow: 0 2px 4px var(--shadow-color);
+  padding: 1rem 0;
+  z-index: 10;
+}
+
+.product-gallery {
+  display: flex;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.product-gallery img {
+  width: 100%;
+  height: auto;
+  margin-right: 1rem;
+  border-radius: var(--border-radius);
+  box-shadow: 2px 2px 8px var(--shadow-color);
+}
+
+.add-to-cart {
+  background-color: var(--primary-color);
+  color: white;
+  padding: 1rem 2rem;
+  border: none;
+  border-radius: var(--border-radius);
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.add-to-cart:hover {
+  background-color: darken(var(--primary-color), 10%);
+}
+
+.accordion {
+    background-color: #eee;
+    color: #444;
+    cursor: pointer;
+    padding: 18px;
+    width: 100%;
+    text-align: left;
+    border: none;
+    outline: none;
+    transition: 0.4s;
+}
+
+.active, .accordion:hover {
+    background-color: #ccc; 
+}
+
+.panel {
+    padding: 0 18px;
+    display: none;
+    background-color: white;
+    overflow: hidden;
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgb(0,0,0);
+    background-color: rgba(0,0,0,0.4);
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: 15% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+}
+
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+
+</style>
+</head>
+<body>
+<nav>
+  <div>Logo</div>
+  <ul>
+    <li>Home</li>
+    <li>About</li>
+    <li>Contact</li>
+  </ul>
+</nav>
+
+<main>
+  <section class="hero">
+    <div style="background: linear-gradient(to right, #4CAF50, #8BC34A); padding: 2rem; border-radius: var(--border-radius); box-shadow: 2px 2px 8px var(--shadow-color);">Hero Banner</div>
+  </section>
+
+  <section class="product-details">
+    <h1 style="font-size: 2rem; margin-bottom: 0.5rem;">Product Title</h1>
+    <p style="font-size: 1.2rem; margin-bottom: 1rem;">Product Subtitle</p>
+
+    <div class="product-gallery">
+      <div><div style="background: linear-gradient(to right, #FF9800, #FFC107); width: 200px; height: 200px; border-radius: var(--border-radius);"></div></div>
+      <div><div style="background: linear-gradient(to right, #2196F3, #3F51B5); width: 200px; height: 200px; border-radius: var(--border-radius);"></div></div>
+      <div><div style="background: linear-gradient(to right, #9C27B0, #E040FB); width: 200px; height: 200px; border-radius: var(--border-radius);"></div></div>
+    </div>
+
+    <video width="320" height="240" controls>
+      <source src="movie.mp4" type="video/mp4">
+      Your browser does not support the video tag.
+    </video>
+
+
+    <div style="margin-top: 1rem;">
+      <input type="number" value="1" min="1" style="width: 50px; margin-right: 10px;">
+      <button class="add-to-cart">Add to Cart</button>
+    </div>
+
+  </section>
+
+  <section class="faq">
+    <button class="accordion"><strong>FAQ 1</strong></button>
+    <div class="panel">
+      <p>Answer 1</p>
+    </div>
+
+    <button class="accordion"><strong>FAQ 2</strong></button>
+    <div class="panel">
+      <p>Answer 2</p>
+    </div>
+  </section>
+
+  <button id="openModalBtn">Open Modal</button>
+  <div id="myModal" class="modal">
+    <div class="modal-content">
+      <span class="close">&times;</span>
+      <p>Modal content goes here...</p>
+    </div>
+  </div>
+
+</main>
+<footer>Footer</footer>
+
+<script>
+const acc = document.getElementsByClassName("accordion");
+let i;
+
+for (i = 0; i < acc.length; i++) {
+  acc[i].addEventListener("click", function() {
+    this.classList.toggle("active");
+    let panel = this.nextElementSibling;
+    if (panel.style.display === "block") {
+      panel.style.display = "none";
+    } else {
+      panel.style.display = "block";
+    }
+  });
+}
+
+var modal = document.getElementById("myModal");
+var btn = document.getElementById("openModalBtn");
+var span = document.getElementsByClassName("close")[0];
+
+btn.onclick = function() {
+  modal.style.display = "block";
+}
+
+span.onclick = function() {
+  modal.style.display = "none";
+}
+
+window.onclick = function(event) {
+  if (event.target == modal) {
+    modal.style.display = "none";
+  }
+}
+</script>
+
+</body>
+</html>

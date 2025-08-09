@@ -3,13 +3,15 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AI Chat</title>
+<title>Modern Chat Application</title>
 <style>
 :root {
   --primary-color: #3f51b5;
   --secondary-color: #6200ee;
   --background-color: #f4f4f4;
   --text-color: #333;
+  --light-background: #fff;
+  --dark-background: #222;
   --border-radius: 8px;
   --box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
@@ -17,136 +19,165 @@
 body {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   background-color: var(--background-color);
+  margin: 0;
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-  margin: 0;
   color: var(--text-color);
 }
 
-.container {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  max-width: 800px;
-  margin: 20px auto;
-  border-radius: var(--border-radius);
+/* Top Navigation Bar */
+header {
+  position: sticky;
+  top: 0;
+  background-color: var(--light-background);
+  padding: 1rem;
   box-shadow: var(--box-shadow);
-  background-color: white;
-  overflow: hidden;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 10;
 }
 
-.chat-window {
+.logo {
+  width: 50px;
+  height: 50px;
+  background-color: var(--primary-color);
+  border-radius: var(--border-radius);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color:white;
+}
+
+.user-profile {
+  display: flex;
+  align-items: center;
+}
+
+.user-profile img {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+}
+
+
+/* Chat Container */
+.chat-container {
   flex: 1;
-  padding: 20px;
   overflow-y: auto;
-  min-height: 200px;
+  padding: 1rem;
 }
 
-.message-bubble {
-  padding: 10px 15px;
-  margin-bottom: 10px;
+.message {
+  padding: 0.5rem 1rem;
+  margin-bottom: 0.5rem;
   border-radius: var(--border-radius);
   max-width: 70%;
-  word-break: break-word;
 }
 
-.message-bubble-user {
-  background-color: #f0f0f0;
+.user-message {
+  background-color: var(--primary-color);
+  color: white;
   align-self: flex-end;
 }
 
-.message-bubble-bot {
-  background-color: #e0f7fa;
+.bot-message {
+  background-color: #e0e0e0;
   align-self: flex-start;
 }
 
-.message-input {
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: var(--border-radius);
-  resize: vertical;
-  margin-bottom: 10px;
+/* User Input */
+.input-area {
+  padding: 1rem;
+  display: flex;
 }
 
+.input-field {
+  flex: 1;
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: var(--border-radius);
+}
 
 .send-button {
-  background-color: var(--primary-color);
+  padding: 0.5rem 1rem;
+  background-color: var(--secondary-color);
   color: white;
-  padding: 10px 15px;
   border: none;
   border-radius: var(--border-radius);
+  margin-left: 0.5rem;
   cursor: pointer;
 }
 
-.typing-indicator {
+/* Footer */
+footer {
+  background-color: var(--light-background);
+  padding: 1rem;
   text-align: center;
-  margin-bottom: 10px;
-  animation: blink 1s infinite;
-}
-
-@keyframes blink {
-  50% { opacity: 0; }
+  border-top: 1px solid #ccc;
 }
 
 /* Responsive Styles */
-@media (max-width: 600px) {
-  .container {
-    max-width: 95%;
+@media (max-width: 768px) {
+  header {
+    flex-direction: column;
+    align-items: flex-start;
   }
 }
 </style>
 </head>
 <body>
-<div class="container">
-  <div class="chat-window" id="chat-window">
-    </div>
-  <div>
-    <textarea class="message-input" id="message-input" placeholder="Type your message..."></textarea>
-    <button class="send-button" id="send-button">Send</button>
+<header>
+  <div class="logo">Chat App</div>
+  <div class="user-profile">
+    <div style="width:30px; height:30px; border-radius:50%; background-color: #8bc34a;"></div>
+    <div style="margin-left: 0.5rem;">User</div>
   </div>
-  <div class="typing-indicator" id="typing-indicator"></div>
-</div>
-
+  <div style="width:30px; height:30px; background-color: #ffeb3b; border-radius:var(--border-radius); cursor:pointer;"></div>
+</header>
+<main>
+  <div class="chat-container">
+    <div class="message user-message">User Message 1</div>
+    <div class="message bot-message">Bot Message 1</div>
+    <div class="message user-message">User Message 2</div>
+  </div>
+  <div class="input-area">
+    <input type="text" class="input-field" placeholder="Type your message...">
+    <button class="send-button">Send</button>
+  </div>
+</main>
+<footer>
+  &copy; 2023 Chat App. All rights reserved.
+</footer>
 <script>
-const chatWindow = document.getElementById('chat-window');
-const messageInput = document.getElementById('message-input');
-const sendButton = document.getElementById('send-button');
-const typingIndicator = document.getElementById('typing-indicator');
+// Placeholder JavaScript - Replace with actual WebSocket and NLP integration
+const chatContainer = document.querySelector('.chat-container');
+const inputField = document.querySelector('.input-field');
+const sendButton = document.querySelector('.send-button');
 
-sendButton.addEventListener('click', sendMessage);
-messageInput.addEventListener('keyup', (event) => {
-  if (event.key === 'Enter') {
-    sendMessage();
+sendButton.addEventListener('click', () => {
+  const message = inputField.value;
+  if (message.trim() !== '') {
+    sendMessage(message);
+    inputField.value = '';
   }
 });
 
-function sendMessage() {
-  const message = messageInput.value;
-  if (message.trim() === '') return;
-
-  displayMessage(message, 'user');
-  messageInput.value = '';
-
-  //Simulate API call and bot response (replace with actual API call)
-  typingIndicator.style.display = 'block';
+function sendMessage(message) {
+  const messageElement = document.createElement('div');
+  messageElement.classList.add('message', 'user-message');
+  messageElement.textContent = message;
+  chatContainer.appendChild(messageElement);
+  // Simulate bot response after 1 second
   setTimeout(() => {
-    typingIndicator.style.display = 'none';
-    const botResponse = "This is a bot response to: " + message;
-    displayMessage(botResponse, 'bot');
-  }, 1500);
+    const botMessageElement = document.createElement('div');
+    botMessageElement.classList.add('message', 'bot-message');
+    botMessageElement.textContent = 'Bot Response: ' + message;
+    chatContainer.appendChild(botMessageElement);
+    chatContainer.scrollTop = chatContainer.scrollHeight;
+  }, 1000);
 }
-
-function displayMessage(message, sender) {
-  const messageBubble = document.createElement('div');
-  messageBubble.classList.add('message-bubble');
-  messageBubble.classList.add(`message-bubble-${sender}`);
-  messageBubble.textContent = message;
-  chatWindow.appendChild(messageBubble);
-  chatWindow.scrollTop = chatWindow.scrollHeight;
-}
-
-
 </script>
 </body>
 </html>

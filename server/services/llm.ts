@@ -1,12 +1,54 @@
-import { GoogleGenerativeAI } from "@google/generative-ai";
+import { GoogleGenerativeAI, GenerativeModel } from "@google/generative-ai";
 import { AnalysisResult, FileStructure } from "@shared/schema";
 
-const genAI = new GoogleGenerativeAI(
-  process.env.GOOGLE_API_KEY || "AIzaSyAUwIZJSoHYFp2IZQs1NMdBVH-78yHk6tI",
-);
-const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+/**
+ * Configuration constants for the LLM service
+ */
+const CONFIG = {
+  MODEL_NAME: "gemini-1.5-flash", //##gemini-2.5-flash
+  DEFAULT_API_KEY: "AIzaSyAUwIZJSoHYFp2IZQs1NMdBVH-78yHk6tI", // Consider moving to environment variables
+  JSON_EXTRACTION_REGEX: /\{[\s\S]*\}/,
+  MARKDOWN_CODE_BLOCK_REGEX: /```html\n?/g,
+  MARKDOWN_END_REGEX: /```\n?$/g,
+} as const;
 
-console.log("Google API Key:", process.env.GOOGLE_API_KEY);
+/**
+ * Error messages for better error handling
+ */
+const ERROR_MESSAGES = {
+  NO_API_KEY: "Google API key is not configured",
+  NO_JSON_RESPONSE: "No valid JSON found in AI response",
+  JSON_PARSE_ERROR: "Failed to parse JSON response from AI",
+  CONTENT_GENERATION_FAILED: "Failed to generate content",
+  PROMPT_ANALYSIS_FAILED: "Failed to analyze prompt",
+  FILE_STRUCTURE_FAILED: "Failed to generate file structure",
+  PROMPT_ENHANCEMENT_FAILED: "Failed to enhance prompt",
+  FILE_MODIFICATION_FAILED: "Failed to modify file content",
+} as const;
+
+/**
+ * Initialize Google Generative AI client with proper error handling
+ */
+const initializeGoogleAI = (): {
+  genAI: GoogleGenerativeAI;
+  model: GenerativeModel;
+} => {
+  const apiKey = process.env.GOOGLE_API_KEY || CONFIG.DEFAULT_API_KEY;
+
+  if (!apiKey) {
+    throw new Error(ERROR_MESSAGES.NO_API_KEY);
+  }
+
+  const genAI = new GoogleGenerativeAI(apiKey);
+  const model = genAI.getGenerativeModel({ model: CONFIG.MODEL_NAME });
+
+  // Log API key status (without exposing the actual key)
+  console.log("Google API Key status:", apiKey ? "✓ Configured" : "✗ Missing");
+
+  return { genAI, model };
+};
+
+const { genAI, model } = initializeGoogleAI();
 
 export class LLMService {
   async analyzePrompt(prompt: string): Promise<AnalysisResult> {
@@ -41,13 +83,13 @@ Analyze this web application request: ${prompt}`;
       throw new Error(
         `Failed to analyze prompt: ${
           error instanceof Error ? error.message : String(error)
-        }`,
+        }`
       );
     }
   }
 
   async generateFileStructure(
-    analysisResult: AnalysisResult,
+    analysisResult: AnalysisResult
   ): Promise<FileStructure> {
     try {
       const prompt = `You're a web dev and architect. Craft a file structure with detailed prompts, rich in UI elements, features, and interactivity for each HTML file.
@@ -96,7 +138,7 @@ Criteria:
       throw new Error(
         `Failed to generate file structure: ${
           error instanceof Error ? error.message : String(error)
-        }`,
+        }`
       );
     }
   }
@@ -104,16 +146,16 @@ Criteria:
   async enhanceFilePrompt(
     basePrompt: string,
     fileName: string,
-    analysisResult: AnalysisResult,
+    analysisResult: AnalysisResult
   ): Promise<string> {
     try {
-      const enhancementPrompt = `Analyze this page prompt and generate a comprehensive modern UI feature list:
+      const enhancementPrompt = `Analyze and enhance the following page prompt to include a comprehensive list of modern UI elements and features:
 
 BASE PROMPT: ${basePrompt}
 PAGE: ${fileName}
 CONTEXT: ${JSON.stringify(analysisResult)}
 
-Return a structured list of specific modern web elements and features for this page. Format as:
+Return a detailed and structured list of elements for this page, categorized as follows:
 
 LAYOUT & NAVIGATION:
 - [specific element]: [brief description]
@@ -135,16 +177,17 @@ DESIGN PATTERNS:
 - [specific styling]: [implementation note]
 - [specific effect]: [implementation note]
 
-Focus on:
-• Contemporary UI patterns (glassmorphism, neumorphism, gradients)
-• Interactive elements (modals, dropdowns, carousels, accordions)
-• Modern forms (multi-step, validation, file upload, search)
-• Data visualization (charts, progress bars, statistics cards)
-• Responsive layouts (CSS Grid, Flexbox, mobile-first)
-• Accessibility features (ARIA, semantic HTML, keyboard nav)
-• Performance optimizations (lazy loading, animations)
+Focus on including as many elements as possible, such as:
+• Advanced navigation (sticky headers, mega menus, breadcrumbs)
+• Interactive widgets (modals, accordions, carousels, dropdowns, tooltips)
+• Content-rich sections (hero banners, feature highlights, testimonials, FAQs, pricing tables)
+• Modern forms (multi-step forms, validation, file uploads, search bars)
+• Data visualization (charts, graphs, progress bars, statistics cards)
+• Responsive layouts (CSS Grid, Flexbox, mobile-first design)
+• Accessibility features (ARIA roles, semantic HTML, keyboard navigation)
+• Performance optimizations (lazy loading, animations, efficient rendering)
 
-Make each element specific and actionable for ${fileName}. Be concise but comprehensive.`;
+Make each element specific, actionable, and tailored for ${fileName}. Be concise but comprehensive.`;
 
       const result = await model.generateContent(enhancementPrompt);
       const response = await result.response;
@@ -152,7 +195,7 @@ Make each element specific and actionable for ${fileName}. Be concise but compre
     } catch (error) {
       console.warn(
         `Failed to enhance prompt for ${fileName}, using original:`,
-        error,
+        error
       );
       return basePrompt; // Fallback to original prompt if enhancement fails
     }
@@ -161,7 +204,7 @@ Make each element specific and actionable for ${fileName}. Be concise but compre
   async generateFileContent(
     fileName: string,
     analysisResult: AnalysisResult,
-    fileStructure: FileStructure,
+    fileStructure: FileStructure
   ): Promise<string> {
     try {
       // Extract the specific prompt for this file from the structure
@@ -177,10 +220,16 @@ Make each element specific and actionable for ${fileName}. Be concise but compre
       const enhancedFilePrompt = await this.enhanceFilePrompt(
         filePrompt,
         fileName,
-        analysisResult,
+        analysisResult
       );
 
-      const prompt = `You are an expert modern web developer specialized in creating high-quality, contemporary HTML5 applications. Generate a complete, self-contained HTML5 file with ALL styles and JavaScript embedded using <style> and <script> tags. Do NOT reference external CSS, JS, or image files.
+      const prompt = `You are an expert modern web developer specialized in creating high-quality, contemporary HTML5 applications. 
+      
+Generate a complete, self-contained HTML5 file with ALL styles and JavaScript embedded using <style> and <script> tags for the below BRD
+
+BRD: ${enhancedFilePrompt},
+
+. Do NOT reference external CSS, JS, or image files.
 
 MODERN DESIGN REQUIREMENTS:
 - Use contemporary design patterns (glassmorphism, neumorphism, gradient overlays, subtle shadows)
@@ -215,7 +264,7 @@ CSS STYLE GUIDELINES:
 - Create depth with layered shadows and subtle gradients
 
 File: ${fileName}
-Must have Requirements: ${enhancedFilePrompt}
+
 Project context: ${JSON.stringify(analysisResult)}
 
 Generate a production-ready, visually stunning HTML5 application that demonstrates modern web development best practices. Return ONLY the complete HTML content without markdown formatting.`;
@@ -235,7 +284,7 @@ Generate a production-ready, visually stunning HTML5 application that demonstrat
       throw new Error(
         `Failed to generate content for ${fileName}: ${
           error instanceof Error ? error.message : String(error)
-        }`,
+        }`
       );
     }
   }
@@ -243,7 +292,7 @@ Generate a production-ready, visually stunning HTML5 application that demonstrat
   async modifyFileContent(
     fileName: string,
     currentContent: string,
-    modificationRequest: string,
+    modificationRequest: string
   ): Promise<string> {
     try {
       const prompt = `You are an expert web developer. Modify the existing HTML file based on the user's request. The file must remain completely self-contained with all CSS in <style> tags and all JavaScript in <script> tags. Do not reference external files.
@@ -277,7 +326,7 @@ Return ONLY the complete modified HTML content, no markdown formatting.`;
       throw new Error(
         `Failed to modify ${fileName}: ${
           error instanceof Error ? error.message : String(error)
-        }`,
+        }`
       );
     }
   }
