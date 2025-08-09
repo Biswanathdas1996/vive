@@ -1,498 +1,115 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Modern Chat Interface</title>
-    <style>
-        /* CSS Reset */
-        *, *::before, *::after {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Modern Chat App</title>
+  <style>
+    :root {
+      --primary-color: #4285f4;
+      --secondary-color: #ea4335;
+      --background-color: #f5f5f5;
+      --text-color: #333;
+      --shadow-color: rgba(0, 0, 0, 0.1);
+    }
 
-        /* CSS Custom Properties (Variables) */
-        :root {
-            --primary-color: #6200ea;
-            --secondary-color: #3700b3;
-            --accent-color: #03dac6;
-            --background-color: #f0f4f8;
-            --surface-color: #ffffff;
-            --text-primary: #212121;
-            --text-secondary: #757575;
-            --shadow-color: rgba(0, 0, 0, 0.1);
-            --border-radius: 10px;
-            --transition-duration: 0.3s;
-            --spacing-unit: 16px;
-            --font-family: 'Roboto', sans-serif;
-        }
+    body {
+      font-family: 'Roboto', sans-serif;
+      background-color: var(--background-color);
+      color: var(--text-color);
+      margin: 0;
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+      min-height: 100vh;
+    }
 
-        /* Dark Theme (override variables) */
-        @media (prefers-color-scheme: dark) {
-            :root {
-                --background-color: #121212;
-                --surface-color: #1e1e1e;
-                --text-primary: #ffffff;
-                --text-secondary: #d0d0d0;
-                --shadow-color: rgba(255, 255, 255, 0.1);
-            }
-        }
+    nav {
+      background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+      color: white;
+      padding: 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
 
-        /* Typography */
-        body {
-            font-family: var(--font-family);
-            font-size: 16px;
-            line-height: 1.6;
-            color: var(--text-primary);
-            background-color: var(--background-color);
-            transition: background-color var(--transition-duration), color var(--transition-duration);
-        }
+    nav .logo {
+      font-weight: bold;
+      font-size: 1.2rem;
+    }
 
-        h1, h2, h3 {
-            font-weight: 500;
-            line-height: 1.2;
-            margin-bottom: calc(var(--spacing-unit) / 2);
-        }
+    nav ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+    }
 
-        h1 {
-            font-size: clamp(2rem, 5vw, 3rem); /* Responsive heading */
-        }
+    nav li {
+      margin-left: 1rem;
+    }
 
-        h2 {
-            font-size: clamp(1.5rem, 4vw, 2rem);
-        }
-
-        /* Layout */
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: var(--spacing-unit);
-        }
-
-        header {
-            background-color: var(--surface-color);
-            padding: var(--spacing-unit);
-            border-bottom: 1px solid var(--shadow-color);
-            box-shadow: 0 2px 4px var(--shadow-color);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            transition: background-color var(--transition-duration), box-shadow var(--transition-duration);
-        }
-
-        nav ul {
-            list-style: none;
-            display: flex;
-        }
-
-        nav li {
-            margin-left: var(--spacing-unit);
-        }
-
-        nav a {
-            text-decoration: none;
-            color: var(--text-primary);
-            font-weight: 500;
-            transition: color var(--transition-duration);
-        }
-
-        nav a:hover {
-            color: var(--primary-color);
-        }
-
-        main {
-            display: flex;
-            flex-direction: column;
-            height: calc(100vh - 150px); /* Adjust height based on header and footer */
-        }
-
-        /* Chat Interface Styles */
-        .chat-container {
-            flex-grow: 1;
-            display: flex;
-            flex-direction: column;
-            background-color: var(--surface-color);
-            border-radius: var(--border-radius);
-            box-shadow: 0 4px 8px var(--shadow-color);
-            overflow: hidden;
-            margin: var(--spacing-unit);
-            transition: background-color var(--transition-duration), box-shadow var(--transition-duration);
-        }
-
-        .chat-window {
-            flex-grow: 1;
-            padding: var(--spacing-unit);
-            overflow-y: auto;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .message {
-            padding: calc(var(--spacing-unit) / 2);
-            margin-bottom: calc(var(--spacing-unit) / 2);
-            border-radius: var(--border-radius);
-            max-width: 80%;
-            word-wrap: break-word;
-            transition: background-color var(--transition-duration);
-        }
-
-        .user-message {
-            background-color: #DCF8C6;
-            align-self: flex-end;
-        }
-
-        .chatbot-message {
-            background-color: #ECE5DD;
-            align-self: flex-start;
-        }
-
-        .message-timestamp {
-            font-size: 0.75rem;
-            color: var(--text-secondary);
-            margin-top: calc(var(--spacing-unit) / 4);
-            display: block;
-            text-align: right;
-        }
-
-        .input-area {
-            padding: var(--spacing-unit);
-            background-color: var(--surface-color);
-            border-top: 1px solid var(--shadow-color);
-            display: flex;
-            align-items: center;
-            transition: background-color var(--transition-duration), border-color var(--transition-duration);
-        }
-
-        textarea {
-            flex-grow: 1;
-            padding: calc(var(--spacing-unit) / 2);
-            border: none;
-            border-radius: var(--border-radius);
-            resize: none;
-            font-family: var(--font-family);
-            font-size: 1rem;
-            line-height: 1.4;
-            color: var(--text-primary);
-            background-color: var(--background-color);
-            outline: none;
-            transition: background-color var(--transition-duration), color var(--transition-duration);
-        }
-
-        button {
-            padding: calc(var(--spacing-unit) / 2) var(--spacing-unit);
-            border: none;
-            border-radius: var(--border-radius);
-            background-color: var(--primary-color);
-            color: white;
-            font-weight: 500;
-            cursor: pointer;
-            transition: background-color var(--transition-duration);
-            margin-left: calc(var(--spacing-unit) / 2);
-        }
-
-        button:hover {
-            background-color: var(--secondary-color);
-        }
-
-        footer {
-            background-color: var(--surface-color);
-            padding: var(--spacing-unit);
-            text-align: center;
-            border-top: 1px solid var(--shadow-color);
-            box-shadow: 0 -2px 4px var(--shadow-color);
-            transition: background-color var(--transition-duration), box-shadow var(--transition-duration);
-        }
-
-        /* Settings Modal Styles */
-        dialog {
-            border: none;
-            border-radius: var(--border-radius);
-            box-shadow: 0 8px 16px var(--shadow-color);
-            padding: var(--spacing-unit);
-            background-color: var(--surface-color);
-            color: var(--text-primary);
-            transition: background-color var(--transition-duration), color var(--transition-duration);
-        }
-
-        dialog::backdrop {
-            background-color: rgba(0, 0, 0, 0.5);
-        }
-
-        dialog form {
-            display: flex;
-            flex-direction: column;
-        }
-
-        dialog label {
-            margin-bottom: calc(var(--spacing-unit) / 4);
-        }
-
-        dialog input[type="text"] {
-            padding: calc(var(--spacing-unit) / 2);
-            border: 1px solid var(--shadow-color);
-            border-radius: var(--border-radius);
-            margin-bottom: var(--spacing-unit);
-        }
-
-        .close-button {
-            align-self: flex-end;
-            background-color: transparent;
-            color: var(--text-primary);
-        }
-
-        .profile-dropdown {
-            position: relative;
-            display: inline-block;
-        }
-
-        .profile-dropdown-content {
-            display: none;
-            position: absolute;
-            background-color: var(--surface-color);
-            min-width: 160px;
-            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-            z-index: 1;
-            right: 0;
-            border-radius: var(--border-radius);
-            padding: calc(var(--spacing-unit) / 2);
-            transition: background-color var(--transition-duration);
-        }
-
-        .profile-dropdown-content a {
-            color: var(--text-primary);
-            padding: 12px 16px;
-            text-decoration: none;
-            display: block;
-            transition: color var(--transition-duration);
-        }
-
-        .profile-dropdown-content a:hover {
-            background-color: #ddd;
-        }
-
-        .show {
-            display: block;
-        }
-
-       .settings-icon {
-            background-color: transparent;
-            border: none;
-            cursor: pointer;
-            font-size: 1.5rem; /* Adjust as needed */
-            color: var(--text-primary);
-            transition: color var(--transition-duration);
-        }
-
-        .settings-icon:hover {
-            color: var(--primary-color);
-        }
-
-        .error-message {
-            background-color: #f44336;
-            color: white;
-            padding: calc(var(--spacing-unit) / 2);
-            border-radius: var(--border-radius);
-            margin-bottom: var(--spacing-unit);
-            display: none; /* Hidden by default */
-        }
-
-        .error-message.show {
-            display: block;
-        }
-
-        /* CSS Icons (Send Button) */
-        button::before {
-            content: '\27A2'; /* Unicode arrow */
-            margin-right: 5px;
-        }
-
-        .chatbot-persona {
-            padding: var(--spacing-unit);
-            margin: var(--spacing-unit);
-            background-color: var(--surface-color);
-            border-radius: var(--border-radius);
-            box-shadow: 0 2px 4px var(--shadow-color);
-            transition: background-color var(--transition-duration), box-shadow var(--transition-duration);
-        }
-
-        /* CSS Gradient */
-        .gradient-background {
-            background: linear-gradient(to right, #4a148c, #880e4f);
-            color: white;
-            padding: var(--spacing-unit);
-            border-radius: var(--border-radius);
-            margin-bottom: var(--spacing-unit);
-        }
-
-        /* Responsive Design */
-        @media (max-width: 768px) {
-            .container {
-                padding: calc(var(--spacing-unit) / 2);
-            }
-
-            nav ul {
-                flex-direction: column;
-            }
-
-            nav li {
-                margin-left: 0;
-                margin-bottom: calc(var(--spacing-unit) / 2);
-            }
-        }
+    nav a {
+      color: white;
+      text-decoration: none;
+    }
 
 
-    </style>
+
+    main {
+      padding: 1rem;
+      display: flex;
+      flex-direction: column;
+      overflow-y: auto;
+    }
+
+
+
+    footer {
+      background-color: #eee;
+      padding: 1rem;
+      text-align: center;
+    }
+
+
+
+  </style>
 </head>
 <body>
-    <header>
-        <h1>My Chat App</h1>
-        <nav>
-            <ul>
-                <li><a href="#">Home</a></li>
-                <li><a href="#">About</a></li>
-                <li><a href="#">Contact</a></li>
-            </ul>
-        </nav>
-        <div class="profile-dropdown">
-            <button onclick="toggleDropdown()" class="dropbtn">User Profile</button>
-            <div id="myDropdown" class="profile-dropdown-content">
-                <a href="#">Profile</a>
-                <a href="#">Settings</a>
-                <a href="#">Logout</a>
-            </div>
+
+  <nav>
+    <div class="logo">Chat App</div>
+    <ul>
+      <li><a href="#">Home</a></li>
+      <li><a href="#">About</a></li>
+      <li><a href="#">Contact</a></li>
+    </ul>
+  </nav>
+
+  <main>
+    <div style="margin-bottom: 1rem; padding: 1rem; background-color: white; border-radius: 8px; box-shadow: 0 2px 4px var(--shadow-color);">
+        <div style="display: flex; align-items: center;">
+          <div style="width: 30px; height: 30px; border-radius: 50%; background-color: var(--primary-color); margin-right: 0.5rem;"></div>
+          <span>User</span>
         </div>
-    </header>
+        <div style="margin-top: 0.5rem;">Hello, this is a test message.</div>
+    </div>
+  </main>
 
-    <main>
-        <div class="error-message" id="errorMessage" role="alert">
-            Error: An unexpected error occurred. Please try again.
-        </div>
 
-        <section class="chatbot-persona">
-            <h2>Chatbot Persona</h2>
-            <p>I am a helpful assistant designed to answer your questions and provide information.</p>
-        </section>
+  <footer>
+    &copy; 2023 Chat App
+  </footer>
 
-        <section class="gradient-background">
-            <h2>Example Content with Gradient</h2>
-            <p>This section demonstrates a background gradient for visual appeal.  Customize as needed!</p>
-        </section>
 
-        <div class="chat-container">
-            <div class="chat-window" id="chatWindow">
-                <div class="message chatbot-message">
-                    Hello! How can I help you today?
-                    <span class="message-timestamp">10:00 AM</span>
-                </div>
-                <div class="message user-message">
-                    I need some information about web development.
-                    <span class="message-timestamp">10:01 AM</span>
-                </div>
-            </div>
 
-            <div class="input-area">
-                <textarea id="messageInput" placeholder="Type your message here..."></textarea>
-                <button onclick="sendMessage()">Send</button>
-                <button class="settings-icon" onclick="openSettings()" aria-label="Open settings">&#9881;</button>
-            </div>
-        </div>
-    </main>
+  <script>
+    // Placeholder for JavaScript functionality (WebSocket integration, dynamic updates, animations, etc.)
+    console.log("JavaScript loaded.");
 
-    <footer>
-        <p>&copy; 2024 My Chat App</p>
-    </footer>
+  </script>
 
-    <dialog id="settingsModal" aria-labelledby="settings-title" aria-describedby="settings-description">
-        <h2 id="settings-title">Settings</h2>
-        <p id="settings-description">Customize your chat experience.</p>
-        <form>
-            <label for="username">Username:</label>
-            <input type="text" id="username" name="username" value="User123">
-
-            <button type="button" onclick="closeSettings()">Close</button>
-        </form>
-    </dialog>
-
-    <script>
-        function sendMessage() {
-            const messageInput = document.getElementById("messageInput");
-            const chatWindow = document.getElementById("chatWindow");
-            const messageText = messageInput.value.trim();
-
-            if (messageText !== "") {
-                const messageElement = document.createElement("div");
-                messageElement.classList.add("message", "user-message");
-                messageElement.textContent = messageText;
-
-                const timestampElement = document.createElement("span");
-                timestampElement.classList.add("message-timestamp");
-                const now = new Date();
-                timestampElement.textContent = `${now.getHours()}:${String(now.getMinutes()).padStart(2, '0')}`;
-                messageElement.appendChild(timestampElement);
-
-                chatWindow.appendChild(messageElement);
-                messageInput.value = ""; // Clear the input
-
-                // Simulate chatbot response (for demonstration purposes)
-                setTimeout(() => {
-                    const chatbotMessageElement = document.createElement("div");
-                    chatbotMessageElement.classList.add("message", "chatbot-message");
-                    chatbotMessageElement.textContent = "Thanks for your message! I'm processing it.";
-
-                    const chatbotTimestampElement = document.createElement("span");
-                    chatbotTimestampElement.classList.add("message-timestamp");
-                    const now2 = new Date();
-                    chatbotTimestampElement.textContent = `${now2.getHours()}:${String(now2.getMinutes()).padStart(2, '0')}`;
-                    chatbotMessageElement.appendChild(chatbotTimestampElement);
-
-                    chatWindow.appendChild(chatbotMessageElement);
-
-                    chatWindow.scrollTop = chatWindow.scrollHeight; // Scroll to bottom
-                }, 500); // Simulate delay
-            }
-        }
-
-        function openSettings() {
-            const settingsModal = document.getElementById("settingsModal");
-            settingsModal.showModal();
-        }
-
-        function closeSettings() {
-            const settingsModal = document.getElementById("settingsModal");
-            settingsModal.close();
-        }
-
-        function toggleDropdown() {
-            document.getElementById("myDropdown").classList.toggle("show");
-        }
-
-        // Close the dropdown if the user clicks outside of it
-        window.onclick = function(event) {
-            if (!event.target.matches('.dropbtn')) {
-                var dropdowns = document.getElementsByClassName("profile-dropdown-content");
-                for (var i = 0; i < dropdowns.length; i++) {
-                    var openDropdown = dropdowns[i];
-                    if (openDropdown.classList.contains('show')) {
-                        openDropdown.classList.remove('show');
-                    }
-                }
-            }
-        }
-
-         // Error Message Simulation (for demonstration)
-        function simulateError() {
-            const errorMessage = document.getElementById("errorMessage");
-            errorMessage.classList.add("show");
-            setTimeout(() => {
-                errorMessage.classList.remove("show");
-            }, 3000); // Hide after 3 seconds
-        }
-
-         document.addEventListener("DOMContentLoaded", function() {
-            //Call simulateError() when the page loads.
-            //simulateError();
-         });
-    </script>
 </body>
 </html>
