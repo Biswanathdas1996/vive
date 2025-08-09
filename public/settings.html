@@ -6,145 +6,214 @@
 <title>Settings</title>
 <style>
 :root {
-  --primary-color: #673ab7;
-  --secondary-color: #ff9800;
-  --bg-color: #f4f4f4;
+  --primary-color: #3f51b5;
+  --secondary-color: #6200ee;
+  --background-color: #f4f4f4;
   --text-color: #333;
   --shadow-color: rgba(0,0,0,0.2);
   --border-radius: 8px;
-  --spacing: 1rem;
 }
 
 body {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background-color: var(--bg-color);
+  font-family: 'Roboto', sans-serif;
+  background-color: var(--background-color);
   color: var(--text-color);
+  line-height: 1.6;
   margin: 0;
-  display: grid;
-  grid-template-rows: auto 1fr auto;
+  display: flex;
+  flex-direction: column;
   min-height: 100vh;
 }
 
-header {
-  background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+nav {
+  background-color: var(--primary-color);
   color: white;
-  padding: var(--spacing);
+  padding: 1rem;
   text-align: center;
 }
 
-main {
-  padding: var(--spacing);
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  grid-gap: var(--spacing);
+h1 {
+  margin: 0;
+  font-size: 1.5rem;
 }
 
-section {
+.container {
+  max-width: 800px;
+  margin: 2rem auto;
+  padding: 1rem;
   background-color: white;
+  box-shadow: 0 2px 8px var(--shadow-color);
   border-radius: var(--border-radius);
-  box-shadow: 0 2px 4px var(--shadow-color);
-  padding: var(--spacing);
 }
 
-.setting-item {
-  display: flex;
-  align-items: center;
-  margin-bottom: var(--spacing);
-}
-
-.setting-item label {
-  flex-grow: 1;
-}
-
-select, input[type="number"], input[type="range"] {
-  border-radius: var(--border-radius);
-  padding: 0.5rem;
-  border: 1px solid #ccc;
-}
-
-
-footer {
-  background-color: var(--bg-color);
-  padding: var(--spacing);
-  text-align: center;
-}
-
-/* Neumorphism styles */
-.neumorphic-box {
+.card {
+  margin-bottom: 2rem;
+  padding: 1rem;
   background-color: #fff;
-  border-radius: 10px;
-  box-shadow: 6px 6px 12px rgba(0, 0, 0, 0.1), -6px -6px 12px rgba(255, 255, 255, 0.7);
-  padding: 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border-radius: var(--border-radius);
 }
 
+.card-title {
+  font-size: 1.2rem;
+  margin-bottom: 1rem;
+}
 
+input[type="text"],
+input[type="email"],
+input[type="password"],
+select,
+input[type="range"] {
+  width: 100%;
+  padding: 0.5rem;
+  margin-bottom: 1rem;
+  border: 1px solid #ccc;
+  border-radius: var(--border-radius);
+  box-sizing: border-box;
+}
+
+input[type="file"] {
+  display: none;
+}
+
+.custom-file-upload {
+  background-color: #eee;
+  padding: 0.5rem;
+  border-radius: var(--border-radius);
+  cursor: pointer;
+}
+
+.toggle-switch {
+  display: inline-block;
+  width: 60px;
+  height: 30px;
+  background-color: #ccc;
+  border-radius: 15px;
+  position: relative;
+}
+
+.toggle-switch input[type="checkbox"] {
+  display: none;
+}
+
+.toggle-switch input[type="checkbox"] + label {
+  display: block;
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+  position: absolute;
+  top: 0;
+  left: 0;
+  background-color: white;
+  border-radius: 15px;
+  transition: transform 0.3s ease;
+}
+
+.toggle-switch input[type="checkbox"]:checked + label {
+  transform: translateX(30px);
+}
+
+.toggle-switch input[type="checkbox"] + label::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 5px;
+  transform: translateY(-50%);
+  width: 20px;
+  height: 20px;
+  background-color: var(--primary-color);
+  border-radius: 50%;
+  transition: transform 0.3s ease;
+}
+
+.toggle-switch input[type="checkbox"]:checked + label::before {
+  transform: translateX(25px) translateY(-50%);
+}
+
+button {
+  background-color: var(--primary-color);
+  color: white;
+  padding: 0.8rem 1.5rem;
+  border: none;
+  border-radius: var(--border-radius);
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+button:hover {
+  background-color: #283593;
+}
+
+/* Responsive Styles */
 @media (max-width: 768px) {
-  main {
-    grid-template-columns: 1fr;
+  .container {
+    padding: 0.5rem;
+  }
+  .card {
+    margin-bottom: 1rem;
   }
 }
 </style>
+</head>
 <body>
-<header>
+<nav>
   <h1>Settings</h1>
-</header>
-<main>
-  <section>
-    <h2>Forecast Parameters</h2>
-    <div class="setting-item">
-      <label for="time-horizon">Time Horizon:</label>
-      <select id="time-horizon">
-        <option value="24">24 Hours</option>
-        <option value="72">72 Hours</option>
-        <option value="168">168 Hours</option>
-      </select>
+</nav>
+<div class="container">
+  <div class="card">
+    <h2 class="card-title">User Profile</h2>
+    <div style="display:flex; align-items: center;">
+      <div style="width: 80px; height: 80px; background-color: lightblue; border-radius: 50%; margin-right: 1rem;"></div>
+      <div>
+          <label for="file-upload">Upload Profile Picture</label>
+          <input type="file" id="file-upload" accept="image/*">
+      </div>
     </div>
-    <div class="setting-item">
-      <label for="data-frequency">Data Frequency:</label>
-      <select id="data-frequency">
-        <option value="hourly">Hourly</option>
-        <option value="daily">Daily</option>
-      </select>
-    </div>
-    <div class="setting-item">
-      <label for="model">Forecasting Model:</label>
-      <select id="model">
-        <option value="modelA">Model A</option>
-        <option value="modelB">Model B</option>
-      </select>
-    </div>
-  </section>
-  <section>
-    <h2>Dashboard Layout</h2>
-    <div class="setting-item">
-      <label for="layout">Layout:</label>
-      <select id="layout">
-        <option value="layout1">Layout 1</option>
-        <option value="layout2">Layout 2</option>
-      </select>
-    </div>
-    </section>
-    <section class="neumorphic-box">
-    <h2>User Preferences</h2>
-    <div class="setting-item">
-      <label for="theme">Theme:</label>
-      <select id="theme">
-        <option value="light">Light</option>
-        <option value="dark">Dark</option>
-      </select>
-    </div>
+    <input type="text" placeholder="Name" value="John Doe">
+    <input type="email" placeholder="Email" value="john.doe@example.com">
+  </div>
 
-  </section>
-</main>
-<footer>
-  <p>&copy; 2023 Weather App</p>
-</footer>
+
+  <div class="card">
+    <h2 class="card-title">Notifications</h2>
+    <label class="toggle-switch">
+      <input type="checkbox" checked>
+      <label>Email</label>
+    </label>
+    <label class="toggle-switch">
+      <input type="checkbox">
+      <label>Push</label>
+    </label>
+  </div>
+
+  <div class="card">
+    <h2 class="card-title">AI Settings</h2>
+    <select>
+      <option value="en">English</option>
+      <option value="es">Spanish</option>
+    </select>
+    <input type="range" min="10" max="100" value="50">
+  </div>
+
+
+  <button>Save Changes</button>
+  <button>Reset to Default</button>
+</div>
 <script>
-// Placeholder for JavaScript functionality (e.g., theme switching, saving settings)
-document.getElementById('theme').addEventListener('change', function() {
-  const theme = this.value;
-  document.body.classList.toggle('dark-theme', theme === 'dark');
-});
+  //Simple File Upload Preview (replace with robust solution for production)
+  const fileUpload = document.getElementById('file-upload');
+  const preview = document.querySelector('.card div div:first-child'); // Selects the div for image preview.
+
+  fileUpload.addEventListener('change', (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        preview.style.backgroundImage = `url(${e.target.result})`;
+      };
+      reader.readAsDataURL(file);
+    }
+  });
 </script>
 </body>
 </html>
