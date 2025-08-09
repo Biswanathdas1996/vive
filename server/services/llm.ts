@@ -117,6 +117,64 @@ CRITICAL: Every single page must have numbered UI elements [1] through [10] mini
     }
   }
 
+  async enhanceFilePrompt(
+    basePrompt: string,
+    fileName: string,
+    analysisResult: AnalysisResult
+  ): Promise<string> {
+    try {
+      const enhancementPrompt = `You are an expert UI/UX designer and modern web developer. Enhance the following file prompt by adding detailed specifications for modern web elements and components. 
+
+Original prompt: ${basePrompt}
+
+Enhance this prompt with specific modern element names and detailed descriptions including:
+
+MODERN UI COMPONENTS TO INCLUDE:
+- Navigation elements: navbar, breadcrumb, mega-menu, sidebar, hamburger menu, tab navigation, pagination, stepper navigation
+- Layout components: hero section, card grid, masonry layout, sidebar layout, sticky header, floating action button
+- Content elements: carousel, accordion, modal, tooltip, popover, drawer, collapse, dropdown, alert, badge, chip, tag
+- Form elements: input fields, select dropdown, multi-select, checkbox, radio buttons, toggle switch, slider, date picker, file upload, search bar
+- Interactive elements: button variants, icon buttons, floating buttons, loading spinners, progress bars, skeleton loaders
+- Data display: tables, charts, graphs, timeline, calendar, statistics cards, comparison tables, pricing tables
+- Media elements: image gallery, video player, audio player, carousel, lightbox, zoom functionality
+- Social elements: testimonials, reviews, ratings, social media feeds, comment sections, share buttons
+- Advanced components: chatbot interface, notification center, user profile menu, dashboard widgets, analytics panels
+
+MODERN DESIGN PATTERNS TO SPECIFY:
+- Glassmorphism effects with backdrop-filter blur
+- Neumorphism with subtle shadows and highlights
+- Gradient overlays and color transitions
+- Micro-interactions and hover animations
+- Dark/light theme toggle functionality
+- Responsive breakpoints for mobile, tablet, desktop
+- Custom CSS properties for consistent theming
+- Modern typography with font stacks and fluid sizing
+- Accessibility features with ARIA labels and semantic HTML
+
+TECHNICAL SPECIFICATIONS TO ADD:
+- CSS Grid and Flexbox layouts
+- CSS custom properties and calc() functions
+- Transform and transition animations
+- Scroll-triggered animations
+- Intersection Observer implementations
+- Progressive web app features
+- Performance optimization techniques
+- SEO-friendly semantic structure
+
+File: ${fileName}
+Project context: ${JSON.stringify(analysisResult)}
+
+Return an enhanced, highly detailed prompt that specifies exactly which modern elements to include, their styling approach, interactions, and technical implementation. Make it comprehensive and specific for production-ready modern web development.`;
+
+      const result = await model.generateContent(enhancementPrompt);
+      const response = await result.response;
+      return response.text().trim();
+    } catch (error) {
+      console.warn(`Failed to enhance prompt for ${fileName}, using original:`, error);
+      return basePrompt; // Fallback to original prompt if enhancement fails
+    }
+  }
+
   async generateFileContent(
     fileName: string,
     analysisResult: AnalysisResult,
@@ -131,6 +189,13 @@ CRITICAL: Every single page must have numbered UI elements [1] through [10] mini
       ) {
         filePrompt = (fileStructure.public.children[fileName] as any).prompt;
       }
+
+      // Enhance the file prompt with AI-generated detailed specifications
+      const enhancedFilePrompt = await this.enhanceFilePrompt(
+        filePrompt,
+        fileName,
+        analysisResult
+      );
 
       const prompt = `You are an expert modern web developer specialized in creating high-quality, contemporary HTML5 applications. Generate a complete, self-contained HTML5 file with ALL styles and JavaScript embedded using <style> and <script> tags. Do NOT reference external CSS, JS, or image files.
 
@@ -167,7 +232,7 @@ CSS STYLE GUIDELINES:
 - Create depth with layered shadows and subtle gradients
 
 File: ${fileName}
-Specific requirements: ${filePrompt}
+Enhanced Specific Requirements: ${enhancedFilePrompt}
 Project context: ${JSON.stringify(analysisResult)}
 
 Generate a production-ready, visually stunning HTML5 application that demonstrates modern web development best practices. Return ONLY the complete HTML content without markdown formatting.`;
