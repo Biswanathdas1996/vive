@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modern Chat Interface</title>
+    <style>
+        :root {
+            --primary-color: #6200ee;
+            --secondary-color: #03dac5;
+            --background-color: #f0f0f0;
+            --text-color: #333;
+            --border-radius: 12px;
+            --transition-speed: 0.3s;
+            --shadow: rgba(0, 0, 0, 0.2);
+            --bg-gradient: linear-gradient(135deg, #6200ee, #03dac5);
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--background-color);
+            color: var(--text-color);
+        }
+
+        header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1rem;
+            background: var(--bg-gradient);
+            box-shadow: 0 4px 6px var(--shadow);
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #fff;
+        }
+
+        nav {
+            display: flex;
+            gap: 1rem;
+        }
+
+        nav a {
+            color: #fff;
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: var(--border-radius);
+            transition: background var(--transition-speed);
+        }
+
+        nav a:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .theme-toggle {
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: 20px;
+            background: rgba(255, 255, 255, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+
+        .chat-box {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+        }
+
+        .sidebar {
+            width: 250px;
+            background: #fff;
+            box-shadow: 0 0 10px var(--shadow);
+            padding: 1rem;
+            overflow-y: auto;
+        }
+
+        .sidebar.collapsed {
+            display: none;
+        }
+
+        .chat-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background: #e0e0e0;
+        }
+
+        .chat-history {
+            flex: 1;
+            padding: 1rem;
+            overflow-y: auto;
+        }
+
+        .message {
+            margin-bottom: 1rem;
+            padding: 1rem;
+            background: #fff;
+            border-radius: var(--border-radius);
+            box-shadow: 0 4px 6px var(--shadow);
+            transition: transform var(--transition-speed);
+        }
+
+        .message:hover {
+            transform: translateY(-5px);
+        }
+
+        .message.ai {
+            background: var(--primary-color);
+            color: #fff;
+        }
+
+        .typing-indicator {
+            display: flex;
+            align-items: center;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.5);
+            border-radius: var(--border-radius);
+            text-align: center;
+        }
+
+        .footer {
+            padding: 1rem;
+            background: #fff;
+            box-shadow: 0 -4px 6px var(--shadow);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .input-area {
+            flex: 1;
+            margin-right: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: #fff;
+            border-radius: var(--border-radius);
+            padding: 0.5rem 1rem;
+            box-shadow: 0 4px 6px var(--shadow);
+        }
+
+        .input-area input {
+            width: 100%;
+            border: none;
+            outline: none;
+            font-size: 1rem;
+        }
+
+        .button {
+            padding: 0.5rem 1rem;
+            background: var(--primary-color);
+            color: #fff;
+            border: none;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            transition: background var(--transition-speed);
+        }
+
+        .button:hover {
+            background: var(--secondary-color);
+        }
+
+        .privacy-banner {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: var(--bg-gradient);
+            color: #fff;
+            padding: 0.5rem 1rem;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            transition: transform var(--transition-speed);
+        }
+
+        .privacy-banner.show {
+            transform: translateY(0);
+        }
+
+        .privacy-banner.hide {
+            transform: translateY(100%);
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="logo">Chat App</div>
+    <nav>
+        <a href="#history">History</a>
+        <a href="#profile">Profile</a>
+        <div class="theme-toggle" aria-label="Toggle Theme">🌓</div>
+    </nav>
+</header>
+
+<div class="container">
+    <div class="chat-box">
+        <aside class="sidebar">
+            <h2>Chat Topics</h2>
+            <p>Topic 1</p>
+            <p>Topic 2</p>
+            <p>Topic 3</p>
+        </aside>
+        
+        <main class="chat-content">
+            <section class="chat-history">
+                <article class="message">
+                    <p>User: Hello, how are you?</p>
+                    <small>Today, 10:00 AM</small>
+                </article>
+                <article class="message ai">
+                    <p>AI: I'm here to assist you!</p>
+                    <small>Today, 10:01 AM</small>
+                </article>
+            </section>
+            
+            <div class="typing-indicator" aria-live="polite">
+                Someone is typing...
+            </div>
+        </main>
+    </div>
+
+    <footer class="footer">
+        <div class="input-area">
+            <input type="text" placeholder="Type a message" aria-label="Message input">
+            <button class="emoji">😊</button>
+        </div>
+        <button class="button">Send</button>
+    </footer>
+</div>
+
+<div class="privacy-banner show">
+    <p>Our privacy policy has been updated. <a href="#" style="color: #fff;">Read more</a></p>
+    <button class="button" onclick="this.parentElement.classList.add('hide')">Dismiss</button>
+</div>
+
+<script>
+    // JavaScript for theme toggle
+    document.querySelector('.theme-toggle').addEventListener('click', () => {
+        document.body.classList.toggle('dark-mode');
+        if (document.body.classList.contains('dark-mode')) {
+            document.documentElement.style.setProperty('--background-color', '#333');
+            document.documentElement.style.setProperty('--text-color', '#eee');
+            document.documentElement.style.setProperty('--primary-color', '#bb86fc');
+            document.documentElement.style.setProperty('--secondary-color', '#03dac5');
+        } else {
+            document.documentElement.style.setProperty('--background-color', '#f0f0f0');
+            document.documentElement.style.setProperty('--text-color', '#333');
+            document.documentElement.style.setProperty('--primary-color', '#6200ee');
+            document.documentElement.style.setProperty('--secondary-color', '#03dac5');
+        }
+    });
+
+    // Mock typing indicator
+    setTimeout(() => {
+        document.querySelector('.typing-indicator').style.display = 'none';
+    }, 3000);
+</script>
+
+</body>
+</html>

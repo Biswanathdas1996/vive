@@ -7,6 +7,7 @@ interface AIConfig {
   provider: string;
   model: string;
   hasApiKey: boolean;
+  keySource: "settings" | "environment" | "none";
   status: string;
 }
 
@@ -67,7 +68,10 @@ export function AIStatusIndicator() {
         <span className={`text-xs ${
           config.hasApiKey ? "text-emerald-400" : "text-red-400"
         }`}>
-          {config.hasApiKey ? "Active" : "No Key"}
+          {config.hasApiKey ? 
+            (config.keySource === "environment" ? "Env Key" : "Settings Key") : 
+            "No Key"
+          }
         </span>
       </div>
     </div>

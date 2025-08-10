@@ -296,10 +296,23 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get("/api/ai-config", async (req, res) => {
     try {
       const config = await enhancedLLMService.getCurrentConfig();
+      const settings = await storage.getSettings("default");
+      
+      // Check if API key is from settings or environment
+      let keySource = "none";
+      if (config.apiKey) {
+        if (settings?.apiKeys?.[config.provider]) {
+          keySource = "settings";
+        } else {
+          keySource = "environment";
+        }
+      }
+      
       res.json({
         provider: config.provider,
         model: config.model,
         hasApiKey: !!config.apiKey,
+        keySource,
         status: "active"
       });
     } catch (error) {
