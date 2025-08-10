@@ -72,7 +72,7 @@ export class EnhancedLLMService {
       };
     }
 
-    const apiKey = settings.apiKeys[settings.aiProvider] || 
+    const apiKey = (settings.apiKeys && settings.apiKeys[settings.aiProvider]) || 
                    process.env[`${settings.aiProvider.toUpperCase()}_API_KEY`] || "";
 
     return {
@@ -373,7 +373,7 @@ Return ONLY the complete modified HTML content, no markdown formatting.`;
    * Get available models for a specific provider
    */
   getAvailableModels(provider: keyof typeof AI_MODELS): string[] {
-    return AI_MODELS[provider].models;
+    return [...AI_MODELS[provider].models];
   }
 
   /**
