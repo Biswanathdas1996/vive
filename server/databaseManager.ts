@@ -108,10 +108,86 @@ class DatabaseManager {
   }
 
   /**
-   * Get connection for settings operations (always uses static connection)
+   * Get connection for settings operations (uses configured DB if available)
    */
-  getSettingsDatabase() {
-    return db;
+  async getSettingsDatabase() {
+    try {
+      // Check if we have a configured database by using static connection first
+      const [settings] = await db
+        .select()
+        .from(schema.settings)
+        .where(eq(schema.settings.userId, "default"));
+
+      // If we have a configured database, use it for all operations
+      if (settings?.databaseConfig?.connectionString) {
+        return await this.getConfiguredDatabase();
+      }
+      
+      // Otherwise use static connection
+      return db;
+    } catch (error) {
+      console.error('Error getting settings database:', error);
+      return db;
+    }
+  }
+
+  /**
+   * Migrate settings from static database to configured database
+   */
+  async migrateSettingsToConfiguredDatabase(databaseConfig: DatabaseConfig) {
+    try {
+      // Get current settings from static database
+      const [currentSettings] = await db
+        .select()
+        .from(schema.settings)
+        .where(eq(schema.settings.userId, "default"));
+
+      if (!currentSettings) {
+        console.log("No settings to migrate");
+        return;
+      }
+
+      // Create connection to new configured database
+      const connectionString = this.buildConnectionString(databaseConfig);
+      const newPool = new Pool({ connectionString });
+      const newDb = drizzle({ client: newPool, schema });
+
+      // Ensure tables exist in new database (run db:push equivalent)
+      try {
+        // Test if settings table exists and is accessible
+        await newDb.select().from(schema.settings).limit(1);
+      } catch (error) {
+        console.log("Settings table might not exist in configured database");
+      }
+
+      // Migrate settings to new database
+      try {
+        await newDb
+          .insert(schema.settings)
+          .values({
+            ...currentSettings,
+            databaseConfig // Include the new database config
+          });
+      } catch (insertError) {
+        // If insert fails due to conflict, update existing record
+        await newDb
+          .update(schema.settings)
+          .set({
+            ...currentSettings,
+            databaseConfig,
+            updatedAt: new Date()
+          })
+          .where(eq(schema.settings.userId, "default"));
+      }
+
+      // Close the migration connection
+      await newPool.end();
+
+      console.log("Settings successfully migrated to configured database");
+    } catch (error) {
+      console.error("Error migrating settings:", error);
+      throw error;
+    }
   }
 }
 

@@ -361,6 +361,16 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const settingsData = req.body;
       const userId = settingsData.userId || "default";
       
+      // If we're setting a new database configuration, migrate settings
+      if (settingsData.databaseConfig?.connectionString) {
+        try {
+          await databaseManager.migrateSettingsToConfiguredDatabase(settingsData.databaseConfig);
+        } catch (migrationError) {
+          console.error("Migration error:", migrationError);
+          // Continue with normal save even if migration fails
+        }
+      }
+      
       const settings = await storage.upsertSettings({
         userId,
         aiProvider: settingsData.aiProvider,

@@ -16,7 +16,7 @@ import {
 } from "@shared/schema";
 import { randomUUID } from "crypto";
 import { db } from "./db";
-import { getDynamicDb } from "./dynamicDb";
+import { databaseManager } from "./databaseManager";
 import { eq } from "drizzle-orm";
 
 // Storage interface for the application
@@ -147,9 +147,8 @@ export class MemStorage implements IStorage {
 
 export class DatabaseStorage implements IStorage {
   private async getDb() {
-    // For now, use static connection to avoid circular dependencies
-    // TODO: Implement proper dynamic switching after initial settings are loaded
-    return db;
+    // Use database manager to get the appropriate connection
+    return await databaseManager.getSettingsDatabase();
   }
 
   async createProject(insertProject: InsertProject): Promise<Project> {

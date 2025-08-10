@@ -400,7 +400,7 @@ export default function SettingsPage() {
                       className="bg-slate-800 border-slate-600 font-mono text-sm"
                     />
                     <p className="text-xs text-slate-500">
-                      Enter a complete PostgreSQL connection string. This will override individual database settings.
+                      Enter a complete PostgreSQL connection string. All settings, API keys, and data will be stored in this database once configured.
                     </p>
                   </div>
 
@@ -448,6 +448,7 @@ export default function SettingsPage() {
                       <li>• Use a complete connection string for easy setup</li>
                       <li>• SSL is enabled by default for security</li>
                       <li>• Test the connection before saving to ensure it works</li>
+                      <li>• All settings, API keys, and application data will be stored in the configured database</li>
                       <li>• The system will fallback to environment variables if no database is configured</li>
                     </ul>
                   </div>
