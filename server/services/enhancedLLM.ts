@@ -64,16 +64,14 @@ export class EnhancedLLMService {
     const settings = await storage.getSettings("default");
     
     if (!settings) {
-      // Default to Gemini with environment variable
-      return {
-        provider: "gemini",
-        model: "gemini-1.5-flash",
-        apiKey: process.env.GOOGLE_API_KEY || process.env.GEMINI_API_KEY || ""
-      };
+      throw new Error("No settings found in database. Please configure AI provider and API keys in settings.");
     }
 
-    const apiKey = (settings.apiKeys && settings.apiKeys[settings.aiProvider]) || 
-                   process.env[`${settings.aiProvider.toUpperCase()}_API_KEY`] || "";
+    const apiKey = (settings.apiKeys && settings.apiKeys[settings.aiProvider]) || "";
+
+    if (!apiKey) {
+      throw new Error(`API key not found for ${settings.aiProvider}. Please configure it in settings.`);
+    }
 
     return {
       provider: settings.aiProvider as keyof typeof AI_MODELS,

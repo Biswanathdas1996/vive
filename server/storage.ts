@@ -159,7 +159,7 @@ export class DatabaseStorage implements IStorage {
   async createChatSession(insertSession: InsertChatSession): Promise<ChatSession> {
     const sessionData = {
       projectId: insertSession.projectId || null,
-      messages: insertSession.messages || [],
+      messages: (insertSession.messages as ChatMessage[]) || [],
       status: insertSession.status || "active"
     };
     

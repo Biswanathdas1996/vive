@@ -292,29 +292,48 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Object storage routes for image uploads
+  // AI Configuration endpoint
+  app.get("/api/ai-config", async (req, res) => {
+    try {
+      const settings = await storage.getSettings("default");
+      
+      if (!settings) {
+        return res.status(404).json({ 
+          error: "No AI configuration found. Please configure AI provider and API keys in settings.",
+          hasApiKey: false,
+          provider: null,
+          model: null
+        });
+      }
+
+      const hasApiKey = !!(settings.apiKeys && settings.apiKeys[settings.aiProvider]);
+      
+      res.json({
+        provider: settings.aiProvider,
+        model: settings.aiModel,
+        hasApiKey,
+        availableProviders: ["gemini", "openai", "claude"]
+      });
+    } catch (error) {
+      res.status(500).json({
+        error: error instanceof Error ? error.message : String(error),
+        hasApiKey: false,
+        provider: null,
+        model: null
+      });
+    }
+  });
+
   // Settings routes
   app.get("/api/settings", async (req, res) => {
     try {
       const userId = req.query.userId as string || "default";
-      let settings = await storage.getSettings(userId);
+      const settings = await storage.getSettings(userId);
       
-      // Return default settings if none exist
       if (!settings) {
-        settings = {
-          id: "default",
-          userId: "default",
-          aiProvider: "gemini",
-          aiModel: "gemini-1.5-flash",
-          apiKeys: {},
-          preferences: {
-            theme: "dark",
-            language: "en",
-            autoSave: true,
-            showAdvanced: false
-          },
-          createdAt: new Date(),
-          updatedAt: new Date()
-        };
+        return res.status(404).json({
+          error: "No settings found. Please configure AI provider and API keys in settings."
+        });
       }
       
       res.json(settings);
