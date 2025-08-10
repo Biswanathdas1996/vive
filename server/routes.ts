@@ -621,6 +621,34 @@ export async function registerRoutes(app: Express): Promise<Server> {
           };
           break;
           
+        case 'enhance_prompt':
+          const enhancedPrompt = await llmService.enhanceFilePrompt(
+            args?.originalPrompt || '',
+            'index.html',
+            args?.context || {}
+          );
+          result = {
+            content: [{
+              type: 'text',
+              text: enhancedPrompt,
+            }],
+          };
+          break;
+          
+        case 'modify_file_content':
+          const modifiedContent = await llmService.modifyFileContent(
+            args?.currentContent || '',
+            args?.instructions || '',
+            args?.fileName || ''
+          );
+          result = {
+            content: [{
+              type: 'text',
+              text: modifiedContent,
+            }],
+          };
+          break;
+          
         default:
           return res.status(400).json({ error: `Unknown tool: ${name}` });
       }

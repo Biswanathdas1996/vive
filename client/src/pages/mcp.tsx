@@ -100,6 +100,45 @@ export default function MCPPage() {
     resourceMutation.mutate(selectedResource);
   };
 
+  // Get example JSON for each tool
+  const getToolExampleJson = (toolName: string): string => {
+    const examples = {
+      'analyze_prompt': {
+        "prompt": "Create a modern e-commerce website with shopping cart and user authentication"
+      },
+      'generate_file_structure': {
+        "analysis": {
+          "features": ["shopping cart", "user auth", "product catalog"],
+          "pages": ["index.html", "products.html", "cart.html"],
+          "technical_requirements": {"responsive": true}
+        },
+        "prompt": "Create a modern e-commerce website"
+      },
+      'generate_file_content': {
+        "fileName": "index.html",
+        "requirements": "Modern homepage with hero section, navigation, and footer",
+        "context": {"theme": "professional", "colors": "blue and white"}
+      },
+      'enhance_prompt': {
+        "originalPrompt": "Create a blog website",
+        "context": {"style": "modern", "features": ["comments", "search"]}
+      },
+      'modify_file_content': {
+        "currentContent": "<html><head><title>My Site</title></head><body><h1>Welcome</h1></body></html>",
+        "instructions": "Add a contact form section with email and message fields",
+        "fileName": "index.html"
+      }
+    };
+    
+    return JSON.stringify(examples[toolName as keyof typeof examples] || {}, null, 2);
+  };
+
+  // Auto-populate textarea when tool selection changes
+  const handleToolSelect = (toolName: string) => {
+    setSelectedTool(toolName);
+    setToolArgs(getToolExampleJson(toolName));
+  };
+
   const tools: MCPTool[] = [
     {
       name: "analyze_prompt",
@@ -135,6 +174,31 @@ export default function MCPPage() {
           context: { type: "object", description: "Additional context" }
         },
         required: ["fileName", "requirements"]
+      }
+    },
+    {
+      name: "enhance_prompt",
+      description: "Enhance a user prompt with additional details and context",
+      inputSchema: {
+        type: "object",
+        properties: {
+          originalPrompt: { type: "string", description: "The original prompt to enhance" },
+          context: { type: "object", description: "Additional context for enhancement" }
+        },
+        required: ["originalPrompt"]
+      }
+    },
+    {
+      name: "modify_file_content",
+      description: "Modify existing file content based on instructions",
+      inputSchema: {
+        type: "object",
+        properties: {
+          currentContent: { type: "string", description: "Current content of the file" },
+          instructions: { type: "string", description: "Instructions for modifying the content" },
+          fileName: { type: "string", description: "Name of the file being modified" }
+        },
+        required: ["currentContent", "instructions", "fileName"]
       }
     }
   ];
@@ -242,7 +306,7 @@ export default function MCPPage() {
                           ? 'border-primary bg-primary/5'
                           : 'border-border hover:border-primary/50'
                       }`}
-                      onClick={() => setSelectedTool(tool.name)}
+                      onClick={() => handleToolSelect(tool.name)}
                     >
                       <h4 className="font-medium">{tool.name}</h4>
                       <p className="text-sm text-muted-foreground mt-1">{tool.description}</p>
@@ -256,28 +320,7 @@ export default function MCPPage() {
                     <div className="space-y-3">
                       <label className="text-sm font-medium">Arguments (JSON)</label>
                       <Textarea
-                        placeholder={selectedTool === 'analyze_prompt'
-                          ? `Example:
-{
-  "prompt": "Create a modern e-commerce website with shopping cart and user authentication"
-}`
-                          : selectedTool === 'generate_file_structure'
-                          ? `Example:
-{
-  "analysis": {
-    "features": ["shopping cart", "user auth", "product catalog"],
-    "pages": ["index.html", "products.html", "cart.html"],
-    "technical_requirements": {"responsive": true}
-  },
-  "prompt": "Create a modern e-commerce website"
-}`
-                          : `Example:
-{
-  "fileName": "index.html",
-  "requirements": "Modern homepage with hero section, navigation, and footer",
-  "context": {"theme": "professional", "colors": "blue and white"}
-}`
-                        }
+                        placeholder="Select a tool above to see example arguments"
                         value={toolArgs}
                         onChange={(e) => setToolArgs(e.target.value)}
                         className="min-h-32 font-mono text-sm"
