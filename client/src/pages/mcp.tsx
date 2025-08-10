@@ -73,8 +73,8 @@ export default function MCPPage() {
   // Resource fetch mutation
   const resourceMutation = useMutation({
     mutationFn: async (uri: string) => {
-      const cleanUri = uri.replace('://', '/');
-      const response = await fetch(`/api/mcp/resources/${cleanUri}`);
+      const encodedUri = encodeURIComponent(uri);
+      const response = await fetch(`/api/mcp/resources/fetch?uri=${encodedUri}`);
       const data = await response.json();
       
       // Return both successful and error responses to display to user

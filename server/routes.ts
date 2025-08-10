@@ -687,47 +687,71 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.get("/api/mcp/resources/:uri(*)", async (req, res) => {
+  app.get("/api/mcp/resources/fetch", async (req, res) => {
     try {
-      const uri = req.params.uri + req.params[0];
+      const uri = req.query.uri as string;
+      
+      if (!uri) {
+        return res.status(400).json({ error: "URI parameter is required" });
+      }
       
       switch (uri) {
-        case 'ai-config/current':
-          const settings = await storage.getSettings('default');
-          res.json({
-            uri: 'ai-config://current',
-            content: {
-              provider: settings?.aiProvider || 'not configured',
-              model: settings?.aiModel || 'not configured',
-              hasApiKey: !!(settings?.apiKeys && Object.keys(settings.apiKeys).length > 0),
-            }
-          });
-          break;
-          
-        case 'ai-providers/list':
-          const providers = await storage.getAllAiProviders();
-          const providerModels = [];
-          
-          for (const provider of providers) {
-            const models = await storage.getAiModelsByProvider(provider.id);
-            providerModels.push({
-              ...provider,
-              models: models,
+        case 'ai-config://current':
+          try {
+            const settings = await storage.getSettings('default');
+            res.json({
+              uri: 'ai-config://current',
+              content: {
+                provider: settings?.aiProvider || 'not configured',
+                model: settings?.aiModel || 'not configured',
+                hasApiKey: !!(settings?.apiKeys && Object.keys(settings.apiKeys).length > 0),
+              }
+            });
+          } catch (error) {
+            res.json({
+              uri: 'ai-config://current',
+              content: {
+                error: 'No AI configuration found',
+                message: 'Please configure AI provider and API keys',
+              }
             });
           }
+          break;
           
-          res.json({
-            uri: 'ai-providers://list',
-            content: providerModels
-          });
+        case 'ai-providers://list':
+          try {
+            const providers = await storage.getAllAiProviders();
+            const providerModels = [];
+            
+            for (const provider of providers) {
+              const models = await storage.getAiModelsByProvider(provider.id);
+              providerModels.push({
+                ...provider,
+                models: models,
+              });
+            }
+            
+            res.json({
+              uri: 'ai-providers://list',
+              content: providerModels
+            });
+          } catch (error) {
+            res.json({
+              uri: 'ai-providers://list',
+              content: { 
+                error: 'Failed to fetch AI providers',
+                message: 'Unable to retrieve provider information'
+              }
+            });
+          }
           break;
           
         default:
           res.status(404).json({ error: `Unknown resource: ${uri}` });
       }
     } catch (error) {
-      console.error("Error getting MCP resource:", error);
-      res.status(500).json({ error: "Failed to get MCP resource" });
+      console.error("Error fetching MCP resource:", error);
+      res.status(500).json({ error: "Failed to fetch MCP resource" });
     }
   });
 
