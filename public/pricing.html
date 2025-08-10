@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Pricing Page">
+<title>Pricing Page</title>
+<style>
+:root {
+  --primary-color: #3498db;
+  --secondary-color: #2ecc71;
+  --accent-color: #e74c3c;
+  --background-color: #f4f4f4;
+  --text-color: #333;
+  --shadow-color: rgba(0,0,0,0.1);
+  --border-radius: 8px;
+}
+
+body {
+  font-family: 'Arial', sans-serif;
+  line-height: 1.6;
+  margin: 0;
+  background-color: var(--background-color);
+  color: var(--text-color);
+  transition: background-color 0.3s ease;
+}
+
+.dark-mode {
+  background-color: #222;
+  color: #eee;
+}
+
+.dark-mode .primary {
+  background-color: #555;
+}
+
+nav {
+  background-color: white;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  box-shadow: 0 2px 4px var(--shadow-color);
+}
+
+.breadcrumb {
+  padding: 10px;
+}
+
+.hero {
+  background: linear-gradient(to bottom right, #4CAF50, #8BC34A);
+  color: white;
+  padding: 2em 0;
+  text-align: center;
+}
+
+.pricing-table {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 20px;
+  padding: 20px;
+}
+
+.pricing-plan {
+  background-color: white;
+  border-radius: var(--border-radius);
+  box-shadow: 0 2px 4px var(--shadow-color);
+  padding: 20px;
+  text-align: center;
+}
+
+.faq {
+  padding: 20px;
+}
+
+.faq-item {
+  margin-bottom: 10px;
+  border-bottom: 1px solid #ccc;
+}
+
+.faq-question {
+  cursor: pointer;
+}
+
+.faq-answer {
+  display: none;
+  padding: 10px;
+}
+
+.testimonial-carousel {
+  padding: 20px;
+}
+
+.footer {
+  background-color: #333;
+  color: white;
+  padding: 20px;
+  text-align: center;
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+  .pricing-table {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Animations and Micro-interactions */
+.pricing-plan:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 4px 8px var(--shadow-color);
+}
+
+.faq-question:hover {
+  text-decoration: underline;
+}
+
+.show {
+  display: block;
+}
+
+</style>
+</head>
+<body>
+<div id="theme-toggle">
+  <label for="theme-switch">Dark Mode:</label>
+  <input type="checkbox" id="theme-switch">
+</div>
+
+<nav>
+  <ul>
+    <li><a href="#">Home</a></li>
+    <li><a href="#">Features</a></li>
+    <li><a href="#">About Us</a></li>
+    <li><a href="#">Contact</a></li>
+  </ul>
+</nav>
+
+<div class="breadcrumb">Home > Pricing</div>
+
+<section class="hero">
+  <h1>Our Pricing Plans</h1>
+  <p>Choose the plan that best fits your needs.</p>
+</section>
+
+<section class="pricing-table">
+  <div class="pricing-plan">
+    <h3>Basic</h3>
+    <p>$9/month</p>
+    <ul>
+      <li>Feature 1</li>
+      <li>Feature 2</li>
+    </ul>
+    <button>Choose Plan</button>
+  </div>
+  <div class="pricing-plan">
+    <h3>Premium</h3>
+    <p>$49/month</p>
+    <ul>
+      <li>Feature 1</li>
+      <li>Feature 2</li>
+      <li>Feature 3</li>
+    </ul>
+    <button>Choose Plan</button>
+  </div>
+</section>
+
+<section class="faq">
+  <h2>Frequently Asked Questions</h2>
+  <div class="faq-item">
+    <h3 class="faq-question">What is included in the Basic plan?</h3>
+    <div class="faq-answer">The Basic plan includes features 1 and 2.</div>
+  </div>
+</section>
+
+<footer class="footer">
+  <p>&copy; 2023 My Company</p>
+</footer>
+
+<script>
+const themeToggle = document.getElementById('theme-switch');
+const body = document.body;
+
+themeToggle.addEventListener('change', () => {
+  body.classList.toggle('dark-mode');
+});
+
+const faqItems = document.querySelectorAll('.faq-item');
+
+faqItems.forEach(item => {
+  const question = item.querySelector('.faq-question');
+  const answer = item.querySelector('.faq-answer');
+
+  question.addEventListener('click', () => {
+    answer.classList.toggle('show');
+  });
+});
+</script>
+</body>
+</html>

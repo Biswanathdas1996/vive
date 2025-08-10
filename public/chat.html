@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chat Application</title>
+<style>
+:root {
+  --primary-color: #4CAF50;
+  --secondary-color: #FFC107;
+  --background-color: #f4f4f4;
+  --text-color: #333;
+  --shadow-color: rgba(0,0,0,0.2);
+  --border-radius: 8px;
+  --font-family: 'Roboto', sans-serif;
+}
+
+body {
+  font-family: var(--font-family);
+  background-color: var(--background-color);
+  margin: 0;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  min-height: 100vh;
+  color: var(--text-color);
+}
+
+.sticky {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background-color: white;
+  box-shadow: 0 2px 4px var(--shadow-color);
+}
+
+header {
+  display: flex;
+  align-items: center;
+  padding: 1rem;
+}
+
+.profile-pic {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background-color: var(--primary-color);
+  margin-right: 1rem;
+  cursor: pointer;
+}
+
+.settings-icon {
+  margin-left: auto;
+  width: 24px;
+  height: 24px;
+  background-color: var(--secondary-color);
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+aside {
+  background-color: #f0f0f0;
+  padding: 1rem;
+  overflow-y: auto;
+}
+
+.conversation {
+  padding: 0.5rem;
+  border-bottom: 1px solid #ddd;
+  display: flex;
+  align-items: center;
+}
+
+.conversation-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background-color: var(--primary-color);
+  margin-right: 1rem;
+}
+
+main {
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.message-container {
+  margin-bottom: 1rem;
+  padding: 1rem;
+  border-radius: var(--border-radius);
+  display: flex;
+  align-items: center;
+}
+
+.user-message {
+  background-color: var(--primary-color);
+  color: white;
+  margin-left: auto;
+}
+
+.chatbot-message {
+  background-color: #eee;
+}
+
+.message-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background-color: var(--secondary-color);
+  margin-right: 1rem;
+}
+
+
+footer {
+  padding: 1rem;
+  text-align: center;
+  background-color: #eee;
+}
+
+.message-input {
+  width: 100%;
+  padding: 0.8rem;
+  border: 1px solid #ccc;
+  border-radius: var(--border-radius);
+  margin-top: 1rem;
+}
+
+.send-button {
+  padding: 0.8rem 1.5rem;
+  background-color: var(--primary-color);
+  color: white;
+  border: none;
+  border-radius: var(--border-radius);
+  cursor: pointer;
+  margin-left: 1rem;
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+  header, aside {
+    flex-direction: column;
+  }
+  aside {
+    display: none; /* Hide sidebar on smaller screens */
+  }
+  main {
+    padding: 0.5rem;
+  }
+
+}
+
+</style>
+</head>
+<body>
+<header class="sticky">
+  <div class="profile-pic"></div>
+  <div class="settings-icon"></div>
+</header>
+
+<aside>
+  <div class="conversation">
+    <div class="conversation-avatar"></div>
+    <div>
+      <span>User 1</span><br>
+      <span>Last Message</span>
+    </div>
+  </div>
+</aside>
+
+<main>
+  <div class="message-container chatbot-message">
+    <div class="message-avatar"></div>
+    <p>Hello there!</p>
+  </div>
+  <div class="message-container user-message">
+    <p>Hi!</p>
+  </div>
+  <input type="text" class="message-input" placeholder="Type your message...">
+  <button class="send-button">Send</button>
+</main>
+
+<footer>
+  &copy; 2023 Chat App. Version 1.0
+</footer>
+
+<script>
+// Basic send message functionality
+const messageInput = document.querySelector('.message-input');
+const sendButton = document.querySelector('.send-button');
+const chatArea = document.querySelector('main');
+
+sendButton.addEventListener('click', () => {
+  const messageText = messageInput.value;
+  if (messageText.trim() !== '') {
+    const newMessage = document.createElement('div');
+    newMessage.classList.add('message-container', 'user-message');
+    newMessage.innerHTML = `<p>${messageText}</p>`;
+    chatArea.insertBefore(newMessage, sendButton); //Insert before send button
+    messageInput.value = '';
+  }
+});
+
+messageInput.addEventListener('keydown', (event) => {
+    if (event.key === 'Enter') {
+      sendButton.click();
+    }
+  });
+
+</script>
+</body>
+</html>

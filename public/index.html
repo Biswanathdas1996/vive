@@ -3,118 +3,202 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>NLP Capabilities Showcase</title>
+<title>Enhanced Landing Page</title>
 <style>
 :root {
-  --primary-color: #4285F4;
-  --secondary-color: #0F9D58;
-  --accent-color: #F4B400;
-  --background-color: #f4f4f4;
+  --primary-color: #673ab7;
+  --secondary-color: #f06292;
+  --accent-color: #4caf50;
+  --bg-color: #f4f4f4;
   --text-color: #333;
   --shadow-color: rgba(0,0,0,0.2);
   --border-radius: 8px;
-  --spacing: 1rem;
 }
 
 body {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-family: 'Arial', sans-serif;
   margin: 0;
-  background-color: var(--background-color);
-  color: var(--text-color);
+  background-color: var(--bg-color);
   line-height: 1.6;
+  color: var(--text-color);
 }
 
+/* Navbar */
 nav {
   position: sticky;
   top: 0;
-  background-color: rgba(255,255,255,0.9);
+  background-color: white;
   box-shadow: 0 2px 4px var(--shadow-color);
-  z-index: 10;
+  z-index: 100;
 }
-
-/*Rest of the CSS Styles would be here.  Due to length constraints this is a skeletal structure.  A full implementation would be significantly longer.*/
-
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+}
+.logo {
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+.nav-links {
+    display: flex;
+}
+.nav-link {
+    margin: 0 1rem;
+    text-decoration: none;
+    color: var(--primary-color);
+}
 .hamburger {
-  display: none; /* Show only on smaller screens */
-}
-
-@media (max-width: 768px) {
-  .hamburger {
-    display: block;
-  }
-  .nav-links {
     display: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+}
+@media (max-width: 768px){
+  .nav-links {
+      display: none;
+  }
+  .hamburger {
+      display: block;
   }
   .nav-links.active {
-    display: block;
-    background-color: #fff;
-    position: absolute;
-    top: 100%;
-    left: 0;
-    width: 100%;
-    z-index:1;
+      display: flex;
+      flex-direction: column;
+      position: absolute;
+      top: 100%;
+      left: 0;
+      background-color: white;
+      width: 100%;
+      padding: 1rem;
+      box-shadow: 0 2px 4px var(--shadow-color);
   }
-
 }
 
+
+/*Hero Section*/
+.hero {
+    background: linear-gradient(to bottom, rgba(255,255,255,0.5), rgba(255,255,255,0.8)), url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%"><defs><linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" style="stop-color:rgb(255,255,255);stop-opacity:1" /><stop offset="100%" style="stop-color:rgb(200,200,200);stop-opacity:1" /></linearGradient></defs><rect width="100%" height="100%" fill="url(#grad1)" /></svg>'); /*Background Gradient*/
+    min-height: 50vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    color: white;
+}
+.hero h1{
+    font-size: 3rem;
+    margin-bottom: 1rem;
+}
+.hero p{
+    font-size: 1.5rem;
+    margin-bottom: 2rem;
+}
+.hero button{
+    background-color: var(--primary-color);
+    color: white;
+    padding: 1rem 2rem;
+    border: none;
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    font-size: 1rem;
+}
+
+
+/*Modal*/
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.4);
+}
+.modal-content {
+    background-color: #fefefe;
+    margin: 15% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+}
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+/*Footer*/
+footer {
+    background-color: #333;
+    color: white;
+    padding: 1rem;
+    text-align: center;
+}
+
+/*Responsive Styles -  add more as needed*/
+@media (max-width: 768px) {
+  .hero h1 { font-size: 2rem; }
+  .hero p { font-size: 1rem; }
+}
 </style>
 </head>
 <body>
+
 <nav>
-  <div class="container">
-    <a href="#" class="logo">NLP Solutions</a>
-    <div class="hamburger" onclick="toggleNav()">
-      <div class="bar"></div>
-      <div class="bar"></div>
-      <div class="bar"></div>
+    <div class="navbar">
+        <div class="logo">ChatBot App</div>
+        <div class="nav-links">
+            <a href="#" class="nav-link">Home</a>
+            <a href="#" class="nav-link">Features</a>
+            <a href="#" class="nav-link">Pricing</a>
+            <a href="#" class="nav-link">About</a>
+            <a href="#" class="nav-link">Contact</a>
+        </div>
+        <div class="hamburger" onclick="toggleNav()">&#9776;</div>
     </div>
-    <ul class="nav-links" id="navLinks">
-      <li><a href="#">Home</a></li>
-      <li><a href="#">Features</a></li>
-      <li><a href="#">About</a></li>
-      <li><a href="#">Contact</a></li>
-    </ul>
-  </div>
 </nav>
 
-<main>
-  <!--Hero Section (Placeholder)-->
-  <section class="hero">
-    <div style="background: linear-gradient(to bottom, #4285F4, #007bff); height: 300px; display: flex; justify-content: center; align-items: center; color: white; text-shadow: 2px 2px 4px #000;">
-      <h1>Welcome to NLP Solutions</h1>
-      <p>Your AI-powered language processing solutions</p>
-    </div>
-  </section>
 
-  <!--Feature Cards (Placeholders)-->
-  <section class="features">
-    <div class="container">
-      <div class="feature-card">Feature 1</div>
-      <div class="feature-card">Feature 2</div>
-      <div class="feature-card">Feature 3</div>
-    </div>
-  </section>
+<section class="hero">
+  <h1>Welcome to Our Chatbot</h1>
+  <p>Your Intelligent Conversational AI</p>
+  <button onclick="openModal()">Start Chatting</button>
+</section>
 
-  <!--Rest of the page content (Placeholders for brevity)-->
-  <section class="testimonials">Testimonials</section>
-  <section class="services">Services</section>
-  <section class="about">About Us</section>
-  <section class="contact">Contact Us</section>
-
-
-</main>
-<footer>
-  <div class="container">
-    &copy; 2024 NLP Solutions
+<div id="myModal" class="modal">
+  <div class="modal-content">
+    <span class="close" onclick="closeModal()">&times;</span>
+    <p>Chat Interface Here</p>
   </div>
+</div>
+
+
+<footer>
+  <p>&copy; 2023 ChatBot App. All rights reserved.</p>
 </footer>
 
 <script>
-function toggleNav() {
-  document.getElementById("navLinks").classList.toggle("active");
+function openModal() {
+  document.getElementById("myModal").style.display = "block";
 }
 
-//Other JavaScript functions (for modals, carousels, etc.) would go here
+function closeModal() {
+  document.getElementById("myModal").style.display = "none";
+}
+
+function toggleNav() {
+    document.querySelector('.nav-links').classList.toggle('active');
+}
 </script>
 
 </body>
