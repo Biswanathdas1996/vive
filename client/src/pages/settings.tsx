@@ -151,8 +151,8 @@ export default function SettingsPage() {
 
   // Mutations for AI provider management
   const deleteProviderMutation = useMutation({
-    mutationFn: async (id: number) => {
-      return apiRequest(`/api/ai-providers/${id}`, { method: "DELETE" });
+    mutationFn: async (id: string) => {
+      return apiRequest("DELETE", `/api/ai-providers/${id}`);
     },
     onSuccess: () => {
       toast({
@@ -172,8 +172,8 @@ export default function SettingsPage() {
   });
 
   const deleteModelMutation = useMutation({
-    mutationFn: async (id: number) => {
-      return apiRequest(`/api/ai-models/${id}`, { method: "DELETE" });
+    mutationFn: async (id: string) => {
+      return apiRequest("DELETE", `/api/ai-models/${id}`);
     },
     onSuccess: () => {
       toast({
@@ -202,7 +202,7 @@ export default function SettingsPage() {
     name: z.string().min(1, "Name is required"),
     key: z.string().min(1, "Key is required"),
     description: z.string().min(1, "Description is required"),
-    providerId: z.coerce.number().min(1, "Please select a provider"),
+    providerId: z.string().min(1, "Please select a provider"),
     isDefault: z.boolean().default(false),
   });
 
@@ -218,7 +218,7 @@ export default function SettingsPage() {
       name: "",
       key: "",
       description: "",
-      providerId: 1,
+      providerId: "",
       isDefault: false,
     },
   });
@@ -226,10 +226,7 @@ export default function SettingsPage() {
   // Create mutations with form handling
   const createProviderMutation = useMutation({
     mutationFn: async (data: z.infer<typeof providerFormSchema>) => {
-      return apiRequest("/api/ai-providers", {
-        method: "POST",
-        body: JSON.stringify(data),
-      });
+      return apiRequest("POST", "/api/ai-providers", data);
     },
     onSuccess: () => {
       toast({
@@ -253,11 +250,8 @@ export default function SettingsPage() {
     mutationFn: async ({
       id,
       ...data
-    }: { id: number } & z.infer<typeof providerFormSchema>) => {
-      return apiRequest(`/api/ai-providers/${id}`, {
-        method: "PUT",
-        body: JSON.stringify(data),
-      });
+    }: { id: string } & z.infer<typeof providerFormSchema>) => {
+      return apiRequest("PUT", `/api/ai-providers/${id}`, data);
     },
     onSuccess: () => {
       toast({
@@ -279,10 +273,7 @@ export default function SettingsPage() {
 
   const createModelMutation = useMutation({
     mutationFn: async (data: z.infer<typeof modelFormSchema>) => {
-      return apiRequest("/api/ai-models", {
-        method: "POST",
-        body: JSON.stringify(data),
-      });
+      return apiRequest("POST", "/api/ai-models", data);
     },
     onSuccess: () => {
       toast({
@@ -306,11 +297,8 @@ export default function SettingsPage() {
     mutationFn: async ({
       id,
       ...data
-    }: { id: number } & z.infer<typeof modelFormSchema>) => {
-      return apiRequest(`/api/ai-models/${id}`, {
-        method: "PUT",
-        body: JSON.stringify(data),
-      });
+    }: { id: string } & z.infer<typeof modelFormSchema>) => {
+      return apiRequest("PUT", `/api/ai-models/${id}`, data);
     },
     onSuccess: () => {
       toast({
@@ -347,7 +335,7 @@ export default function SettingsPage() {
         name: editingModel.name,
         key: editingModel.key,
         description: editingModel.description,
-        providerId: Number(editingModel.providerId),
+        providerId: editingModel.providerId,
         isDefault: editingModel.isDefault,
       });
     }
@@ -649,7 +637,7 @@ export default function SettingsPage() {
                           name: "",
                           key: "",
                           description: "",
-                          providerId: Number(providers[0]?.id) || 1,
+                          providerId: providers[0]?.id || "",
                           isDefault: false,
                         });
                         setShowAddModel(true);
@@ -685,12 +673,7 @@ export default function SettingsPage() {
                           <div className="flex space-x-2">
                             <Button
                               onClick={() => {
-                                // Ensure the model data is properly typed before setting
-                                const typedModel = {
-                                  ...model,
-                                  providerId: Number(model.providerId)
-                                };
-                                setEditingModel(typedModel);
+                                setEditingModel(model);
                               }}
                               size="sm"
                               variant="outline"
@@ -1198,9 +1181,14 @@ export default function SettingsPage() {
           </DialogHeader>
           <Form {...modelForm}>
             <form
-              onSubmit={modelForm.handleSubmit((data) =>
-                updateModelMutation.mutate({ id: editingModel!.id, ...data }),
-              )}
+              onSubmit={modelForm.handleSubmit((data) => {
+                if (editingModel) {
+                  updateModelMutation.mutate({ 
+                    id: editingModel.id,
+                    ...data 
+                  });
+                }
+              })}
               className="space-y-4"
             >
               <FormField
@@ -1211,20 +1199,15 @@ export default function SettingsPage() {
                     <FormLabel>Provider</FormLabel>
                     <FormControl>
                       <Select
-                        value={field.value?.toString() || ""}
-                        onValueChange={(value) => {
-                          const numValue = parseInt(value, 10);
-                          if (!isNaN(numValue)) {
-                            field.onChange(numValue);
-                          }
-                        }}
+                        value={field.value || ""}
+                        onValueChange={(value) => field.onChange(value)}
                       >
                         <SelectTrigger className="bg-slate-800 border-slate-600">
                           <SelectValue placeholder="Select a provider" />
                         </SelectTrigger>
                         <SelectContent className="bg-slate-800 border-slate-600">
                           {providers.map((provider) => (
-                            <SelectItem key={provider.id} value={provider.id.toString()}>
+                            <SelectItem key={provider.id} value={provider.id}>
                               {provider.icon} {provider.name}
                             </SelectItem>
                           ))}
