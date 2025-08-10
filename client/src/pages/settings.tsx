@@ -347,7 +347,7 @@ export default function SettingsPage() {
         name: editingModel.name,
         key: editingModel.key,
         description: editingModel.description,
-        providerId: editingModel.providerId,
+        providerId: Number(editingModel.providerId),
         isDefault: editingModel.isDefault,
       });
     }
@@ -649,7 +649,7 @@ export default function SettingsPage() {
                           name: "",
                           key: "",
                           description: "",
-                          providerId: providers[0]?.id || 1,
+                          providerId: Number(providers[0]?.id) || 1,
                           isDefault: false,
                         });
                         setShowAddModel(true);
@@ -685,7 +685,12 @@ export default function SettingsPage() {
                           <div className="flex space-x-2">
                             <Button
                               onClick={() => {
-                                setEditingModel(model);
+                                // Ensure the model data is properly typed before setting
+                                const typedModel = {
+                                  ...model,
+                                  providerId: Number(model.providerId)
+                                };
+                                setEditingModel(typedModel);
                               }}
                               size="sm"
                               variant="outline"
