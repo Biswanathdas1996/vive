@@ -329,11 +329,22 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get("/api/settings", async (req, res) => {
     try {
       const userId = req.query.userId as string || "default";
-      const settings = await storage.getSettings(userId);
+      let settings = await storage.getSettings(userId);
       
+      // Create default settings if none exist
       if (!settings) {
-        return res.status(404).json({
-          error: "No settings found. Please configure AI provider and API keys in settings."
+        settings = await storage.upsertSettings({
+          userId,
+          aiProvider: "gemini",
+          aiModel: "gemini-1.5-flash",
+          apiKeys: {},
+          preferences: {
+            theme: ["dark"],
+            language: ["en"],
+            autoSave: [true],
+            showAdvanced: [false]
+          },
+          databaseConfig: null
         });
       }
       
@@ -396,11 +407,16 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const settings = await storage.getSettings("default");
       
       res.json({
-        configured: !!(settings?.databaseConfig),
-        usingEnvironment: !settings?.databaseConfig && !!process.env.DATABASE_URL,
-        hasEnvironmentFallback: !!process.env.DATABASE_URL
+        configured: !!(settings?.databaseConfig?.connectionString),
+        usingEnvironment: !settings?.databaseConfig?.connectionString && !!process.env.DATABASE_URL,
+        hasEnvironmentFallback: !!process.env.DATABASE_URL,
+        currentConfig: settings?.databaseConfig ? {
+          hasConnectionString: !!settings.databaseConfig.connectionString,
+          ssl: settings.databaseConfig.ssl
+        } : null
       });
     } catch (error) {
+      console.error('Database status error:', error);
       res.status(500).json({
         configured: false,
         usingEnvironment: false,
