@@ -159,7 +159,7 @@ export default function SettingsPage() {
     name: z.string().min(1, "Name is required"),
     key: z.string().min(1, "Key is required"),
     description: z.string().min(1, "Description is required"),
-    providerId: z.coerce.number().min(1, "Provider is required"),
+    providerId: z.coerce.number().min(1, "Please select a provider"),
     isDefault: z.boolean().default(false),
   });
 
@@ -255,8 +255,17 @@ export default function SettingsPage() {
         providerId: editingModel.providerId,
         isDefault: editingModel.isDefault,
       });
+    } else {
+      // Reset to default values when not editing
+      modelForm.reset({
+        name: "",
+        key: "",
+        description: "",
+        providerId: providers[0]?.id || 1,
+        isDefault: false,
+      });
     }
-  }, [editingModel, modelForm]);
+  }, [editingModel, modelForm, providers]);
 
   const handleProviderChange = (providerKey: string) => {
     const provider = providers.find(p => p.key === providerKey);
@@ -525,7 +534,9 @@ export default function SettingsPage() {
                           </div>
                           <div className="flex space-x-2">
                             <Button
-                              onClick={() => setEditingModel(model)}
+                              onClick={() => {
+                                setEditingModel(model);
+                              }}
                               size="sm"
                               variant="outline"
                               className="border-slate-600"
@@ -912,9 +923,12 @@ export default function SettingsPage() {
                   <FormItem>
                     <FormLabel>Provider</FormLabel>
                     <FormControl>
-                      <Select value={field.value?.toString()} onValueChange={(value) => field.onChange(Number(value))}>
+                      <Select 
+                        value={field.value?.toString() || ""} 
+                        onValueChange={(value) => field.onChange(Number(value))}
+                      >
                         <SelectTrigger className="bg-slate-800 border-slate-600">
-                          <SelectValue />
+                          <SelectValue placeholder="Select a provider" />
                         </SelectTrigger>
                         <SelectContent className="bg-slate-800 border-slate-600">
                           {providers.map((provider) => (
