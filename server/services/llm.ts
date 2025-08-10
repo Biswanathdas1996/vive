@@ -27,24 +27,10 @@ const ERROR_MESSAGES = {
   FILE_MODIFICATION_FAILED: "Failed to modify file content",
 } as const;
 
-// AI Model configurations
-const AI_MODELS = {
-  gemini: {
-    models: ["gemini-1.5-flash", "gemini-1.5-pro", "gemini-2.0-flash-exp"],
-    defaultModel: "gemini-1.5-flash"
-  },
-  openai: {
-    models: ["gpt-4o", "gpt-4o-mini", "gpt-4-turbo", "gpt-3.5-turbo"],
-    defaultModel: "gpt-4o"
-  },
-  claude: {
-    models: ["claude-sonnet-4-20250514", "claude-3-7-sonnet-20250219", "claude-3-5-sonnet-20241022", "claude-3-haiku-20240307"],
-    defaultModel: "claude-sonnet-4-20250514"
-  }
-} as const;
+// AI provider validation now comes from database
 
 interface AIConfig {
-  provider: keyof typeof AI_MODELS;
+  provider: string;
   model: string;
   apiKey: string;
 }
@@ -59,14 +45,26 @@ async function getAIConfig(): Promise<AIConfig> {
     throw new Error("No settings found in database. Please configure AI provider and API keys in settings.");
   }
 
-  const apiKey = (settings.apiKeys && settings.apiKeys[settings.aiProvider]) || "";
+  // Validate provider exists in database
+  const provider = await storage.getAiProviderByKey(settings.aiProvider);
+  if (!provider) {
+    throw new Error(`AI provider '${settings.aiProvider}' not found in database.`);
+  }
 
+  // Validate model exists for this provider
+  const models = await storage.getAiModelsByProvider(provider.id);
+  const selectedModel = models.find(m => m.key === settings.aiModel);
+  if (!selectedModel) {
+    throw new Error(`AI model '${settings.aiModel}' not found for provider '${settings.aiProvider}'.`);
+  }
+
+  const apiKey = (settings.apiKeys && settings.apiKeys[settings.aiProvider]) || "";
   if (!apiKey) {
     throw new Error(`API key not found for ${settings.aiProvider}. Please configure it in settings.`);
   }
 
   return {
-    provider: settings.aiProvider as keyof typeof AI_MODELS,
+    provider: settings.aiProvider,
     model: settings.aiModel,
     apiKey
   };

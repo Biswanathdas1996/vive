@@ -7,15 +7,21 @@ import {
   type InsertGeneratedFile,
   type Settings,
   type InsertSettings,
+  type AiProvider,
+  type InsertAiProvider,
+  type AiModel,
+  type InsertAiModel,
   type ChatMessage,
   projects,
   chatSessions,
   generatedFiles,
-  settings
+  settings,
+  aiProviders,
+  aiModels
 } from "@shared/schema";
 import { randomUUID } from "crypto";
 import { db } from "./db";
-import { eq } from "drizzle-orm";
+import { eq, sql, and } from "drizzle-orm";
 
 // Storage interface for the application
 export interface IStorage {
@@ -36,6 +42,22 @@ export interface IStorage {
   // Settings methods
   getSettings(userId?: string): Promise<Settings | undefined>;
   upsertSettings(settings: InsertSettings): Promise<Settings>;
+  
+  // AI Provider methods
+  getAllAiProviders(): Promise<AiProvider[]>;
+  getAiProvider(id: string): Promise<AiProvider | undefined>;
+  getAiProviderByKey(key: string): Promise<AiProvider | undefined>;
+  createAiProvider(provider: InsertAiProvider): Promise<AiProvider>;
+  updateAiProvider(id: string, updates: Partial<AiProvider>): Promise<AiProvider | undefined>;
+  deleteAiProvider(id: string): Promise<boolean>;
+  
+  // AI Model methods
+  getAllAiModels(): Promise<AiModel[]>;
+  getAiModelsByProvider(providerId: string): Promise<AiModel[]>;
+  getAiModel(id: string): Promise<AiModel | undefined>;
+  createAiModel(model: InsertAiModel): Promise<AiModel>;
+  updateAiModel(id: string, updates: Partial<AiModel>): Promise<AiModel | undefined>;
+  deleteAiModel(id: string): Promise<boolean>;
 }
 
 export class MemStorage implements IStorage {
@@ -239,6 +261,94 @@ export class DatabaseStorage implements IStorage {
       .returning();
     
     return created;
+  }
+
+  // AI Provider methods
+  async getAllAiProviders(): Promise<AiProvider[]> {
+    return await db.select().from(aiProviders).where(eq(aiProviders.isActive, true));
+  }
+
+  async getAiProvider(id: string): Promise<AiProvider | undefined> {
+    const [provider] = await db.select().from(aiProviders).where(eq(aiProviders.id, id));
+    return provider || undefined;
+  }
+
+  async getAiProviderByKey(key: string): Promise<AiProvider | undefined> {
+    const [provider] = await db.select().from(aiProviders).where(eq(aiProviders.key, key));
+    return provider || undefined;
+  }
+
+  async createAiProvider(insertProvider: InsertAiProvider): Promise<AiProvider> {
+    const [provider] = await db
+      .insert(aiProviders)
+      .values(insertProvider)
+      .returning();
+    return provider;
+  }
+
+  async updateAiProvider(id: string, updates: Partial<AiProvider>): Promise<AiProvider | undefined> {
+    const [provider] = await db
+      .update(aiProviders)
+      .set({
+        ...updates,
+        updatedAt: new Date()
+      })
+      .where(eq(aiProviders.id, id))
+      .returning();
+    return provider || undefined;
+  }
+
+  async deleteAiProvider(id: string): Promise<boolean> {
+    const result = await db
+      .update(aiProviders)
+      .set({ isActive: false, updatedAt: new Date() })
+      .where(eq(aiProviders.id, id))
+      .returning();
+    return result.length > 0;
+  }
+
+  // AI Model methods
+  async getAllAiModels(): Promise<AiModel[]> {
+    return await db.select().from(aiModels).where(eq(aiModels.isActive, true));
+  }
+
+  async getAiModelsByProvider(providerId: string): Promise<AiModel[]> {
+    return await db.select().from(aiModels)
+      .where(and(eq(aiModels.providerId, providerId), eq(aiModels.isActive, true)));
+  }
+
+  async getAiModel(id: string): Promise<AiModel | undefined> {
+    const [model] = await db.select().from(aiModels).where(eq(aiModels.id, id));
+    return model || undefined;
+  }
+
+  async createAiModel(insertModel: InsertAiModel): Promise<AiModel> {
+    const [model] = await db
+      .insert(aiModels)
+      .values(insertModel)
+      .returning();
+    return model;
+  }
+
+  async updateAiModel(id: string, updates: Partial<AiModel>): Promise<AiModel | undefined> {
+    const [model] = await db
+      .update(aiModels)
+      .set({
+        ...updates,
+        updatedAt: new Date()
+      })
+      .where(eq(aiModels.id, id))
+      .returning();
+    return model || undefined;
+  }
+
+  async deleteAiModel(id: string): Promise<boolean> {
+    const result = await db
+      .update(aiModels)
+      .set({ isActive: false, updatedAt: new Date() })
+      .where(eq(aiModels.id, id))
+      .returning();
+    return result.length > 0;
   }
 }
 

@@ -29,6 +29,29 @@ export const generatedFiles = pgTable("generated_files", {
   createdAt: timestamp("created_at").defaultNow(),
 });
 
+export const aiProviders = pgTable("ai_providers", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  key: text("key").notNull().unique(),
+  name: text("name").notNull(),
+  icon: text("icon").notNull(),
+  description: text("description"),
+  isActive: boolean("is_active").default(true),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+export const aiModels = pgTable("ai_models", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  providerId: varchar("provider_id").references(() => aiProviders.id),
+  key: text("key").notNull(),
+  name: text("name").notNull(),
+  description: text("description"),
+  isActive: boolean("is_active").default(true),
+  isDefault: boolean("is_default").default(false),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
 export const settings = pgTable("settings", {
   id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
   userId: varchar("user_id").default("default"),
@@ -100,6 +123,18 @@ export const insertGeneratedFileSchema = createInsertSchema(generatedFiles).omit
   createdAt: true,
 });
 
+export const insertAiProviderSchema = createInsertSchema(aiProviders).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+});
+
+export const insertAiModelSchema = createInsertSchema(aiModels).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+});
+
 export const insertSettingsSchema = createInsertSchema(settings).omit({
   id: true,
   createdAt: true,
@@ -109,9 +144,13 @@ export const insertSettingsSchema = createInsertSchema(settings).omit({
 export type InsertProject = z.infer<typeof insertProjectSchema>;
 export type InsertChatSession = z.infer<typeof insertChatSessionSchema>;
 export type InsertGeneratedFile = z.infer<typeof insertGeneratedFileSchema>;
+export type InsertAiProvider = z.infer<typeof insertAiProviderSchema>;
+export type InsertAiModel = z.infer<typeof insertAiModelSchema>;
 export type InsertSettings = z.infer<typeof insertSettingsSchema>;
 
 export type Project = typeof projects.$inferSelect;
 export type ChatSession = typeof chatSessions.$inferSelect;
 export type GeneratedFile = typeof generatedFiles.$inferSelect;
+export type AiProvider = typeof aiProviders.$inferSelect;
+export type AiModel = typeof aiModels.$inferSelect;
 export type Settings = typeof settings.$inferSelect;

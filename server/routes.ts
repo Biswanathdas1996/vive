@@ -365,6 +365,115 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // AI Providers routes
+  app.get("/api/ai-providers", async (req, res) => {
+    try {
+      const providers = await storage.getAllAiProviders();
+      res.json(providers);
+    } catch (error) {
+      res.status(500).json({ 
+        error: error instanceof Error ? error.message : String(error) 
+      });
+    }
+  });
+
+  app.post("/api/ai-providers", async (req, res) => {
+    try {
+      const provider = await storage.createAiProvider(req.body);
+      res.json(provider);
+    } catch (error) {
+      res.status(500).json({ 
+        error: error instanceof Error ? error.message : String(error) 
+      });
+    }
+  });
+
+  app.put("/api/ai-providers/:id", async (req, res) => {
+    try {
+      const { id } = req.params;
+      const provider = await storage.updateAiProvider(id, req.body);
+      if (!provider) {
+        return res.status(404).json({ error: "Provider not found" });
+      }
+      res.json(provider);
+    } catch (error) {
+      res.status(500).json({ 
+        error: error instanceof Error ? error.message : String(error) 
+      });
+    }
+  });
+
+  app.delete("/api/ai-providers/:id", async (req, res) => {
+    try {
+      const { id } = req.params;
+      const success = await storage.deleteAiProvider(id);
+      if (!success) {
+        return res.status(404).json({ error: "Provider not found" });
+      }
+      res.json({ success: true });
+    } catch (error) {
+      res.status(500).json({ 
+        error: error instanceof Error ? error.message : String(error) 
+      });
+    }
+  });
+
+  // AI Models routes
+  app.get("/api/ai-models", async (req, res) => {
+    try {
+      const { providerId } = req.query;
+      const models = providerId 
+        ? await storage.getAiModelsByProvider(providerId as string)
+        : await storage.getAllAiModels();
+      res.json(models);
+    } catch (error) {
+      res.status(500).json({ 
+        error: error instanceof Error ? error.message : String(error) 
+      });
+    }
+  });
+
+  app.post("/api/ai-models", async (req, res) => {
+    try {
+      const model = await storage.createAiModel(req.body);
+      res.json(model);
+    } catch (error) {
+      res.status(500).json({ 
+        error: error instanceof Error ? error.message : String(error) 
+      });
+    }
+  });
+
+  app.put("/api/ai-models/:id", async (req, res) => {
+    try {
+      const { id } = req.params;
+      const model = await storage.updateAiModel(id, req.body);
+      if (!model) {
+        return res.status(404).json({ error: "Model not found" });
+      }
+      res.json(model);
+    } catch (error) {
+      res.status(500).json({ 
+        error: error instanceof Error ? error.message : String(error) 
+      });
+    }
+  });
+
+  app.delete("/api/ai-models/:id", async (req, res) => {
+    try {
+      const { id } = req.params;
+      const success = await storage.deleteAiModel(id);
+      if (!success) {
+        return res.status(404).json({ error: "Model not found" });
+      }
+      res.json({ success: true });
+    } catch (error) {
+      res.status(500).json({ 
+        error: error instanceof Error ? error.message : String(error) 
+      });
+    }
+  });
+
   app.post("/api/objects/upload", async (req, res) => {
     try {
       const objectStorageService = new ObjectStorageService();

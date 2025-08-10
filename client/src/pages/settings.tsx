@@ -9,45 +9,32 @@ import { Badge } from "@/components/ui/badge";
 import { Switch } from "@/components/ui/switch";
 import { Separator } from "@/components/ui/separator";
 import { useToast } from "@/hooks/use-toast";
-import { Settings, Save, Zap, Brain, MessageSquare, Key, Monitor } from "lucide-react";
+import { Settings, Save, Zap, Brain, MessageSquare, Key, Monitor, Plus, Edit, Trash2 } from "lucide-react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
 
-// Available AI models configuration
-const AI_MODELS = {
-  gemini: {
-    name: "Google Gemini",
-    icon: "🧠",
-    models: [
-      { id: "gemini-1.5-flash", name: "Gemini 1.5 Flash", description: "Fast and efficient" },
-      { id: "gemini-1.5-pro", name: "Gemini 1.5 Pro", description: "Advanced reasoning" },
-      { id: "gemini-2.0-flash-exp", name: "Gemini 2.0 Flash (Experimental)", description: "Latest experimental" }
-    ]
-  },
-  openai: {
-    name: "OpenAI",
-    icon: "🤖",
-    models: [
-      { id: "gpt-4o", name: "GPT-4o", description: "Latest multimodal model" },
-      { id: "gpt-4o-mini", name: "GPT-4o Mini", description: "Faster and cheaper" },
-      { id: "gpt-4-turbo", name: "GPT-4 Turbo", description: "Advanced reasoning" },
-      { id: "gpt-3.5-turbo", name: "GPT-3.5 Turbo", description: "Cost-effective" }
-    ]
-  },
-  claude: {
-    name: "Anthropic Claude",
-    icon: "⚡",
-    models: [
-      { id: "claude-sonnet-4-20250514", name: "Claude 4.0 Sonnet", description: "Latest and most capable" },
-      { id: "claude-3-7-sonnet-20250219", name: "Claude 3.7 Sonnet", description: "Enhanced capabilities" },
-      { id: "claude-3-5-sonnet-20241022", name: "Claude 3.5 Sonnet", description: "Balanced performance" },
-      { id: "claude-3-haiku-20240307", name: "Claude 3 Haiku", description: "Fast and efficient" }
-    ]
-  }
-} as const;
+// Database-driven AI provider and model types
+interface AiProvider {
+  id: string;
+  key: string;
+  name: string;
+  icon: string;
+  description?: string;
+  isActive: boolean;
+}
+
+interface AiModel {
+  id: string;
+  providerId: string;
+  key: string;
+  name: string;
+  description?: string;
+  isActive: boolean;
+  isDefault: boolean;
+}
 
 interface AppSettings {
-  aiProvider: keyof typeof AI_MODELS;
+  aiProvider: string;
   aiModel: string;
   apiKeys: Record<string, string>;
   preferences: {
@@ -67,6 +54,16 @@ export default function SettingsPage() {
     queryKey: ["/api/settings"],
   });
 
+  // Fetch AI providers from database
+  const { data: providers = [], isLoading: providersLoading } = useQuery<AiProvider[]>({
+    queryKey: ["/api/ai-providers"],
+  });
+
+  // Fetch AI models from database
+  const { data: models = [], isLoading: modelsLoading } = useQuery<AiModel[]>({
+    queryKey: ["/api/ai-models"],
+  });
+
   const [formData, setFormData] = useState<AppSettings>({
     aiProvider: "gemini",
     aiModel: "gemini-1.5-flash",
@@ -80,6 +77,10 @@ export default function SettingsPage() {
   });
 
   const [activeTab, setActiveTab] = useState("models");
+  const [showAddProvider, setShowAddProvider] = useState(false);
+  const [showAddModel, setShowAddModel] = useState(false);
+  const [editingProvider, setEditingProvider] = useState<AiProvider | null>(null);
+  const [editingModel, setEditingModel] = useState<AiModel | null>(null);
 
   // Update form data when settings are loaded
   useEffect(() => {
@@ -107,11 +108,44 @@ export default function SettingsPage() {
     },
   });
 
-  const handleProviderChange = (provider: keyof typeof AI_MODELS) => {
-    const defaultModel = AI_MODELS[provider].models[0].id;
+  // Mutations for AI provider management
+  const deleteProviderMutation = useMutation({
+    mutationFn: async (id: number) => {
+      return apiRequest(`/api/ai-providers/${id}`, { method: "DELETE" });
+    },
+    onSuccess: () => {
+      toast({ title: "Provider deleted", description: "AI provider deleted successfully." });
+      queryClient.invalidateQueries({ queryKey: ["/api/ai-providers"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/ai-models"] });
+    },
+    onError: (error: any) => {
+      toast({ title: "Error", description: error?.message || "Failed to delete provider.", variant: "destructive" });
+    },
+  });
+
+  const deleteModelMutation = useMutation({
+    mutationFn: async (id: number) => {
+      return apiRequest(`/api/ai-models/${id}`, { method: "DELETE" });
+    },
+    onSuccess: () => {
+      toast({ title: "Model deleted", description: "AI model deleted successfully." });
+      queryClient.invalidateQueries({ queryKey: ["/api/ai-models"] });
+    },
+    onError: (error: any) => {
+      toast({ title: "Error", description: error?.message || "Failed to delete model.", variant: "destructive" });
+    },
+  });
+
+  const handleProviderChange = (providerKey: string) => {
+    const provider = providers.find(p => p.key === providerKey);
+    if (!provider) return;
+    
+    const providerModels = models.filter(m => m.providerId === provider.id);
+    const defaultModel = providerModels.find(m => m.isDefault)?.key || providerModels[0]?.key || "";
+    
     setFormData(prev => ({
       ...prev,
-      aiProvider: provider,
+      aiProvider: providerKey,
       aiModel: defaultModel
     }));
   };
@@ -130,16 +164,21 @@ export default function SettingsPage() {
     saveSettingsMutation.mutate(formData);
   };
 
-  const getProviderStatus = (provider: keyof typeof AI_MODELS) => {
-    const hasApiKey = formData.apiKeys[provider];
-    const isSelected = formData.aiProvider === provider;
+  const getProviderStatus = (providerKey: string) => {
+    const hasApiKey = formData.apiKeys[providerKey];
+    const isSelected = formData.aiProvider === providerKey;
     
     if (isSelected && hasApiKey) return { status: "active", color: "bg-green-500" };
     if (hasApiKey) return { status: "configured", color: "bg-blue-500" };
     return { status: "inactive", color: "bg-gray-500" };
   };
 
-  if (isLoading) {
+  // Get current provider and its models
+  const currentProvider = providers.find(p => p.key === formData.aiProvider);
+  const currentProviderModels = currentProvider ? models.filter(m => m.providerId === currentProvider.id) : [];
+  const currentModel = currentProviderModels.find(m => m.key === formData.aiModel);
+
+  if (isLoading || providersLoading || modelsLoading) {
     return (
       <div className="min-h-screen bg-slate-950 text-white p-6 flex items-center justify-center">
         <div className="text-center">
@@ -163,10 +202,14 @@ export default function SettingsPage() {
         </div>
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-          <TabsList className="grid w-full grid-cols-3 bg-slate-800">
+          <TabsList className="grid w-full grid-cols-4 bg-slate-800">
             <TabsTrigger value="models" className="flex items-center space-x-2">
               <Brain className="w-4 h-4" />
               <span>AI Models</span>
+            </TabsTrigger>
+            <TabsTrigger value="management" className="flex items-center space-x-2">
+              <Settings className="w-4 h-4" />
+              <span>AI Management</span>
             </TabsTrigger>
             <TabsTrigger value="keys" className="flex items-center space-x-2">
               <Key className="w-4 h-4" />
@@ -197,11 +240,11 @@ export default function SettingsPage() {
                     </Badge>
                   </div>
                   <div className="flex items-center space-x-3">
-                    <span className="text-2xl">{AI_MODELS[formData.aiProvider]?.icon}</span>
+                    <span className="text-2xl">{currentProvider?.icon || "🤖"}</span>
                     <div>
-                      <p className="font-medium">{AI_MODELS[formData.aiProvider]?.name}</p>
+                      <p className="font-medium">{currentProvider?.name || "No Provider Selected"}</p>
                       <p className="text-sm text-slate-400">
-                        {AI_MODELS[formData.aiProvider]?.models.find(m => m.id === formData.aiModel)?.name}
+                        {currentModel?.name || "No Model Selected"}
                       </p>
                     </div>
                   </div>
@@ -211,19 +254,20 @@ export default function SettingsPage() {
                 <div className="space-y-4">
                   <Label className="text-base font-medium">Select AI Provider</Label>
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    {Object.entries(AI_MODELS).map(([key, provider]) => {
-                      const status = getProviderStatus(key as keyof typeof AI_MODELS);
-                      const isSelected = formData.aiProvider === key;
+                    {providers.map((provider) => {
+                      const status = getProviderStatus(provider.key);
+                      const isSelected = formData.aiProvider === provider.key;
+                      const providerModels = models.filter(m => m.providerId === provider.id);
                       
                       return (
                         <Card
-                          key={key}
+                          key={provider.id}
                           className={`cursor-pointer transition-colors border-2 ${
                             isSelected 
                               ? "border-blue-500 bg-slate-800" 
                               : "border-slate-600 bg-slate-900 hover:border-slate-500"
                           }`}
-                          onClick={() => handleProviderChange(key as keyof typeof AI_MODELS)}
+                          onClick={() => handleProviderChange(provider.key)}
                         >
                           <CardContent className="p-4">
                             <div className="flex items-center justify-between mb-3">
@@ -232,7 +276,7 @@ export default function SettingsPage() {
                             </div>
                             <h3 className="font-semibold mb-1">{provider.name}</h3>
                             <p className="text-xs text-slate-400">
-                              {provider.models.length} models available
+                              {providerModels.length} models available
                             </p>
                           </CardContent>
                         </Card>
@@ -249,8 +293,8 @@ export default function SettingsPage() {
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent className="bg-slate-800 border-slate-600">
-                      {AI_MODELS[formData.aiProvider]?.models.map((model) => (
-                        <SelectItem key={model.id} value={model.id}>
+                      {currentProviderModels.map((model) => (
+                        <SelectItem key={model.id} value={model.key}>
                           <div className="flex flex-col">
                             <span className="font-medium">{model.name}</span>
                             <span className="text-xs text-slate-400">{model.description}</span>
@@ -264,6 +308,120 @@ export default function SettingsPage() {
             </Card>
           </TabsContent>
 
+          {/* AI Management Tab */}
+          <TabsContent value="management" className="space-y-6">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              {/* AI Providers Management */}
+              <Card className="bg-slate-900 border-slate-700">
+                <CardHeader>
+                  <div className="flex items-center justify-between">
+                    <CardTitle className="flex items-center space-x-2">
+                      <Brain className="w-5 h-5 text-blue-500" />
+                      <span>AI Providers</span>
+                    </CardTitle>
+                    <Button
+                      onClick={() => setShowAddProvider(true)}
+                      size="sm"
+                      className="bg-blue-600 hover:bg-blue-700"
+                    >
+                      <Plus className="w-4 h-4 mr-2" />
+                      Add Provider
+                    </Button>
+                  </div>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  {providers.map((provider) => (
+                    <div key={provider.id} className="p-3 bg-slate-800 rounded-lg border border-slate-600">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center space-x-3">
+                          <span className="text-xl">{provider.icon}</span>
+                          <div>
+                            <p className="font-medium">{provider.name}</p>
+                            <p className="text-xs text-slate-400">Key: {provider.key}</p>
+                          </div>
+                        </div>
+                        <div className="flex space-x-2">
+                          <Button
+                            onClick={() => setEditingProvider(provider)}
+                            size="sm"
+                            variant="outline"
+                            className="border-slate-600"
+                          >
+                            <Edit className="w-3 h-3" />
+                          </Button>
+                          <Button
+                            onClick={() => deleteProviderMutation.mutate(provider.id)}
+                            size="sm"
+                            variant="outline"
+                            className="border-red-600 text-red-400 hover:bg-red-600"
+                          >
+                            <Trash2 className="w-3 h-3" />
+                          </Button>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </CardContent>
+              </Card>
+
+              {/* AI Models Management */}
+              <Card className="bg-slate-900 border-slate-700">
+                <CardHeader>
+                  <div className="flex items-center justify-between">
+                    <CardTitle className="flex items-center space-x-2">
+                      <Zap className="w-5 h-5 text-yellow-500" />
+                      <span>AI Models</span>
+                    </CardTitle>
+                    <Button
+                      onClick={() => setShowAddModel(true)}
+                      size="sm"
+                      className="bg-yellow-600 hover:bg-yellow-700"
+                    >
+                      <Plus className="w-4 h-4 mr-2" />
+                      Add Model
+                    </Button>
+                  </div>
+                </CardHeader>
+                <CardContent className="space-y-4 max-h-96 overflow-y-auto">
+                  {models.map((model) => {
+                    const provider = providers.find(p => p.id === model.providerId);
+                    return (
+                      <div key={model.id} className="p-3 bg-slate-800 rounded-lg border border-slate-600">
+                        <div className="flex items-center justify-between">
+                          <div>
+                            <p className="font-medium">{model.name}</p>
+                            <p className="text-xs text-slate-400">
+                              {provider?.name} • Key: {model.key}
+                            </p>
+                            <p className="text-xs text-slate-500 mt-1">{model.description}</p>
+                          </div>
+                          <div className="flex space-x-2">
+                            <Button
+                              onClick={() => setEditingModel(model)}
+                              size="sm"
+                              variant="outline"
+                              className="border-slate-600"
+                            >
+                              <Edit className="w-3 h-3" />
+                            </Button>
+                            <Button
+                              onClick={() => deleteModelMutation.mutate(model.id)}
+                              size="sm"
+                              variant="outline"
+                              className="border-red-600 text-red-400 hover:bg-red-600"
+                            >
+                              <Trash2 className="w-3 h-3" />
+                            </Button>
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </CardContent>
+              </Card>
+            </div>
+          </TabsContent>
+
           {/* API Keys Tab */}
           <TabsContent value="keys" className="space-y-6">
             <Card className="bg-slate-900 border-slate-700">
@@ -274,22 +432,22 @@ export default function SettingsPage() {
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-6">
-                {Object.entries(AI_MODELS).map(([key, provider]) => (
-                  <div key={key} className="space-y-3">
+                {providers.map((provider) => (
+                  <div key={provider.id} className="space-y-3">
                     <div className="flex items-center justify-between">
                       <Label className="flex items-center space-x-2">
                         <span className="text-lg">{provider.icon}</span>
                         <span>{provider.name} API Key</span>
                       </Label>
-                      <Badge variant={formData.apiKeys[key] ? "default" : "secondary"}>
-                        {formData.apiKeys[key] ? "Configured" : "Not Set"}
+                      <Badge variant={formData.apiKeys[provider.key] ? "default" : "secondary"}>
+                        {formData.apiKeys[provider.key] ? "Configured" : "Not Set"}
                       </Badge>
                     </div>
                     <Input
                       type="password"
                       placeholder={`Enter your ${provider.name} API key`}
-                      value={formData.apiKeys[key] || ""}
-                      onChange={(e) => handleApiKeyChange(key, e.target.value)}
+                      value={formData.apiKeys[provider.key] || ""}
+                      onChange={(e) => handleApiKeyChange(provider.key, e.target.value)}
                       className="bg-slate-800 border-slate-600 font-mono text-sm"
                     />
                     <p className="text-xs text-slate-500">
