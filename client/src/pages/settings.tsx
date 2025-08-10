@@ -168,21 +168,26 @@ export default function SettingsPage() {
     setDbTestResult(null);
 
     try {
+      console.log("Testing database connection with config:", formData.databaseConfig);
       const response = await apiRequest("POST", "/api/database/test", {
         databaseConfig: formData.databaseConfig
       });
       
+      const data = await response.json();
+      console.log("Database test response:", data);
+      
       setDbTestResult({
-        connected: response.connected,
-        message: response.message
+        connected: data.connected,
+        message: data.message
       });
 
       toast({
-        title: response.connected ? "Connection Successful" : "Connection Failed",
-        description: response.message,
-        variant: response.connected ? "default" : "destructive",
+        title: data.connected ? "Connection Successful" : "Connection Failed",
+        description: data.message,
+        variant: data.connected ? "default" : "destructive",
       });
     } catch (error) {
+      console.error("Database test error:", error);
       setDbTestResult({
         connected: false,
         message: "Failed to test connection"
