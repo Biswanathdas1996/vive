@@ -3,203 +3,177 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Enhanced Landing Page</title>
+<title>AI-Powered Conversation</title>
 <style>
 :root {
-  --primary-color: #673ab7;
-  --secondary-color: #f06292;
-  --accent-color: #4caf50;
-  --bg-color: #f4f4f4;
+  --primary-color: #4285f4;
+  --secondary-color: #f4b400;
+  --accent-color: #0f9d58;
   --text-color: #333;
-  --shadow-color: rgba(0,0,0,0.2);
-  --border-radius: 8px;
+  --bg-color: #f8f8f8;
+  --dark-bg: #222;
+  --dark-text: #eee;
 }
 
 body {
   font-family: 'Arial', sans-serif;
   margin: 0;
-  background-color: var(--bg-color);
   line-height: 1.6;
+  background-color: var(--bg-color);
   color: var(--text-color);
+  transition: background-color 0.3s ease;
 }
 
-/* Navbar */
+body.dark-mode {
+  background-color: var(--dark-bg);
+  color: var(--dark-text);
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
 nav {
+  background-color: var(--primary-color);
+  color: white;
   position: sticky;
   top: 0;
-  background-color: white;
-  box-shadow: 0 2px 4px var(--shadow-color);
   z-index: 100;
+  padding: 10px 0;
 }
-.navbar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 1rem;
+
+nav ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: space-around;
 }
-.logo {
-    font-size: 1.5rem;
-    font-weight: bold;
-}
-.nav-links {
-    display: flex;
-}
-.nav-link {
-    margin: 0 1rem;
-    text-decoration: none;
-    color: var(--primary-color);
-}
-.hamburger {
-    display: none;
-    font-size: 1.5rem;
-    cursor: pointer;
-}
-@media (max-width: 768px){
-  .nav-links {
-      display: none;
-  }
-  .hamburger {
-      display: block;
-  }
-  .nav-links.active {
-      display: flex;
-      flex-direction: column;
-      position: absolute;
-      top: 100%;
-      left: 0;
-      background-color: white;
-      width: 100%;
-      padding: 1rem;
-      box-shadow: 0 2px 4px var(--shadow-color);
-  }
+
+nav li a {
+  text-decoration: none;
+  color: white;
+  padding: 10px;
 }
 
 
-/*Hero Section*/
 .hero {
-    background: linear-gradient(to bottom, rgba(255,255,255,0.5), rgba(255,255,255,0.8)), url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%"><defs><linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" style="stop-color:rgb(255,255,255);stop-opacity:1" /><stop offset="100%" style="stop-color:rgb(200,200,200);stop-opacity:1" /></linearGradient></defs><rect width="100%" height="100%" fill="url(#grad1)" /></svg>'); /*Background Gradient*/
-    min-height: 50vh;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    color: white;
-}
-.hero h1{
-    font-size: 3rem;
-    margin-bottom: 1rem;
-}
-.hero p{
-    font-size: 1.5rem;
-    margin-bottom: 2rem;
-}
-.hero button{
-    background-color: var(--primary-color);
-    color: white;
-    padding: 1rem 2rem;
-    border: none;
-    border-radius: var(--border-radius);
-    cursor: pointer;
-    font-size: 1rem;
+  background: linear-gradient(to bottom, #4285f4, #0f9d58), url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpolygon points='0,100 100,100 50,0' fill='%23e0e0e0'/%3E%3C/svg%3E");
+  background-size: cover;
+  color: white;
+  padding: 100px 0;
+  text-align: center;
 }
 
-
-/*Modal*/
-.modal {
-    display: none;
-    position: fixed;
-    z-index: 1;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    overflow: auto;
-    background-color: rgba(0,0,0,0.4);
-}
-.modal-content {
-    background-color: #fefefe;
-    margin: 15% auto;
-    padding: 20px;
-    border: 1px solid #888;
-    width: 80%;
-}
-.close {
-    color: #aaa;
-    float: right;
-    font-size: 28px;
-    font-weight: bold;
-}
-.close:hover,
-.close:focus {
-    color: black;
-    text-decoration: none;
-    cursor: pointer;
+.feature-cards {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
 }
 
-/*Footer*/
+.feature-card {
+  width: 300px;
+  margin: 20px;
+  padding: 20px;
+  background-color: white;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  border-radius: 8px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.feature-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
 footer {
-    background-color: #333;
-    color: white;
-    padding: 1rem;
-    text-align: center;
+  background-color: #333;
+  color: white;
+  padding: 20px;
+  text-align: center;
 }
 
-/*Responsive Styles -  add more as needed*/
-@media (max-width: 768px) {
-  .hero h1 { font-size: 2rem; }
-  .hero p { font-size: 1rem; }
-}
+/* Add more styles as needed for other elements */
+
 </style>
 </head>
 <body>
-
 <nav>
-    <div class="navbar">
-        <div class="logo">ChatBot App</div>
-        <div class="nav-links">
-            <a href="#" class="nav-link">Home</a>
-            <a href="#" class="nav-link">Features</a>
-            <a href="#" class="nav-link">Pricing</a>
-            <a href="#" class="nav-link">About</a>
-            <a href="#" class="nav-link">Contact</a>
-        </div>
-        <div class="hamburger" onclick="toggleNav()">&#9776;</div>
-    </div>
+  <ul>
+    <li><a href="#">Chat</a></li>
+    <li><a href="#">About Us</a></li>
+    <li><a href="#">Features</a></li>
+    <li><a href="#">Pricing</a></li>
+    <li><a href="#">Blog</a></li>
+    <li><a href="#">Contact Us</a></li>
+  </ul>
 </nav>
 
-
 <section class="hero">
-  <h1>Welcome to Our Chatbot</h1>
-  <p>Your Intelligent Conversational AI</p>
-  <button onclick="openModal()">Start Chatting</button>
+  <h1>AI-Powered Conversations</h1>
+  <p>Revolutionizing the way you interact.</p>
+  <button>Start Chatting Now</button>
 </section>
 
-<div id="myModal" class="modal">
-  <div class="modal-content">
-    <span class="close" onclick="closeModal()">&times;</span>
-    <p>Chat Interface Here</p>
+<section class="feature-cards">
+  <div class="feature-card">
+    <h3>Feature 1</h3>
+    <p>Description of Feature 1.</p>
   </div>
-</div>
+  <div class="feature-card">
+    <h3>Feature 2</h3>
+    <p>Description of Feature 2.</p>
+  </div>
+  <div class="feature-card">
+    <h3>Feature 3</h3>
+    <p>Description of Feature 3.</p>
+  </div>
+</section>
 
 
 <footer>
-  <p>&copy; 2023 ChatBot App. All rights reserved.</p>
+  <p>&copy; 2023 AI Conversation. All rights reserved.</p>
 </footer>
 
 <script>
-function openModal() {
-  document.getElementById("myModal").style.display = "block";
-}
+//Smooth Scrolling
+document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        document.querySelector(this.getAttribute('href')).scrollIntoView({
+            behavior: 'smooth'
+        });
+    });
+});
 
-function closeModal() {
-  document.getElementById("myModal").style.display = "none";
-}
+//Dark Mode Toggle (Example - needs a toggle element)
+const darkModeToggle = document.getElementById('dark-mode-toggle'); //replace with your toggle element id
 
-function toggleNav() {
-    document.querySelector('.nav-links').classList.toggle('active');
-}
+darkModeToggle.addEventListener('click', () => {
+  document.body.classList.toggle('dark-mode');
+});
+
+
+// Simple form validation example
+const form = document.querySelector('form'); // Replace with your form selector
+const emailInput = form.querySelector('input[type="email"]');
+const submitButton = form.querySelector('button[type="submit"]');
+const message = form.querySelector('.message');
+
+form.addEventListener('submit', (e) => {
+  e.preventDefault();
+  if (emailInput.value.includes('@')) {
+    message.textContent = 'Email submitted successfully!';
+    message.style.color = 'green';
+  } else {
+    message.textContent = 'Please enter a valid email address.';
+    message.style.color = 'red';
+  }
+});
+
+
 </script>
-
 </body>
 </html>

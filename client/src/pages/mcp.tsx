@@ -10,6 +10,7 @@ import { Separator } from "@/components/ui/separator";
 import { AlertCircle, CheckCircle, Code2, Database, Zap, Terminal, Globe, Cpu } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { useQuery, useMutation } from "@tanstack/react-query";
+import { Link } from "wouter";
 
 interface MCPInfo {
   name: string;
@@ -60,10 +61,13 @@ export default function MCPPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name, arguments: args }),
       });
-      if (!response.ok) throw new Error('Tool call failed');
-      return response.json();
+      const data = await response.json();
+      
+      // Return both successful and error responses to display to user
+      return data;
     },
     onSuccess: (data) => setResult(data),
+    onError: (error) => setResult({ error: error.message }),
   });
 
   // Resource fetch mutation
@@ -71,10 +75,13 @@ export default function MCPPage() {
     mutationFn: async (uri: string) => {
       const cleanUri = uri.replace('://', '/');
       const response = await fetch(`/api/mcp/resources/${cleanUri}`);
-      if (!response.ok) throw new Error('Resource fetch failed');
-      return response.json();
+      const data = await response.json();
+      
+      // Return both successful and error responses to display to user
+      return data;
     },
     onSuccess: (data) => setResult(data),
+    onError: (error) => setResult({ error: error.message }),
   });
 
   const handleToolCall = () => {
@@ -155,26 +162,36 @@ export default function MCPPage() {
           {mcpInfoLoading ? (
             <div className="animate-pulse">Loading server info...</div>
           ) : mcpInfo ? (
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div className="space-y-2">
-                <p className="text-sm font-medium">Server Status</p>
-                <Badge variant={mcpInfo.status === 'running' ? 'default' : 'destructive'}>
-                  {mcpInfo.status === 'running' ? <CheckCircle className="h-3 w-3 mr-1" /> : <AlertCircle className="h-3 w-3 mr-1" />}
-                  {mcpInfo.status}
-                </Badge>
-              </div>
-              <div className="space-y-2">
-                <p className="text-sm font-medium">Version</p>
-                <p className="text-sm text-muted-foreground">{mcpInfo.version}</p>
-              </div>
-              <div className="space-y-2">
-                <p className="text-sm font-medium">Capabilities</p>
-                <div className="flex gap-1 flex-wrap">
-                  {mcpInfo.capabilities.tools && <Badge variant="outline">Tools</Badge>}
-                  {mcpInfo.capabilities.resources && <Badge variant="outline">Resources</Badge>}
-                  {mcpInfo.capabilities.prompts && <Badge variant="outline">Prompts</Badge>}
+            <div className="space-y-4">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="space-y-2">
+                  <p className="text-sm font-medium">Server Status</p>
+                  <Badge variant={mcpInfo.status === 'running' ? 'default' : 'destructive'}>
+                    {mcpInfo.status === 'running' ? <CheckCircle className="h-3 w-3 mr-1" /> : <AlertCircle className="h-3 w-3 mr-1" />}
+                    {mcpInfo.status}
+                  </Badge>
+                </div>
+                <div className="space-y-2">
+                  <p className="text-sm font-medium">Version</p>
+                  <p className="text-sm text-muted-foreground">{mcpInfo.version}</p>
+                </div>
+                <div className="space-y-2">
+                  <p className="text-sm font-medium">Capabilities</p>
+                  <div className="flex gap-1 flex-wrap">
+                    {mcpInfo.capabilities.tools && <Badge variant="outline">Tools</Badge>}
+                    {mcpInfo.capabilities.resources && <Badge variant="outline">Resources</Badge>}
+                    {mcpInfo.capabilities.prompts && <Badge variant="outline">Prompts</Badge>}
+                  </div>
                 </div>
               </div>
+              <Alert>
+                <AlertCircle className="h-4 w-4" />
+                <AlertDescription>
+                  <strong>Note:</strong> To use MCP tools, first configure your AI provider and API keys in the{" "}
+                  <Link href="/settings" className="text-primary hover:underline">Settings</Link> page.
+                  The MCP server requires valid AI configuration to process tool calls.
+                </AlertDescription>
+              </Alert>
             </div>
           ) : (
             <Alert>
@@ -239,15 +256,28 @@ export default function MCPPage() {
                     <div className="space-y-3">
                       <label className="text-sm font-medium">Arguments (JSON)</label>
                       <Textarea
-                        placeholder={`Example: ${JSON.stringify(
-                          selectedTool === 'analyze_prompt'
-                            ? { prompt: 'Create a modern blog website' }
-                            : selectedTool === 'generate_file_structure'
-                            ? { analysis: { features: ['blog'], pages: ['index.html'] }, prompt: 'blog site' }
-                            : { fileName: 'index.html', requirements: 'homepage design' },
-                          null,
-                          2
-                        )}`}
+                        placeholder={selectedTool === 'analyze_prompt'
+                          ? `Example:
+{
+  "prompt": "Create a modern e-commerce website with shopping cart and user authentication"
+}`
+                          : selectedTool === 'generate_file_structure'
+                          ? `Example:
+{
+  "analysis": {
+    "features": ["shopping cart", "user auth", "product catalog"],
+    "pages": ["index.html", "products.html", "cart.html"],
+    "technical_requirements": {"responsive": true}
+  },
+  "prompt": "Create a modern e-commerce website"
+}`
+                          : `Example:
+{
+  "fileName": "index.html",
+  "requirements": "Modern homepage with hero section, navigation, and footer",
+  "context": {"theme": "professional", "colors": "blue and white"}
+}`
+                        }
                         value={toolArgs}
                         onChange={(e) => setToolArgs(e.target.value)}
                         className="min-h-32 font-mono text-sm"
