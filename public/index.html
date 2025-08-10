@@ -7,196 +7,196 @@
 <style>
 :root {
   --primary-color: #4285f4;
-  --secondary-color: #f4b400;
-  --accent-color: #0f9d58;
-  --background-color: #f4f4f4;
-  --dark-background: #222;
+  --secondary-color: #673ab7;
+  --accent-color: #ff9800;
+  --bg-color: #f4f4f4;
   --text-color: #333;
-  --dark-text: #eee;
+  --shadow-color: rgba(0,0,0,0.2);
   --border-radius: 8px;
-  --box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
 body {
   font-family: 'Arial', sans-serif;
   line-height: 1.6;
   margin: 0;
-  background-color: var(--background-color);
+  background-color: var(--bg-color);
   color: var(--text-color);
-  transition: background-color 0.3s ease, color 0.3s ease;
+  transition: background-color 0.3s ease;
 }
 
 .dark-mode {
-  background-color: var(--dark-background);
-  color: var(--dark-text);
+  background-color: #333;
+  color: #fff;
 }
 
-/* Navbar */
-nav {
+.dark-mode .card {
+  background-color: #444;
+  color: #eee;
+}
+
+header {
   position: sticky;
   top: 0;
-  background-color: rgba(255,255,255,0.9);
-  box-shadow: var(--box-shadow);
-  padding: 1rem 2rem;
+  background-color: white;
+  box-shadow: 0 2px 4px var(--shadow-color);
+  padding: 1rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
+
+nav {
+  display: flex;
+}
+
 nav ul {
   list-style: none;
   margin: 0;
   padding: 0;
   display: flex;
 }
+
 nav li {
-  margin-left: 2rem;
+  margin-right: 1rem;
 }
+
 nav a {
   text-decoration: none;
   color: var(--text-color);
-  transition: color 0.3s ease;
-}
-nav a:hover {
-  color: var(--primary-color);
 }
 
-/* Mega Menu */
-.mega-menu {
-  position: absolute;
-  background-color: white;
-  box-shadow: var(--box-shadow);
-  display: none;
-}
-.features:hover>.mega-menu{
-  display: block;
-}
-.mega-menu ul {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  grid-gap: 1rem;
-  padding: 1rem;
-}
-
-/* Hero Section */
 .hero {
-  background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTkyaCIgaGVpZ2h0PSI5OCIgdmlld0JveD0iMCAwIDE5MiA5OCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cGF0aCBkPSJNMTkyIDAgTDQ4IDBoLTQ4djkwSDB2OTBjMCA1NS41IDI3LjUgOTggOTggOThoOTZ2LTk4aDQ4djkwem0tOTYgMCAwLTkwIiBmaWxsPSIjNDI4NWY0IiAvPjwvc3ZnPg==');
-  background-size: cover;
+  background: linear-gradient(to bottom, #4285f4, #673ab7);
   color: white;
+  padding: 4rem 0;
   text-align: center;
-  padding: 10rem 0;
 }
+
+.hero h1 {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+}
+
 .hero button {
-  background-color: var(--primary-color);
+  background-color: var(--accent-color);
   color: white;
   padding: 1rem 2rem;
   border: none;
   border-radius: var(--border-radius);
+  font-size: 1.2rem;
   cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-.hero button:hover {
-  background-color: #337ab7;
 }
 
-/* Feature Cards */
-.feature-card {
+.card {
   background-color: white;
   padding: 2rem;
   border-radius: var(--border-radius);
-  box-shadow: var(--box-shadow);
-  margin-bottom: 2rem;
-  position:relative;
-}
-.feature-card::before{
-    content:"";
-    position:absolute;
-    top:0; left:0;
-    width:100%; height:100%;
-    background:linear-gradient(to bottom, rgba(255,255,255,0), rgba(255,255,255,0.3));
-    opacity:0;
-    transition: opacity 0.2s;
-    z-index:1;
-}
-.feature-card:hover::before{
-    opacity:1;
-}
-.feature-card:hover{
-  transform: translateY(-5px);
-  box-shadow: 0 5px 10px rgba(0,0,0,0.2);
+  box-shadow: 0 2px 4px var(--shadow-color);
+  margin-bottom: 1rem;
+  transition: transform 0.2s ease;
 }
 
-/* ...rest of the CSS (Statistics, Testimonials, Accordion, etc.) */
-/* Add styles for statistics, testimonials, accordion, etc., following the same modern design principles. */
+.card:hover {
+  transform: translateY(-5px);
+}
+
+footer {
+  background-color: #333;
+  color: white;
+  padding: 2rem;
+  text-align: center;
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+  nav ul {
+    flex-direction: column;
+  }
+
+  nav li {
+    margin-bottom: 1rem;
+  }
+}
+
+/* Animations */
+.animated-counter {
+  font-size: 2rem;
+  font-weight: bold;
+  animation: counter-animation 1s forwards;
+}
+
+@keyframes counter-animation {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 
 </style>
 </head>
 <body>
-<nav>
+<header>
   <div>Logo</div>
-  <ul>
-    <li><a href="#">Home</a></li>
-    <li class="features"><a href="#">Features</a>
-        <div class="mega-menu">
-            <ul>
-                <li>Customer Support</li>
-                <li>Education</li>
-                <li>Internal Tools</li>
-            </ul>
-        </div>
-    </li>
-    <li><a href="#">About</a></li>
-    <li><a href="#">Pricing</a></li>
-    <li><a href="#">Contact</a></li>
-  </ul>
-  <label class="switch">
-    <input type="checkbox" id="dark-mode-toggle">
-    <span class="slider round"></span>
-  </label>
-</nav>
+  <nav>
+    <ul>
+      <li><a href="#">Home</a></li>
+      <li><a href="#">Features</a></li>
+      <li><a href="#">About</a></li>
+      <li><a href="#">Pricing</a></li>
+      <li><a href="#">Contact</a></li>
+    </ul>
+  </nav>
+</header>
 
 <section class="hero">
   <h1>AI-Powered Chatbot</h1>
-  <p>Revolutionizing communication with intelligent AI.</p>
-  <button>Start Chatting</button>
+  <p>Revolutionizing customer interaction.</p>
+  <button>Start Chat Now</button>
 </section>
 
 <section>
-  <h2>Feature Highlights</h2>
-  <div class="feature-cards">
-    <div class="feature-card">
-      <div>Icon</div>
-      <h3>NLP</h3>
-      <p>Natural Language Processing for seamless conversations</p>
-    </div>
-    <div class="feature-card">
-      <div>Icon</div>
-      <h3>AI-Powered Responses</h3>
-      <p>Intelligent answers for a truly conversational experience</p>
-    </div>
-    </div>
+  <div class="card">Feature 1</div>
+  <div class="card">Feature 2</div>
+  <div class="card">Feature 3</div>
 </section>
-<script>
-// Dark mode toggle
-const darkModeToggle = document.getElementById('dark-mode-toggle');
-const body = document.body;
-darkModeToggle.addEventListener('change', () => {
-  body.classList.toggle('dark-mode');
-});
 
-// Sample animation (replace with your preferred animation library)
-const stats = document.querySelectorAll('.stat-number');
-stats.forEach(stat => {
-  let count = 0;
-  const target = parseInt(stat.dataset.target);
-  const increment = () => {
-    if (count < target) {
-      count++;
-      stat.textContent = count;
-      setTimeout(increment, 10);
-    }
-  };
-  increment();
-});
+<section>
+  <div class="animated-counter">1234</div>
+</section>
+
+<section>
+    <!-- Testimonial Carousel Placeholder -->
+    <div style="background-color:lightblue; padding:20px; border-radius:var(--border-radius); box-shadow: 0 2px 4px var(--shadow-color);">Testimonial Carousel</div>
+</section>
+
+<section>
+    <!-- Chatbot Interaction Image Slider Placeholder -->
+    <div style="background-color:lightgreen; padding:20px; border-radius:var(--border-radius); box-shadow: 0 2px 4px var(--shadow-color);">Chatbot Interaction Slider</div>
+</section>
+
+<footer>
+  &copy; 2023 AI Chatbot. All rights reserved.
+</footer>
+
+<script>
+// Simple counter animation (replace with CountUp.js for advanced features)
+const counterElement = document.querySelector('.animated-counter');
+counterElement.textContent = 1234;
+
+//Dark Mode Toggle (Example)
+const darkModeToggle = document.createElement('button');
+darkModeToggle.textContent = 'Dark Mode';
+darkModeToggle.onclick = () => {
+    document.body.classList.toggle('dark-mode');
+    darkModeToggle.textContent = document.body.classList.contains('dark-mode') ? 'Light Mode' : 'Dark Mode';
+};
+document.body.appendChild(darkModeToggle);
+
 </script>
 </body>
 </html>

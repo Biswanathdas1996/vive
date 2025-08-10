@@ -3,106 +3,113 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Modern Chat Application</title>
+<title>Enhanced Chat Interface</title>
 <style>
 :root {
   --primary-color: #3f51b5;
   --secondary-color: #6200ee;
   --background-color: #f4f4f4;
   --text-color: #333;
-  --light-background: #fff;
+  --accent-color: #ff9800;
   --dark-background: #222;
+  --dark-text: #eee;
   --border-radius: 8px;
   --box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
 body {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-family: 'Arial', sans-serif;
   background-color: var(--background-color);
+  color: var(--text-color);
   margin: 0;
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-  color: var(--text-color);
+  transition: background-color 0.3s ease;
 }
 
-/* Top Navigation Bar */
+body.dark-mode {
+  background-color: var(--dark-background);
+  color: var(--dark-text);
+}
+
 header {
+  background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+  color: white;
+  padding: 1rem;
   position: sticky;
   top: 0;
-  background-color: var(--light-background);
-  padding: 1rem;
-  box-shadow: var(--box-shadow);
+  z-index: 10;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  z-index: 10;
 }
 
 .logo {
-  width: 50px;
-  height: 50px;
-  background-color: var(--primary-color);
-  border-radius: var(--border-radius);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  color:white;
-}
-
-.user-profile {
-  display: flex;
-  align-items: center;
-}
-
-.user-profile img {
-  width: 30px;
-  height: 30px;
+  background-color: rgba(255,255,255,0.2);
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
 }
 
+.user-profile {
+  background-color: rgba(255,255,255,0.2);
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+}
 
-/* Chat Container */
-.chat-container {
+
+main {
+  flex: 1;
+  display: flex;
+  padding: 1rem;
+}
+
+.chat-area {
   flex: 1;
   overflow-y: auto;
   padding: 1rem;
 }
 
 .message {
-  padding: 0.5rem 1rem;
-  margin-bottom: 0.5rem;
-  border-radius: var(--border-radius);
-  max-width: 70%;
+  display: flex;
+  margin-bottom: 1rem;
 }
 
 .user-message {
+  align-self: flex-end;
   background-color: var(--primary-color);
   color: white;
-  align-self: flex-end;
 }
 
 .bot-message {
-  background-color: #e0e0e0;
   align-self: flex-start;
+  background-color: #eee;
 }
 
-/* User Input */
+.message-content {
+  padding: 0.8rem 1.2rem;
+  border-radius: var(--border-radius);
+  max-width: 70%;
+  word-break: break-word;
+}
+
 .input-area {
   padding: 1rem;
   display: flex;
 }
 
-.input-field {
+.message-input {
   flex: 1;
   padding: 0.5rem;
-  border: 1px solid #ccc;
   border-radius: var(--border-radius);
+  border: 1px solid #ccc;
 }
 
 .send-button {
   padding: 0.5rem 1rem;
-  background-color: var(--secondary-color);
+  background-color: var(--accent-color);
   color: white;
   border: none;
   border-radius: var(--border-radius);
@@ -110,74 +117,74 @@ header {
   cursor: pointer;
 }
 
-/* Footer */
 footer {
-  background-color: var(--light-background);
+  background-color: #f0f0f0;
   padding: 1rem;
   text-align: center;
-  border-top: 1px solid #ccc;
 }
 
 /* Responsive Styles */
 @media (max-width: 768px) {
-  header {
+  main {
     flex-direction: column;
-    align-items: flex-start;
   }
 }
+
 </style>
 </head>
 <body>
 <header>
-  <div class="logo">Chat App</div>
-  <div class="user-profile">
-    <div style="width:30px; height:30px; border-radius:50%; background-color: #8bc34a;"></div>
-    <div style="margin-left: 0.5rem;">User</div>
-  </div>
-  <div style="width:30px; height:30px; background-color: #ffeb3b; border-radius:var(--border-radius); cursor:pointer;"></div>
+  <div class="logo"></div>
+  <div class="user-profile"></div>
 </header>
 <main>
-  <div class="chat-container">
-    <div class="message user-message">User Message 1</div>
-    <div class="message bot-message">Bot Message 1</div>
-    <div class="message user-message">User Message 2</div>
+  <div class="chat-area">
+    <div class="message user-message"><div class="message-content">Hello!</div></div>
+    <div class="message bot-message"><div class="message-content">Hi there!</div></div>
   </div>
   <div class="input-area">
-    <input type="text" class="input-field" placeholder="Type your message...">
+    <input type="text" class="message-input" placeholder="Type your message...">
     <button class="send-button">Send</button>
   </div>
 </main>
 <footer>
-  &copy; 2023 Chat App. All rights reserved.
+  &copy; 2024 Chat Application
 </footer>
 <script>
-// Placeholder JavaScript - Replace with actual WebSocket and NLP integration
-const chatContainer = document.querySelector('.chat-container');
-const inputField = document.querySelector('.input-field');
-const sendButton = document.querySelector('.send-button');
+const sendMessageButton = document.querySelector('.send-button');
+const messageInput = document.querySelector('.message-input');
+const chatArea = document.querySelector('.chat-area');
 
-sendButton.addEventListener('click', () => {
-  const message = inputField.value;
-  if (message.trim() !== '') {
-    sendMessage(message);
-    inputField.value = '';
+sendMessageButton.addEventListener('click', () => {
+  const messageText = messageInput.value;
+  if (messageText.trim() !== '') {
+    addMessage('user', messageText);
+    messageInput.value = '';
   }
 });
 
-function sendMessage(message) {
-  const messageElement = document.createElement('div');
-  messageElement.classList.add('message', 'user-message');
-  messageElement.textContent = message;
-  chatContainer.appendChild(messageElement);
-  // Simulate bot response after 1 second
-  setTimeout(() => {
-    const botMessageElement = document.createElement('div');
-    botMessageElement.classList.add('message', 'bot-message');
-    botMessageElement.textContent = 'Bot Response: ' + message;
-    chatContainer.appendChild(botMessageElement);
-    chatContainer.scrollTop = chatContainer.scrollHeight;
-  }, 1000);
+function addMessage(sender, text) {
+  const messageDiv = document.createElement('div');
+  messageDiv.classList.add('message');
+  messageDiv.classList.add(`${sender}-message`);
+  const messageContent = document.createElement('div');
+  messageContent.classList.add('message-content');
+  messageContent.textContent = text;
+  messageDiv.appendChild(messageContent);
+  chatArea.appendChild(messageDiv);
+  chatArea.scrollTop = chatArea.scrollHeight;
 }
+
+//Dark mode toggle (example)
+const body = document.querySelector('body');
+const darkModeToggle = document.createElement('button');
+darkModeToggle.textContent = 'Dark Mode';
+darkModeToggle.addEventListener('click', () => {
+  body.classList.toggle('dark-mode');
+  darkModeToggle.textContent = body.classList.contains('dark-mode') ? 'Light Mode' : 'Dark Mode';
+});
+document.body.appendChild(darkModeToggle);
+
 </script>
 </body>
 </html>
