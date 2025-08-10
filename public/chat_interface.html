@@ -1,416 +1,236 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Modern Chat Interface</title>
-    <style>
-        :root {
-            --primary-color: #6200ea;
-            --secondary-color: #03dac5;
-            --bg-color: #f5f5f5;
-            --text-color: #333;
-            --box-bg: #ffffff;
-            --accent-color: #ff0266;
-            --header-height: 60px;
-            --sidebar-width: 250px;
-            --transition-time: 0.3s;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Enhanced Chat Interface</title>
+<style>
+:root {
+  --primary-color: #3f51b5;
+  --secondary-color: #6200ee;
+  --background-color: #f4f4f4;
+  --text-color: #333;
+  --accent-color: #ff9800;
+  --shadow-color: rgba(0,0,0,0.2);
+  --font-family: 'Roboto', sans-serif;
+}
 
-        body {
-            margin: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            color: var(--text-color);
-            background-color: var(--bg-color);
-            line-height: 1.6;
-        }
+body {
+  font-family: var(--font-family);
+  background-color: var(--background-color);
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
 
-        header {
-            position: fixed;
-            top: 0;
-            width: 100%;
-            height: var(--header-height);
-            background: rgba(255, 255, 255, 0.8);
-            backdrop-filter: blur(10px);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0 20px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            z-index: 1000;
-        }
+nav {
+  position: sticky;
+  top: 0;
+  background-color: rgba(255,255,255,0.8);
+  backdrop-filter: blur(10px);
+  padding: 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 2px 4px var(--shadow-color);
+}
 
-        header .logo, header .user-info {
-            display: flex;
-            align-items: center;
-        }
+.profile {
+  display: flex;
+  align-items: center;
+}
 
-        header .logo::before {
-            content: '';
-            width: 35px;
-            height: 35px;
-            background: radial-gradient(circle, var(--primary-color), var(--secondary-color));
-            border-radius: 50%;
-            margin-right: 10px;
-        }
+.profile img {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  margin-right: 0.5rem;
+  background: linear-gradient(to right, #ff7f50, #ffa07a);
+  border: 2px solid #fff;
+}
 
-        header nav a {
-            color: var(--primary-color);
-            text-decoration: none;
-            margin: 0 15px;
-            font-size: 1.1em;
-            position: relative;
-        }
+.settings {
+  position: relative;
+}
 
-        header nav a::after {
-            content: '';
-            display: block;
-            height: 2px;
-            background: var(--primary-color);
-            transition: width var(--transition-time);
-            position: absolute;
-            bottom: -5px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 0%;
-        }
+.settings-menu {
+  display: none;
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background-color: #fff;
+  box-shadow: 0 2px 4px var(--shadow-color);
+  border-radius: 5px;
+  padding: 0.5rem;
+}
 
-        header nav a:hover::after {
-            width: 100%;
-        }
+.settings:hover .settings-menu {
+  display: block;
+}
 
-        .user-avatar::before {
-            content: '';
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background: var(--accent-color);
-            margin-right: 10px;
-            display: inline-block;
-        }
+.settings-menu li {
+  padding: 0.5rem;
+  cursor: pointer;
+}
 
-        #sidebar {
-            position: fixed;
-            left: 0;
-            top: var(--header-height);
-            width: var(--sidebar-width);
-            height: calc(100% - var(--header-height));
-            background: var(--box-bg);
-            box-shadow: 3px 0 5px rgba(0, 0, 0, 0.1);
-            overflow-y: auto;
-            transition: transform var(--transition-time);
-        }
 
-        #sidebar.collapsed {
-            transform: translateX(-100%);
-        }
+h1 {
+  font-size: 2rem;
+  margin: 0;
+  padding: 1rem;
+  text-align: center;
+  color: var(--primary-color);
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+}
 
-        .conversation-list {
-            padding: 20px;
-        }
 
-        .conversation-item {
-            padding: 10px;
-            margin-bottom: 10px;
-            background: rgba(0, 0, 0, 0.05);
-            border-radius: 8px;
-            position: relative;
-        }
+aside {
+  background-color: #f0f0f0;
+  width: 250px;
+  padding: 1rem;
+  overflow-y: auto;
+  border-right: 1px solid #ccc;
+}
 
-        .conversation-item.unread::after {
-            content: '';
-            width: 10px;
-            height: 10px;
-            background: var(--accent-color);
-            border-radius: 50%;
-            position: absolute;
-            right: 10px;
-            top: 10px;
-        }
 
-        .chat-main {
-            margin-left: var(--sidebar-width);
-            margin-top: var(--header-height);
-            padding: 20px;
-            transition: all var(--transition-time);
-            display: flex;
-            flex-direction: column;
-        }
+main {
+  flex: 1;
+  padding: 1rem;
+  overflow-y: auto;
+}
 
-        .chat-window {
-            flex-grow: 1;
-            background: var(--box-bg);
-            border-radius: 10px;
-            overflow-y: auto;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-        }
+.message {
+  margin-bottom: 1rem;
+  padding: 1rem;
+  border-radius: 10px;
+  max-width: 70%;
+}
 
-        .message-bubble {
-            max-width: 70%;
-            margin-bottom: 10px;
-            padding: 10px;
-            border-radius: 15px;
-            display: flex;
-            align-items: center;
-            position: relative;
-            animation: fadeIn var(--transition-time);
-        }
+.user-message {
+  background-color: var(--primary-color);
+  color: white;
+  align-self: flex-end;
+}
 
-        .message-bubble.sent {
-            background: var(--primary-color);
-            color: #fff;
-            align-self: flex-end;
-        }
+.bot-message {
+  background-color: #e0e0e0;
+  color: var(--text-color);
+  align-self: flex-start;
+}
 
-        .message-bubble.received {
-            background: #e0e0e0;
-            align-self: flex-start;
-        }
 
-        .message-bubble::before {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            width: 0;
-            height: 0;
-            border-style: solid;
-        }
+footer {
+  background-color: #333;
+  color: white;
+  padding: 1rem;
+  text-align: center;
+}
 
-        .message-bubble.sent::before {
-            border-width: 10px 10px 0 0;
-            border-color: var(--primary-color) transparent transparent transparent;
-            right: -10px;
-        }
+textarea {
+  width: 100%;
+  padding: 0.5rem;
+  margin-bottom: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
 
-        .message-bubble.received::before {
-            border-width: 0 10px 10px 0;
-            border-color: transparent var(--secondary-color) transparent transparent;
-            left: -10px;
-        }
+button {
+  background-color: var(--primary-color);
+  color: white;
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
 
-        .chat-footer {
-            display: flex;
-            align-items: center;
-            padding: 10px;
-            background: var(--box-bg);
-            border-radius: 10px;
-            box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1);
-            margin-top: 10px;
-        }
 
-        .emoji-picker {
-            display: none;
-            position: absolute;
-            bottom: 50px;
-            right: 10px;
-            width: 200px;
-            background: #fff;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            padding: 10px;
-        }
+/* Responsive Styles */
+@media (max-width: 768px) {
+  aside {
+    display: none;
+  }
+  main {
+    width: 100%;
+  }
+}
 
-        .chat-footer input[type="text"] {
-            flex-grow: 1;
-            border: none;
-            padding: 10px;
-            font-size: 1em;
-            border-radius: 8px;
-            box-shadow: 0px 1px 5px rgba(0, 0, 0, 0.1);
-        }
-
-        .chat-footer button {
-            background: var(--primary-color);
-            color: #fff;
-            border: none;
-            border-radius: 50%;
-            width: 42px;
-            height: 42px;
-            cursor: pointer;
-            margin-left: 10px;
-            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
-            position: relative;
-        }
-
-        .chat-footer button .voice-input {
-            position: absolute;
-            width: 0;
-            height: 0;
-            border: solid 15px var(--secondary-color);
-            border-radius: 50%;
-            opacity: 0.8;
-            animation: pulse 1.5s infinite alternate;
-            z-index: -1;
-        }
-
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(10px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        @keyframes pulse {
-            to {
-                transform: scale(1.5);
-                opacity: 0;
-            }
-        }
-
-        .floating-button {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background: var(--accent-color);
-            border-radius: 50%;
-            width: 60px;
-            height: 60px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            color: #fff;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            cursor: pointer;
-            transition: transform var(--transition-time);
-        }
-
-        .floating-button:hover {
-            transform: scale(1.1);
-        }
-
-        footer {
-            position: fixed;
-            bottom: 0;
-            width: 100%;
-            height: 50px;
-            display: flex;
-            align-items: center;
-            justify-content: space-around;
-            background: rgba(255, 255, 255, 0.8);
-            box-shadow: 0 -4px 8px rgba(0, 0, 0, 0.1);
-            backdrop-filter: blur(10px);
-        }
-
-        .settings-modal {
-            display: none; /* Hidden by default */
-            position: fixed; /* Stay in place */
-            z-index: 1001; /* Sit on top */
-            padding-top: 60px; /* Location of the box */
-            left: 0;
-            top: 0;
-            width: 100%; /* Full width */
-            height: 100%; /* Full height */
-            overflow: auto; /* Enable scroll if needed */
-            background-color: rgb(0, 0, 0); /* Fallback color */
-            background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
-        }
-
-        .settings-modal-content {
-            background-color: #fefefe;
-            margin: 15% auto; /* 15% from the top and centered */
-            padding: 20px;
-            border: 1px solid #888;
-            width: 80%; /* Could be more or less, depending on screen size */
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-        }
-
-        .close-modal {
-            color: #aaa;
-            float: right;
-            font-size: 28px;
-            font-weight: bold;
-        }
-
-        .close-modal:hover,
-        .close-modal:focus {
-            color: black;
-            text-decoration: none;
-            cursor: pointer;
-        }
-
-    </style>
+</style>
 </head>
 <body>
-    <header>
-        <div class="logo"></div>
-        <nav>
-            <a href="#profile">Profile</a>
-            <a href="#settings" onclick="openModal()">Settings</a>
-        </nav>
-        <div class="user-info">
-            <span class="user-avatar"></span>
-            <span>User Name</span>
-        </div>
-    </header>
-
-    <div id="sidebar" class="collapsed">
-        <div class="conversation-list">
-            <div class="conversation-item unread">Contact 1</div>
-            <div class="conversation-item">Contact 2</div>
-            <div class="conversation-item unread">Contact 3</div>
-        </div>
+  <h1>Enhanced Chat Interface</h1>
+  <nav>
+    <div class="profile">
+      <div class="profile-image" style="background: radial-gradient(circle, rgba(238,174,202,1) 0%, rgba(148,187,233,1) 100%); width:30px; height:30px; border-radius:50%;"></div>
+      <span>User</span>
     </div>
-
-    <main class="chat-main">
-        <div class="chat-window">
-            <div class="message-bubble sent">Hello!</div>
-            <div class="message-bubble received">Hi!</div>
-            <div class="message-bubble sent">How are you?</div>
-        </div>
-
-        <div class="chat-footer">
-            <input type="text" placeholder="Type a message...">
-            <button><span class="voice-input"></span></button>
-        </div>
-    </main>
-
-    <div class="floating-button" onclick="toggleAIChat()">
-        <span>AI</span>
+    <div class="settings">
+      <button>Settings</button>
+      <ul class="settings-menu">
+        <li>Theme</li>
+        <li>Notifications</li>
+        <li>Account</li>
+      </ul>
     </div>
+  </nav>
 
-    <footer>
-        <div>Quick Action 1</div>
-        <div>Quick Action 2</div>
-        <div>Quick Action 3</div>
-    </footer>
+  <aside>
+    <ul>
+      <li>Conversation 1</li>
+      <li>Conversation 2</li>
+    </ul>
+  </aside>
 
-    <div id="settingsModal" class="settings-modal">
-        <div class="settings-modal-content">
-            <span class="close-modal" onclick="closeModal()">&times;</span>
-            <h2>Settings</h2>
-            <label>
-                <input type="checkbox">
-                Dark Mode
-            </label>
-        </div>
-    </div>
+  <main>
+    <div class="message user-message">User Message 1</div>
+    <div class="message bot-message">Bot Message 1</div>
+    <div class="message user-message">User Message 2</div>
+    <div class="message bot-message">Bot Message 2</div>
+  </main>
 
-    <script>
-        const sidebar = document.getElementById('sidebar');
+  <div style="padding:1rem;">
+    <textarea placeholder="Type your message"></textarea>
+    <button>Send</button>
+  </div>
 
-        function toggleSidebar() {
-            sidebar.classList.toggle('collapsed');
-        }
+  <footer>
+    &copy; 2023 Chatbot Inc.
+  </footer>
 
-        function openModal() {
-            document.getElementById('settingsModal').style.display = "block";
-        }
+<script>
+  const sendMessageButton = document.querySelector('button');
+  const messageInput = document.querySelector('textarea');
+  const mainChatArea = document.querySelector('main');
 
-        function closeModal() {
-            document.getElementById('settingsModal').style.display = "none";
-        }
+  sendMessageButton.addEventListener('click', () => {
+    const userMessage = messageInput.value;
+    if (userMessage.trim() !== '') {
+      const messageDiv = document.createElement('div');
+      messageDiv.classList.add('message', 'user-message');
+      messageDiv.textContent = userMessage;
+      mainChatArea.appendChild(messageDiv);
+      messageInput.value = '';
 
-        function toggleAIChat() {
-            alert('AI Chat Functionality Coming Soon!');
-        }
-    </script>
+      // Simulate bot response (replace with actual bot logic)
+      setTimeout(() => {
+        const botMessage = document.createElement('div');
+        botMessage.classList.add('message', 'bot-message');
+        botMessage.textContent = 'Bot response to: ' + userMessage;
+        mainChatArea.appendChild(botMessage);
+        mainChatArea.scrollTop = mainChatArea.scrollHeight;
+      }, 500);
+    }
+  });
+
+
+  //Simulate lazy loading (replace with actual implementation)
+  const images = document.querySelectorAll('img');
+  images.forEach(img => {
+    img.onload = () => {
+      img.classList.add('loaded');
+    }
+  })
+
+</script>
 </body>
 </html>

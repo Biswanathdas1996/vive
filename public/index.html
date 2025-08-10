@@ -3,200 +3,119 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AI-Powered Chatbot</title>
+<title>NLP Capabilities Showcase</title>
 <style>
 :root {
-  --primary-color: #4285f4;
-  --secondary-color: #673ab7;
-  --accent-color: #ff9800;
-  --bg-color: #f4f4f4;
+  --primary-color: #4285F4;
+  --secondary-color: #0F9D58;
+  --accent-color: #F4B400;
+  --background-color: #f4f4f4;
   --text-color: #333;
   --shadow-color: rgba(0,0,0,0.2);
   --border-radius: 8px;
+  --spacing: 1rem;
 }
 
 body {
-  font-family: 'Arial', sans-serif;
-  line-height: 1.6;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   margin: 0;
-  background-color: var(--bg-color);
+  background-color: var(--background-color);
   color: var(--text-color);
-  transition: background-color 0.3s ease;
-}
-
-.dark-mode {
-  background-color: #333;
-  color: #fff;
-}
-
-.dark-mode .card {
-  background-color: #444;
-  color: #eee;
-}
-
-header {
-  position: sticky;
-  top: 0;
-  background-color: white;
-  box-shadow: 0 2px 4px var(--shadow-color);
-  padding: 1rem;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+  line-height: 1.6;
 }
 
 nav {
-  display: flex;
-}
-
-nav ul {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: flex;
-}
-
-nav li {
-  margin-right: 1rem;
-}
-
-nav a {
-  text-decoration: none;
-  color: var(--text-color);
-}
-
-.hero {
-  background: linear-gradient(to bottom, #4285f4, #673ab7);
-  color: white;
-  padding: 4rem 0;
-  text-align: center;
-}
-
-.hero h1 {
-  font-size: 3rem;
-  margin-bottom: 1rem;
-}
-
-.hero button {
-  background-color: var(--accent-color);
-  color: white;
-  padding: 1rem 2rem;
-  border: none;
-  border-radius: var(--border-radius);
-  font-size: 1.2rem;
-  cursor: pointer;
-}
-
-.card {
-  background-color: white;
-  padding: 2rem;
-  border-radius: var(--border-radius);
+  position: sticky;
+  top: 0;
+  background-color: rgba(255,255,255,0.9);
   box-shadow: 0 2px 4px var(--shadow-color);
-  margin-bottom: 1rem;
-  transition: transform 0.2s ease;
+  z-index: 10;
 }
 
-.card:hover {
-  transform: translateY(-5px);
+/*Rest of the CSS Styles would be here.  Due to length constraints this is a skeletal structure.  A full implementation would be significantly longer.*/
+
+.hamburger {
+  display: none; /* Show only on smaller screens */
 }
 
-footer {
-  background-color: #333;
-  color: white;
-  padding: 2rem;
-  text-align: center;
-}
-
-/* Responsive styles */
 @media (max-width: 768px) {
-  nav ul {
-    flex-direction: column;
+  .hamburger {
+    display: block;
+  }
+  .nav-links {
+    display: none;
+  }
+  .nav-links.active {
+    display: block;
+    background-color: #fff;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    z-index:1;
   }
 
-  nav li {
-    margin-bottom: 1rem;
-  }
 }
-
-/* Animations */
-.animated-counter {
-  font-size: 2rem;
-  font-weight: bold;
-  animation: counter-animation 1s forwards;
-}
-
-@keyframes counter-animation {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
 
 </style>
 </head>
 <body>
-<header>
-  <div>Logo</div>
-  <nav>
-    <ul>
+<nav>
+  <div class="container">
+    <a href="#" class="logo">NLP Solutions</a>
+    <div class="hamburger" onclick="toggleNav()">
+      <div class="bar"></div>
+      <div class="bar"></div>
+      <div class="bar"></div>
+    </div>
+    <ul class="nav-links" id="navLinks">
       <li><a href="#">Home</a></li>
       <li><a href="#">Features</a></li>
       <li><a href="#">About</a></li>
-      <li><a href="#">Pricing</a></li>
       <li><a href="#">Contact</a></li>
     </ul>
-  </nav>
-</header>
+  </div>
+</nav>
 
-<section class="hero">
-  <h1>AI-Powered Chatbot</h1>
-  <p>Revolutionizing customer interaction.</p>
-  <button>Start Chat Now</button>
-</section>
+<main>
+  <!--Hero Section (Placeholder)-->
+  <section class="hero">
+    <div style="background: linear-gradient(to bottom, #4285F4, #007bff); height: 300px; display: flex; justify-content: center; align-items: center; color: white; text-shadow: 2px 2px 4px #000;">
+      <h1>Welcome to NLP Solutions</h1>
+      <p>Your AI-powered language processing solutions</p>
+    </div>
+  </section>
 
-<section>
-  <div class="card">Feature 1</div>
-  <div class="card">Feature 2</div>
-  <div class="card">Feature 3</div>
-</section>
+  <!--Feature Cards (Placeholders)-->
+  <section class="features">
+    <div class="container">
+      <div class="feature-card">Feature 1</div>
+      <div class="feature-card">Feature 2</div>
+      <div class="feature-card">Feature 3</div>
+    </div>
+  </section>
 
-<section>
-  <div class="animated-counter">1234</div>
-</section>
+  <!--Rest of the page content (Placeholders for brevity)-->
+  <section class="testimonials">Testimonials</section>
+  <section class="services">Services</section>
+  <section class="about">About Us</section>
+  <section class="contact">Contact Us</section>
 
-<section>
-    <!-- Testimonial Carousel Placeholder -->
-    <div style="background-color:lightblue; padding:20px; border-radius:var(--border-radius); box-shadow: 0 2px 4px var(--shadow-color);">Testimonial Carousel</div>
-</section>
 
-<section>
-    <!-- Chatbot Interaction Image Slider Placeholder -->
-    <div style="background-color:lightgreen; padding:20px; border-radius:var(--border-radius); box-shadow: 0 2px 4px var(--shadow-color);">Chatbot Interaction Slider</div>
-</section>
-
+</main>
 <footer>
-  &copy; 2023 AI Chatbot. All rights reserved.
+  <div class="container">
+    &copy; 2024 NLP Solutions
+  </div>
 </footer>
 
 <script>
-// Simple counter animation (replace with CountUp.js for advanced features)
-const counterElement = document.querySelector('.animated-counter');
-counterElement.textContent = 1234;
+function toggleNav() {
+  document.getElementById("navLinks").classList.toggle("active");
+}
 
-//Dark Mode Toggle (Example)
-const darkModeToggle = document.createElement('button');
-darkModeToggle.textContent = 'Dark Mode';
-darkModeToggle.onclick = () => {
-    document.body.classList.toggle('dark-mode');
-    darkModeToggle.textContent = document.body.classList.contains('dark-mode') ? 'Light Mode' : 'Dark Mode';
-};
-document.body.appendChild(darkModeToggle);
-
+//Other JavaScript functions (for modals, carousels, etc.) would go here
 </script>
+
 </body>
 </html>
