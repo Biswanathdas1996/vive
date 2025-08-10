@@ -1,856 +1,183 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Modern Chat Application</title>
-    <style>
-        /* CSS Reset */
-        *, *::before, *::after {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-
-        /* CSS Custom Properties (Variables) */
-        :root {
-            --primary-color: #4CAF50;
-            --secondary-color: #2196F3;
-            --background-color: #F5F5F5;
-            --text-color: #333;
-            --light-text-color: #777;
-            --border-radius: 8px;
-            --shadow-color: rgba(0, 0, 0, 0.1);
-            --glass-background: rgba(255, 255, 255, 0.2);
-            --glass-border: rgba(255, 255, 255, 0.3);
-            --message-user-bg: #DCF8C6;
-            --message-bot-bg: #FFFFFF;
-            --dark-primary-color: #388E3C;
-            --dark-secondary-color: #1976D2;
-            --dark-background-color: #121212;
-            --dark-text-color: #EEE;
-            --dark-light-text-color: #BBB;
-
-            /* Light Theme */
-            --theme-background: var(--background-color);
-            --theme-text: var(--text-color);
-            --theme-light-text: var(--light-text-color);
-            --theme-message-user-bg: var(--message-user-bg);
-            --theme-message-bot-bg: var(--message-bot-bg);
-            --theme-shadow: var(--shadow-color);
-            --theme-glass-background: var(--glass-background);
-            --theme-glass-border: var(--glass-border);
-            --theme-primary: var(--primary-color);
-            --theme-secondary: var(--secondary-color);
-        }
-
-        /* Dark Theme */
-        body.dark-theme {
-            --theme-background: var(--dark-background-color);
-            --theme-text: var(--dark-text-color);
-            --theme-light-text: var(--dark-light-text-color);
-            --theme-message-user-bg: #A5D6A7; /* Slightly modified for dark theme */
-            --theme-message-bot-bg: #424242; /* Darker background for bot messages */
-            --theme-shadow: rgba(0, 0, 0, 0.5);
-            --theme-glass-background: rgba(0, 0, 0, 0.3);
-            --theme-glass-border: rgba(0, 0, 0, 0.4);
-            --theme-primary: var(--dark-primary-color);
-            --theme-secondary: var(--dark-secondary-color);
-        }
-
-
-        /* General Styles */
-        body {
-            font-family: 'Roboto', sans-serif;
-            background-color: var(--theme-background);
-            color: var(--theme-text);
-            line-height: 1.6;
-            transition: background-color 0.3s ease, color 0.3s ease;
-        }
-
-        /* Typography */
-        h1 {
-            font-size: clamp(2rem, 5vw, 3rem);
-            margin-bottom: 1rem;
-            text-align: center;
-            color: var(--theme-primary);
-        }
-
-        p {
-            font-size: 1rem;
-            color: var(--theme-light-text);
-        }
-
-        /* Layout */
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-
-        /* Modern Design Elements */
-        .glassmorphism {
-            background: var(--theme-glass-background);
-            border: 1px solid var(--theme-glass-border);
-            border-radius: var(--border-radius);
-            box-shadow: 0 4px 6px var(--theme-shadow);
-            padding: 20px;
-            backdrop-filter: blur(5px);
-        }
-
-        /* Navigation Bar */
-        nav {
-            position: sticky;
-            top: 0;
-            left: 0;
-            width: 100%;
-            background-color: var(--theme-background);
-            padding: 1rem;
-            box-shadow: 0 2px 4px var(--theme-shadow);
-            z-index: 100;
-        }
-
-        nav ul {
-            list-style: none;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0 1rem;
-        }
-
-        nav a {
-            color: var(--theme-text);
-            text-decoration: none;
-            font-weight: 500;
-            transition: color 0.3s ease;
-        }
-
-        nav a:hover {
-            color: var(--theme-primary);
-        }
-
-        .nav-left {
-            display: flex;
-            align-items: center;
-        }
-
-        .logo {
-            font-size: 1.5rem;
-            font-weight: bold;
-            margin-right: 2rem;
-        }
-
-        .nav-right {
-            display: flex;
-            align-items: center;
-        }
-
-        .nav-right button {
-            background: none;
-            border: none;
-            color: var(--theme-text);
-            font-size: 1.2rem;
-            cursor: pointer;
-            margin-left: 1rem;
-            transition: color 0.3s ease;
-        }
-
-        .nav-right button:hover {
-            color: var(--theme-primary);
-        }
-
-        /* Chat Container */
-        #chat-container {
-            display: flex;
-            flex-direction: column;
-            height: calc(100vh - 100px); /* Adjust height to account for nav and input area */
-            overflow: hidden;
-        }
-
-        #chat-messages {
-            flex-grow: 1;
-            padding: 1rem;
-            overflow-y: auto;
-            display: flex;
-            flex-direction: column;
-            scroll-behavior: smooth; /* Smooth scrolling for new messages */
-        }
-
-        /* Message Styles */
-        .message {
-            padding: 0.75rem 1rem;
-            margin-bottom: 0.5rem;
-            border-radius: var(--border-radius);
-            max-width: 80%;
-            clear: both;
-            word-wrap: break-word;
-        }
-
-        .user-message {
-            background-color: var(--theme-message-user-bg);
-            align-self: flex-end;
-            float: right;
-            color: var(--text-color);
-        }
-
-        .bot-message {
-            background-color: var(--theme-message-bot-bg);
-            align-self: flex-start;
-            float: left;
-            color: var(--text-color);
-        }
-
-        .message-timestamp {
-            font-size: 0.75rem;
-            color: var(--theme-light-text);
-            margin-top: 0.25rem;
-            display: block;
-            text-align: right;
-        }
-
-        /* Input Area */
-        #input-area {
-            padding: 1rem;
-            display: flex;
-            align-items: center;
-            border-top: 1px solid var(--theme-glass-border);
-            background-color: var(--theme-background);
-        }
-
-        #message-input {
-            flex-grow: 1;
-            padding: 0.75rem;
-            border: 1px solid var(--theme-glass-border);
-            border-radius: var(--border-radius);
-            font-size: 1rem;
-            color: var(--theme-text);
-            background-color: transparent; /* Make input background transparent */
-            resize: none; /* Disable textarea resizing */
-            min-height: 40px; /* Set a minimum height */
-            max-height: 100px; /* Set a maximum height */
-        }
-
-        #message-input::placeholder {
-            color: var(--theme-light-text);
-        }
-
-        #send-button {
-            background-color: var(--theme-primary);
-            color: white;
-            border: none;
-            border-radius: var(--border-radius);
-            padding: 0.75rem 1.25rem;
-            margin-left: 0.5rem;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-        }
-
-        #send-button:hover {
-            background-color: var(--theme-secondary);
-        }
-
-        /* Loading Indicator */
-        .loading-spinner {
-            border: 4px solid rgba(0, 0, 0, 0.1);
-            border-top: 4px solid var(--theme-primary);
-            border-radius: 50%;
-            width: 20px;
-            height: 20px;
-            animation: spin 1s linear infinite;
-            margin: 0 auto;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        /* Error Message */
-        .error-message {
-            background-color: #F44336;
-            color: white;
-            padding: 1rem;
-            border-radius: var(--border-radius);
-            margin-bottom: 1rem;
-            text-align: center;
-        }
-
-        /* Scroll-to-Bottom Button */
-        #scroll-to-bottom {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background-color: var(--theme-primary);
-            color: white;
-            border: none;
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            font-size: 1.5rem;
-            cursor: pointer;
-            display: none; /* Hidden by default */
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 2px 4px var(--theme-shadow);
-            transition: background-color 0.3s ease, opacity 0.3s ease;
-        }
-
-        #scroll-to-bottom:hover {
-            background-color: var(--theme-secondary);
-        }
-
-        #scroll-to-bottom.show {
-            display: flex; /* Show when the class is added */
-        }
-
-        /* Context Menu */
-        .context-menu {
-            position: absolute;
-            background-color: var(--theme-background);
-            border: 1px solid var(--theme-glass-border);
-            border-radius: var(--border-radius);
-            box-shadow: 0 2px 4px var(--theme-shadow);
-            padding: 0.5rem 0;
-            min-width: 150px;
-            z-index: 1000;
-            display: none;
-        }
-
-        .context-menu ul {
-            list-style: none;
-        }
-
-        .context-menu li {
-            padding: 0.5rem 1rem;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-            color: var(--theme-text);
-        }
-
-        .context-menu li:hover {
-            background-color: var(--theme-glass-background);
-        }
-
-        /* Settings/Preferences Panel */
-        .settings-panel {
-            position: fixed;
-            top: 0;
-            right: -300px; /* Initially hidden off-screen */
-            width: 300px;
-            height: 100%;
-            background-color: var(--theme-background);
-            border-left: 1px solid var(--theme-glass-border);
-            box-shadow: -2px 0 4px var(--theme-shadow);
-            padding: 2rem;
-            transition: right 0.3s ease;
-            z-index: 1000;
-        }
-
-        .settings-panel.open {
-            right: 0; /* Slide in when open class is added */
-        }
-
-        .settings-panel h2 {
-            font-size: 1.5rem;
-            margin-bottom: 1rem;
-            color: var(--theme-primary);
-        }
-
-        .setting-item {
-            margin-bottom: 1rem;
-        }
-
-        .setting-item label {
-            display: block;
-            margin-bottom: 0.5rem;
-            color: var(--theme-light-text);
-        }
-
-        .setting-item input[type="range"] {
-            width: 100%;
-        }
-
-        /* Clear Conversation Confirmation Modal */
-        .modal {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
-            display: none;
-            justify-content: center;
-            align-items: center;
-            z-index: 1001;
-        }
-
-        .modal.open {
-            display: flex;
-        }
-
-        .modal-content {
-            background-color: var(--theme-background);
-            border-radius: var(--border-radius);
-            padding: 2rem;
-            box-shadow: 0 4px 8px var(--theme-shadow);
-            text-align: center;
-            min-width: 300px;
-        }
-
-        .modal-content h3 {
-            font-size: 1.25rem;
-            margin-bottom: 1rem;
-            color: var(--theme-text);
-        }
-
-        .modal-content p {
-            margin-bottom: 1.5rem;
-            color: var(--theme-light-text);
-        }
-
-        .modal-buttons button {
-            padding: 0.75rem 1.25rem;
-            border: none;
-            border-radius: var(--border-radius);
-            cursor: pointer;
-            margin: 0 0.5rem;
-            transition: background-color 0.3s ease;
-        }
-
-        .modal-buttons button.confirm {
-            background-color: #F44336;
-            color: white;
-        }
-
-        .modal-buttons button.confirm:hover {
-            background-color: #D32F2F;
-        }
-
-        .modal-buttons button.cancel {
-            background-color: var(--theme-secondary);
-            color: white;
-        }
-
-        .modal-buttons button.cancel:hover {
-            background-color: var(--theme-primary);
-        }
-
-        /* Theme Switch */
-        .theme-switch {
-            display: flex;
-            align-items: center;
-        }
-
-        .theme-switch label {
-            margin-right: 0.5rem;
-            color: var(--theme-light-text);
-        }
-
-        /* Notification Preferences */
-        .notification-setting {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        .notification-setting label {
-            margin-right: 1rem;
-        }
-
-        /* Responsive Design */
-        @media (max-width: 768px) {
-            .container {
-                padding: 10px;
-            }
-
-            #input-area {
-                flex-direction: column;
-                align-items: stretch;
-            }
-
-            #message-input {
-                margin-bottom: 0.5rem;
-            }
-
-            #send-button {
-                margin-left: 0;
-            }
-
-            nav ul {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-
-            .nav-left, .nav-right {
-                width: 100%;
-                margin-bottom: 0.5rem;
-            }
-
-            .nav-right {
-                justify-content: flex-end;
-            }
-
-            #chat-container {
-              height: calc(100vh - 180px);
-            }
-
-            .context-menu {
-                position: fixed; /* Ensure it's positioned relative to the viewport */
-                top: 50%;          /* Center vertically */
-                left: 50%;         /* Center horizontally */
-                transform: translate(-50%, -50%); /* Adjust for the menu's size */
-                width: 80%;         /* Occupy a larger portion of the screen */
-                max-width: 300px;  /* Set a maximum width */
-            }
-        }
-
-        /* Markdown Styling (Basic) */
-        .user-message em, .bot-message em {
-            font-style: italic;
-        }
-
-        .user-message strong, .bot-message strong {
-            font-weight: bold;
-        }
-
-        .bot-status {
-            display: inline-block;
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-            margin-left: 5px;
-        }
-
-        .bot-online {
-            background-color: #4CAF50;
-        }
-
-        .bot-offline {
-            background-color: #F44336;
-        }
-
-        .avatar {
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            background-color: #ccc; /* Placeholder color */
-            margin-right: 8px;
-            display: inline-block;
-            vertical-align: middle;
-        }
-
-        .message-with-avatar {
-            display: flex;
-            align-items: flex-start;
-        }
-
-        .message-content {
-            flex-grow: 1;
-        }
-
-        /* Debouncing animation for send button */
-        .send-button-debounce {
-            animation: debounceAnimation 0.5s ease-in-out;
-        }
-
-        @keyframes debounceAnimation {
-            0% {
-                transform: scale(1);
-            }
-            50% {
-                transform: scale(0.9);
-            }
-            100% {
-                transform: scale(1);
-            }
-        }
-
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Modern Chat Application</title>
+<style>
+:root {
+  --primary-color: #3f51b5;
+  --secondary-color: #6200ee;
+  --background-color: #f4f4f4;
+  --text-color: #333;
+  --light-background: #fff;
+  --dark-background: #222;
+  --border-radius: 8px;
+  --box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: var(--background-color);
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  color: var(--text-color);
+}
+
+/* Top Navigation Bar */
+header {
+  position: sticky;
+  top: 0;
+  background-color: var(--light-background);
+  padding: 1rem;
+  box-shadow: var(--box-shadow);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 10;
+}
+
+.logo {
+  width: 50px;
+  height: 50px;
+  background-color: var(--primary-color);
+  border-radius: var(--border-radius);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color:white;
+}
+
+.user-profile {
+  display: flex;
+  align-items: center;
+}
+
+.user-profile img {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+}
+
+
+/* Chat Container */
+.chat-container {
+  flex: 1;
+  overflow-y: auto;
+  padding: 1rem;
+}
+
+.message {
+  padding: 0.5rem 1rem;
+  margin-bottom: 0.5rem;
+  border-radius: var(--border-radius);
+  max-width: 70%;
+}
+
+.user-message {
+  background-color: var(--primary-color);
+  color: white;
+  align-self: flex-end;
+}
+
+.bot-message {
+  background-color: #e0e0e0;
+  align-self: flex-start;
+}
+
+/* User Input */
+.input-area {
+  padding: 1rem;
+  display: flex;
+}
+
+.input-field {
+  flex: 1;
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: var(--border-radius);
+}
+
+.send-button {
+  padding: 0.5rem 1rem;
+  background-color: var(--secondary-color);
+  color: white;
+  border: none;
+  border-radius: var(--border-radius);
+  margin-left: 0.5rem;
+  cursor: pointer;
+}
+
+/* Footer */
+footer {
+  background-color: var(--light-background);
+  padding: 1rem;
+  text-align: center;
+  border-top: 1px solid #ccc;
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+  header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+</style>
 </head>
-<body class="">
+<body>
+<header>
+  <div class="logo">Chat App</div>
+  <div class="user-profile">
+    <div style="width:30px; height:30px; border-radius:50%; background-color: #8bc34a;"></div>
+    <div style="margin-left: 0.5rem;">User</div>
+  </div>
+  <div style="width:30px; height:30px; background-color: #ffeb3b; border-radius:var(--border-radius); cursor:pointer;"></div>
+</header>
+<main>
+  <div class="chat-container">
+    <div class="message user-message">User Message 1</div>
+    <div class="message bot-message">Bot Message 1</div>
+    <div class="message user-message">User Message 2</div>
+  </div>
+  <div class="input-area">
+    <input type="text" class="input-field" placeholder="Type your message...">
+    <button class="send-button">Send</button>
+  </div>
+</main>
+<footer>
+  &copy; 2023 Chat App. All rights reserved.
+</footer>
+<script>
+// Placeholder JavaScript - Replace with actual WebSocket and NLP integration
+const chatContainer = document.querySelector('.chat-container');
+const inputField = document.querySelector('.input-field');
+const sendButton = document.querySelector('.send-button');
 
-    <nav>
-        <ul>
-            <li class="nav-left">
-                <a href="#" class="logo">ChatApp</a>
-            </li>
-            <li class="nav-right">
-                <button id="settings-button">&#9881; Settings</button>
-                <button id="help-button">?</button>
-                <button id="account-button">&#128100;</button>
-                <button id="clear-button">Clear</button>
-            </li>
-        </ul>
-    </nav>
+sendButton.addEventListener('click', () => {
+  const message = inputField.value;
+  if (message.trim() !== '') {
+    sendMessage(message);
+    inputField.value = '';
+  }
+});
 
-    <div id="chat-container">
-        <div id="chat-messages">
-            <!-- Messages will be added here -->
-        </div>
-
-        <div id="input-area">
-            <textarea id="message-input" placeholder="Type a message..."></textarea>
-            <button id="send-button">&#10148;</button>
-        </div>
-    </div>
-
-    <button id="scroll-to-bottom">&#8595;</button>
-
-    <!-- Context Menu -->
-    <div class="context-menu" id="message-context-menu">
-        <ul>
-            <li id="copy-message">Copy</li>
-            <li id="delete-message">Delete</li>
-        </ul>
-    </div>
-
-    <!-- Settings Panel -->
-    <div class="settings-panel" id="settings-panel">
-        <h2>Settings</h2>
-        <div class="setting-item">
-            <label for="theme-switch">Theme:</label>
-            <div class="theme-switch">
-                <label>Light</label>
-                <input type="checkbox" id="theme-switch">
-                <label>Dark</label>
-            </div>
-        </div>
-        <div class="setting-item">
-            <label for="font-size">Font Size:</label>
-            <input type="range" id="font-size" min="12" max="20" value="16">
-        </div>
-        <div class="setting-item notification-setting">
-            <label for="notifications">Enable Notifications:</label>
-            <input type="checkbox" id="notifications">
-        </div>
-    </div>
-
-    <!-- Clear Conversation Confirmation Modal -->
-    <div class="modal" id="clear-modal">
-        <div class="modal-content">
-            <h3>Clear Conversation</h3>
-            <p>Are you sure you want to clear the entire conversation history?</p>
-            <div class="modal-buttons">
-                <button class="confirm" id="confirm-clear">Confirm</button>
-                <button class="cancel" id="cancel-clear">Cancel</button>
-            </div>
-        </div>
-    </div>
-
-    <script>
-        const chatMessages = document.getElementById('chat-messages');
-        const messageInput = document.getElementById('message-input');
-        const sendButton = document.getElementById('send-button');
-        const scrollToBottomButton = document.getElementById('scroll-to-bottom');
-        const messageContextMenu = document.getElementById('message-context-menu');
-        const settingsButton = document.getElementById('settings-button');
-        const settingsPanel = document.getElementById('settings-panel');
-        const clearButton = document.getElementById('clear-button');
-        const clearModal = document.getElementById('clear-modal');
-        const confirmClearButton = document.getElementById('confirm-clear');
-        const cancelClearButton = document.getElementById('cancel-clear');
-        const themeSwitch = document.getElementById('theme-switch');
-        const fontSizeInput = document.getElementById('font-size');
-        const notificationsCheckbox = document.getElementById('notifications');
-        let selectedMessage = null; // Store the selected message element
-        let debouncing = false;
-
-        // Load settings from local storage
-        const savedTheme = localStorage.getItem('theme') || 'light';
-        const savedFontSize = localStorage.getItem('fontSize') || '16';
-        const savedNotifications = localStorage.getItem('notifications') === 'true';
-
-        // Apply saved settings
-        if (savedTheme === 'dark') {
-            document.body.classList.add('dark-theme');
-            themeSwitch.checked = true;
-        }
-        document.documentElement.style.fontSize = savedFontSize + 'px';
-        fontSizeInput.value = savedFontSize;
-        notificationsCheckbox.checked = savedNotifications;
-
-        // Function to create a message element
-        function createMessageElement(messageText, isUser, timestamp) {
-            const messageDiv = document.createElement('div');
-            messageDiv.classList.add('message');
-            messageDiv.classList.add(isUser ? 'user-message' : 'bot-message');
-
-            // Wrap the message content in a container for avatar
-            const messageWithAvatar = document.createElement('div');
-            messageWithAvatar.classList.add('message-with-avatar');
-
-            // Add avatar
-            const avatarDiv = document.createElement('div');
-            avatarDiv.classList.add('avatar');
-            messageWithAvatar.appendChild(avatarDiv);
-
-            const messageContentDiv = document.createElement('div');
-            messageContentDiv.classList.add('message-content');
-
-            // Simple Markdown rendering (italics and bold)
-            let formattedMessage = messageText.replace(/\*(.*?)\*/g, '<em>$1</em>'); // Italics
-            formattedMessage = formattedMessage.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>'); // Bold
-            messageContentDiv.innerHTML = formattedMessage;
-
-            const timestampSpan = document.createElement('span');
-            timestampSpan.classList.add('message-timestamp');
-            timestampSpan.textContent = timestamp;
-
-            messageContentDiv.appendChild(timestampSpan);
-            messageWithAvatar.appendChild(messageContentDiv)
-
-            messageDiv.appendChild(messageWithAvatar);
-
-            messageDiv.addEventListener('contextmenu', (event) => {
-                event.preventDefault();
-                selectedMessage = messageDiv;
-                positionContextMenu(event);
-            });
-
-            return messageDiv;
-        }
-
-
-        // Function to add a message to the chat
-        function addMessage(messageText, isUser) {
-            const now = new Date();
-            const timestamp = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-            const messageElement = createMessageElement(messageText, isUser, timestamp);
-            chatMessages.appendChild(messageElement);
-            chatMessages.scrollTop = chatMessages.scrollHeight; // Scroll to bottom
-        }
-
-        // Send message function
-        function sendMessage() {
-            const messageText = messageInput.value.trim();
-            if (messageText !== "") {
-              if (debouncing) {
-                return;
-              }
-
-              debouncing = true;
-              addMessage(messageText, true);
-              messageInput.value = "";
-
-              // Simulate bot response after a short delay
-              setTimeout(() => {
-                addMessage("This is a simulated response from the bot.", false);
-              }, 500); // Simulate network latency
-
-              // Debounce Visual Feedback
-              sendButton.classList.add('send-button-debounce');
-              setTimeout(() => {
-                  sendButton.classList.remove('send-button-debounce');
-                  debouncing = false;
-              }, 500); // Match animation duration
-            }
-        }
-
-        // Function to position the context menu
-        function positionContextMenu(event) {
-            messageContextMenu.style.top = event.clientY + 'px';
-            messageContextMenu.style.left = event.clientX + 'px';
-            messageContextMenu.style.display = 'block';
-        }
-
-        // Event listeners
-        sendButton.addEventListener('click', sendMessage);
-
-        messageInput.addEventListener('keydown', (event) => {
-            if (event.key === 'Enter' && !event.shiftKey) {
-                event.preventDefault();
-                sendMessage();
-            }
-        });
-
-        chatMessages.addEventListener('scroll', () => {
-            if (chatMessages.scrollTop + chatMessages.clientHeight < chatMessages.scrollHeight - 20) {
-                scrollToBottomButton.classList.add('show');
-            } else {
-                scrollToBottomButton.classList.remove('show');
-            }
-        });
-
-        scrollToBottomButton.addEventListener('click', () => {
-            chatMessages.scrollTop = chatMessages.scrollHeight;
-            scrollToBottomButton.classList.remove('show');
-        });
-
-        document.addEventListener('click', (event) => {
-            if (!messageContextMenu.contains(event.target) && event.target !== selectedMessage) {
-                messageContextMenu.style.display = 'none';
-            }
-        });
-
-        document.getElementById('copy-message').addEventListener('click', () => {
-            if (selectedMessage) {
-                navigator.clipboard.writeText(selectedMessage.textContent)
-                    .then(() => {
-                        console.log('Message copied to clipboard');
-                    })
-                    .catch(err => {
-                        console.error('Failed to copy message: ', err);
-                    });
-                messageContextMenu.style.display = 'none';
-                selectedMessage = null;
-            }
-        });
-
-        document.getElementById('delete-message').addEventListener('click', () => {
-            if (selectedMessage) {
-                selectedMessage.remove();
-                messageContextMenu.style.display = 'none';
-                selectedMessage = null;
-            }
-        });
-
-        settingsButton.addEventListener('click', () => {
-            settingsPanel.classList.toggle('open');
-        });
-
-        clearButton.addEventListener('click', () => {
-            clearModal.classList.add('open');
-        });
-
-        confirmClearButton.addEventListener('click', () => {
-            chatMessages.innerHTML = ''; // Clear all messages
-            clearModal.classList.remove('open');
-        });
-
-        cancelClearButton.addEventListener('click', () => {
-            clearModal.classList.remove('open');
-        });
-
-        themeSwitch.addEventListener('change', () => {
-            document.body.classList.toggle('dark-theme');
-            const theme = document.body.classList.contains('dark-theme') ? 'dark' : 'light';
-            localStorage.setItem('theme', theme);
-        });
-
-        fontSizeInput.addEventListener('input', () => {
-            const fontSize = fontSizeInput.value;
-            document.documentElement.style.fontSize = fontSize + 'px';
-            localStorage.setItem('fontSize', fontSize);
-        });
-
-        notificationsCheckbox.addEventListener('change', () => {
-            const notificationsEnabled = notificationsCheckbox.checked;
-            localStorage.setItem('notifications', notificationsEnabled);
-
-            if (notificationsEnabled) {
-                // Request permission for notifications
-                if (Notification.permission !== 'granted') {
-                    Notification.requestPermission().then(permission => {
-                        if (permission === 'granted') {
-                            console.log('Notification permission granted.');
-                        }
-                    });
-                }
-            }
-        });
-
-        // Initial scroll to bottom
-        chatMessages.scrollTop = chatMessages.scrollHeight;
-    </script>
+function sendMessage(message) {
+  const messageElement = document.createElement('div');
+  messageElement.classList.add('message', 'user-message');
+  messageElement.textContent = message;
+  chatContainer.appendChild(messageElement);
+  // Simulate bot response after 1 second
+  setTimeout(() => {
+    const botMessageElement = document.createElement('div');
+    botMessageElement.classList.add('message', 'bot-message');
+    botMessageElement.textContent = 'Bot Response: ' + message;
+    chatContainer.appendChild(botMessageElement);
+    chatContainer.scrollTop = chatContainer.scrollHeight;
+  }, 1000);
+}
+</script>
 </body>
 </html>

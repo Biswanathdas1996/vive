@@ -1,7 +1,7 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
-import { enhancedLLMService } from "./services/enhancedLLM";
+import { llmService } from "./services/llm";
 import { fileGeneratorService } from "./services/fileGenerator";
 import { ObjectStorageService, ObjectPermission } from "./objectStorage";
 import { imageAnalysisService } from "./services/imageAnalysis";
@@ -25,7 +25,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
 
       // Step 1: Analyze prompt
-      const analysisResult = await enhancedLLMService.analyzePrompt(prompt);
+      const analysisResult = await llmService.analyzePrompt(prompt);
 
       // Create project
       const project = await storage.createProject({
@@ -85,7 +85,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const { analysisResult } = req.body;
 
       const fileStructure =
-        await enhancedLLMService.generateFileStructure(analysisResult);
+        await llmService.generateFileStructure(analysisResult);
       console.log("Generated file structure:", fileStructure);
       // Update chat session
       const chatSession = await storage.getChatSession(sessionId);
@@ -138,7 +138,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const { sessionId } = req.params;
       const { fileName, analysisResult, fileStructure } = req.body;
 
-      const content = await enhancedLLMService.generateFileContent(
+      const content = await llmService.generateFileContent(
         fileName,
         analysisResult,
         fileStructure,
@@ -188,7 +188,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const { fileName, modificationRequest } = req.body;
 
       const currentContent = await fileGeneratorService.readFile(fileName);
-      const modifiedContent = await enhancedLLMService.modifyFileContent(
+      const modifiedContent = await llmService.modifyFileContent(
         fileName,
         currentContent,
         modificationRequest,
@@ -292,36 +292,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Object storage routes for image uploads
-  // Current AI config route
-  app.get("/api/ai-config", async (req, res) => {
-    try {
-      const config = await enhancedLLMService.getCurrentConfig();
-      const settings = await storage.getSettings("default");
-      
-      // Check if API key is from settings or environment
-      let keySource = "none";
-      if (config.apiKey) {
-        if (settings?.apiKeys?.[config.provider]) {
-          keySource = "settings";
-        } else {
-          keySource = "environment";
-        }
-      }
-      
-      res.json({
-        provider: config.provider,
-        model: config.model,
-        hasApiKey: !!config.apiKey,
-        keySource,
-        status: "active"
-      });
-    } catch (error) {
-      res.status(500).json({
-        error: error instanceof Error ? error.message : String(error),
-      });
-    }
-  });
-
   // Settings routes
   app.get("/api/settings", async (req, res) => {
     try {
