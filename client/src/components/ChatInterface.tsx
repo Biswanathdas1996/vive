@@ -170,12 +170,33 @@ export function ChatInterface({
   // MCP-based file generation
   const generateFilesWithMcp = async (sessionId: string, structure: string) => {
     try {
+      console.log('Starting MCP file generation with structure:', structure);
       const structureObj = JSON.parse(structure);
-      const files = structureObj.public?.children ? Object.keys(structureObj.public.children) : [];
+      console.log('Parsed structure:', structureObj);
+      
+      // Extract files from the structure - it might be nested differently
+      let files: string[] = [];
+      if (structureObj.public?.children) {
+        files = Object.keys(structureObj.public.children);
+      } else if (structureObj.children) {
+        files = Object.keys(structureObj.children);
+      } else if (typeof structureObj === 'object') {
+        // Sometimes the structure is directly the file list
+        files = Object.keys(structureObj);
+      }
+      
+      console.log('Files to generate:', files);
+      
+      if (files.length === 0) {
+        // Fallback to generating a basic index.html
+        files = ['index.html'];
+      }
       
       for (let i = 0; i < files.length; i++) {
         const fileName = files[i];
-        setCurrentWorkflow(prev => ({
+        console.log(`Generating file ${i + 1}/${files.length}: ${fileName}`);
+        
+        setCurrentWorkflow((prev: any) => ({
           ...prev,
           currentStep: "content",
           structureComplete: true,
@@ -193,22 +214,33 @@ export function ChatInterface({
             arguments: {
               fileName,
               fileStructure: structure,
-              requirements: structureObj.public.children[fileName]?.prompt || `Generate content for ${fileName}`
+              requirements: `Generate a complete, modern ${fileName} file with embedded CSS and JavaScript`
             }
           })
         });
         
-        const result = await response.json();
+        if (!response.ok) {
+          throw new Error(`Failed to generate ${fileName}: ${response.statusText}`);
+        }
         
-        // Save the generated file
-        await apiRequest("POST", `/api/chat/${sessionId}/generate-file`, {
+        const result = await response.json();
+        console.log(`Generated content for ${fileName}:`, result);
+        
+        if (!result.content || !result.content[0] || !result.content[0].text) {
+          throw new Error(`Invalid response format for ${fileName}`);
+        }
+        
+        // Save the generated file using the correct endpoint
+        const saveResponse = await apiRequest("POST", `/api/chat/${sessionId}/generate-content`, {
           fileName,
           content: result.content[0].text,
           useMcp: true
         });
+        
+        console.log(`Saved file ${fileName}:`, saveResponse);
       }
       
-      setCurrentWorkflow(prev => ({
+      setCurrentWorkflow((prev: any) => ({
         ...prev,
         contentComplete: true,
         completedFiles: files.length
@@ -216,13 +248,18 @@ export function ChatInterface({
       setIsGenerating(false);
       
       queryClient.invalidateQueries({ queryKey: ["/api/chat", sessionId] });
+      
+      toast({
+        title: "Generation Complete",
+        description: `Successfully generated ${files.length} files using MCP server`,
+      });
     } catch (error) {
       console.error('MCP file generation failed:', error);
       setIsGenerating(false);
       setCurrentWorkflow(null);
       toast({
         title: "Generation Error",
-        description: "Failed to generate files using MCP server",
+        description: `Failed to generate files using MCP server: ${error instanceof Error ? error.message : 'Unknown error'}`,
         variant: "destructive",
       });
     }

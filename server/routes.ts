@@ -137,9 +137,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post("/api/chat/:sessionId/generate-content", async (req, res) => {
     try {
       const { sessionId } = req.params;
-      const { fileName, analysisResult, fileStructure } = req.body;
+      const { fileName, analysisResult, fileStructure, content, useMcp } = req.body;
 
-      const content = await llmService.generateFileContent(
+      // If content is provided (MCP mode), use it directly; otherwise generate it
+      const finalContent = content || await llmService.generateFileContent(
         fileName,
         analysisResult,
         fileStructure,
@@ -153,19 +154,19 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Save file to public directory
       const generatedFile = await fileGeneratorService.createFile(
         fileName,
-        content,
+        finalContent,
         chatSession.projectId!,
       );
       await storage.createGeneratedFile({
         projectId: chatSession.projectId!,
         fileName,
         filePath: generatedFile.filePath,
-        content,
+        content: finalContent,
       });
 
       res.json({
         fileName,
-        content,
+        content: finalContent,
         filePath: generatedFile.filePath,
         workflow: {
           step: 3,
