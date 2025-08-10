@@ -147,13 +147,9 @@ export class MemStorage implements IStorage {
 
 export class DatabaseStorage implements IStorage {
   private async getDb() {
-    // Use dynamic database service for configuration-aware connections
-    try {
-      return await getDynamicDb();
-    } catch (error) {
-      // Fallback to static connection for initial operations
-      return db;
-    }
+    // For now, use static connection to avoid circular dependencies
+    // TODO: Implement proper dynamic switching after initial settings are loaded
+    return db;
   }
 
   async createProject(insertProject: InsertProject): Promise<Project> {

@@ -5,7 +5,7 @@ import { llmService } from "./services/llm";
 import { fileGeneratorService } from "./services/fileGenerator";
 import { ObjectStorageService, ObjectPermission } from "./objectStorage";
 import { imageAnalysisService } from "./services/imageAnalysis";
-import { dynamicDbService } from "./dynamicDb";
+import { databaseManager } from "./databaseManager";
 import express from "express";
 import path from "path";
 
@@ -387,7 +387,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(400).json({ error: "Database configuration is required" });
       }
 
-      const isConnected = await dynamicDbService.testConnection(databaseConfig);
+      const isConnected = await databaseManager.testConnection(databaseConfig);
       
       res.json({
         connected: isConnected,
