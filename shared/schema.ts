@@ -36,7 +36,6 @@ export const settings = pgTable("settings", {
   aiModel: text("ai_model").notNull().default("gemini-1.5-flash"),
   apiKeys: json("api_keys").$type<Record<string, string>>().default({}),
   preferences: json("preferences").$type<Record<string, any>>().default({}),
-  databaseConfig: json("database_config").$type<DatabaseConfig>(),
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
 });
@@ -74,16 +73,6 @@ export interface AIModelConfig {
   apiKey?: string;
 }
 
-export interface DatabaseConfig {
-  host?: string;
-  port?: number;
-  database?: string;
-  username?: string;
-  password?: string;
-  ssl?: boolean;
-  connectionString?: string;
-}
-
 export interface AppSettings {
   aiProvider: "gemini" | "openai" | "claude";
   aiModel: string;
@@ -94,7 +83,6 @@ export interface AppSettings {
     autoSave?: boolean;
     showAdvanced?: boolean;
   };
-  databaseConfig?: DatabaseConfig;
 }
 
 export const insertProjectSchema = createInsertSchema(projects).omit({

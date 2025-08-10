@@ -5,7 +5,6 @@ import { llmService } from "./services/llm";
 import { fileGeneratorService } from "./services/fileGenerator";
 import { ObjectStorageService, ObjectPermission } from "./objectStorage";
 import { imageAnalysisService } from "./services/imageAnalysis";
-import { databaseManager } from "./databaseManager";
 import express from "express";
 import path from "path";
 
@@ -329,22 +328,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get("/api/settings", async (req, res) => {
     try {
       const userId = req.query.userId as string || "default";
-      let settings = await storage.getSettings(userId);
+      const settings = await storage.getSettings(userId);
       
-      // Create default settings if none exist
       if (!settings) {
-        settings = await storage.upsertSettings({
-          userId,
-          aiProvider: "gemini",
-          aiModel: "gemini-1.5-flash",
-          apiKeys: {},
-          preferences: {
-            theme: ["dark"],
-            language: ["en"],
-            autoSave: [true],
-            showAdvanced: [false]
-          },
-          databaseConfig: null
+        return res.status(404).json({
+          error: "No settings found. Please configure AI provider and API keys in settings."
         });
       }
       
@@ -361,76 +349,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const settingsData = req.body;
       const userId = settingsData.userId || "default";
       
-      // If we're setting a new database configuration, migrate settings
-      if (settingsData.databaseConfig?.connectionString) {
-        try {
-          await databaseManager.migrateSettingsToConfiguredDatabase(settingsData.databaseConfig);
-        } catch (migrationError) {
-          console.error("Migration error:", migrationError);
-          // Continue with normal save even if migration fails
-        }
-      }
-      
       const settings = await storage.upsertSettings({
         userId,
         aiProvider: settingsData.aiProvider,
         aiModel: settingsData.aiModel,
         apiKeys: settingsData.apiKeys || {},
-        preferences: settingsData.preferences || {},
-        databaseConfig: settingsData.databaseConfig || null
+        preferences: settingsData.preferences || {}
       });
       
       res.json(settings);
     } catch (error) {
       res.status(500).json({
-        error: error instanceof Error ? error.message : String(error),
-      });
-    }
-  });
-
-  // Test database connection
-  app.post("/api/database/test", async (req, res) => {
-    try {
-      const { databaseConfig } = req.body;
-      
-      if (!databaseConfig) {
-        return res.status(400).json({ error: "Database configuration is required" });
-      }
-
-      const isConnected = await databaseManager.testConnection(databaseConfig);
-      
-      res.json({
-        connected: isConnected,
-        message: isConnected ? "Database connection successful" : "Database connection failed"
-      });
-    } catch (error) {
-      res.status(500).json({
-        connected: false,
-        error: error instanceof Error ? error.message : String(error),
-      });
-    }
-  });
-
-  // Get current database status
-  app.get("/api/database/status", async (req, res) => {
-    try {
-      const settings = await storage.getSettings("default");
-      
-      res.json({
-        configured: !!(settings?.databaseConfig?.connectionString),
-        usingEnvironment: !settings?.databaseConfig?.connectionString && !!process.env.DATABASE_URL,
-        hasEnvironmentFallback: !!process.env.DATABASE_URL,
-        currentConfig: settings?.databaseConfig ? {
-          hasConnectionString: !!settings.databaseConfig.connectionString,
-          ssl: settings.databaseConfig.ssl
-        } : null
-      });
-    } catch (error) {
-      console.error('Database status error:', error);
-      res.status(500).json({
-        configured: false,
-        usingEnvironment: false,
-        hasEnvironmentFallback: false,
         error: error instanceof Error ? error.message : String(error),
       });
     }

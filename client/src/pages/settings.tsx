@@ -9,7 +9,7 @@ import { Badge } from "@/components/ui/badge";
 import { Switch } from "@/components/ui/switch";
 import { Separator } from "@/components/ui/separator";
 import { useToast } from "@/hooks/use-toast";
-import { Settings, Save, Zap, Brain, MessageSquare, Key, Monitor, Database } from "lucide-react";
+import { Settings, Save, Zap, Brain, MessageSquare, Key, Monitor } from "lucide-react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
 
@@ -46,16 +46,6 @@ const AI_MODELS = {
   }
 } as const;
 
-interface DatabaseConfig {
-  host?: string;
-  port?: number;
-  database?: string;
-  username?: string;
-  password?: string;
-  ssl?: boolean;
-  connectionString?: string;
-}
-
 interface AppSettings {
   aiProvider: keyof typeof AI_MODELS;
   aiModel: string;
@@ -66,7 +56,6 @@ interface AppSettings {
     autoSave?: boolean;
     showAdvanced?: boolean;
   };
-  databaseConfig?: DatabaseConfig;
 }
 
 export default function SettingsPage() {
@@ -87,13 +76,10 @@ export default function SettingsPage() {
       language: "en",
       autoSave: true,
       showAdvanced: false
-    },
-    databaseConfig: {}
+    }
   });
 
   const [activeTab, setActiveTab] = useState("models");
-  const [dbTestResult, setDbTestResult] = useState<{ connected: boolean; message: string } | null>(null);
-  const [isTestingDb, setIsTestingDb] = useState(false);
 
   // Update form data when settings are loaded
   useEffect(() => {
@@ -144,65 +130,6 @@ export default function SettingsPage() {
     saveSettingsMutation.mutate(formData);
   };
 
-  const handleDatabaseConfigChange = (field: keyof DatabaseConfig, value: string | number | boolean) => {
-    setFormData(prev => ({
-      ...prev,
-      databaseConfig: {
-        ...prev.databaseConfig,
-        [field]: value
-      }
-    }));
-  };
-
-  const testDatabaseConnection = async () => {
-    if (!formData.databaseConfig?.connectionString) {
-      toast({
-        title: "Error",
-        description: "Please enter a database URL to test the connection.",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    setIsTestingDb(true);
-    setDbTestResult(null);
-
-    try {
-      console.log("Testing database connection with config:", formData.databaseConfig);
-      const response = await apiRequest("POST", "/api/database/test", {
-        databaseConfig: formData.databaseConfig
-      });
-      
-      const data = await response.json();
-      console.log("Database test response:", data);
-      
-      setDbTestResult({
-        connected: data.connected,
-        message: data.message
-      });
-
-      toast({
-        title: data.connected ? "Connection Successful" : "Connection Failed",
-        description: data.message,
-        variant: data.connected ? "default" : "destructive",
-      });
-    } catch (error) {
-      console.error("Database test error:", error);
-      setDbTestResult({
-        connected: false,
-        message: "Failed to test connection"
-      });
-      
-      toast({
-        title: "Connection Test Failed",
-        description: "Unable to test database connection. Please check your settings.",
-        variant: "destructive",
-      });
-    } finally {
-      setIsTestingDb(false);
-    }
-  };
-
   const getProviderStatus = (provider: keyof typeof AI_MODELS) => {
     const hasApiKey = formData.apiKeys[provider];
     const isSelected = formData.aiProvider === provider;
@@ -236,7 +163,7 @@ export default function SettingsPage() {
         </div>
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-          <TabsList className="grid w-full grid-cols-4 bg-slate-800">
+          <TabsList className="grid w-full grid-cols-3 bg-slate-800">
             <TabsTrigger value="models" className="flex items-center space-x-2">
               <Brain className="w-4 h-4" />
               <span>AI Models</span>
@@ -244,10 +171,6 @@ export default function SettingsPage() {
             <TabsTrigger value="keys" className="flex items-center space-x-2">
               <Key className="w-4 h-4" />
               <span>API Keys</span>
-            </TabsTrigger>
-            <TabsTrigger value="database" className="flex items-center space-x-2">
-              <Database className="w-4 h-4" />
-              <span>Database</span>
             </TabsTrigger>
             <TabsTrigger value="preferences" className="flex items-center space-x-2">
               <Monitor className="w-4 h-4" />
@@ -375,84 +298,6 @@ export default function SettingsPage() {
                     <Separator className="bg-slate-700" />
                   </div>
                 ))}
-              </CardContent>
-            </Card>
-          </TabsContent>
-
-          {/* Database Configuration Tab */}
-          <TabsContent value="database" className="space-y-6">
-            <Card className="bg-slate-900 border-slate-700">
-              <CardHeader>
-                <CardTitle className="flex items-center space-x-2">
-                  <Database className="w-5 h-5 text-blue-500" />
-                  <span>Database Configuration</span>
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-6">
-                <div className="space-y-4">
-                  <div className="space-y-3">
-                    <Label className="text-base font-medium">Database URL</Label>
-                    <Input
-                      type="text"
-                      placeholder="postgresql://username:password@host:port/database"
-                      value={formData.databaseConfig?.connectionString || ""}
-                      onChange={(e) => handleDatabaseConfigChange("connectionString", e.target.value)}
-                      className="bg-slate-800 border-slate-600 font-mono text-sm"
-                    />
-                    <p className="text-xs text-slate-500">
-                      Enter a complete PostgreSQL connection string. All settings, API keys, and data will be stored in this database once configured.
-                    </p>
-                  </div>
-
-                  <div className="flex space-x-3">
-                    <Button
-                      onClick={testDatabaseConnection}
-                      disabled={isTestingDb || !formData.databaseConfig?.connectionString}
-                      className="bg-blue-600 hover:bg-blue-700 text-white"
-                    >
-                      {isTestingDb ? "Testing..." : "Test Connection"}
-                    </Button>
-                    
-                    {dbTestResult && (
-                      <div className={`flex items-center space-x-2 px-3 py-2 rounded-md ${
-                        dbTestResult.connected 
-                          ? "bg-green-900/50 text-green-400 border border-green-500/50" 
-                          : "bg-red-900/50 text-red-400 border border-red-500/50"
-                      }`}>
-                        <div className={`w-2 h-2 rounded-full ${
-                          dbTestResult.connected ? "bg-green-400" : "bg-red-400"
-                        }`} />
-                        <span className="text-sm">{dbTestResult.message}</span>
-                      </div>
-                    )}
-                  </div>
-
-                  <Separator className="bg-slate-700" />
-
-                  <div className="space-y-3">
-                    <div className="flex items-center justify-between">
-                      <Label className="font-medium">SSL Connection</Label>
-                      <Switch
-                        checked={formData.databaseConfig?.ssl ?? true}
-                        onCheckedChange={(checked) => handleDatabaseConfigChange("ssl", checked)}
-                      />
-                    </div>
-                    <p className="text-xs text-slate-500">
-                      Enable SSL for secure database connections (recommended for production).
-                    </p>
-                  </div>
-
-                  <div className="bg-slate-800/50 p-4 rounded-lg border border-slate-700">
-                    <h4 className="font-medium text-slate-300 mb-2">Configuration Notes:</h4>
-                    <ul className="text-xs text-slate-400 space-y-1">
-                      <li>• Use a complete connection string for easy setup</li>
-                      <li>• SSL is enabled by default for security</li>
-                      <li>• Test the connection before saving to ensure it works</li>
-                      <li>• All settings, API keys, and application data will be stored in the configured database</li>
-                      <li>• The system will fallback to environment variables if no database is configured</li>
-                    </ul>
-                  </div>
-                </div>
               </CardContent>
             </Card>
           </TabsContent>
