@@ -3,13 +3,30 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import { Switch } from "@/components/ui/switch";
 import { Separator } from "@/components/ui/separator";
 import { useToast } from "@/hooks/use-toast";
-import { Settings, Save, Zap, Brain, MessageSquare, Key, Monitor, Plus, Edit, Trash2 } from "lucide-react";
+import {
+  Settings,
+  Save,
+  Zap,
+  Brain,
+  MessageSquare,
+  Key,
+  Monitor,
+  Plus,
+  Edit,
+  Trash2,
+} from "lucide-react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
 import {
@@ -20,7 +37,14 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -60,14 +84,16 @@ interface AppSettings {
 export default function SettingsPage() {
   const { toast } = useToast();
   const queryClient = useQueryClient();
-  
+
   // Fetch current settings
   const { data: settings, isLoading } = useQuery<AppSettings>({
     queryKey: ["/api/settings"],
   });
 
   // Fetch AI providers from database
-  const { data: providers = [], isLoading: providersLoading } = useQuery<AiProvider[]>({
+  const { data: providers = [], isLoading: providersLoading } = useQuery<
+    AiProvider[]
+  >({
     queryKey: ["/api/ai-providers"],
   });
 
@@ -84,14 +110,16 @@ export default function SettingsPage() {
       theme: "dark",
       language: "en",
       autoSave: true,
-      showAdvanced: false
-    }
+      showAdvanced: false,
+    },
   });
 
   const [activeTab, setActiveTab] = useState("models");
   const [showAddProvider, setShowAddProvider] = useState(false);
   const [showAddModel, setShowAddModel] = useState(false);
-  const [editingProvider, setEditingProvider] = useState<AiProvider | null>(null);
+  const [editingProvider, setEditingProvider] = useState<AiProvider | null>(
+    null,
+  );
   const [editingModel, setEditingModel] = useState<AiModel | null>(null);
 
   // Update form data when settings are loaded
@@ -103,7 +131,8 @@ export default function SettingsPage() {
 
   // Save settings mutation
   const saveSettingsMutation = useMutation({
-    mutationFn: (data: AppSettings) => apiRequest("POST", "/api/settings", data),
+    mutationFn: (data: AppSettings) =>
+      apiRequest("POST", "/api/settings", data),
     onSuccess: () => {
       toast({
         title: "Settings saved",
@@ -126,12 +155,19 @@ export default function SettingsPage() {
       return apiRequest(`/api/ai-providers/${id}`, { method: "DELETE" });
     },
     onSuccess: () => {
-      toast({ title: "Provider deleted", description: "AI provider deleted successfully." });
+      toast({
+        title: "Provider deleted",
+        description: "AI provider deleted successfully.",
+      });
       queryClient.invalidateQueries({ queryKey: ["/api/ai-providers"] });
       queryClient.invalidateQueries({ queryKey: ["/api/ai-models"] });
     },
     onError: (error: any) => {
-      toast({ title: "Error", description: error?.message || "Failed to delete provider.", variant: "destructive" });
+      toast({
+        title: "Error",
+        description: error?.message || "Failed to delete provider.",
+        variant: "destructive",
+      });
     },
   });
 
@@ -140,11 +176,18 @@ export default function SettingsPage() {
       return apiRequest(`/api/ai-models/${id}`, { method: "DELETE" });
     },
     onSuccess: () => {
-      toast({ title: "Model deleted", description: "AI model deleted successfully." });
+      toast({
+        title: "Model deleted",
+        description: "AI model deleted successfully.",
+      });
       queryClient.invalidateQueries({ queryKey: ["/api/ai-models"] });
     },
     onError: (error: any) => {
-      toast({ title: "Error", description: error?.message || "Failed to delete model.", variant: "destructive" });
+      toast({
+        title: "Error",
+        description: error?.message || "Failed to delete model.",
+        variant: "destructive",
+      });
     },
   });
 
@@ -171,67 +214,119 @@ export default function SettingsPage() {
 
   const modelForm = useForm<z.infer<typeof modelFormSchema>>({
     resolver: zodResolver(modelFormSchema),
-    defaultValues: { name: "", key: "", description: "", providerId: 1, isDefault: false },
+    defaultValues: {
+      name: "",
+      key: "",
+      description: "",
+      providerId: 1,
+      isDefault: false,
+    },
   });
 
   // Create mutations with form handling
   const createProviderMutation = useMutation({
     mutationFn: async (data: z.infer<typeof providerFormSchema>) => {
-      return apiRequest("/api/ai-providers", { method: "POST", body: JSON.stringify(data) });
+      return apiRequest("/api/ai-providers", {
+        method: "POST",
+        body: JSON.stringify(data),
+      });
     },
     onSuccess: () => {
-      toast({ title: "Provider added", description: "AI provider created successfully." });
+      toast({
+        title: "Provider added",
+        description: "AI provider created successfully.",
+      });
       queryClient.invalidateQueries({ queryKey: ["/api/ai-providers"] });
       setShowAddProvider(false);
       providerForm.reset();
     },
     onError: (error: any) => {
-      toast({ title: "Error", description: error?.message || "Failed to create provider.", variant: "destructive" });
+      toast({
+        title: "Error",
+        description: error?.message || "Failed to create provider.",
+        variant: "destructive",
+      });
     },
   });
 
   const updateProviderMutation = useMutation({
-    mutationFn: async ({ id, ...data }: { id: number } & z.infer<typeof providerFormSchema>) => {
-      return apiRequest(`/api/ai-providers/${id}`, { method: "PUT", body: JSON.stringify(data) });
+    mutationFn: async ({
+      id,
+      ...data
+    }: { id: number } & z.infer<typeof providerFormSchema>) => {
+      return apiRequest(`/api/ai-providers/${id}`, {
+        method: "PUT",
+        body: JSON.stringify(data),
+      });
     },
     onSuccess: () => {
-      toast({ title: "Provider updated", description: "AI provider updated successfully." });
+      toast({
+        title: "Provider updated",
+        description: "AI provider updated successfully.",
+      });
       queryClient.invalidateQueries({ queryKey: ["/api/ai-providers"] });
       setEditingProvider(null);
       providerForm.reset();
     },
     onError: (error: any) => {
-      toast({ title: "Error", description: error?.message || "Failed to update provider.", variant: "destructive" });
+      toast({
+        title: "Error",
+        description: error?.message || "Failed to update provider.",
+        variant: "destructive",
+      });
     },
   });
 
   const createModelMutation = useMutation({
     mutationFn: async (data: z.infer<typeof modelFormSchema>) => {
-      return apiRequest("/api/ai-models", { method: "POST", body: JSON.stringify(data) });
+      return apiRequest("/api/ai-models", {
+        method: "POST",
+        body: JSON.stringify(data),
+      });
     },
     onSuccess: () => {
-      toast({ title: "Model added", description: "AI model created successfully." });
+      toast({
+        title: "Model added",
+        description: "AI model created successfully.",
+      });
       queryClient.invalidateQueries({ queryKey: ["/api/ai-models"] });
       setShowAddModel(false);
       modelForm.reset();
     },
     onError: (error: any) => {
-      toast({ title: "Error", description: error?.message || "Failed to create model.", variant: "destructive" });
+      toast({
+        title: "Error",
+        description: error?.message || "Failed to create model.",
+        variant: "destructive",
+      });
     },
   });
 
   const updateModelMutation = useMutation({
-    mutationFn: async ({ id, ...data }: { id: number } & z.infer<typeof modelFormSchema>) => {
-      return apiRequest(`/api/ai-models/${id}`, { method: "PUT", body: JSON.stringify(data) });
+    mutationFn: async ({
+      id,
+      ...data
+    }: { id: number } & z.infer<typeof modelFormSchema>) => {
+      return apiRequest(`/api/ai-models/${id}`, {
+        method: "PUT",
+        body: JSON.stringify(data),
+      });
     },
     onSuccess: () => {
-      toast({ title: "Model updated", description: "AI model updated successfully." });
+      toast({
+        title: "Model updated",
+        description: "AI model updated successfully.",
+      });
       queryClient.invalidateQueries({ queryKey: ["/api/ai-models"] });
       setEditingModel(null);
       modelForm.reset();
     },
     onError: (error: any) => {
-      toast({ title: "Error", description: error?.message || "Failed to update model.", variant: "destructive" });
+      toast({
+        title: "Error",
+        description: error?.message || "Failed to update model.",
+        variant: "destructive",
+      });
     },
   });
 
@@ -255,39 +350,33 @@ export default function SettingsPage() {
         providerId: editingModel.providerId,
         isDefault: editingModel.isDefault,
       });
-    } else {
-      // Reset to default values when not editing
-      modelForm.reset({
-        name: "",
-        key: "",
-        description: "",
-        providerId: providers[0]?.id || 1,
-        isDefault: false,
-      });
     }
-  }, [editingModel, modelForm, providers]);
+  }, [editingModel]);
 
   const handleProviderChange = (providerKey: string) => {
-    const provider = providers.find(p => p.key === providerKey);
+    const provider = providers.find((p) => p.key === providerKey);
     if (!provider) return;
-    
-    const providerModels = models.filter(m => m.providerId === provider.id);
-    const defaultModel = providerModels.find(m => m.isDefault)?.key || providerModels[0]?.key || "";
-    
-    setFormData(prev => ({
+
+    const providerModels = models.filter((m) => m.providerId === provider.id);
+    const defaultModel =
+      providerModels.find((m) => m.isDefault)?.key ||
+      providerModels[0]?.key ||
+      "";
+
+    setFormData((prev) => ({
       ...prev,
       aiProvider: providerKey,
-      aiModel: defaultModel
+      aiModel: defaultModel,
     }));
   };
 
   const handleApiKeyChange = (provider: string, value: string) => {
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
       apiKeys: {
         ...prev.apiKeys,
-        [provider]: value
-      }
+        [provider]: value,
+      },
     }));
   };
 
@@ -298,16 +387,21 @@ export default function SettingsPage() {
   const getProviderStatus = (providerKey: string) => {
     const hasApiKey = formData.apiKeys[providerKey];
     const isSelected = formData.aiProvider === providerKey;
-    
-    if (isSelected && hasApiKey) return { status: "active", color: "bg-green-500" };
+
+    if (isSelected && hasApiKey)
+      return { status: "active", color: "bg-green-500" };
     if (hasApiKey) return { status: "configured", color: "bg-blue-500" };
     return { status: "inactive", color: "bg-gray-500" };
   };
 
   // Get current provider and its models
-  const currentProvider = providers.find(p => p.key === formData.aiProvider);
-  const currentProviderModels = currentProvider ? models.filter(m => m.providerId === currentProvider.id) : [];
-  const currentModel = currentProviderModels.find(m => m.key === formData.aiModel);
+  const currentProvider = providers.find((p) => p.key === formData.aiProvider);
+  const currentProviderModels = currentProvider
+    ? models.filter((m) => m.providerId === currentProvider.id)
+    : [];
+  const currentModel = currentProviderModels.find(
+    (m) => m.key === formData.aiModel,
+  );
 
   if (isLoading || providersLoading || modelsLoading) {
     return (
@@ -329,16 +423,25 @@ export default function SettingsPage() {
             <Settings className="w-8 h-8 text-blue-500" />
             <h1 className="text-3xl font-bold">Settings</h1>
           </div>
-          <p className="text-slate-400">Configure AI models and application preferences</p>
+          <p className="text-slate-400">
+            Configure AI models and application preferences
+          </p>
         </div>
 
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
+        <Tabs
+          value={activeTab}
+          onValueChange={setActiveTab}
+          className="space-y-6"
+        >
           <TabsList className="grid w-full grid-cols-4 bg-slate-800">
             <TabsTrigger value="models" className="flex items-center space-x-2">
               <Brain className="w-4 h-4" />
               <span>AI Models</span>
             </TabsTrigger>
-            <TabsTrigger value="management" className="flex items-center space-x-2">
+            <TabsTrigger
+              value="management"
+              className="flex items-center space-x-2"
+            >
               <Settings className="w-4 h-4" />
               <span>AI Management</span>
             </TabsTrigger>
@@ -346,7 +449,10 @@ export default function SettingsPage() {
               <Key className="w-4 h-4" />
               <span>API Keys</span>
             </TabsTrigger>
-            <TabsTrigger value="preferences" className="flex items-center space-x-2">
+            <TabsTrigger
+              value="preferences"
+              className="flex items-center space-x-2"
+            >
               <Monitor className="w-4 h-4" />
               <span>Preferences</span>
             </TabsTrigger>
@@ -365,15 +471,24 @@ export default function SettingsPage() {
                 {/* Current Selection */}
                 <div className="p-4 bg-slate-800 rounded-lg border border-slate-600">
                   <div className="flex items-center justify-between mb-2">
-                    <Label className="text-sm font-medium">Current Configuration</Label>
-                    <Badge variant="secondary" className="bg-green-600 text-white">
+                    <Label className="text-sm font-medium">
+                      Current Configuration
+                    </Label>
+                    <Badge
+                      variant="secondary"
+                      className="bg-green-600 text-white"
+                    >
                       Active
                     </Badge>
                   </div>
                   <div className="flex items-center space-x-3">
-                    <span className="text-2xl">{currentProvider?.icon || "🤖"}</span>
+                    <span className="text-2xl">
+                      {currentProvider?.icon || "🤖"}
+                    </span>
                     <div>
-                      <p className="font-medium">{currentProvider?.name || "No Provider Selected"}</p>
+                      <p className="font-medium">
+                        {currentProvider?.name || "No Provider Selected"}
+                      </p>
                       <p className="text-sm text-slate-400">
                         {currentModel?.name || "No Model Selected"}
                       </p>
@@ -383,19 +498,23 @@ export default function SettingsPage() {
 
                 {/* Provider Selection */}
                 <div className="space-y-4">
-                  <Label className="text-base font-medium">Select AI Provider</Label>
+                  <Label className="text-base font-medium">
+                    Select AI Provider
+                  </Label>
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                     {providers.map((provider) => {
                       const status = getProviderStatus(provider.key);
                       const isSelected = formData.aiProvider === provider.key;
-                      const providerModels = models.filter(m => m.providerId === provider.id);
-                      
+                      const providerModels = models.filter(
+                        (m) => m.providerId === provider.id,
+                      );
+
                       return (
                         <Card
                           key={provider.id}
                           className={`cursor-pointer transition-colors border-2 ${
-                            isSelected 
-                              ? "border-blue-500 bg-slate-800" 
+                            isSelected
+                              ? "border-blue-500 bg-slate-800"
                               : "border-slate-600 bg-slate-900 hover:border-slate-500"
                           }`}
                           onClick={() => handleProviderChange(provider.key)}
@@ -403,9 +522,13 @@ export default function SettingsPage() {
                           <CardContent className="p-4">
                             <div className="flex items-center justify-between mb-3">
                               <span className="text-2xl">{provider.icon}</span>
-                              <div className={`w-3 h-3 rounded-full ${status.color}`} />
+                              <div
+                                className={`w-3 h-3 rounded-full ${status.color}`}
+                              />
                             </div>
-                            <h3 className="font-semibold mb-1">{provider.name}</h3>
+                            <h3 className="font-semibold mb-1">
+                              {provider.name}
+                            </h3>
                             <p className="text-xs text-slate-400">
                               {providerModels.length} models available
                             </p>
@@ -419,7 +542,12 @@ export default function SettingsPage() {
                 {/* Model Selection */}
                 <div className="space-y-3">
                   <Label className="text-base font-medium">Select Model</Label>
-                  <Select value={formData.aiModel} onValueChange={(value) => setFormData(prev => ({ ...prev, aiModel: value }))}>
+                  <Select
+                    value={formData.aiModel}
+                    onValueChange={(value) =>
+                      setFormData((prev) => ({ ...prev, aiModel: value }))
+                    }
+                  >
                     <SelectTrigger className="bg-slate-800 border-slate-600">
                       <SelectValue />
                     </SelectTrigger>
@@ -428,7 +556,9 @@ export default function SettingsPage() {
                         <SelectItem key={model.id} value={model.key}>
                           <div className="flex flex-col">
                             <span className="font-medium">{model.name}</span>
-                            <span className="text-xs text-slate-400">{model.description}</span>
+                            <span className="text-xs text-slate-400">
+                              {model.description}
+                            </span>
                           </div>
                         </SelectItem>
                       ))}
@@ -465,13 +595,18 @@ export default function SettingsPage() {
                 </CardHeader>
                 <CardContent className="space-y-4">
                   {providers.map((provider) => (
-                    <div key={provider.id} className="p-3 bg-slate-800 rounded-lg border border-slate-600">
+                    <div
+                      key={provider.id}
+                      className="p-3 bg-slate-800 rounded-lg border border-slate-600"
+                    >
                       <div className="flex items-center justify-between">
                         <div className="flex items-center space-x-3">
                           <span className="text-xl">{provider.icon}</span>
                           <div>
                             <p className="font-medium">{provider.name}</p>
-                            <p className="text-xs text-slate-400">Key: {provider.key}</p>
+                            <p className="text-xs text-slate-400">
+                              Key: {provider.key}
+                            </p>
                           </div>
                         </div>
                         <div className="flex space-x-2">
@@ -484,7 +619,9 @@ export default function SettingsPage() {
                             <Edit className="w-3 h-3" />
                           </Button>
                           <Button
-                            onClick={() => deleteProviderMutation.mutate(provider.id)}
+                            onClick={() =>
+                              deleteProviderMutation.mutate(provider.id)
+                            }
                             size="sm"
                             variant="outline"
                             className="border-red-600 text-red-400 hover:bg-red-600"
@@ -508,7 +645,13 @@ export default function SettingsPage() {
                     </CardTitle>
                     <Button
                       onClick={() => {
-                        modelForm.reset({ name: "", key: "", description: "", providerId: providers[0]?.id || 1, isDefault: false });
+                        modelForm.reset({
+                          name: "",
+                          key: "",
+                          description: "",
+                          providerId: providers[0]?.id || 1,
+                          isDefault: false,
+                        });
                         setShowAddModel(true);
                       }}
                       size="sm"
@@ -521,16 +664,23 @@ export default function SettingsPage() {
                 </CardHeader>
                 <CardContent className="space-y-4 max-h-96 overflow-y-auto">
                   {models.map((model) => {
-                    const provider = providers.find(p => p.id === model.providerId);
+                    const provider = providers.find(
+                      (p) => p.id === model.providerId,
+                    );
                     return (
-                      <div key={model.id} className="p-3 bg-slate-800 rounded-lg border border-slate-600">
+                      <div
+                        key={model.id}
+                        className="p-3 bg-slate-800 rounded-lg border border-slate-600"
+                      >
                         <div className="flex items-center justify-between">
                           <div>
                             <p className="font-medium">{model.name}</p>
                             <p className="text-xs text-slate-400">
                               {provider?.name} • Key: {model.key}
                             </p>
-                            <p className="text-xs text-slate-500 mt-1">{model.description}</p>
+                            <p className="text-xs text-slate-500 mt-1">
+                              {model.description}
+                            </p>
                           </div>
                           <div className="flex space-x-2">
                             <Button
@@ -544,7 +694,9 @@ export default function SettingsPage() {
                               <Edit className="w-3 h-3" />
                             </Button>
                             <Button
-                              onClick={() => deleteModelMutation.mutate(model.id)}
+                              onClick={() =>
+                                deleteModelMutation.mutate(model.id)
+                              }
                               size="sm"
                               variant="outline"
                               className="border-red-600 text-red-400 hover:bg-red-600"
@@ -578,19 +730,30 @@ export default function SettingsPage() {
                         <span className="text-lg">{provider.icon}</span>
                         <span>{provider.name} API Key</span>
                       </Label>
-                      <Badge variant={formData.apiKeys[provider.key] ? "default" : "secondary"}>
-                        {formData.apiKeys[provider.key] ? "Configured" : "Not Set"}
+                      <Badge
+                        variant={
+                          formData.apiKeys[provider.key]
+                            ? "default"
+                            : "secondary"
+                        }
+                      >
+                        {formData.apiKeys[provider.key]
+                          ? "Configured"
+                          : "Not Set"}
                       </Badge>
                     </div>
                     <Input
                       type="password"
                       placeholder={`Enter your ${provider.name} API key`}
                       value={formData.apiKeys[provider.key] || ""}
-                      onChange={(e) => handleApiKeyChange(provider.key, e.target.value)}
+                      onChange={(e) =>
+                        handleApiKeyChange(provider.key, e.target.value)
+                      }
                       className="bg-slate-800 border-slate-600 font-mono text-sm"
                     />
                     <p className="text-xs text-slate-500">
-                      Required to use {provider.name} models. Keys are stored securely.
+                      Required to use {provider.name} models. Keys are stored
+                      securely.
                     </p>
                     <Separator className="bg-slate-700" />
                   </div>
@@ -613,32 +776,44 @@ export default function SettingsPage() {
                   <div className="flex items-center justify-between">
                     <div>
                       <Label className="font-medium">Auto Save</Label>
-                      <p className="text-sm text-slate-400">Automatically save your work</p>
+                      <p className="text-sm text-slate-400">
+                        Automatically save your work
+                      </p>
                     </div>
                     <Switch
                       checked={formData.preferences.autoSave}
-                      onCheckedChange={(checked) => 
-                        setFormData(prev => ({
+                      onCheckedChange={(checked) =>
+                        setFormData((prev) => ({
                           ...prev,
-                          preferences: { ...prev.preferences, autoSave: checked }
+                          preferences: {
+                            ...prev.preferences,
+                            autoSave: checked,
+                          },
                         }))
                       }
                     />
                   </div>
-                  
+
                   <Separator className="bg-slate-700" />
-                  
+
                   <div className="flex items-center justify-between">
                     <div>
-                      <Label className="font-medium">Show Advanced Options</Label>
-                      <p className="text-sm text-slate-400">Display advanced configuration options</p>
+                      <Label className="font-medium">
+                        Show Advanced Options
+                      </Label>
+                      <p className="text-sm text-slate-400">
+                        Display advanced configuration options
+                      </p>
                     </div>
                     <Switch
                       checked={formData.preferences.showAdvanced}
-                      onCheckedChange={(checked) => 
-                        setFormData(prev => ({
+                      onCheckedChange={(checked) =>
+                        setFormData((prev) => ({
                           ...prev,
-                          preferences: { ...prev.preferences, showAdvanced: checked }
+                          preferences: {
+                            ...prev.preferences,
+                            showAdvanced: checked,
+                          },
                         }))
                       }
                     />
@@ -648,12 +823,12 @@ export default function SettingsPage() {
 
                   <div className="space-y-3">
                     <Label className="font-medium">Interface Language</Label>
-                    <Select 
-                      value={formData.preferences.language} 
-                      onValueChange={(value) => 
-                        setFormData(prev => ({
+                    <Select
+                      value={formData.preferences.language}
+                      onValueChange={(value) =>
+                        setFormData((prev) => ({
                           ...prev,
-                          preferences: { ...prev.preferences, language: value }
+                          preferences: { ...prev.preferences, language: value },
                         }))
                       }
                     >
@@ -693,10 +868,17 @@ export default function SettingsPage() {
         <DialogContent className="bg-slate-900 border-slate-700 text-white">
           <DialogHeader>
             <DialogTitle>Add AI Provider</DialogTitle>
-            <DialogDescription>Create a new AI provider configuration.</DialogDescription>
+            <DialogDescription>
+              Create a new AI provider configuration.
+            </DialogDescription>
           </DialogHeader>
           <Form {...providerForm}>
-            <form onSubmit={providerForm.handleSubmit((data) => createProviderMutation.mutate(data))} className="space-y-4">
+            <form
+              onSubmit={providerForm.handleSubmit((data) =>
+                createProviderMutation.mutate(data),
+              )}
+              className="space-y-4"
+            >
               <FormField
                 control={providerForm.control}
                 name="name"
@@ -704,7 +886,11 @@ export default function SettingsPage() {
                   <FormItem>
                     <FormLabel>Provider Name</FormLabel>
                     <FormControl>
-                      <Input placeholder="e.g., OpenAI" {...field} className="bg-slate-800 border-slate-600" />
+                      <Input
+                        placeholder="e.g., OpenAI"
+                        {...field}
+                        className="bg-slate-800 border-slate-600"
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -717,7 +903,11 @@ export default function SettingsPage() {
                   <FormItem>
                     <FormLabel>Provider Key</FormLabel>
                     <FormControl>
-                      <Input placeholder="e.g., openai" {...field} className="bg-slate-800 border-slate-600" />
+                      <Input
+                        placeholder="e.g., openai"
+                        {...field}
+                        className="bg-slate-800 border-slate-600"
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -730,18 +920,31 @@ export default function SettingsPage() {
                   <FormItem>
                     <FormLabel>Icon (emoji)</FormLabel>
                     <FormControl>
-                      <Input placeholder="e.g., 🤖" {...field} className="bg-slate-800 border-slate-600" />
+                      <Input
+                        placeholder="e.g., 🤖"
+                        {...field}
+                        className="bg-slate-800 border-slate-600"
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
               <DialogFooter>
-                <Button type="button" variant="outline" onClick={() => setShowAddProvider(false)}>
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => setShowAddProvider(false)}
+                >
                   Cancel
                 </Button>
-                <Button type="submit" disabled={createProviderMutation.isPending}>
-                  {createProviderMutation.isPending ? "Creating..." : "Create Provider"}
+                <Button
+                  type="submit"
+                  disabled={createProviderMutation.isPending}
+                >
+                  {createProviderMutation.isPending
+                    ? "Creating..."
+                    : "Create Provider"}
                 </Button>
               </DialogFooter>
             </form>
@@ -750,14 +953,27 @@ export default function SettingsPage() {
       </Dialog>
 
       {/* Edit Provider Dialog */}
-      <Dialog open={!!editingProvider} onOpenChange={() => setEditingProvider(null)}>
+      <Dialog
+        open={!!editingProvider}
+        onOpenChange={() => setEditingProvider(null)}
+      >
         <DialogContent className="bg-slate-900 border-slate-700 text-white">
           <DialogHeader>
             <DialogTitle>Edit AI Provider</DialogTitle>
-            <DialogDescription>Update the AI provider configuration.</DialogDescription>
+            <DialogDescription>
+              Update the AI provider configuration.
+            </DialogDescription>
           </DialogHeader>
           <Form {...providerForm}>
-            <form onSubmit={providerForm.handleSubmit((data) => updateProviderMutation.mutate({ id: editingProvider!.id, ...data }))} className="space-y-4">
+            <form
+              onSubmit={providerForm.handleSubmit((data) =>
+                updateProviderMutation.mutate({
+                  id: editingProvider!.id,
+                  ...data,
+                }),
+              )}
+              className="space-y-4"
+            >
               <FormField
                 control={providerForm.control}
                 name="name"
@@ -765,7 +981,10 @@ export default function SettingsPage() {
                   <FormItem>
                     <FormLabel>Provider Name</FormLabel>
                     <FormControl>
-                      <Input {...field} className="bg-slate-800 border-slate-600" />
+                      <Input
+                        {...field}
+                        className="bg-slate-800 border-slate-600"
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -778,7 +997,10 @@ export default function SettingsPage() {
                   <FormItem>
                     <FormLabel>Provider Key</FormLabel>
                     <FormControl>
-                      <Input {...field} className="bg-slate-800 border-slate-600" />
+                      <Input
+                        {...field}
+                        className="bg-slate-800 border-slate-600"
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -791,18 +1013,30 @@ export default function SettingsPage() {
                   <FormItem>
                     <FormLabel>Icon (emoji)</FormLabel>
                     <FormControl>
-                      <Input {...field} className="bg-slate-800 border-slate-600" />
+                      <Input
+                        {...field}
+                        className="bg-slate-800 border-slate-600"
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
               <DialogFooter>
-                <Button type="button" variant="outline" onClick={() => setEditingProvider(null)}>
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => setEditingProvider(null)}
+                >
                   Cancel
                 </Button>
-                <Button type="submit" disabled={updateProviderMutation.isPending}>
-                  {updateProviderMutation.isPending ? "Updating..." : "Update Provider"}
+                <Button
+                  type="submit"
+                  disabled={updateProviderMutation.isPending}
+                >
+                  {updateProviderMutation.isPending
+                    ? "Updating..."
+                    : "Update Provider"}
                 </Button>
               </DialogFooter>
             </form>
@@ -815,10 +1049,17 @@ export default function SettingsPage() {
         <DialogContent className="bg-slate-900 border-slate-700 text-white">
           <DialogHeader>
             <DialogTitle>Add AI Model</DialogTitle>
-            <DialogDescription>Create a new AI model configuration.</DialogDescription>
+            <DialogDescription>
+              Create a new AI model configuration.
+            </DialogDescription>
           </DialogHeader>
           <Form {...modelForm}>
-            <form onSubmit={modelForm.handleSubmit((data) => createModelMutation.mutate(data))} className="space-y-4">
+            <form
+              onSubmit={modelForm.handleSubmit((data) =>
+                createModelMutation.mutate(data),
+              )}
+              className="space-y-4"
+            >
               <FormField
                 control={modelForm.control}
                 name="providerId"
@@ -826,13 +1067,24 @@ export default function SettingsPage() {
                   <FormItem>
                     <FormLabel>Provider</FormLabel>
                     <FormControl>
-                      <Select value={field.value?.toString()} onValueChange={(value) => field.onChange(Number(value))}>
+                      <Select
+                        value={field.value?.toString()}
+                        onValueChange={(value) => {
+                          const numValue = parseInt(value, 10);
+                          if (!isNaN(numValue)) {
+                            field.onChange(numValue);
+                          }
+                        }}
+                      >
                         <SelectTrigger className="bg-slate-800 border-slate-600">
                           <SelectValue placeholder="Select a provider" />
                         </SelectTrigger>
                         <SelectContent className="bg-slate-800 border-slate-600">
                           {providers.map((provider) => (
-                            <SelectItem key={provider.id} value={provider.id.toString()}>
+                            <SelectItem
+                              key={provider.id}
+                              value={provider.id.toString()}
+                            >
                               {provider.icon} {provider.name}
                             </SelectItem>
                           ))}
@@ -850,7 +1102,11 @@ export default function SettingsPage() {
                   <FormItem>
                     <FormLabel>Model Name</FormLabel>
                     <FormControl>
-                      <Input placeholder="e.g., GPT-4" {...field} className="bg-slate-800 border-slate-600" />
+                      <Input
+                        placeholder="e.g., GPT-4"
+                        {...field}
+                        className="bg-slate-800 border-slate-600"
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -863,7 +1119,11 @@ export default function SettingsPage() {
                   <FormItem>
                     <FormLabel>Model Key</FormLabel>
                     <FormControl>
-                      <Input placeholder="e.g., gpt-4" {...field} className="bg-slate-800 border-slate-600" />
+                      <Input
+                        placeholder="e.g., gpt-4"
+                        {...field}
+                        className="bg-slate-800 border-slate-600"
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -876,7 +1136,11 @@ export default function SettingsPage() {
                   <FormItem>
                     <FormLabel>Description</FormLabel>
                     <FormControl>
-                      <Input placeholder="e.g., Advanced reasoning model" {...field} className="bg-slate-800 border-slate-600" />
+                      <Input
+                        placeholder="e.g., Advanced reasoning model"
+                        {...field}
+                        className="bg-slate-800 border-slate-600"
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -888,18 +1152,29 @@ export default function SettingsPage() {
                 render={({ field }) => (
                   <FormItem className="flex items-center space-x-2">
                     <FormControl>
-                      <Switch checked={field.value} onCheckedChange={field.onChange} />
+                      <Switch
+                        checked={field.value}
+                        onCheckedChange={field.onChange}
+                      />
                     </FormControl>
-                    <FormLabel>Set as default model for this provider</FormLabel>
+                    <FormLabel>
+                      Set as default model for this provider
+                    </FormLabel>
                   </FormItem>
                 )}
               />
               <DialogFooter>
-                <Button type="button" variant="outline" onClick={() => setShowAddModel(false)}>
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => setShowAddModel(false)}
+                >
                   Cancel
                 </Button>
                 <Button type="submit" disabled={createModelMutation.isPending}>
-                  {createModelMutation.isPending ? "Creating..." : "Create Model"}
+                  {createModelMutation.isPending
+                    ? "Creating..."
+                    : "Create Model"}
                 </Button>
               </DialogFooter>
             </form>
@@ -912,10 +1187,17 @@ export default function SettingsPage() {
         <DialogContent className="bg-slate-900 border-slate-700 text-white">
           <DialogHeader>
             <DialogTitle>Edit AI Model</DialogTitle>
-            <DialogDescription>Update the AI model configuration.</DialogDescription>
+            <DialogDescription>
+              Update the AI model configuration.
+            </DialogDescription>
           </DialogHeader>
           <Form {...modelForm}>
-            <form onSubmit={modelForm.handleSubmit((data) => updateModelMutation.mutate({ id: editingModel!.id, ...data }))} className="space-y-4">
+            <form
+              onSubmit={modelForm.handleSubmit((data) =>
+                updateModelMutation.mutate({ id: editingModel!.id, ...data }),
+              )}
+              className="space-y-4"
+            >
               <FormField
                 control={modelForm.control}
                 name="providerId"
@@ -923,9 +1205,14 @@ export default function SettingsPage() {
                   <FormItem>
                     <FormLabel>Provider</FormLabel>
                     <FormControl>
-                      <Select 
-                        value={field.value?.toString() || ""} 
-                        onValueChange={(value) => field.onChange(Number(value))}
+                      <Select
+                        value={field.value?.toString() || ""}
+                        onValueChange={(value) => {
+                          const numValue = parseInt(value, 10);
+                          if (!isNaN(numValue)) {
+                            field.onChange(numValue);
+                          }
+                        }}
                       >
                         <SelectTrigger className="bg-slate-800 border-slate-600">
                           <SelectValue placeholder="Select a provider" />
@@ -950,7 +1237,10 @@ export default function SettingsPage() {
                   <FormItem>
                     <FormLabel>Model Name</FormLabel>
                     <FormControl>
-                      <Input {...field} className="bg-slate-800 border-slate-600" />
+                      <Input
+                        {...field}
+                        className="bg-slate-800 border-slate-600"
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -963,7 +1253,10 @@ export default function SettingsPage() {
                   <FormItem>
                     <FormLabel>Model Key</FormLabel>
                     <FormControl>
-                      <Input {...field} className="bg-slate-800 border-slate-600" />
+                      <Input
+                        {...field}
+                        className="bg-slate-800 border-slate-600"
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -976,7 +1269,10 @@ export default function SettingsPage() {
                   <FormItem>
                     <FormLabel>Description</FormLabel>
                     <FormControl>
-                      <Input {...field} className="bg-slate-800 border-slate-600" />
+                      <Input
+                        {...field}
+                        className="bg-slate-800 border-slate-600"
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -988,18 +1284,29 @@ export default function SettingsPage() {
                 render={({ field }) => (
                   <FormItem className="flex items-center space-x-2">
                     <FormControl>
-                      <Switch checked={field.value} onCheckedChange={field.onChange} />
+                      <Switch
+                        checked={field.value}
+                        onCheckedChange={field.onChange}
+                      />
                     </FormControl>
-                    <FormLabel>Set as default model for this provider</FormLabel>
+                    <FormLabel>
+                      Set as default model for this provider
+                    </FormLabel>
                   </FormItem>
                 )}
               />
               <DialogFooter>
-                <Button type="button" variant="outline" onClick={() => setEditingModel(null)}>
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => setEditingModel(null)}
+                >
                   Cancel
                 </Button>
                 <Button type="submit" disabled={updateModelMutation.isPending}>
-                  {updateModelMutation.isPending ? "Updating..." : "Update Model"}
+                  {updateModelMutation.isPending
+                    ? "Updating..."
+                    : "Update Model"}
                 </Button>
               </DialogFooter>
             </form>
