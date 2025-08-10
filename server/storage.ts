@@ -65,12 +65,16 @@ export class MemStorage implements IStorage {
   private chatSessions: Map<string, ChatSession>;
   private generatedFiles: Map<string, GeneratedFile>;
   private settings: Map<string, Settings>;
+  private aiProviders: Map<string, AiProvider>;
+  private aiModels: Map<string, AiModel>;
 
   constructor() {
     this.projects = new Map();
     this.chatSessions = new Map();
     this.generatedFiles = new Map();
     this.settings = new Map();
+    this.aiProviders = new Map();
+    this.aiModels = new Map();
   }
 
   async createProject(insertProject: InsertProject): Promise<Project> {
@@ -161,6 +165,116 @@ export class MemStorage implements IStorage {
     
     this.settings.set(userId, settings);
     return settings;
+  }
+
+  // AI Provider methods
+  async getAllAiProviders(): Promise<AiProvider[]> {
+    return Array.from(this.aiProviders.values()).filter(provider => provider.isActive !== false);
+  }
+
+  async getAiProvider(id: string): Promise<AiProvider | undefined> {
+    return this.aiProviders.get(id);
+  }
+
+  async getAiProviderByKey(key: string): Promise<AiProvider | undefined> {
+    return Array.from(this.aiProviders.values()).find(provider => provider.key === key);
+  }
+
+  async createAiProvider(insertProvider: InsertAiProvider): Promise<AiProvider> {
+    const id = randomUUID();
+    const provider: AiProvider = {
+      ...insertProvider,
+      id,
+      description: insertProvider.description ?? null,
+      isActive: insertProvider.isActive ?? true,
+      createdAt: new Date(),
+      updatedAt: new Date()
+    };
+    this.aiProviders.set(id, provider);
+    return provider;
+  }
+
+  async updateAiProvider(id: string, updates: Partial<AiProvider>): Promise<AiProvider | undefined> {
+    const provider = this.aiProviders.get(id);
+    if (!provider) return undefined;
+    
+    const updatedProvider = { 
+      ...provider, 
+      ...updates, 
+      updatedAt: new Date() 
+    };
+    this.aiProviders.set(id, updatedProvider);
+    return updatedProvider;
+  }
+
+  async deleteAiProvider(id: string): Promise<boolean> {
+    const provider = this.aiProviders.get(id);
+    if (!provider) return false;
+    
+    const updatedProvider = { 
+      ...provider, 
+      isActive: false, 
+      updatedAt: new Date() 
+    };
+    this.aiProviders.set(id, updatedProvider);
+    return true;
+  }
+
+  // AI Model methods
+  async getAllAiModels(): Promise<AiModel[]> {
+    return Array.from(this.aiModels.values()).filter(model => model.isActive !== false);
+  }
+
+  async getAiModelsByProvider(providerId: string): Promise<AiModel[]> {
+    return Array.from(this.aiModels.values()).filter(
+      model => model.providerId === providerId && model.isActive !== false
+    );
+  }
+
+  async getAiModel(id: string): Promise<AiModel | undefined> {
+    return this.aiModels.get(id);
+  }
+
+  async createAiModel(insertModel: InsertAiModel): Promise<AiModel> {
+    const id = randomUUID();
+    const model: AiModel = {
+      ...insertModel,
+      id,
+      description: insertModel.description ?? null,
+      providerId: insertModel.providerId ?? null,
+      isActive: insertModel.isActive ?? true,
+      isDefault: insertModel.isDefault ?? false,
+      createdAt: new Date(),
+      updatedAt: new Date()
+    };
+    this.aiModels.set(id, model);
+    return model;
+  }
+
+  async updateAiModel(id: string, updates: Partial<AiModel>): Promise<AiModel | undefined> {
+    const model = this.aiModels.get(id);
+    if (!model) return undefined;
+    
+    const updatedModel = { 
+      ...model, 
+      ...updates, 
+      updatedAt: new Date() 
+    };
+    this.aiModels.set(id, updatedModel);
+    return updatedModel;
+  }
+
+  async deleteAiModel(id: string): Promise<boolean> {
+    const model = this.aiModels.get(id);
+    if (!model) return false;
+    
+    const updatedModel = { 
+      ...model, 
+      isActive: false, 
+      updatedAt: new Date() 
+    };
+    this.aiModels.set(id, updatedModel);
+    return true;
   }
 }
 
@@ -352,4 +466,6 @@ export class DatabaseStorage implements IStorage {
   }
 }
 
-export const storage = new DatabaseStorage();
+// Temporarily using MemStorage to avoid database connection issues during development
+// TODO: Switch back to DatabaseStorage once database connectivity is resolved
+export const storage = new MemStorage();
