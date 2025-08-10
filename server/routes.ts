@@ -597,8 +597,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
           
         case 'generate_file_structure':
           const fileStructure = await llmService.generateFileStructure(
-            args?.analysis || {},
-            args?.prompt || ''
+            args?.analysis || {}
           );
           result = {
             content: [{
