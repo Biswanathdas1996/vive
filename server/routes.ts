@@ -2,6 +2,7 @@ import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { llmService } from "./services/llm";
+import { mcpServer } from "./services/mcpServer";
 import { fileGeneratorService } from "./services/fileGenerator";
 import { ObjectStorageService, ObjectPermission } from "./objectStorage";
 import { imageAnalysisService } from "./services/imageAnalysis";
@@ -546,6 +547,159 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error("Error accessing object:", error);
       return res.sendStatus(404);
+    }
+  });
+
+  // MCP Server endpoints
+  app.get("/api/mcp/info", async (req, res) => {
+    try {
+      res.json({
+        name: "AI Code Generator MCP Server",
+        version: "1.0.0",
+        capabilities: {
+          resources: true,
+          tools: true,
+          prompts: true,
+        },
+        status: "running",
+        description: "MCP server that exposes LLM capabilities for AI-powered code generation",
+      });
+    } catch (error) {
+      console.error("Error getting MCP server info:", error);
+      res.status(500).json({ error: "Failed to get MCP server info" });
+    }
+  });
+
+  app.post("/api/mcp/tools/call", async (req, res) => {
+    try {
+      const { name, arguments: args } = req.body;
+      
+      if (!name) {
+        return res.status(400).json({ error: "Tool name is required" });
+      }
+
+      // Get the MCP server instance
+      const server = mcpServer.getServer();
+      
+      // Simulate MCP tool call
+      let result;
+      switch (name) {
+        case 'analyze_prompt':
+          const analysis = await llmService.analyzePrompt(args?.prompt || '');
+          result = {
+            content: [{
+              type: 'text',
+              text: JSON.stringify(analysis, null, 2),
+            }],
+          };
+          break;
+          
+        case 'generate_file_structure':
+          const fileStructure = await llmService.generateFileStructure(
+            args?.analysis || {},
+            args?.prompt || ''
+          );
+          result = {
+            content: [{
+              type: 'text',
+              text: JSON.stringify(fileStructure, null, 2),
+            }],
+          };
+          break;
+          
+        case 'generate_file_content':
+          const content = await llmService.generateFileContent(
+            args?.fileName || '',
+            args?.requirements || {},
+            args?.context || {}
+          );
+          result = {
+            content: [{
+              type: 'text',
+              text: content,
+            }],
+          };
+          break;
+          
+        default:
+          return res.status(400).json({ error: `Unknown tool: ${name}` });
+      }
+      
+      res.json(result);
+    } catch (error) {
+      console.error("Error calling MCP tool:", error);
+      res.status(500).json({ 
+        error: "Failed to call MCP tool",
+        details: error instanceof Error ? error.message : String(error)
+      });
+    }
+  });
+
+  app.get("/api/mcp/resources", async (req, res) => {
+    try {
+      const resources = [
+        {
+          uri: 'ai-config://current',
+          name: 'Current AI Configuration',
+          description: 'Shows the current AI provider and model configuration',
+          mimeType: 'application/json',
+        },
+        {
+          uri: 'ai-providers://list',
+          name: 'AI Providers',
+          description: 'List of available AI providers and models',
+          mimeType: 'application/json',
+        },
+      ];
+      
+      res.json({ resources });
+    } catch (error) {
+      console.error("Error listing MCP resources:", error);
+      res.status(500).json({ error: "Failed to list MCP resources" });
+    }
+  });
+
+  app.get("/api/mcp/resources/:uri(*)", async (req, res) => {
+    try {
+      const uri = req.params.uri + req.params[0];
+      
+      switch (uri) {
+        case 'ai-config/current':
+          const settings = await storage.getSettings('default');
+          res.json({
+            uri: 'ai-config://current',
+            content: {
+              provider: settings?.aiProvider || 'not configured',
+              model: settings?.aiModel || 'not configured',
+              hasApiKey: !!(settings?.apiKeys && Object.keys(settings.apiKeys).length > 0),
+            }
+          });
+          break;
+          
+        case 'ai-providers/list':
+          const providers = await storage.getAllAiProviders();
+          const providerModels = [];
+          
+          for (const provider of providers) {
+            const models = await storage.getAiModelsByProvider(provider.id);
+            providerModels.push({
+              ...provider,
+              models: models,
+            });
+          }
+          
+          res.json({
+            uri: 'ai-providers://list',
+            content: providerModels
+          });
+          break;
+          
+        default:
+          res.status(404).json({ error: `Unknown resource: ${uri}` });
+      }
+    } catch (error) {
+      console.error("Error getting MCP resource:", error);
+      res.status(500).json({ error: "Failed to get MCP resource" });
     }
   });
 

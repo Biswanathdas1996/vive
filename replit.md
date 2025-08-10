@@ -96,6 +96,43 @@ The architecture supports a complete AI-driven development workflow from require
 
 # Recent Changes
 
+## MCP (Model Context Protocol) Server Integration (January 2025)
+
+Implemented a comprehensive MCP server that exposes the AI code generation capabilities through the standardized Model Context Protocol, allowing external tools like Claude Desktop, Cursor, and other MCP clients to access our LLM services.
+
+**Key features:**
+- **Full MCP Protocol Support**: Complete implementation with tools, resources, and prompts
+- **Standalone Server**: Independent MCP server script for external tool integration
+- **HTTP API Integration**: REST endpoints for web-based MCP access
+- **Multi-Provider Compatibility**: Works with all configured AI providers (Gemini, OpenAI, Claude)
+- **Real-time Resource Access**: Live access to AI configuration and provider information
+
+**Available MCP Tools:**
+- `analyze_prompt` - Extract features, pages, and technical requirements from user input
+- `generate_file_structure` - Create complete application file structures
+- `generate_file_content` - Generate modern HTML content with embedded CSS/JS
+- `enhance_prompt` - Add detailed UI specifications to user prompts
+- `modify_file_content` - Modify existing files based on instructions
+
+**Available MCP Resources:**
+- `ai-config://current` - Current AI provider and model configuration
+- `ai-providers://list` - Complete list of available AI providers and models
+
+**Integration Options:**
+- **Standalone Mode**: `npx tsx scripts/mcp-server.ts` for external tools
+- **HTTP API Mode**: `/api/mcp/*` endpoints for web integration
+- **Claude Desktop**: Direct integration via configuration file
+- **MCP Dashboard**: Built-in web interface at `/mcp` for testing and management
+
+**Technical Implementation:**
+- MCP Server (`server/services/mcpServer.ts`) - Core protocol implementation
+- MCP Client (`server/services/mcpClient.ts`) - Internal client for HTTP integration
+- Standalone Script (`scripts/mcp-server.ts`) - Independent server runner
+- HTTP Endpoints (`server/routes.ts`) - REST API wrapper
+- Web Dashboard (`client/src/pages/mcp.tsx`) - Frontend interface
+
+This integration transforms the AI code generator into a standardized service compatible with the growing MCP ecosystem, significantly expanding its accessibility and integration potential.
+
 ## Multi-Provider AI Model Selection System (January 2025)
 
 Implemented a comprehensive AI provider selection system that allows users to choose between multiple AI providers and models through the settings interface.
