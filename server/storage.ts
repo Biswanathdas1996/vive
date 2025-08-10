@@ -172,13 +172,14 @@ export class DatabaseStorage implements IStorage {
   }
 
   async createChatSession(insertSession: InsertChatSession): Promise<ChatSession> {
+    const database = await this.getDb();
     const sessionData = {
       projectId: insertSession.projectId || null,
       messages: (insertSession.messages as ChatMessage[]) || [],
       status: insertSession.status || "active"
     };
     
-    const [session] = await db
+    const [session] = await database
       .insert(chatSessions)
       .values(sessionData)
       .returning();
@@ -186,12 +187,14 @@ export class DatabaseStorage implements IStorage {
   }
 
   async getChatSession(id: string): Promise<ChatSession | undefined> {
-    const [session] = await db.select().from(chatSessions).where(eq(chatSessions.id, id));
+    const database = await this.getDb();
+    const [session] = await database.select().from(chatSessions).where(eq(chatSessions.id, id));
     return session || undefined;
   }
 
   async updateChatSession(id: string, updates: Partial<ChatSession>): Promise<ChatSession | undefined> {
-    const [session] = await db
+    const database = await this.getDb();
+    const [session] = await database
       .update(chatSessions)
       .set(updates)
       .where(eq(chatSessions.id, id))
@@ -200,7 +203,8 @@ export class DatabaseStorage implements IStorage {
   }
 
   async createGeneratedFile(insertFile: InsertGeneratedFile): Promise<GeneratedFile> {
-    const [file] = await db
+    const database = await this.getDb();
+    const [file] = await database
       .insert(generatedFiles)
       .values(insertFile)
       .returning();
@@ -208,24 +212,28 @@ export class DatabaseStorage implements IStorage {
   }
 
   async getGeneratedFile(id: string): Promise<GeneratedFile | undefined> {
-    const [file] = await db.select().from(generatedFiles).where(eq(generatedFiles.id, id));
+    const database = await this.getDb();
+    const [file] = await database.select().from(generatedFiles).where(eq(generatedFiles.id, id));
     return file || undefined;
   }
 
   async getProjectFiles(projectId: string): Promise<GeneratedFile[]> {
-    return await db.select().from(generatedFiles).where(eq(generatedFiles.projectId, projectId));
+    const database = await this.getDb();
+    return await database.select().from(generatedFiles).where(eq(generatedFiles.projectId, projectId));
   }
 
   async getSettings(userId: string = "default"): Promise<Settings | undefined> {
-    const [userSettings] = await db.select().from(settings).where(eq(settings.userId, userId));
+    const database = await this.getDb();
+    const [userSettings] = await database.select().from(settings).where(eq(settings.userId, userId));
     return userSettings || undefined;
   }
 
   async upsertSettings(insertSettings: InsertSettings): Promise<Settings> {
+    const database = await this.getDb();
     const userId = insertSettings.userId || "default";
     
     // Try to update existing settings first
-    const [updated] = await db
+    const [updated] = await database
       .update(settings)
       .set({
         aiProvider: insertSettings.aiProvider || "gemini",
@@ -243,7 +251,7 @@ export class DatabaseStorage implements IStorage {
     }
 
     // If no existing settings, insert new ones
-    const [created] = await db
+    const [created] = await database
       .insert(settings)
       .values({
         userId,
