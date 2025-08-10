@@ -159,7 +159,7 @@ export default function SettingsPage() {
     name: z.string().min(1, "Name is required"),
     key: z.string().min(1, "Key is required"),
     description: z.string().min(1, "Description is required"),
-    providerId: z.number().min(1, "Provider is required"),
+    providerId: z.coerce.number().min(1, "Provider is required"),
     isDefault: z.boolean().default(false),
   });
 
@@ -171,7 +171,7 @@ export default function SettingsPage() {
 
   const modelForm = useForm<z.infer<typeof modelFormSchema>>({
     resolver: zodResolver(modelFormSchema),
-    defaultValues: { name: "", key: "", description: "", providerId: 0, isDefault: false },
+    defaultValues: { name: "", key: "", description: "", providerId: 1, isDefault: false },
   });
 
   // Create mutations with form handling
@@ -499,7 +499,7 @@ export default function SettingsPage() {
                     </CardTitle>
                     <Button
                       onClick={() => {
-                        modelForm.reset({ name: "", key: "", description: "", providerId: 0, isDefault: false });
+                        modelForm.reset({ name: "", key: "", description: "", providerId: providers[0]?.id || 1, isDefault: false });
                         setShowAddModel(true);
                       }}
                       size="sm"
@@ -815,7 +815,7 @@ export default function SettingsPage() {
                   <FormItem>
                     <FormLabel>Provider</FormLabel>
                     <FormControl>
-                      <Select value={field.value?.toString()} onValueChange={(value) => field.onChange(parseInt(value))}>
+                      <Select value={field.value?.toString()} onValueChange={(value) => field.onChange(Number(value))}>
                         <SelectTrigger className="bg-slate-800 border-slate-600">
                           <SelectValue placeholder="Select a provider" />
                         </SelectTrigger>
@@ -912,7 +912,7 @@ export default function SettingsPage() {
                   <FormItem>
                     <FormLabel>Provider</FormLabel>
                     <FormControl>
-                      <Select value={field.value?.toString()} onValueChange={(value) => field.onChange(parseInt(value))}>
+                      <Select value={field.value?.toString()} onValueChange={(value) => field.onChange(Number(value))}>
                         <SelectTrigger className="bg-slate-800 border-slate-600">
                           <SelectValue />
                         </SelectTrigger>
