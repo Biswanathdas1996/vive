@@ -12,6 +12,18 @@ import { useToast } from "@/hooks/use-toast";
 import { Settings, Save, Zap, Brain, MessageSquare, Key, Monitor, Plus, Edit, Trash2 } from "lucide-react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
 
 // Database-driven AI provider and model types
 interface AiProvider {
@@ -135,6 +147,116 @@ export default function SettingsPage() {
       toast({ title: "Error", description: error?.message || "Failed to delete model.", variant: "destructive" });
     },
   });
+
+  // Form schemas
+  const providerFormSchema = z.object({
+    name: z.string().min(1, "Name is required"),
+    key: z.string().min(1, "Key is required"),
+    icon: z.string().min(1, "Icon is required"),
+  });
+
+  const modelFormSchema = z.object({
+    name: z.string().min(1, "Name is required"),
+    key: z.string().min(1, "Key is required"),
+    description: z.string().min(1, "Description is required"),
+    providerId: z.number().min(1, "Provider is required"),
+    isDefault: z.boolean().default(false),
+  });
+
+  // Forms
+  const providerForm = useForm<z.infer<typeof providerFormSchema>>({
+    resolver: zodResolver(providerFormSchema),
+    defaultValues: { name: "", key: "", icon: "" },
+  });
+
+  const modelForm = useForm<z.infer<typeof modelFormSchema>>({
+    resolver: zodResolver(modelFormSchema),
+    defaultValues: { name: "", key: "", description: "", providerId: 0, isDefault: false },
+  });
+
+  // Create mutations with form handling
+  const createProviderMutation = useMutation({
+    mutationFn: async (data: z.infer<typeof providerFormSchema>) => {
+      return apiRequest("/api/ai-providers", { method: "POST", body: JSON.stringify(data) });
+    },
+    onSuccess: () => {
+      toast({ title: "Provider added", description: "AI provider created successfully." });
+      queryClient.invalidateQueries({ queryKey: ["/api/ai-providers"] });
+      setShowAddProvider(false);
+      providerForm.reset();
+    },
+    onError: (error: any) => {
+      toast({ title: "Error", description: error?.message || "Failed to create provider.", variant: "destructive" });
+    },
+  });
+
+  const updateProviderMutation = useMutation({
+    mutationFn: async ({ id, ...data }: { id: number } & z.infer<typeof providerFormSchema>) => {
+      return apiRequest(`/api/ai-providers/${id}`, { method: "PUT", body: JSON.stringify(data) });
+    },
+    onSuccess: () => {
+      toast({ title: "Provider updated", description: "AI provider updated successfully." });
+      queryClient.invalidateQueries({ queryKey: ["/api/ai-providers"] });
+      setEditingProvider(null);
+      providerForm.reset();
+    },
+    onError: (error: any) => {
+      toast({ title: "Error", description: error?.message || "Failed to update provider.", variant: "destructive" });
+    },
+  });
+
+  const createModelMutation = useMutation({
+    mutationFn: async (data: z.infer<typeof modelFormSchema>) => {
+      return apiRequest("/api/ai-models", { method: "POST", body: JSON.stringify(data) });
+    },
+    onSuccess: () => {
+      toast({ title: "Model added", description: "AI model created successfully." });
+      queryClient.invalidateQueries({ queryKey: ["/api/ai-models"] });
+      setShowAddModel(false);
+      modelForm.reset();
+    },
+    onError: (error: any) => {
+      toast({ title: "Error", description: error?.message || "Failed to create model.", variant: "destructive" });
+    },
+  });
+
+  const updateModelMutation = useMutation({
+    mutationFn: async ({ id, ...data }: { id: number } & z.infer<typeof modelFormSchema>) => {
+      return apiRequest(`/api/ai-models/${id}`, { method: "PUT", body: JSON.stringify(data) });
+    },
+    onSuccess: () => {
+      toast({ title: "Model updated", description: "AI model updated successfully." });
+      queryClient.invalidateQueries({ queryKey: ["/api/ai-models"] });
+      setEditingModel(null);
+      modelForm.reset();
+    },
+    onError: (error: any) => {
+      toast({ title: "Error", description: error?.message || "Failed to update model.", variant: "destructive" });
+    },
+  });
+
+  // Handle editing
+  useEffect(() => {
+    if (editingProvider) {
+      providerForm.reset({
+        name: editingProvider.name,
+        key: editingProvider.key,
+        icon: editingProvider.icon,
+      });
+    }
+  }, [editingProvider, providerForm]);
+
+  useEffect(() => {
+    if (editingModel) {
+      modelForm.reset({
+        name: editingModel.name,
+        key: editingModel.key,
+        description: editingModel.description,
+        providerId: editingModel.providerId,
+        isDefault: editingModel.isDefault,
+      });
+    }
+  }, [editingModel, modelForm]);
 
   const handleProviderChange = (providerKey: string) => {
     const provider = providers.find(p => p.key === providerKey);
@@ -320,7 +442,10 @@ export default function SettingsPage() {
                       <span>AI Providers</span>
                     </CardTitle>
                     <Button
-                      onClick={() => setShowAddProvider(true)}
+                      onClick={() => {
+                        providerForm.reset({ name: "", key: "", icon: "" });
+                        setShowAddProvider(true);
+                      }}
                       size="sm"
                       className="bg-blue-600 hover:bg-blue-700"
                     >
@@ -373,7 +498,10 @@ export default function SettingsPage() {
                       <span>AI Models</span>
                     </CardTitle>
                     <Button
-                      onClick={() => setShowAddModel(true)}
+                      onClick={() => {
+                        modelForm.reset({ name: "", key: "", description: "", providerId: 0, isDefault: false });
+                        setShowAddModel(true);
+                      }}
                       size="sm"
                       className="bg-yellow-600 hover:bg-yellow-700"
                     >
@@ -548,6 +676,322 @@ export default function SettingsPage() {
           </Button>
         </div>
       </div>
+
+      {/* Add Provider Dialog */}
+      <Dialog open={showAddProvider} onOpenChange={setShowAddProvider}>
+        <DialogContent className="bg-slate-900 border-slate-700 text-white">
+          <DialogHeader>
+            <DialogTitle>Add AI Provider</DialogTitle>
+            <DialogDescription>Create a new AI provider configuration.</DialogDescription>
+          </DialogHeader>
+          <Form {...providerForm}>
+            <form onSubmit={providerForm.handleSubmit((data) => createProviderMutation.mutate(data))} className="space-y-4">
+              <FormField
+                control={providerForm.control}
+                name="name"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Provider Name</FormLabel>
+                    <FormControl>
+                      <Input placeholder="e.g., OpenAI" {...field} className="bg-slate-800 border-slate-600" />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={providerForm.control}
+                name="key"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Provider Key</FormLabel>
+                    <FormControl>
+                      <Input placeholder="e.g., openai" {...field} className="bg-slate-800 border-slate-600" />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={providerForm.control}
+                name="icon"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Icon (emoji)</FormLabel>
+                    <FormControl>
+                      <Input placeholder="e.g., 🤖" {...field} className="bg-slate-800 border-slate-600" />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <DialogFooter>
+                <Button type="button" variant="outline" onClick={() => setShowAddProvider(false)}>
+                  Cancel
+                </Button>
+                <Button type="submit" disabled={createProviderMutation.isPending}>
+                  {createProviderMutation.isPending ? "Creating..." : "Create Provider"}
+                </Button>
+              </DialogFooter>
+            </form>
+          </Form>
+        </DialogContent>
+      </Dialog>
+
+      {/* Edit Provider Dialog */}
+      <Dialog open={!!editingProvider} onOpenChange={() => setEditingProvider(null)}>
+        <DialogContent className="bg-slate-900 border-slate-700 text-white">
+          <DialogHeader>
+            <DialogTitle>Edit AI Provider</DialogTitle>
+            <DialogDescription>Update the AI provider configuration.</DialogDescription>
+          </DialogHeader>
+          <Form {...providerForm}>
+            <form onSubmit={providerForm.handleSubmit((data) => updateProviderMutation.mutate({ id: editingProvider!.id, ...data }))} className="space-y-4">
+              <FormField
+                control={providerForm.control}
+                name="name"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Provider Name</FormLabel>
+                    <FormControl>
+                      <Input {...field} className="bg-slate-800 border-slate-600" />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={providerForm.control}
+                name="key"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Provider Key</FormLabel>
+                    <FormControl>
+                      <Input {...field} className="bg-slate-800 border-slate-600" />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={providerForm.control}
+                name="icon"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Icon (emoji)</FormLabel>
+                    <FormControl>
+                      <Input {...field} className="bg-slate-800 border-slate-600" />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <DialogFooter>
+                <Button type="button" variant="outline" onClick={() => setEditingProvider(null)}>
+                  Cancel
+                </Button>
+                <Button type="submit" disabled={updateProviderMutation.isPending}>
+                  {updateProviderMutation.isPending ? "Updating..." : "Update Provider"}
+                </Button>
+              </DialogFooter>
+            </form>
+          </Form>
+        </DialogContent>
+      </Dialog>
+
+      {/* Add Model Dialog */}
+      <Dialog open={showAddModel} onOpenChange={setShowAddModel}>
+        <DialogContent className="bg-slate-900 border-slate-700 text-white">
+          <DialogHeader>
+            <DialogTitle>Add AI Model</DialogTitle>
+            <DialogDescription>Create a new AI model configuration.</DialogDescription>
+          </DialogHeader>
+          <Form {...modelForm}>
+            <form onSubmit={modelForm.handleSubmit((data) => createModelMutation.mutate(data))} className="space-y-4">
+              <FormField
+                control={modelForm.control}
+                name="providerId"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Provider</FormLabel>
+                    <FormControl>
+                      <Select value={field.value?.toString()} onValueChange={(value) => field.onChange(parseInt(value))}>
+                        <SelectTrigger className="bg-slate-800 border-slate-600">
+                          <SelectValue placeholder="Select a provider" />
+                        </SelectTrigger>
+                        <SelectContent className="bg-slate-800 border-slate-600">
+                          {providers.map((provider) => (
+                            <SelectItem key={provider.id} value={provider.id.toString()}>
+                              {provider.icon} {provider.name}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={modelForm.control}
+                name="name"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Model Name</FormLabel>
+                    <FormControl>
+                      <Input placeholder="e.g., GPT-4" {...field} className="bg-slate-800 border-slate-600" />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={modelForm.control}
+                name="key"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Model Key</FormLabel>
+                    <FormControl>
+                      <Input placeholder="e.g., gpt-4" {...field} className="bg-slate-800 border-slate-600" />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={modelForm.control}
+                name="description"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Description</FormLabel>
+                    <FormControl>
+                      <Input placeholder="e.g., Advanced reasoning model" {...field} className="bg-slate-800 border-slate-600" />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={modelForm.control}
+                name="isDefault"
+                render={({ field }) => (
+                  <FormItem className="flex items-center space-x-2">
+                    <FormControl>
+                      <Switch checked={field.value} onCheckedChange={field.onChange} />
+                    </FormControl>
+                    <FormLabel>Set as default model for this provider</FormLabel>
+                  </FormItem>
+                )}
+              />
+              <DialogFooter>
+                <Button type="button" variant="outline" onClick={() => setShowAddModel(false)}>
+                  Cancel
+                </Button>
+                <Button type="submit" disabled={createModelMutation.isPending}>
+                  {createModelMutation.isPending ? "Creating..." : "Create Model"}
+                </Button>
+              </DialogFooter>
+            </form>
+          </Form>
+        </DialogContent>
+      </Dialog>
+
+      {/* Edit Model Dialog */}
+      <Dialog open={!!editingModel} onOpenChange={() => setEditingModel(null)}>
+        <DialogContent className="bg-slate-900 border-slate-700 text-white">
+          <DialogHeader>
+            <DialogTitle>Edit AI Model</DialogTitle>
+            <DialogDescription>Update the AI model configuration.</DialogDescription>
+          </DialogHeader>
+          <Form {...modelForm}>
+            <form onSubmit={modelForm.handleSubmit((data) => updateModelMutation.mutate({ id: editingModel!.id, ...data }))} className="space-y-4">
+              <FormField
+                control={modelForm.control}
+                name="providerId"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Provider</FormLabel>
+                    <FormControl>
+                      <Select value={field.value?.toString()} onValueChange={(value) => field.onChange(parseInt(value))}>
+                        <SelectTrigger className="bg-slate-800 border-slate-600">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent className="bg-slate-800 border-slate-600">
+                          {providers.map((provider) => (
+                            <SelectItem key={provider.id} value={provider.id.toString()}>
+                              {provider.icon} {provider.name}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={modelForm.control}
+                name="name"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Model Name</FormLabel>
+                    <FormControl>
+                      <Input {...field} className="bg-slate-800 border-slate-600" />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={modelForm.control}
+                name="key"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Model Key</FormLabel>
+                    <FormControl>
+                      <Input {...field} className="bg-slate-800 border-slate-600" />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={modelForm.control}
+                name="description"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Description</FormLabel>
+                    <FormControl>
+                      <Input {...field} className="bg-slate-800 border-slate-600" />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={modelForm.control}
+                name="isDefault"
+                render={({ field }) => (
+                  <FormItem className="flex items-center space-x-2">
+                    <FormControl>
+                      <Switch checked={field.value} onCheckedChange={field.onChange} />
+                    </FormControl>
+                    <FormLabel>Set as default model for this provider</FormLabel>
+                  </FormItem>
+                )}
+              />
+              <DialogFooter>
+                <Button type="button" variant="outline" onClick={() => setEditingModel(null)}>
+                  Cancel
+                </Button>
+                <Button type="submit" disabled={updateModelMutation.isPending}>
+                  {updateModelMutation.isPending ? "Updating..." : "Update Model"}
+                </Button>
+              </DialogFooter>
+            </form>
+          </Form>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
