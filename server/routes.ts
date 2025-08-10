@@ -5,6 +5,7 @@ import { llmService } from "./services/llm";
 import { fileGeneratorService } from "./services/fileGenerator";
 import { ObjectStorageService, ObjectPermission } from "./objectStorage";
 import { imageAnalysisService } from "./services/imageAnalysis";
+import { dynamicDbService } from "./dynamicDb";
 import express from "express";
 import path from "path";
 
@@ -354,12 +355,56 @@ export async function registerRoutes(app: Express): Promise<Server> {
         aiProvider: settingsData.aiProvider,
         aiModel: settingsData.aiModel,
         apiKeys: settingsData.apiKeys || {},
-        preferences: settingsData.preferences || {}
+        preferences: settingsData.preferences || {},
+        databaseConfig: settingsData.databaseConfig || null
       });
       
       res.json(settings);
     } catch (error) {
       res.status(500).json({
+        error: error instanceof Error ? error.message : String(error),
+      });
+    }
+  });
+
+  // Test database connection
+  app.post("/api/database/test", async (req, res) => {
+    try {
+      const { databaseConfig } = req.body;
+      
+      if (!databaseConfig) {
+        return res.status(400).json({ error: "Database configuration is required" });
+      }
+
+      const isConnected = await dynamicDbService.testConnection(databaseConfig);
+      
+      res.json({
+        connected: isConnected,
+        message: isConnected ? "Database connection successful" : "Database connection failed"
+      });
+    } catch (error) {
+      res.status(500).json({
+        connected: false,
+        error: error instanceof Error ? error.message : String(error),
+      });
+    }
+  });
+
+  // Get current database status
+  app.get("/api/database/status", async (req, res) => {
+    try {
+      const settings = await storage.getSettings("default");
+      
+      res.json({
+        configured: !!(settings?.databaseConfig),
+        usingEnvironment: !settings?.databaseConfig && !!process.env.DATABASE_URL,
+        hasEnvironmentFallback: !!process.env.DATABASE_URL
+      });
+    } catch (error) {
+      res.status(500).json({
+        configured: false,
+        usingEnvironment: false,
+        hasEnvironmentFallback: false,
         error: error instanceof Error ? error.message : String(error),
       });
     }

@@ -8,6 +8,7 @@ import {
   type Settings,
   type InsertSettings,
   type ChatMessage,
+  type DatabaseConfig,
   projects,
   chatSessions,
   generatedFiles,
@@ -15,6 +16,7 @@ import {
 } from "@shared/schema";
 import { randomUUID } from "crypto";
 import { db } from "./db";
+import { getDynamicDb } from "./dynamicDb";
 import { eq } from "drizzle-orm";
 
 // Storage interface for the application
@@ -133,6 +135,7 @@ export class MemStorage implements IStorage {
       aiModel: insertSettings.aiModel || "gemini-1.5-flash",
       apiKeys: insertSettings.apiKeys || {},
       preferences: insertSettings.preferences || {},
+      databaseConfig: (insertSettings.databaseConfig as DatabaseConfig) || null,
       createdAt: existing?.createdAt || new Date(),
       updatedAt: new Date()
     };
@@ -143,8 +146,19 @@ export class MemStorage implements IStorage {
 }
 
 export class DatabaseStorage implements IStorage {
+  private async getDb() {
+    // Use dynamic database service for configuration-aware connections
+    try {
+      return await getDynamicDb();
+    } catch (error) {
+      // Fallback to static connection for initial operations
+      return db;
+    }
+  }
+
   async createProject(insertProject: InsertProject): Promise<Project> {
-    const [project] = await db
+    const database = await this.getDb();
+    const [project] = await database
       .insert(projects)
       .values(insertProject)
       .returning();
@@ -152,7 +166,8 @@ export class DatabaseStorage implements IStorage {
   }
 
   async getProject(id: string): Promise<Project | undefined> {
-    const [project] = await db.select().from(projects).where(eq(projects.id, id));
+    const database = await this.getDb();
+    const [project] = await database.select().from(projects).where(eq(projects.id, id));
     return project || undefined;
   }
 
@@ -217,6 +232,7 @@ export class DatabaseStorage implements IStorage {
         aiModel: insertSettings.aiModel || "gemini-1.5-flash",
         apiKeys: insertSettings.apiKeys || {},
         preferences: insertSettings.preferences || {},
+        databaseConfig: (insertSettings.databaseConfig as DatabaseConfig) || null,
         updatedAt: new Date()
       })
       .where(eq(settings.userId, userId))
@@ -234,7 +250,8 @@ export class DatabaseStorage implements IStorage {
         aiProvider: insertSettings.aiProvider || "gemini",
         aiModel: insertSettings.aiModel || "gemini-1.5-flash",
         apiKeys: insertSettings.apiKeys || {},
-        preferences: insertSettings.preferences || {}
+        preferences: insertSettings.preferences || {},
+        databaseConfig: (insertSettings.databaseConfig as DatabaseConfig) || null
       })
       .returning();
     

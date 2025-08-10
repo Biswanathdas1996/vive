@@ -149,5 +149,24 @@ Completely removed environment variable dependencies and implemented a pure data
 
 **Database Migration:**
 - Executed `npm run db:push` to create all necessary PostgreSQL tables
-- Settings table stores: user preferences, AI provider, model selection, API keys, and preferences
+- Settings table stores: user preferences, AI provider, model selection, API keys, preferences, and database configuration
 - All services now query database directly for configuration without environment variables
+
+## Configurable Database System (January 2025)
+
+Extended the database-only system to make database connections fully configurable through the settings interface:
+
+**Key Features:**
+- **Dynamic Database Connections**: Database connection details can be configured through settings interface
+- **Database Configuration Management**: Users can configure host, port, database name, credentials, and SSL settings
+- **Connection Testing**: API endpoint to test database connections before saving configuration
+- **Fallback Support**: System maintains environment variable fallback for initial bootstrap
+- **Live Connection Switching**: Dynamic database service manages connection pools efficiently
+
+**Technical Implementation:**
+- Created DynamicDatabaseService for managing configurable database connections
+- Added database configuration fields to Settings schema (host, port, database, username, password, ssl, connectionString)
+- Implemented connection pooling with automatic connection switching
+- Added API endpoints: /api/database/test and /api/database/status
+- Updated storage layer to use dynamic database connections
+- Comprehensive connection string building from individual config parameters
