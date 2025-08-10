@@ -7,7 +7,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { useToast } from "@/hooks/use-toast";
 import { ObjectUploader } from "./ObjectUploader";
-import { Send, Trash2, Download, Brain, Search, Table, Cog, CheckCircle, Loader, ChevronUp, ChevronDown, ChevronLeft, ChevronRight, Image } from "lucide-react";
+import { Send, Trash2, Download, Brain, Search, Table, Cog, CheckCircle, Loader, ChevronUp, ChevronDown, ChevronLeft, ChevronRight, Image, Zap } from "lucide-react";
 import type { UploadResult } from "@uppy/core";
 
 // Generic JSON renderer that can handle any data structure
@@ -119,6 +119,7 @@ export function ChatInterface({
   const [isHeaderCollapsed, setIsHeaderCollapsed] = useState(false);
   const [uploadedImages, setUploadedImages] = useState<string[]>([]);
   const [imageAnalyses, setImageAnalyses] = useState<Record<string, string>>({});
+  const [useMcpMode, setUseMcpMode] = useState(false);
   // Remove local state and use props instead
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const queryClient = useQueryClient();
@@ -132,11 +133,112 @@ export function ChatInterface({
 
   const messages: ChatMessage[] = (chatSession as any)?.messages || [];
 
+  // MCP server mode function
+  const startChatWithMcp = async (prompt: string) => {
+    // Step 1: Analyze prompt using MCP
+    const analysisResponse = await fetch('/api/mcp/tools/call', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        name: 'analyze_prompt',
+        arguments: { prompt }
+      })
+    });
+    const analysisResult = await analysisResponse.json();
+    
+    // Step 2: Generate file structure using MCP
+    const structureResponse = await fetch('/api/mcp/tools/call', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        name: 'generate_file_structure',
+        arguments: { analysis: analysisResult.content[0].text }
+      })
+    });
+    const structureResult = await structureResponse.json();
+    
+    // Step 3: Create project and chat session
+    const response = await apiRequest("POST", "/api/chat/start", { 
+      prompt,
+      useMcp: true,
+      analysis: analysisResult.content[0].text,
+      structure: structureResult.content[0].text
+    });
+    return response.json();
+  };
+
+  // MCP-based file generation
+  const generateFilesWithMcp = async (sessionId: string, structure: string) => {
+    try {
+      const structureObj = JSON.parse(structure);
+      const files = structureObj.public?.children ? Object.keys(structureObj.public.children) : [];
+      
+      for (let i = 0; i < files.length; i++) {
+        const fileName = files[i];
+        setCurrentWorkflow(prev => ({
+          ...prev,
+          currentStep: "content",
+          structureComplete: true,
+          currentFile: fileName,
+          completedFiles: i,
+          totalFiles: files.length
+        }));
+
+        // Generate file content using MCP
+        const response = await fetch('/api/mcp/tools/call', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            name: 'generate_file_content',
+            arguments: {
+              fileName,
+              fileStructure: structure,
+              requirements: structureObj.public.children[fileName]?.prompt || `Generate content for ${fileName}`
+            }
+          })
+        });
+        
+        const result = await response.json();
+        
+        // Save the generated file
+        await apiRequest("POST", `/api/chat/${sessionId}/generate-file`, {
+          fileName,
+          content: result.content[0].text,
+          useMcp: true
+        });
+      }
+      
+      setCurrentWorkflow(prev => ({
+        ...prev,
+        contentComplete: true,
+        completedFiles: files.length
+      }));
+      setIsGenerating(false);
+      
+      queryClient.invalidateQueries({ queryKey: ["/api/chat", sessionId] });
+    } catch (error) {
+      console.error('MCP file generation failed:', error);
+      setIsGenerating(false);
+      setCurrentWorkflow(null);
+      toast({
+        title: "Generation Error",
+        description: "Failed to generate files using MCP server",
+        variant: "destructive",
+      });
+    }
+  };
+
   // Start new chat mutation
   const startChatMutation = useMutation({
     mutationFn: async (prompt: string) => {
-      const response = await apiRequest("POST", "/api/chat/start", { prompt });
-      return response.json();
+      if (useMcpMode) {
+        // Use MCP server mode
+        return await startChatWithMcp(prompt);
+      } else {
+        // Use conventional mode
+        const response = await apiRequest("POST", "/api/chat/start", { prompt });
+        return response.json();
+      }
     },
     onSuccess: (data) => {
       onProjectCreate(data.projectId);
@@ -149,11 +251,16 @@ export function ChatInterface({
       });
       setIsGenerating(true);
       
-      // Start file structure generation
-      generateStructureMutation.mutate({
-        sessionId: data.chatSessionId,
-        analysisResult: data.analysisResult
-      });
+      if (!useMcpMode) {
+        // Start file structure generation for conventional mode
+        generateStructureMutation.mutate({
+          sessionId: data.chatSessionId,
+          analysisResult: data.analysisResult
+        });
+      } else {
+        // For MCP mode, start generating files directly using MCP tools
+        setTimeout(() => generateFilesWithMcp(data.chatSessionId, data.structure), 100);
+      }
       
       queryClient.invalidateQueries({ queryKey: ["/api/chat", data.chatSessionId] });
     },
@@ -787,6 +894,47 @@ export function ChatInterface({
                       </button>
                     </div>
                   ))}
+                </div>
+              </div>
+            )}
+
+            {/* Generation Mode Toggle */}
+            {!chatSessionId && (
+              <div className="mb-4 p-3 bg-slate-800 rounded-lg border border-slate-600">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center space-x-3">
+                    <div className="flex items-center space-x-2">
+                      <Brain className={`w-4 h-4 ${!useMcpMode ? 'text-blue-500' : 'text-slate-400'}`} />
+                      <span className="text-sm font-medium text-slate-200">Generation Mode</span>
+                    </div>
+                    <div className="flex items-center bg-slate-900 rounded-lg p-1">
+                      <button
+                        onClick={() => setUseMcpMode(false)}
+                        className={`px-3 py-1 text-xs rounded-md transition-all ${
+                          !useMcpMode 
+                            ? 'bg-blue-600 text-white' 
+                            : 'text-slate-400 hover:text-slate-300'
+                        }`}
+                      >
+                        <Brain className="w-3 h-3 mr-1 inline" />
+                        Conventional
+                      </button>
+                      <button
+                        onClick={() => setUseMcpMode(true)}
+                        className={`px-3 py-1 text-xs rounded-md transition-all ${
+                          useMcpMode 
+                            ? 'bg-purple-600 text-white' 
+                            : 'text-slate-400 hover:text-slate-300'
+                        }`}
+                      >
+                        <Zap className="w-3 h-3 mr-1 inline" />
+                        MCP Server
+                      </button>
+                    </div>
+                  </div>
+                  <div className="text-xs text-slate-500">
+                    {useMcpMode ? 'Using MCP protocol for generation' : 'Using traditional AI workflow'}
+                  </div>
                 </div>
               </div>
             )}
