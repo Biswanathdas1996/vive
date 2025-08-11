@@ -61,6 +61,17 @@ export default function MCPPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name, arguments: args }),
       });
+      
+      if (!response.ok) {
+        const errorText = await response.text();
+        try {
+          const errorData = JSON.parse(errorText);
+          throw new Error(errorData.error || errorData.details || `HTTP ${response.status}`);
+        } catch {
+          throw new Error(`HTTP ${response.status}: ${errorText}`);
+        }
+      }
+      
       const data = await response.json();
       
       // Return both successful and error responses to display to user
@@ -75,6 +86,17 @@ export default function MCPPage() {
     mutationFn: async (uri: string) => {
       const encodedUri = encodeURIComponent(uri);
       const response = await fetch(`/api/mcp/resources/fetch?uri=${encodedUri}`);
+      
+      if (!response.ok) {
+        const errorText = await response.text();
+        try {
+          const errorData = JSON.parse(errorText);
+          throw new Error(errorData.error || errorData.details || `HTTP ${response.status}`);
+        } catch {
+          throw new Error(`HTTP ${response.status}: ${errorText}`);
+        }
+      }
+      
       const data = await response.json();
       
       // Return both successful and error responses to display to user

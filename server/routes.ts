@@ -586,7 +586,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
       let result;
       switch (name) {
         case 'analyze_prompt':
-          const analysis = await llmService.analyzePrompt(args?.prompt || '');
+          if (!args?.prompt) {
+            return res.status(400).json({ error: "Prompt is required for analyze_prompt" });
+          }
+          const analysis = await llmService.analyzePrompt(args.prompt);
           result = {
             content: [{
               type: 'text',
@@ -596,9 +599,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
           break;
           
         case 'generate_file_structure':
-          const fileStructure = await llmService.generateFileStructure(
-            args?.analysis || {}
-          );
+          if (!args?.analysis) {
+            return res.status(400).json({ error: "Analysis is required for generate_file_structure" });
+          }
+          const fileStructure = await llmService.generateFileStructure(args.analysis);
           result = {
             content: [{
               type: 'text',

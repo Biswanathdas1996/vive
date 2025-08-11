@@ -133,15 +133,25 @@ export class LLMService {
 Analyze this web application request: ${prompt}`;
 
       const responseText = await generateContent(systemPrompt);
+      
+      if (!responseText || typeof responseText !== 'string') {
+        throw new Error('Empty or invalid response from AI provider');
+      }
 
       // Extract JSON from response
       const jsonMatch = responseText.match(CONFIG.JSON_EXTRACTION_REGEX);
-      if (!jsonMatch) {
+      if (!jsonMatch || !jsonMatch[0]) {
+        console.error('No JSON found in AI response:', responseText);
         throw new Error(ERROR_MESSAGES.NO_JSON_RESPONSE);
       }
 
-      const parsedResult = JSON.parse(jsonMatch[0]);
-      return parsedResult as AnalysisResult;
+      try {
+        const parsedResult = JSON.parse(jsonMatch[0]);
+        return parsedResult as AnalysisResult;
+      } catch (parseError) {
+        console.error('Failed to parse JSON:', jsonMatch[0]);
+        throw new Error(`${ERROR_MESSAGES.JSON_PARSE_ERROR}: ${parseError instanceof Error ? parseError.message : String(parseError)}`);
+      }
     } catch (error) {
       throw new Error(
         `${ERROR_MESSAGES.PROMPT_ANALYSIS_FAILED}: ${error instanceof Error ? error.message : String(error)}`,
@@ -184,15 +194,25 @@ Criteria:
 - ENFORCE: Must have at least 10 UI elements per page.`;
 
       const responseText = await generateContent(prompt);
+      
+      if (!responseText || typeof responseText !== 'string') {
+        throw new Error('Empty or invalid response from AI provider');
+      }
 
       // Extract JSON from response
       const jsonMatch = responseText.match(CONFIG.JSON_EXTRACTION_REGEX);
-      if (!jsonMatch) {
+      if (!jsonMatch || !jsonMatch[0]) {
+        console.error('No JSON found in AI response:', responseText);
         throw new Error(ERROR_MESSAGES.NO_JSON_RESPONSE);
       }
 
-      const parsedResult = JSON.parse(jsonMatch[0]);
-      return parsedResult as FileStructure;
+      try {
+        const parsedResult = JSON.parse(jsonMatch[0]);
+        return parsedResult as FileStructure;
+      } catch (parseError) {
+        console.error('Failed to parse JSON:', jsonMatch[0]);
+        throw new Error(`${ERROR_MESSAGES.JSON_PARSE_ERROR}: ${parseError instanceof Error ? parseError.message : String(parseError)}`);
+      }
     } catch (error) {
       throw new Error(
         `${ERROR_MESSAGES.FILE_STRUCTURE_FAILED}: ${error instanceof Error ? error.message : String(error)}`,
