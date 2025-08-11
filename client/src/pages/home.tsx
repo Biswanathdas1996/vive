@@ -30,13 +30,8 @@ export default function Home() {
             <div className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></div>
             <span>LLM Connected</span>
           </div>
-          <Link href="/mcp">
-            <button className="p-2 hover:bg-slate-800 rounded-lg transition-colors" title="MCP Server">
-              <Network className="w-4 h-4 text-slate-400" />
-            </button>
-          </Link>
-          <Link href="/settings">
-            <button className="p-2 hover:bg-slate-800 rounded-lg transition-colors" title="Settings">
+          <Link href="/admin">
+            <button className="p-2 hover:bg-slate-800 rounded-lg transition-colors" title="Admin Panel">
               <Cog className="w-4 h-4 text-slate-400" />
             </button>
           </Link>
