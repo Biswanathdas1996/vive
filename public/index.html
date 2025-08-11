@@ -3,97 +3,106 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Chatbot Landing Page</title>
+<title>AI-Powered Conversation Features</title>
 <style>
 :root {
-  --primary-color: #4285F4;
-  --secondary-color: #EA4335;
-  --accent-color: #FBBC05;
+  --primary-color: #4A6572;
+  --secondary-color: #A3B18A;
+  --accent-color: #E6B8AF;
+  --background-color: #F8F8F8;
   --text-color: #333;
-  --bg-color: #f4f4f4;
-  --shadow-color: rgba(0,0,0,0.2);
-  --border-radius: 8px;
+  --dark-text-color: #fff;
+  --shadow-color: rgba(0,0,0,0.1);
 }
 
 body {
-  font-family: 'Roboto', sans-serif;
-  line-height: 1.6;
+  font-family: 'Arial', sans-serif;
   margin: 0;
-  background-color: var(--bg-color);
+  line-height: 1.6;
+  background-color: var(--background-color);
   color: var(--text-color);
+  transition: background-color 0.3s ease;
 }
 
-.navbar {
+.dark-mode {
+  background-color: #333;
+  color: var(--dark-text-color);
+}
+
+.dark-mode .btn {
+    background-color: #fff;
+    color: #333;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+/* Navbar */
+nav {
+  background-color: var(--primary-color);
+  color: #fff;
   position: sticky;
   top: 0;
-  background-color: white;
-  box-shadow: 0 2px 4px var(--shadow-color);
-  padding: 1rem;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
   z-index: 10;
 }
 
-.navbar-logo {
-  font-size: 1.5rem;
-  font-weight: bold;
-  color: var(--primary-color);
-}
-
-.navbar-links {
+nav ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
   display: flex;
-  gap: 1rem;
+  align-items: center;
 }
 
-.navbar-links a {
+nav li {
+  margin: 0 10px;
+}
+
+nav a {
+  color: #fff;
   text-decoration: none;
-  color: var(--text-color);
+  padding: 10px;
+  transition: background-color 0.3s ease;
+}
+
+nav a:hover {
+  background-color: rgba(255,255,255,0.2);
 }
 
 
+/* Hero Section */
 .hero {
-  background-image: linear-gradient(to bottom, #4285F4, #64B5F6);
-  color: white;
-  padding: 4rem;
+  background-image: linear-gradient(to bottom, #66ccff, #3399ff), url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1 1"><polygon points="0,0 1,0 1,1" style="fill:#66ccff;"/></svg>');
+  background-size: cover;
+  color: #fff;
+  padding: 100px 0;
   text-align: center;
 }
 
-.hero-title {
-  font-size: 3rem;
-  margin-bottom: 1rem;
-}
-
-.hero-subtitle {
-  font-size: 1.5rem;
-  margin-bottom: 2rem;
-}
-
-.hero-button {
+.btn {
   background-color: var(--accent-color);
-  color: white;
-  padding: 1rem 2rem;
+  color: #fff;
+  padding: 10px 20px;
   border: none;
-  border-radius: var(--border-radius);
-  font-size: 1.2rem;
+  border-radius: 5px;
   cursor: pointer;
   transition: background-color 0.3s ease;
 }
 
-.hero-button:hover {
-  background-color: darken(var(--accent-color), 10%);
+.btn:hover {
+  background-color: #E0A89E;
 }
 
+/* Feature Cards */
 .feature-card {
-  background-color: white;
-  padding: 2rem;
-  border-radius: var(--border-radius);
-  box-shadow: 0 2px 4px var(--shadow-color);
-  margin-bottom: 2rem;
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  cursor: pointer;
+  background-color: #fff;
+  padding: 20px;
+  margin-bottom: 20px;
+  border-radius: 5px;
+  box-shadow: var(--shadow-color);
   transition: transform 0.3s ease;
 }
 
@@ -101,70 +110,71 @@ body {
   transform: translateY(-5px);
 }
 
-.feature-icon {
-  font-size: 2rem;
-  color: var(--primary-color);
-}
 
-.feature-title {
-  font-weight: bold;
+/* Responsive Styles (Example) */
+@media (max-width: 768px) {
+  nav ul {
+    flex-direction: column;
+  }
+  nav li {
+    margin: 5px 0;
+  }
 }
-
-/* ... rest of the CSS styles ... */
-/*  Add styles for modal, carousel, scrollable list, form, counters, chatbot preview, etc.  */
-/*  Remember to use CSS variables, modern layouts (Grid, Flexbox), animations, and responsive design. */
 
 </style>
 </head>
 <body>
-<nav class="navbar">
-  <div class="navbar-logo">ChatBot</div>
-  <div class="navbar-links">
-    <a href="#">Home</a>
-    <a href="#">Features</a>
-    <a href="#">Pricing</a>
-    <a href="#">Contact</a>
-  </div>
+<nav>
+  <ul>
+    <li><a href="#">Home</a></li>
+    <li><a href="#">Features</a></li>
+    <li><a href="#">About</a></li>
+    <li><a href="#">Pricing</a></li>
+    <li><a href="#">Contact</a></li>
+  </ul>
 </nav>
 
 <section class="hero">
-  <h1 class="hero-title">Welcome to Our Amazing Chatbot!</h1>
-  <p class="hero-subtitle">Revolutionizing customer service, one conversation at a time.</p>
-  <button class="hero-button">Try the Chatbot</button>
+  <h1>AI-Powered Conversations</h1>
+  <p>Revolutionizing communication.</p>
+  <button class="btn">Start Chatting</button>
 </section>
 
 <section class="features">
-  <div class="feature-card">
-    <div class="feature-icon">&#128221;</div>
-    <div>
-      <h3>Feature 1</h3>
-      <p>Short description of feature 1.</p>
-    </div>
-  </div>
-  <div class="feature-card">
-    <div class="feature-icon">&#128222;</div>
-    <div>
-      <h3>Feature 2</h3>
-      <p>Short description of feature 2.</p>
-    </div>
-  </div>
-  <div class="feature-card">
-    <div class="feature-icon">&#128223;</div>
-    <div>
-      <h3>Feature 3</h3>
-      <p>Short description of feature 3.</p>
+  <div class="container">
+    <h2>Key Features</h2>
+    <div class="feature-cards">
+      <div class="feature-card">
+        <h3>AI-Powered Conversation</h3>
+        <p>Description here</p>
+      </div>
+      <div class="feature-card">
+        <h3>NLU</h3>
+        <p>Description here</p>
+      </div>
     </div>
   </div>
 </section>
 
 
-<section class="footer">
-  <p>&copy; 2023 Chatbot Inc. All rights reserved.</p>
-</section>
+<footer>
+  <button id="backToTop">Back to Top</button>
+</footer>
 
 <script>
-// Add your JavaScript code here for interactivity (modal handling, carousel, form validation, etc.)
-//Remember to use modern JavaScript features (e.g., async/await, arrow functions) and event listeners.
+document.getElementById('backToTop').addEventListener('click', function() {
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+});
+
+// Dark Mode Toggle (example)
+const darkModeToggle = document.createElement('button');
+darkModeToggle.textContent = 'Dark Mode';
+darkModeToggle.addEventListener('click', () => {
+  document.body.classList.toggle('dark-mode');
+  darkModeToggle.textContent = document.body.classList.contains('dark-mode') ? 'Light Mode' : 'Dark Mode';
+});
+document.body.appendChild(darkModeToggle);
 </script>
+
 </body>
 </html>

@@ -3,169 +3,193 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Chat with ChatBotty</title>
+<title>Enhanced Page Prompt: Responsive Chat Interface Application</title>
 <style>
 :root {
-  --primary-color: #3f51b5;
-  --secondary-color: #6200ee;
-  --bg-color: #f4f4f4;
+  --primary-color: #4285F4;
+  --secondary-color: #f44336;
+  --accent-color: #FFEB3B;
+  --background-color: #f4f4f4;
+  --dark-background: #212121;
   --text-color: #333;
-  --accent-color: #ff9800;
-  --shadow-color: rgba(0,0,0,0.2);
+  --dark-text: #fff;
+  --border-radius: 8px;
+  --box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
 body {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   margin: 0;
-  background-color: var(--bg-color);
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
+  background-color: var(--background-color);
+  transition: background-color 0.3s ease;
   color: var(--text-color);
 }
 
-header {
-  background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-  color: white;
-  padding: 1rem;
-  position: sticky;
-  top: 0;
-  z-index: 10;
-  box-shadow: 0 2px 4px var(--shadow-color);
+body.dark-mode {
+  background-color: var(--dark-background);
+  color: var(--dark-text);
+}
+
+.container {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
+  min-height: 100vh;
 }
 
-header button {
-  background: none;
-  border: none;
-  color: white;
-  font-size: 1.2rem;
-  cursor: pointer;
-}
-
-main {
-  flex: 1;
-  display: flex;
-  padding: 1rem;
-}
-
-.chat-area {
-  flex: 1;
+.sidebar {
+  width: 300px;
+  background-color: #fff;
+  box-shadow: var(--box-shadow);
+  padding: 20px;
   overflow-y: auto;
-  padding-right: 1rem;
+  transition: width 0.3s ease;
+}
+
+.sidebar.collapsed {
+  width: 60px;
+}
+
+.sidebar h3 {
+  margin-top: 0;
+}
+
+.sidebar ul {
+  list-style: none;
+  padding: 0;
+}
+
+.sidebar li {
+  margin-bottom: 10px;
+}
+
+.main-content {
+  flex: 1;
+  padding: 20px;
+}
+
+.chat-display {
+  height: 400px;
+  overflow-y: auto;
+  border: 1px solid #ccc;
+  border-radius: var(--border-radius);
+  padding: 10px;
 }
 
 .message {
-  margin-bottom: 1rem;
-  padding: 1rem;
-  border-radius: 0.5rem;
-  max-width: 70%;
+  margin-bottom: 10px;
+  padding: 10px;
+  border-radius: var(--border-radius);
 }
 
-.user-message {
-  align-self: flex-end;
-  background-color: var(--accent-color);
-  color: white;
-}
-
-.bot-message {
-  align-self: flex-start;
-  background-color: #e0e0e0;
-}
-
-.input-area {
-  padding: 1rem;
-}
-
-input[type="text"] {
-  padding: 0.8rem;
-  border-radius: 0.5rem;
-  border: 1px solid #ccc;
-  width: calc(100% - 6rem); /* Adjust width as needed */
-  margin-right: 0.5rem;
-}
-
-button[type="submit"] {
-  padding: 0.8rem 1.5rem;
-  border-radius: 0.5rem;
+.message.user {
   background-color: var(--primary-color);
   color: white;
-  cursor: pointer;
-  transition: background-color 0.3s;
+  align-self: flex-end;
 }
 
-button[type="submit"]:hover {
-  background-color: darken(var(--primary-color), 10%);
+.message.ai {
+  background-color: #e0e0e0;
+  align-self: flex-start;
+}
+
+.message-text {
+  word-break: break-word;
+}
+
+
+.chat-input {
+  margin-top: 10px;
+  display: flex;
+}
+
+.chat-input input[type="text"] {
+  flex: 1;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: var(--border-radius);
+}
+
+.chat-input button {
+  padding: 10px 20px;
+  background-color: var(--primary-color);
+  color: white;
+  border: none;
+  border-radius: var(--border-radius);
+  cursor: pointer;
 }
 
 footer {
   background-color: #f0f0f0;
-  padding: 1rem;
+  padding: 10px;
   text-align: center;
-  border-top: 1px solid #ddd;
 }
 
 /* Responsive Styles */
 @media (max-width: 768px) {
-  main {
+  .container {
     flex-direction: column;
   }
-  .chat-area{
-    padding-right:0;
+  .sidebar {
+    width: 100%;
   }
 }
 
 </style>
 </head>
 <body>
-<header>
-  <button>Back</button>
-  <h1>Chat with ChatBotty</h1>
-  <button>Profile</button>
-</header>
-<main>
-  <div class="chat-area">
-    <div class="message bot-message">
-      <div style="background-color: #ADD8E6; border-radius: 10px; padding: 10px;">Bot response 1</div>
+<div class="container">
+  <div class="sidebar">
+    <h3>Conversation History</h3>
+    <ul>
+      <li>Conversation 1</li>
+      <li>Conversation 2</li>
+    </ul>
+    <h3>Settings</h3>
+    <ul>
+      <li>Setting 1</li>
+      <li>Setting 2</li>
+    </ul>
+    <h3>Help</h3>
+    <ul>
+      <li>Help 1</li>
+      <li>Help 2</li>
+    </ul>
+  </div>
+  <div class="main-content">
+    <div class="chat-display">
+      <div class="message user">
+        <div class="message-text">User Message 1</div>
+      </div>
+      <div class="message ai">
+        <div class="message-text">AI Response 1</div>
+      </div>
     </div>
-    <div class="message user-message">
-      <div style="background-color: #FFB6C1; border-radius: 10px; padding: 10px;">User message 1</div>
-    </div>
-    <div class="message bot-message">
-      <div style="background-color: #ADD8E6; border-radius: 10px; padding: 10px;">Bot response 2</div>
+    <div class="chat-input">
+      <input type="text" placeholder="Type your message...">
+      <button>Send</button>
     </div>
   </div>
-  <div class="input-area">
-    <input type="text" placeholder="Type your message...">
-    <button type="submit">Send</button>
-  </div>
-</main>
+</div>
 <footer>
-  <button>Close Chat</button>
-  <button>Clear Conversation</button>
+  &copy; 2023 Chat Application | Version 1.0 | <a href="#">Contact Us</a>
 </footer>
-
 <script>
-// Simple JavaScript for Send button (replace with more sophisticated logic)
-const sendButton = document.querySelector('button[type="submit"]');
-const inputField = document.querySelector('input[type="text"]');
-const chatArea = document.querySelector('.chat-area');
-
-sendButton.addEventListener('click', () => {
-  if (inputField.value.trim() !== '') {
-    const newMessage = document.createElement('div');
-    newMessage.classList.add('message', 'user-message');
-    newMessage.innerHTML = `<div style="background-color: #FFB6C1; border-radius: 10px; padding: 10px;">${inputField.value}</div>`;
-    chatArea.appendChild(newMessage);
-    inputField.value = '';
-    // Add logic to send message to server and receive response here
-    chatArea.scrollTop = chatArea.scrollHeight;
-  }
+// JavaScript for simple functionality (expandable later)
+const sidebar = document.querySelector('.sidebar');
+const sidebarToggle = document.createElement('button');
+sidebarToggle.textContent = '☰';
+sidebarToggle.style.position = 'absolute';
+sidebarToggle.style.top = '10px';
+sidebarToggle.style.left = '10px';
+sidebarToggle.style.backgroundColor = 'var(--primary-color)';
+sidebarToggle.style.color = 'white';
+sidebarToggle.style.border = 'none';
+sidebarToggle.style.borderRadius = 'var(--border-radius)';
+sidebarToggle.style.padding = '5px 10px';
+sidebarToggle.style.cursor = 'pointer';
+sidebarToggle.addEventListener('click', () => {
+  sidebar.classList.toggle('collapsed');
 });
-
-
+document.body.appendChild(sidebarToggle);
 </script>
 </body>
 </html>
