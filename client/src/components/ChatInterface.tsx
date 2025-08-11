@@ -178,9 +178,14 @@ export function ChatInterface({
     
     const structureResult = await structureResponse.json();
     
+    console.log('Structure result from MCP:', structureResult);
+    
     if (!structureResult?.content?.[0]?.text) {
+      console.error('Invalid structure response:', structureResult);
       throw new Error('Invalid structure response format');
     }
+    
+    console.log('Structure text:', structureResult.content[0].text);
     
     // Step 3: Create project and chat session
     const response = await apiRequest("POST", "/api/chat/start", { 
@@ -315,6 +320,7 @@ export function ChatInterface({
       }
     },
     onSuccess: (data) => {
+      console.log('Chat start response data:', data);
       onProjectCreate(data.projectId);
       onChatSessionCreate(data.chatSessionId);
       setCurrentWorkflow({
@@ -333,6 +339,7 @@ export function ChatInterface({
         });
       } else {
         // For MCP mode, start generating files directly using MCP tools
+        console.log('Structure from response:', data.structure);
         if (data.structure) {
           setTimeout(() => generateFilesWithMcp(data.chatSessionId, data.structure), 100);
         } else {

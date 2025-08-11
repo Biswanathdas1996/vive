@@ -19,14 +19,26 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Start new chat session
   app.post("/api/chat/start", async (req, res) => {
     try {
-      const { prompt } = req.body;
+      const { prompt, useMcp, analysis, structure } = req.body;
 
       if (!prompt) {
         return res.status(400).json({ error: "Prompt is required" });
       }
 
-      // Step 1: Analyze prompt
-      const analysisResult = await llmService.analyzePrompt(prompt);
+      let analysisResult;
+      
+      if (useMcp && analysis) {
+        // Use the analysis from MCP
+        try {
+          analysisResult = typeof analysis === 'string' ? JSON.parse(analysis) : analysis;
+        } catch (error) {
+          console.error('Failed to parse MCP analysis:', error);
+          return res.status(400).json({ error: "Invalid analysis format from MCP" });
+        }
+      } else {
+        // Step 1: Analyze prompt using conventional method
+        analysisResult = await llmService.analyzePrompt(prompt);
+      }
 
       // Create project
       const project = await storage.createProject({
@@ -60,7 +72,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         ],
       });
 
-      res.json({
+      const response: any = {
         projectId: project.id,
         chatSessionId: chatSession.id,
         analysisResult,
@@ -69,7 +81,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
           stepName: "Requirements Analysis",
           status: "completed",
         },
-      });
+      };
+
+      // Include structure in response if this is MCP mode
+      if (useMcp && structure) {
+        response.structure = structure;
+      }
+
+      res.json(response);
     } catch (error) {
       res
         .status(500)
