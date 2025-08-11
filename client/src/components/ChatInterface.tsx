@@ -337,7 +337,11 @@ export function ChatInterface({
           setTimeout(() => generateFilesWithMcp(data.chatSessionId, data.structure), 100);
         } else {
           console.error('No structure provided for MCP file generation');
-          setError('Failed to generate file structure. Please try again.');
+          toast({
+            title: "Generation Error",
+            description: "Failed to generate file structure. Please try again.",
+            variant: "destructive",
+          });
           setIsGenerating(false);
         }
       }
