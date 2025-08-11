@@ -3,177 +3,168 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AI-Powered Conversation</title>
+<title>Chatbot Landing Page</title>
 <style>
 :root {
-  --primary-color: #4285f4;
-  --secondary-color: #f4b400;
-  --accent-color: #0f9d58;
+  --primary-color: #4285F4;
+  --secondary-color: #EA4335;
+  --accent-color: #FBBC05;
   --text-color: #333;
-  --bg-color: #f8f8f8;
-  --dark-bg: #222;
-  --dark-text: #eee;
+  --bg-color: #f4f4f4;
+  --shadow-color: rgba(0,0,0,0.2);
+  --border-radius: 8px;
 }
 
 body {
-  font-family: 'Arial', sans-serif;
-  margin: 0;
+  font-family: 'Roboto', sans-serif;
   line-height: 1.6;
+  margin: 0;
   background-color: var(--bg-color);
   color: var(--text-color);
-  transition: background-color 0.3s ease;
 }
 
-body.dark-mode {
-  background-color: var(--dark-bg);
-  color: var(--dark-text);
-}
-
-.container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 20px;
-}
-
-nav {
-  background-color: var(--primary-color);
-  color: white;
+.navbar {
   position: sticky;
   top: 0;
-  z-index: 100;
-  padding: 10px 0;
-}
-
-nav ul {
-  list-style: none;
-  margin: 0;
-  padding: 0;
+  background-color: white;
+  box-shadow: 0 2px 4px var(--shadow-color);
+  padding: 1rem;
   display: flex;
-  justify-content: space-around;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 10;
 }
 
-nav li a {
+.navbar-logo {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: var(--primary-color);
+}
+
+.navbar-links {
+  display: flex;
+  gap: 1rem;
+}
+
+.navbar-links a {
   text-decoration: none;
-  color: white;
-  padding: 10px;
+  color: var(--text-color);
 }
 
 
 .hero {
-  background: linear-gradient(to bottom, #4285f4, #0f9d58), url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpolygon points='0,100 100,100 50,0' fill='%23e0e0e0'/%3E%3C/svg%3E");
-  background-size: cover;
+  background-image: linear-gradient(to bottom, #4285F4, #64B5F6);
   color: white;
-  padding: 100px 0;
+  padding: 4rem;
   text-align: center;
 }
 
-.feature-cards {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-around;
+.hero-title {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+}
+
+.hero-subtitle {
+  font-size: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.hero-button {
+  background-color: var(--accent-color);
+  color: white;
+  padding: 1rem 2rem;
+  border: none;
+  border-radius: var(--border-radius);
+  font-size: 1.2rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.hero-button:hover {
+  background-color: darken(var(--accent-color), 10%);
 }
 
 .feature-card {
-  width: 300px;
-  margin: 20px;
-  padding: 20px;
   background-color: white;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-  border-radius: 8px;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  padding: 2rem;
+  border-radius: var(--border-radius);
+  box-shadow: 0 2px 4px var(--shadow-color);
+  margin-bottom: 2rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  cursor: pointer;
+  transition: transform 0.3s ease;
 }
 
 .feature-card:hover {
   transform: translateY(-5px);
-  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
 }
 
-footer {
-  background-color: #333;
-  color: white;
-  padding: 20px;
-  text-align: center;
+.feature-icon {
+  font-size: 2rem;
+  color: var(--primary-color);
 }
 
-/* Add more styles as needed for other elements */
+.feature-title {
+  font-weight: bold;
+}
+
+/* ... rest of the CSS styles ... */
+/*  Add styles for modal, carousel, scrollable list, form, counters, chatbot preview, etc.  */
+/*  Remember to use CSS variables, modern layouts (Grid, Flexbox), animations, and responsive design. */
 
 </style>
 </head>
 <body>
-<nav>
-  <ul>
-    <li><a href="#">Chat</a></li>
-    <li><a href="#">About Us</a></li>
-    <li><a href="#">Features</a></li>
-    <li><a href="#">Pricing</a></li>
-    <li><a href="#">Blog</a></li>
-    <li><a href="#">Contact Us</a></li>
-  </ul>
+<nav class="navbar">
+  <div class="navbar-logo">ChatBot</div>
+  <div class="navbar-links">
+    <a href="#">Home</a>
+    <a href="#">Features</a>
+    <a href="#">Pricing</a>
+    <a href="#">Contact</a>
+  </div>
 </nav>
 
 <section class="hero">
-  <h1>AI-Powered Conversations</h1>
-  <p>Revolutionizing the way you interact.</p>
-  <button>Start Chatting Now</button>
+  <h1 class="hero-title">Welcome to Our Amazing Chatbot!</h1>
+  <p class="hero-subtitle">Revolutionizing customer service, one conversation at a time.</p>
+  <button class="hero-button">Try the Chatbot</button>
 </section>
 
-<section class="feature-cards">
+<section class="features">
   <div class="feature-card">
-    <h3>Feature 1</h3>
-    <p>Description of Feature 1.</p>
+    <div class="feature-icon">&#128221;</div>
+    <div>
+      <h3>Feature 1</h3>
+      <p>Short description of feature 1.</p>
+    </div>
   </div>
   <div class="feature-card">
-    <h3>Feature 2</h3>
-    <p>Description of Feature 2.</p>
+    <div class="feature-icon">&#128222;</div>
+    <div>
+      <h3>Feature 2</h3>
+      <p>Short description of feature 2.</p>
+    </div>
   </div>
   <div class="feature-card">
-    <h3>Feature 3</h3>
-    <p>Description of Feature 3.</p>
+    <div class="feature-icon">&#128223;</div>
+    <div>
+      <h3>Feature 3</h3>
+      <p>Short description of feature 3.</p>
+    </div>
   </div>
 </section>
 
 
-<footer>
-  <p>&copy; 2023 AI Conversation. All rights reserved.</p>
-</footer>
+<section class="footer">
+  <p>&copy; 2023 Chatbot Inc. All rights reserved.</p>
+</section>
 
 <script>
-//Smooth Scrolling
-document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-    anchor.addEventListener('click', function (e) {
-        e.preventDefault();
-        document.querySelector(this.getAttribute('href')).scrollIntoView({
-            behavior: 'smooth'
-        });
-    });
-});
-
-//Dark Mode Toggle (Example - needs a toggle element)
-const darkModeToggle = document.getElementById('dark-mode-toggle'); //replace with your toggle element id
-
-darkModeToggle.addEventListener('click', () => {
-  document.body.classList.toggle('dark-mode');
-});
-
-
-// Simple form validation example
-const form = document.querySelector('form'); // Replace with your form selector
-const emailInput = form.querySelector('input[type="email"]');
-const submitButton = form.querySelector('button[type="submit"]');
-const message = form.querySelector('.message');
-
-form.addEventListener('submit', (e) => {
-  e.preventDefault();
-  if (emailInput.value.includes('@')) {
-    message.textContent = 'Email submitted successfully!';
-    message.style.color = 'green';
-  } else {
-    message.textContent = 'Please enter a valid email address.';
-    message.style.color = 'red';
-  }
-});
-
-
+// Add your JavaScript code here for interactivity (modal handling, carousel, form validation, etc.)
+//Remember to use modern JavaScript features (e.g., async/await, arrow functions) and event listeners.
 </script>
 </body>
 </html>

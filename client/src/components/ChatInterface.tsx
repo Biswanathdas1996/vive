@@ -290,6 +290,7 @@ export function ChatInterface({
       setIsGenerating(false);
       
       queryClient.invalidateQueries({ queryKey: ["/api/chat", sessionId] });
+      queryClient.invalidateQueries({ queryKey: ["/api/projects"] });
       
       toast({
         title: "Generation Complete",

@@ -3,85 +3,169 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Enhanced Chat Interface</title>
+<title>Chat with ChatBotty</title>
 <style>
 :root {
-  --primary-color: #673ab7;
-  --secondary-color: #9c27b0;
-  --background-color: #f4f4f4;
+  --primary-color: #3f51b5;
+  --secondary-color: #6200ee;
+  --bg-color: #f4f4f4;
   --text-color: #333;
-  --dark-background: #222;
-  --dark-text: #eee;
-  --border-radius: 8px;
+  --accent-color: #ff9800;
+  --shadow-color: rgba(0,0,0,0.2);
 }
 
 body {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   margin: 0;
-  background-color: var(--background-color);
+  background-color: var(--bg-color);
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
   color: var(--text-color);
-  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-body.dark-mode {
-  background-color: var(--dark-background);
-  color: var(--dark-text);
-}
-
-.navbar {
+header {
+  background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+  color: white;
+  padding: 1rem;
   position: sticky;
   top: 0;
-  background-color: rgba(255,255,255,0.8);
-  backdrop-filter: blur(10px);
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-  padding: 1rem;
+  z-index: 10;
+  box-shadow: 0 2px 4px var(--shadow-color);
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 
-.logo {
-  width: 40px;
-  height: 40px;
-  background-color: var(--primary-color);
-  border-radius: 50%;
-}
-
-.profile-icon {
-  width: 30px;
-  height: 30px;
-  background-color: var(--secondary-color);
-  border-radius: 50%;
+header button {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 1.2rem;
   cursor: pointer;
 }
 
-/* ...rest of the CSS (too long to include here.  Would include styles for sidebar, messages,  inputs, animations, responsiveness, etc.  Refer to BRD for details and apply modern CSS techniques accordingly.)*/
+main {
+  flex: 1;
+  display: flex;
+  padding: 1rem;
+}
+
+.chat-area {
+  flex: 1;
+  overflow-y: auto;
+  padding-right: 1rem;
+}
+
+.message {
+  margin-bottom: 1rem;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  max-width: 70%;
+}
+
+.user-message {
+  align-self: flex-end;
+  background-color: var(--accent-color);
+  color: white;
+}
+
+.bot-message {
+  align-self: flex-start;
+  background-color: #e0e0e0;
+}
+
+.input-area {
+  padding: 1rem;
+}
+
+input[type="text"] {
+  padding: 0.8rem;
+  border-radius: 0.5rem;
+  border: 1px solid #ccc;
+  width: calc(100% - 6rem); /* Adjust width as needed */
+  margin-right: 0.5rem;
+}
+
+button[type="submit"] {
+  padding: 0.8rem 1.5rem;
+  border-radius: 0.5rem;
+  background-color: var(--primary-color);
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+button[type="submit"]:hover {
+  background-color: darken(var(--primary-color), 10%);
+}
+
+footer {
+  background-color: #f0f0f0;
+  padding: 1rem;
+  text-align: center;
+  border-top: 1px solid #ddd;
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+  main {
+    flex-direction: column;
+  }
+  .chat-area{
+    padding-right:0;
+  }
+}
 
 </style>
 </head>
 <body>
-<nav class="navbar">
-  <div class="logo"></div>
-  <div class="profile-icon"></div>
-</nav>
-
+<header>
+  <button>Back</button>
+  <h1>Chat with ChatBotty</h1>
+  <button>Profile</button>
+</header>
 <main>
-  <!-- Chat window, sidebar, etc. would go here -->
-  <div style="background-color:lightblue; height: 500px; width: 80%; margin: 20px auto; border-radius: var(--border-radius); box-shadow: 0 4px 8px rgba(0,0,0,0.1);">Chat window placeholder</div>
+  <div class="chat-area">
+    <div class="message bot-message">
+      <div style="background-color: #ADD8E6; border-radius: 10px; padding: 10px;">Bot response 1</div>
+    </div>
+    <div class="message user-message">
+      <div style="background-color: #FFB6C1; border-radius: 10px; padding: 10px;">User message 1</div>
+    </div>
+    <div class="message bot-message">
+      <div style="background-color: #ADD8E6; border-radius: 10px; padding: 10px;">Bot response 2</div>
+    </div>
+  </div>
+  <div class="input-area">
+    <input type="text" placeholder="Type your message...">
+    <button type="submit">Send</button>
+  </div>
 </main>
+<footer>
+  <button>Close Chat</button>
+  <button>Clear Conversation</button>
+</footer>
 
 <script>
-// JavaScript for handling messages, animations, sidebar, etc. (Too long to include here.  Would handle DOM manipulation, event listeners, message sending/receiving, animations,  and other interactive elements.)
-//  Example: Dark mode toggle
-const body = document.querySelector('body');
-const darkModeToggle = document.createElement('button');
-darkModeToggle.textContent = 'Dark Mode';
-darkModeToggle.addEventListener('click', () => {
-  body.classList.toggle('dark-mode');
+// Simple JavaScript for Send button (replace with more sophisticated logic)
+const sendButton = document.querySelector('button[type="submit"]');
+const inputField = document.querySelector('input[type="text"]');
+const chatArea = document.querySelector('.chat-area');
+
+sendButton.addEventListener('click', () => {
+  if (inputField.value.trim() !== '') {
+    const newMessage = document.createElement('div');
+    newMessage.classList.add('message', 'user-message');
+    newMessage.innerHTML = `<div style="background-color: #FFB6C1; border-radius: 10px; padding: 10px;">${inputField.value}</div>`;
+    chatArea.appendChild(newMessage);
+    inputField.value = '';
+    // Add logic to send message to server and receive response here
+    chatArea.scrollTop = chatArea.scrollHeight;
+  }
 });
-document.body.appendChild(darkModeToggle);
+
 
 </script>
-
 </body>
 </html>
