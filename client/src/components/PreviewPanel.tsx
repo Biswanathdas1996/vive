@@ -35,6 +35,7 @@ export function PreviewPanel({ projectId, selectedFile, isChatCollapsed, isFileE
   const [activeTab, setActiveTab] = useState("index.html");
   const [deviceType, setDeviceType] = useState<DeviceType>("desktop");
   const [previewMode, setPreviewMode] = useState<"preview" | "code">("preview");
+  const [iframeKey, setIframeKey] = useState(0);
 
   // Calculate dynamic width based on collapse states
   const getPreviewWidth = () => {
@@ -73,6 +74,20 @@ export function PreviewPanel({ projectId, selectedFile, isChatCollapsed, isFileE
       setActiveTab(selectedFile);
     }
   }, [selectedFile]);
+
+  // Force iframe reload when files are updated or current file content changes
+  useEffect(() => {
+    if (files.length > 0) {
+      setIframeKey(prev => prev + 1);
+    }
+  }, [files]);
+
+  // Force iframe reload when the selected file content changes
+  useEffect(() => {
+    if (currentFile) {
+      setIframeKey(prev => prev + 1);
+    }
+  }, [currentFile?.url, fileData]);
 
   const getDeviceClass = () => {
     switch (deviceType) {
@@ -239,6 +254,7 @@ export function PreviewPanel({ projectId, selectedFile, isChatCollapsed, isFileE
               <div className={`h-full ${getDeviceClass()}`}>
                 <div className="h-full bg-white rounded-lg shadow-2xl overflow-hidden">
                   <iframe
+                    key={`${currentFile.fileName}-${iframeKey}`}
                     src={currentFile.url}
                     className="w-full h-full border-0"
                     title={`Preview of ${currentFile.fileName}`}

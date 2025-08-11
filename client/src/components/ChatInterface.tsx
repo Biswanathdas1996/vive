@@ -501,9 +501,16 @@ export function ChatInterface({
       // Refresh chat messages and project files after successful modification
       queryClient.invalidateQueries({ queryKey: ["/api/chat", chatSessionId] });
       queryClient.invalidateQueries({ queryKey: ["/api/projects", projectId, "files"] });
+      
+      // Force preview reload by refetching file content
+      setTimeout(() => {
+        queryClient.invalidateQueries({ queryKey: ["/api/files", data.fileName] });
+        queryClient.refetchQueries({ queryKey: ["/api/projects", projectId, "files"] });
+      }, 100);
+      
       toast({
         title: "File Modified",
-        description: `${data.fileName} has been updated successfully`,
+        description: `${data.fileName} has been updated successfully - Preview refreshed`,
       });
     },
     onError: (error: any) => {

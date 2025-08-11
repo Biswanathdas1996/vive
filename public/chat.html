@@ -15,14 +15,17 @@
   --dark-text: #fff;
   --border-radius: 8px;
   --box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  --font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 body {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-family: var(--font-family);
   margin: 0;
   background-color: var(--background-color);
   transition: background-color 0.3s ease;
   color: var(--text-color);
+  display: flex;
+  min-height: 100vh;
 }
 
 body.dark-mode {
@@ -32,7 +35,8 @@ body.dark-mode {
 
 .container {
   display: flex;
-  min-height: 100vh;
+  flex-direction: column; /* Changed to column for better mobile responsiveness */
+  flex: 1; /* Allow container to expand to fill available space */
 }
 
 .sidebar {
@@ -42,6 +46,8 @@ body.dark-mode {
   padding: 20px;
   overflow-y: auto;
   transition: width 0.3s ease;
+  max-height: 100vh; /* Added max-height to prevent overflow on smaller screens */
+  overflow: auto;
 }
 
 .sidebar.collapsed {
@@ -50,6 +56,7 @@ body.dark-mode {
 
 .sidebar h3 {
   margin-top: 0;
+  margin-bottom: 10px;
 }
 
 .sidebar ul {
@@ -59,42 +66,48 @@ body.dark-mode {
 
 .sidebar li {
   margin-bottom: 10px;
+  cursor: pointer; /* Added cursor style for better interactivity */
 }
 
 .main-content {
   flex: 1;
   padding: 20px;
+  position: relative; /* Added to position the toggle button */
 }
 
 .chat-display {
-  height: 400px;
+  height: calc(100vh - 180px); /* Adjusted height dynamically */
   overflow-y: auto;
   border: 1px solid #ccc;
   border-radius: var(--border-radius);
   padding: 10px;
+  flex-grow:1;
 }
+
 
 .message {
   margin-bottom: 10px;
   padding: 10px;
   border-radius: var(--border-radius);
+  word-break: break-word;
 }
 
 .message.user {
   background-color: var(--primary-color);
   color: white;
   align-self: flex-end;
+  text-align: right;
 }
 
 .message.ai {
   background-color: #e0e0e0;
   align-self: flex-start;
+  text-align: left;
 }
 
 .message-text {
   word-break: break-word;
 }
-
 
 .chat-input {
   margin-top: 10px;
@@ -115,12 +128,26 @@ body.dark-mode {
   border: none;
   border-radius: var(--border-radius);
   cursor: pointer;
+  margin-left: 10px;
 }
 
 footer {
   background-color: #f0f0f0;
   padding: 10px;
   text-align: center;
+}
+
+.toggle-button {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background-color: var(--primary-color);
+  color: white;
+  border: none;
+  border-radius: var(--border-radius);
+  padding: 5px 10px;
+  cursor: pointer;
+  display: none; /* Hidden by default, shown on smaller screens */
 }
 
 /* Responsive Styles */
@@ -130,6 +157,16 @@ footer {
   }
   .sidebar {
     width: 100%;
+    max-height: 300px; /* Reduced height for mobile */
+  }
+  .toggle-button {
+    display: block; /* Show toggle button on smaller screens */
+  }
+  .main-content {
+    width: 100%;
+  }
+  .chat-display{
+    height: calc(100vh - 250px);
   }
 }
 
@@ -155,6 +192,7 @@ footer {
     </ul>
   </div>
   <div class="main-content">
+    <button class="toggle-button">☰</button>
     <div class="chat-display">
       <div class="message user">
         <div class="message-text">User Message 1</div>
@@ -173,23 +211,13 @@ footer {
   &copy; 2023 Chat Application | Version 1.0 | <a href="#">Contact Us</a>
 </footer>
 <script>
-// JavaScript for simple functionality (expandable later)
 const sidebar = document.querySelector('.sidebar');
-const sidebarToggle = document.createElement('button');
-sidebarToggle.textContent = '☰';
-sidebarToggle.style.position = 'absolute';
-sidebarToggle.style.top = '10px';
-sidebarToggle.style.left = '10px';
-sidebarToggle.style.backgroundColor = 'var(--primary-color)';
-sidebarToggle.style.color = 'white';
-sidebarToggle.style.border = 'none';
-sidebarToggle.style.borderRadius = 'var(--border-radius)';
-sidebarToggle.style.padding = '5px 10px';
-sidebarToggle.style.cursor = 'pointer';
-sidebarToggle.addEventListener('click', () => {
+const toggleButton = document.querySelector('.toggle-button');
+
+toggleButton.addEventListener('click', () => {
   sidebar.classList.toggle('collapsed');
 });
-document.body.appendChild(sidebarToggle);
+
 </script>
 </body>
 </html>
