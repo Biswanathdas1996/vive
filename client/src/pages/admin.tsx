@@ -1219,108 +1219,135 @@ export default function AdminPage() {
 
           {/* MCP Server Tab */}
           <TabsContent value="mcp-server" className="space-y-6">
-            {/* Server Status */}
-            <Card className="bg-slate-900 border-slate-700">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Cpu className="h-5 w-5" />
-                  MCP Server Status
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                {mcpInfoLoading ? (
-                  <div className="animate-pulse">Loading server info...</div>
-                ) : mcpInfo ? (
-                  <div className="space-y-4">
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                      <div className="space-y-2">
-                        <p className="text-sm font-medium">Server Status</p>
-                        <Badge variant={mcpInfo.status === 'running' ? 'default' : 'destructive'}>
-                          {mcpInfo.status === 'running' ? <CheckCircle className="h-3 w-3 mr-1" /> : <AlertCircle className="h-3 w-3 mr-1" />}
-                          {mcpInfo.status}
-                        </Badge>
-                      </div>
-                      <div className="space-y-2">
-                        <p className="text-sm font-medium">Version</p>
-                        <p className="text-sm text-muted-foreground">{mcpInfo.version}</p>
-                      </div>
-                      <div className="space-y-2">
-                        <p className="text-sm font-medium">Capabilities</p>
-                        <div className="flex gap-1 flex-wrap">
-                          {mcpInfo.capabilities.tools && <Badge variant="outline">Tools</Badge>}
-                          {mcpInfo.capabilities.resources && <Badge variant="outline">Resources</Badge>}
-                          {mcpInfo.capabilities.prompts && <Badge variant="outline">Prompts</Badge>}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              {/* Left Column - Server Status and Resources */}
+              <div className="space-y-6">
+                {/* Server Status */}
+                <Card className="bg-slate-900 border-slate-700">
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                      <Cpu className="h-5 w-5" />
+                      MCP Server Status
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    {mcpInfoLoading ? (
+                      <div className="animate-pulse">Loading server info...</div>
+                    ) : mcpInfo ? (
+                      <div className="space-y-4">
+                        <div className="grid grid-cols-1 gap-4">
+                          <div className="space-y-2">
+                            <p className="text-sm font-medium">Server Status</p>
+                            <Badge variant={mcpInfo.status === 'running' ? 'default' : 'destructive'}>
+                              {mcpInfo.status === 'running' ? <CheckCircle className="h-3 w-3 mr-1" /> : <AlertCircle className="h-3 w-3 mr-1" />}
+                              {mcpInfo.status}
+                            </Badge>
+                          </div>
+                          <div className="space-y-2">
+                            <p className="text-sm font-medium">Version</p>
+                            <p className="text-sm text-muted-foreground">{mcpInfo.version}</p>
+                          </div>
+                          <div className="space-y-2">
+                            <p className="text-sm font-medium">Capabilities</p>
+                            <div className="flex gap-1 flex-wrap">
+                              {mcpInfo.capabilities.tools && <Badge variant="outline">Tools</Badge>}
+                              {mcpInfo.capabilities.resources && <Badge variant="outline">Resources</Badge>}
+                              {mcpInfo.capabilities.prompts && <Badge variant="outline">Prompts</Badge>}
+                            </div>
+                          </div>
                         </div>
+                        <Alert>
+                          <AlertCircle className="h-4 w-4" />
+                          <AlertDescription>
+                            <strong>Note:</strong> The MCP server requires valid AI configuration to process tool calls.
+                            Make sure you have configured your AI provider and API keys in the settings above.
+                          </AlertDescription>
+                        </Alert>
                       </div>
-                    </div>
-                    <Alert>
-                      <AlertCircle className="h-4 w-4" />
-                      <AlertDescription>
-                        <strong>Note:</strong> The MCP server requires valid AI configuration to process tool calls.
-                        Make sure you have configured your AI provider and API keys in the settings above.
-                      </AlertDescription>
-                    </Alert>
-                  </div>
-                ) : (
-                  <Alert>
-                    <AlertCircle className="h-4 w-4" />
-                    <AlertDescription>Unable to connect to MCP server</AlertDescription>
-                  </Alert>
-                )}
-              </CardContent>
-            </Card>
-
-            {/* MCP Resources */}
-            <Card className="bg-slate-900 border-slate-700">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Database className="h-5 w-5" />
-                  MCP Resources
-                </CardTitle>
-                <CardDescription>
-                  Access configuration and system information through MCP resources
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                {resourcesLoading ? (
-                  <div className="animate-pulse">Loading resources...</div>
-                ) : resourcesData?.resources ? (
-                  <div className="space-y-3">
-                    {resourcesData.resources.map((resource) => (
-                      <div
-                        key={resource.uri}
-                        className={`p-3 border rounded-lg cursor-pointer transition-colors ${
-                          selectedResource === resource.uri
-                            ? 'border-primary bg-primary/5'
-                            : 'border-border hover:border-primary/50'
-                        }`}
-                        onClick={() => setSelectedResource(resource.uri)}
-                      >
-                        <h4 className="font-medium">{resource.name}</h4>
-                        <p className="text-sm text-muted-foreground mt-1">{resource.description}</p>
-                        <p className="text-xs text-slate-500 mt-1">URI: {resource.uri}</p>
-                      </div>
-                    ))}
-                    {selectedResource && (
-                      <div className="pt-3">
-                        <Button 
-                          onClick={handleResourceFetch}
-                          disabled={!selectedResource || resourceMutation.isPending}
-                          className="w-full bg-purple-600 hover:bg-purple-700"
-                        >
-                          {resourceMutation.isPending ? 'Fetching Resource...' : 'Fetch Resource'}
-                        </Button>
-                      </div>
+                    ) : (
+                      <Alert>
+                        <AlertCircle className="h-4 w-4" />
+                        <AlertDescription>Unable to connect to MCP server</AlertDescription>
+                      </Alert>
                     )}
-                  </div>
-                ) : (
-                  <Alert>
-                    <AlertCircle className="h-4 w-4" />
-                    <AlertDescription>No MCP resources available</AlertDescription>
-                  </Alert>
-                )}
-              </CardContent>
-            </Card>
+                  </CardContent>
+                </Card>
+
+                {/* MCP Resources */}
+                <Card className="bg-slate-900 border-slate-700">
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                      <Database className="h-5 w-5" />
+                      MCP Resources
+                    </CardTitle>
+                    <CardDescription>
+                      Access configuration and system information through MCP resources
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    {resourcesLoading ? (
+                      <div className="animate-pulse">Loading resources...</div>
+                    ) : resourcesData?.resources ? (
+                      <div className="space-y-3">
+                        {resourcesData.resources.map((resource) => (
+                          <div
+                            key={resource.uri}
+                            className={`p-3 border rounded-lg cursor-pointer transition-colors ${
+                              selectedResource === resource.uri
+                                ? 'border-primary bg-primary/5'
+                                : 'border-border hover:border-primary/50'
+                            }`}
+                            onClick={() => setSelectedResource(resource.uri)}
+                          >
+                            <h4 className="font-medium">{resource.name}</h4>
+                            <p className="text-sm text-muted-foreground mt-1">{resource.description}</p>
+                            <p className="text-xs text-slate-500 mt-1">URI: {resource.uri}</p>
+                          </div>
+                        ))}
+                        {selectedResource && (
+                          <div className="pt-3">
+                            <Button 
+                              onClick={handleResourceFetch}
+                              disabled={!selectedResource || resourceMutation.isPending}
+                              className="w-full bg-purple-600 hover:bg-purple-700"
+                            >
+                              {resourceMutation.isPending ? 'Fetching Resource...' : 'Fetch Resource'}
+                            </Button>
+                          </div>
+                        )}
+                      </div>
+                    ) : (
+                      <Alert>
+                        <AlertCircle className="h-4 w-4" />
+                        <AlertDescription>No MCP resources available</AlertDescription>
+                      </Alert>
+                    )}
+                  </CardContent>
+                </Card>
+              </div>
+
+              {/* Right Column - Resource Results */}
+              <div className="space-y-6">
+                {/* Resource Results */}
+                <Card className="bg-slate-900 border-slate-700">
+                  <CardHeader>
+                    <CardTitle>Resource Results</CardTitle>
+                    <CardDescription>MCP resource content and responses</CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <ScrollArea className="h-96 w-full border rounded-md p-4 bg-slate-800">
+                      {mcpResult ? (
+                        <pre className="text-sm whitespace-pre-wrap font-mono">
+                          {JSON.stringify(mcpResult, null, 2)}
+                        </pre>
+                      ) : (
+                        <p className="text-muted-foreground">No results yet. Select and fetch a resource to see its content here.</p>
+                      )}
+                    </ScrollArea>
+                  </CardContent>
+                </Card>
+              </div>
+            </div>
 
             {/* Integration Instructions */}
             <Card className="bg-slate-900 border-slate-700">
