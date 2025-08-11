@@ -612,10 +612,41 @@ export async function registerRoutes(app: Express): Promise<Server> {
           break;
           
         case 'generate_file_content':
+          if (!args?.fileName) {
+            return res.status(400).json({ error: "fileName is required for generate_file_content" });
+          }
+          if (!args?.fileStructure) {
+            return res.status(400).json({ error: "fileStructure is required for generate_file_content" });
+          }
+          
+          // Parse the fileStructure if it's a string
+          let parsedFileStructure;
+          if (typeof args.fileStructure === 'string') {
+            try {
+              parsedFileStructure = JSON.parse(args.fileStructure);
+            } catch (parseError) {
+              return res.status(400).json({ error: "Invalid fileStructure JSON format" });
+            }
+          } else {
+            parsedFileStructure = args.fileStructure;
+          }
+          
+          // Create a basic analysis result for the file generation
+          const analysisResult = {
+            features: [],
+            pages: [args.fileName],
+            technical_requirements: {
+              responsive: true,
+              authentication: false,
+              data_persistence: "none" as const,
+              ui_framework: "HTML5"
+            }
+          };
+          
           const content = await llmService.generateFileContent(
-            args?.fileName || '',
-            args?.requirements || {},
-            args?.context || {}
+            args.fileName,
+            analysisResult,
+            parsedFileStructure
           );
           result = {
             content: [{

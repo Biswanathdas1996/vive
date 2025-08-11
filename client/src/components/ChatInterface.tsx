@@ -144,7 +144,23 @@ export function ChatInterface({
         arguments: { prompt }
       })
     });
+    
+    if (!analysisResponse.ok) {
+      throw new Error(`Analysis failed: ${analysisResponse.statusText}`);
+    }
+    
     const analysisResult = await analysisResponse.json();
+    
+    if (!analysisResult?.content?.[0]?.text) {
+      throw new Error('Invalid analysis response format');
+    }
+    
+    let analysisData;
+    try {
+      analysisData = JSON.parse(analysisResult.content[0].text);
+    } catch (error) {
+      throw new Error('Failed to parse analysis result');
+    }
     
     // Step 2: Generate file structure using MCP
     const structureResponse = await fetch('/api/mcp/tools/call', {
@@ -152,10 +168,19 @@ export function ChatInterface({
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         name: 'generate_file_structure',
-        arguments: { analysis: analysisResult.content[0].text }
+        arguments: { analysis: analysisData }
       })
     });
+    
+    if (!structureResponse.ok) {
+      throw new Error(`Structure generation failed: ${structureResponse.statusText}`);
+    }
+    
     const structureResult = await structureResponse.json();
+    
+    if (!structureResult?.content?.[0]?.text) {
+      throw new Error('Invalid structure response format');
+    }
     
     // Step 3: Create project and chat session
     const response = await apiRequest("POST", "/api/chat/start", { 
@@ -171,7 +196,19 @@ export function ChatInterface({
   const generateFilesWithMcp = async (sessionId: string, structure: string) => {
     try {
       console.log('Starting MCP file generation with structure:', structure);
-      const structureObj = JSON.parse(structure);
+      
+      if (!structure || structure === 'null' || structure === 'undefined') {
+        throw new Error('Invalid or null structure provided for file generation');
+      }
+      
+      let structureObj;
+      try {
+        structureObj = JSON.parse(structure);
+      } catch (parseError) {
+        console.error('Failed to parse structure:', structure);
+        throw new Error(`Invalid JSON structure: ${parseError instanceof Error ? parseError.message : String(parseError)}`);
+      }
+      
       console.log('Parsed structure:', structureObj);
       
       // Extract files from the structure - it might be nested differently
@@ -296,7 +333,13 @@ export function ChatInterface({
         });
       } else {
         // For MCP mode, start generating files directly using MCP tools
-        setTimeout(() => generateFilesWithMcp(data.chatSessionId, data.structure), 100);
+        if (data.structure) {
+          setTimeout(() => generateFilesWithMcp(data.chatSessionId, data.structure), 100);
+        } else {
+          console.error('No structure provided for MCP file generation');
+          setError('Failed to generate file structure. Please try again.');
+          setIsGenerating(false);
+        }
       }
       
       queryClient.invalidateQueries({ queryKey: ["/api/chat", data.chatSessionId] });
